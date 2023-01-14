@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -31,6 +32,7 @@ public class RobotContainer
 	private boolean useExampleSubsystem	= true;
 
 	private final ExampleSubsystem exampleSubsystem;
+	private Joystick joystick;
 	
 	/** 
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
