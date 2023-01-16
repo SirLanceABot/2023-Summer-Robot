@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.lang.invoke.MethodHandles;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
@@ -9,8 +11,18 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 public class Shoulder extends Subsystem4237
 {
-    private final TalonFX shoulderMotor = new TalonFX(1);
+    // This string gets the full name of the class, including the package name
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
+    static
+    {
+        System.out.println("Loading: " + fullClassName);
+    }
+    
+
+    private final TalonFX shoulderMotor = new TalonFX(1);
     private static final int TIMEOUT_MS = 30;
 
     //TODO: Tune PID values
@@ -19,8 +31,9 @@ public class Shoulder extends Subsystem4237
     private static final double kD = 0.000;
     private static final double kF = 0.04;
 
+    
     public Shoulder()
-    {
+    {   
         configShoulderMotor();
     }
 
@@ -44,7 +57,6 @@ public class Shoulder extends Subsystem4237
         shoulderMotor.configReverseSoftLimitThreshold(0.0);
         shoulderMotor.configReverseSoftLimitEnable(true);
         
-        //TODO: determine if switches are normaly opened or normally closed
         shoulderMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         shoulderMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
 
@@ -64,8 +76,6 @@ public class Shoulder extends Subsystem4237
     {
         shoulderMotor.set(ControlMode.PercentOutput, -0.5);
     }
-
-
 
 
     @Override
