@@ -32,7 +32,7 @@ public class RobotContainer
 	private boolean useExampleSubsystem	= true;
 
 	private final ExampleSubsystem exampleSubsystem;
-	private Joystick joystick;
+	// private Joystick joystick;
 	
 	/** 
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
