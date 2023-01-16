@@ -31,7 +31,9 @@ public class Shoulder extends Subsystem4237
     private static final double kD = 0.000;
     private static final double kF = 0.04;
 
-    
+    private double shoulderSpeed;
+    private double shoulderAngle;
+
     public Shoulder()
     {   
         configShoulderMotor();
@@ -55,7 +57,7 @@ public class Shoulder extends Subsystem4237
         shoulderMotor.configForwardSoftLimitThreshold(0.0);
         shoulderMotor.configForwardSoftLimitEnable(false);
         shoulderMotor.configReverseSoftLimitThreshold(0.0);
-        shoulderMotor.configReverseSoftLimitEnable(true);
+        shoulderMotor.configReverseSoftLimitEnable(false);
         
         shoulderMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         shoulderMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
@@ -69,25 +71,34 @@ public class Shoulder extends Subsystem4237
 
     public void moveUp()
     {
-        shoulderMotor.set(ControlMode.PercentOutput, 0.5);
+        shoulderSpeed = 0.5;
     }
 
     public void moveDown()
     {
-        shoulderMotor.set(ControlMode.PercentOutput, -0.5);
+        shoulderSpeed = -0.5;
     }
 
+    public void off()
+    {
+        shoulderSpeed = 0.0;
+    }
+
+    public void hold()
+    {
+        shoulderSpeed = 0.1;
+    }
 
     @Override
     public synchronized void readPeriodicInputs()
     {
-        
+    
     }
 
     @Override
     public synchronized void writePeriodicOutputs()
     {
-
+        shoulderMotor.set(ControlMode.PercentOutput, shoulderSpeed);
     }
     
 }
