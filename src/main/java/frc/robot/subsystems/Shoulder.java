@@ -81,7 +81,7 @@ public class Shoulder extends Subsystem4237
     @Override
     public synchronized void readPeriodicInputs()
     {
-
+        
     }
 
     @Override
