@@ -32,7 +32,10 @@ public class Shoulder extends Subsystem4237
     private static final double kF = 0.04;
 
     private double shoulderSpeed;
-    private double shoulderAngle;
+    private double currentShoulderPosition;
+    private double currentShoulderAngle;
+    
+    private final double TICKS_PER_DEGREE = 5.69;
 
     public Shoulder()
     {   
@@ -69,6 +72,26 @@ public class Shoulder extends Subsystem4237
         //increase framerate for sensor velocity checks (currently at 100ms)
     }
 
+    // this will be deleted later because of a configuration
+    public void resestEncoder()
+    {
+        // if reverse limit switch pressed, reset integrated encoder to 0
+        if(shoulderMotor.getSensorCollection().isRevLimitSwitchClosed() == 1); 
+        {
+            shoulderMotor.setSelectedSensorPosition(0.0);
+        }
+    }
+
+    public double getShoulderPosition()
+    {
+        return currentShoulderPosition;
+    }
+
+    public double getShoulderAngle()
+    {
+        return currentShoulderAngle;
+    }
+
     public void moveUp()
     {
         shoulderSpeed = 0.5;
@@ -92,13 +115,26 @@ public class Shoulder extends Subsystem4237
     @Override
     public synchronized void readPeriodicInputs()
     {
-    
+        currentShoulderPosition = shoulderMotor.getSelectedSensorPosition();
+        currentShoulderAngle = currentShoulderPosition / TICKS_PER_DEGREE;
     }
 
     @Override
     public synchronized void writePeriodicOutputs()
     {
         shoulderMotor.set(ControlMode.PercentOutput, shoulderSpeed);
+    }
+
+    @Override
+    public void periodic()
+    {
+        // This method will be called once per scheduler run
+    }
+
+    @Override
+    public void simulationPeriodic()
+    {
+        // This method will be called once per scheduler run during simulation
     }
     
 }
