@@ -13,10 +13,10 @@ import java.lang.invoke.MethodHandles;
 // *** IMPORT statements ***
 // Uncomment one of these statements
 
-// import frc.robot.tests.ExampleTest;
+import frc.robot.tests.ExampleTest;
 // import frc.robot.tests.DavidTest;
 // import frc.robot.tests.KyleTest;
-import frc.robot.tests.LoganTest;
+// import frc.robot.tests.LoganTest;
 // import frc.robot.tests.MaahishTest;
 // import frc.robot.tests.MatthewTest;
 // import frc.robot.tests.OwenTest;
@@ -41,10 +41,10 @@ public class TestMode
     // *** CLASS VARIABLES ***
     // Uncomment one of these statements
 
-    // private static final ExampleTest myTest = new ExampleTest();
+    private static final ExampleTest myTest = new ExampleTest();
     // private static final DavidTest myTest = new DavidTest();
     // private static final KyleTest myTest = new KyleTest();
-    private static final LoganTest myTest = new LoganTest();
+    // private static final LoganTest myTest = new LoganTest();
     // private static final MaahishTest myTest = new MaahishTest();
     // private static final MatthewTest myTest = new MatthewTest();
     // private static final OwenTest myTest = new OwenTest();
