@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -30,7 +31,8 @@ public class Arm extends Subsystem4237
         System.out.println("Loading: " + fullClassName);
     }
 
-    private final CANSparkMax armMotor = new CANSparkMax (7, MotorType.kBrushless);
+    int ArmMotorPort = Constants.MotorConstants.ARM_MOTOR_PORT;
+    private final CANSparkMax armMotor = new CANSparkMax (ArmMotorPort, MotorType.kBrushless);
     private final SparkMaxLimitSwitch forwardLimitSwitch = armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     private final SparkMaxLimitSwitch reverseLimitSwitch = armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     private RelativeEncoder armEncoder;

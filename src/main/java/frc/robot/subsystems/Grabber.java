@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder;
+import frc.robot.Constants;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Encoder;
@@ -47,37 +48,38 @@ public class Grabber extends Subsystem4237
     GamePiece currentGamePiece = GamePiece.kNone;
     double speed = 0;
     double encoderDistance;
-    private RelativeEncoder clawMotorEncoder;
-    private final CANSparkMax clawMotor = new CANSparkMax(2, MotorType.kBrushless);
+    private RelativeEncoder grabberMotorEncoder;
+    int GrabberMotorPort= Constants.MotorConstants.GRABBER_MOTOR_PORT;
+    private final CANSparkMax grabberMotor = new CANSparkMax(GrabberMotorPort, MotorType.kBrushless);
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
     
     private void configCANSparkMax()
     {   
-        clawMotorEncoder = clawMotor.getEncoder();
+        grabberMotorEncoder = grabberMotor.getEncoder();
         //Factory Defaults
-        clawMotor.restoreFactoryDefaults();
+        grabberMotor.restoreFactoryDefaults();
 
         //Invert the direction of the motor
-        clawMotor.setInverted(false);
+        grabberMotor.setInverted(false);
 
         //Brake or Coast mode
-        clawMotor.setIdleMode(IdleMode.kBrake);
+        grabberMotor.setIdleMode(IdleMode.kBrake);
 
         //Set the Feedback Sensor
         // clawMotor.
         // clawMotor.setSensorPhase(false);
 
         //Soft Limits
-        clawMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
-        clawMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-        clawMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        clawMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        grabberMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+        grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+        grabberMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
         //Hard Limits
-        forwardLimitSwitch = clawMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        forwardLimitSwitch = grabberMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
         forwardLimitSwitch.enableLimitSwitch(false);
-        reverseLimitSwitch = clawMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        reverseLimitSwitch = grabberMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
         reverseLimitSwitch.enableLimitSwitch(false);
 
 
@@ -104,20 +106,20 @@ public class Grabber extends Subsystem4237
 
     public void releaseGamePiece()
     {
-        clawMotor.set(-0.1);
+        grabberMotor.set(-0.1);
     }
 
     @Override
     public synchronized void readPeriodicInputs()
     {
-        encoderDistance = clawMotorEncoder.getPosition();
+        encoderDistance = grabberMotorEncoder.getPosition();
 
     }
 
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        clawMotor.set(speed);
+        grabberMotor.set(speed);
     }
 
     @Override

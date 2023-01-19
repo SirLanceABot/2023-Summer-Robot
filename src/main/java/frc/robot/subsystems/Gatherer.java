@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
+import frc.robot.Constants;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -22,10 +23,13 @@ public class Gatherer extends Subsystem4237
         System.out.println("Loading: " + fullClassName);
     }
 
-    private final CANSparkMax gathererMotor = new CANSparkMax(2, MotorType.kBrushless);
+    int GathererMotorPort = Constants.MotorConstants.GATHERER_MOTOR_PORT;
+
+    private final CANSparkMax gathererMotor = new CANSparkMax(GathererMotorPort, MotorType.kBrushless);
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
     private RelativeEncoder gathererEncoder;
+    private double motorSpeed;
 
 
     public Gatherer()
@@ -56,14 +60,21 @@ public class Gatherer extends Subsystem4237
 
     public void gatherGamePiece()
     {
-        gathererMotor.set(0.5);
+        motorSpeed = 0.5;
+        // gathererMotor.set(-0.5);
     }
 
     // Incase gamepiece gets jammed or we need to release it
     // reverse direction of motors to push gamepiece out
     public void freeGamePiece()
     {
-        gathererMotor.set(-0.5);
+        // gathererMotor.set(-0.5);
+        motorSpeed = -0.5;
+    }
+
+    public void turnOff()
+    {
+        motorSpeed = 0.0;
     }
 
 
@@ -76,6 +87,18 @@ public class Gatherer extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
+        gathererMotor.set(motorSpeed);
+    }
 
+    @Override
+    public void periodic()
+    {
+        // This method will be called once per scheduler run
+    }
+
+    @Override
+    public void simulationPeriodic()
+    {
+        // This method will be called once per scheduler run during simulation
     }
 }
