@@ -13,17 +13,17 @@ import java.lang.invoke.MethodHandles;
 // *** IMPORT statements ***
 // Uncomment one of these statements
 
-import frc.robot.tests.ExampleTest;
-// import frc.robot.tests.David;
-// import frc.robot.tests.Kyle;
-// import frc.robot.tests.Logan;
-// import frc.robot.tests.Maahish;
-// import frc.robot.tests.Matthew;
-// import frc.robot.tests.Owen;
-// import frc.robot.tests.Sam;
-// import frc.robot.tests.Tanu;
-// import frc.robot.tests.JWood;
-// import frc.robot.tests.RThomas;
+// import frc.robot.tests.ExampleTest;
+// import frc.robot.tests.DavidTest;
+// import frc.robot.tests.KyleTest;
+import frc.robot.tests.LoganTest;
+// import frc.robot.tests.MaahishTest;
+// import frc.robot.tests.MatthewTest;
+// import frc.robot.tests.OwenTest;
+// import frc.robot.tests.SamTest;
+// import frc.robot.tests.TanuTest;
+// import frc.robot.tests.JWoodTest;
+// import frc.robot.tests.RThomasTest;
 
 
 public class TestMode
@@ -41,10 +41,10 @@ public class TestMode
     // *** CLASS VARIABLES ***
     // Uncomment one of these statements
 
-    private static final ExampleTest myTest = new ExampleTest();
+    // private static final ExampleTest myTest = new ExampleTest();
     // private static final DavidTest myTest = new DavidTest();
     // private static final KyleTest myTest = new KyleTest();
-    // private static final LoganTest myTest = new LoganTest();
+    private static final LoganTest myTest = new LoganTest();
     // private static final MaahishTest myTest = new MaahishTest();
     // private static final MatthewTest myTest = new MatthewTest();
     // private static final OwenTest myTest = new OwenTest();
