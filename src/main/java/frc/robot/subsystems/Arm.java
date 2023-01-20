@@ -99,11 +99,18 @@ public class Arm extends Subsystem4237
         // This method will be called once per scheduler run during simulation
     }
 
-
+    public void rectroArm()
+    {
+        armMotor.set(-1.0);
+    }
 
     private void extendoArm()
     {
-    
+        armMotor.set(1.0);
     }
-
+    
+    private void holdoArm()
+    {
+        armMotor.set(0.1);
+    }
 }

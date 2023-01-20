@@ -2,6 +2,8 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.Joystick;
+
 public class KyleTest implements Test
 {
     // This string gets the full name of the class, including the package name
@@ -32,8 +34,13 @@ public class KyleTest implements Test
     /**
      * This method runs periodically (every 20ms).
      */
+
+  Joystick extendButton = new Joystick(1); 
     public void periodic()
-    {}
+    {
+        boolean buttonA = extendButton.getRawButton(1);
+        
+    }
     
     /**
      * This method runs one time after the periodic() method.
