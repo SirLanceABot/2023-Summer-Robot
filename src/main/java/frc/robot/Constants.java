@@ -38,5 +38,6 @@ public final class Constants
         public static final int GATHERER_MOTOR_PORT = 1;
         public static final int GRABBER_MOTOR_PORT = 2;
         public static final int ARM_MOTOR_PORT = 3;
+        public static final int SHOULDER_MOTOR_PORT = 4;
     }
 }

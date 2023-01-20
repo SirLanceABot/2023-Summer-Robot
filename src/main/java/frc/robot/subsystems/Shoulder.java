@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import frc.robot.Constants;
 
 public class Shoulder extends Subsystem4237
 {
@@ -21,8 +22,8 @@ public class Shoulder extends Subsystem4237
         System.out.println("Loading: " + fullClassName);
     }
     
-
-    private final TalonFX shoulderMotor = new TalonFX(1);
+    int ShoulderMotorPort = Constants.MotorConstants.SHOULDER_MOTOR_PORT;
+    private final TalonFX shoulderMotor = new TalonFX(ShoulderMotorPort);
     private static final int TIMEOUT_MS = 30;
 
     //TODO: Tune PID values
