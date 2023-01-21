@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
 import frc.robot.Constants;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -15,6 +14,8 @@ public class Gatherer extends Subsystem4237
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+
+    public static Object turnOff;
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
@@ -29,8 +30,9 @@ public class Gatherer extends Subsystem4237
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
     private RelativeEncoder gathererEncoder;
-    private double motorSpeed;
+    private static double motorSpeed;
 
+    public static Object gatherGamePiece;
 
     public Gatherer()
     {
@@ -56,7 +58,6 @@ public class Gatherer extends Subsystem4237
         reverseLimitSwitch = gathererMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
         reverseLimitSwitch.enableLimitSwitch(false);
     }
-
 
     public void gatherGamePiece()
     {

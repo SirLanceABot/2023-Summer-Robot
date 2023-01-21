@@ -27,6 +27,7 @@ public class CloseGrabber extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Grabber grabber;
+    public boolean isFinished;
 
 
     /**
@@ -45,12 +46,18 @@ public class CloseGrabber extends CommandBase
     // Called when the command is initially scheduled.
     @Override
     public void initialize()
-    {}
+    {
+        System.out.println(this);
+
+        isFinished = false;
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute()
-    {}
+    {
+
+    }
 
     // Called once the command ends or is interrupted.
     @Override

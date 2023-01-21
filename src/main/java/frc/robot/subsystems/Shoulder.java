@@ -24,6 +24,18 @@ public class Shoulder extends Subsystem4237
         System.out.println("Loading: " + fullClassName);
     }
     
+    //TODO: determine real angles
+    public enum LevelAngle
+    {
+        kGatherer(5.0), kLow(30.0), kMiddle(60.0), kHigh(100.0);
+        public final double value;
+
+        private LevelAngle(double value)
+        {
+            this.value = value;
+        }
+    }
+
     int ShoulderMotorPort = Constants.MotorConstants.SHOULDER_MOTOR_PORT;
     private final TalonFX shoulderMotor = new TalonFX(ShoulderMotorPort);
     private static final int TIMEOUT_MS = 30;
@@ -90,12 +102,12 @@ public class Shoulder extends Subsystem4237
         }
     }
 
-    public double getShoulderPosition()
+    public double getShoulderPosition() // encoder ticks
     {
         return currentShoulderPosition;
     }
 
-    public double getShoulderAngle()
+    public double getShoulderAngle()    // angle
     {
         return currentShoulderAngle;
     }
