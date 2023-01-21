@@ -27,6 +27,8 @@ public class OpenGrabber extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Grabber grabber;
+    public boolean isFinished;
+    // private static final Grabber OPEN_GRABBER = Grabber.releaseGamePiece;
 
 
     /**
@@ -40,17 +42,26 @@ public class OpenGrabber extends CommandBase
         
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(this.grabber);
+        isFinished = false;
+
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize()
-    {}
+    {
+        System.out.println(this);
+
+        isFinished = false;
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute()
-    {}
+    {
+        grabber.releaseGamePiece();
+
+    }
 
     // Called once the command ends or is interrupted.
     @Override
