@@ -104,12 +104,12 @@ public class Arm extends Subsystem4237
         armMotor.set(-1.0);
     }
 
-    private void extendoArm()
+    public void extendoArm()
     {
         armMotor.set(1.0);
     }
     
-    private void holdoArm()
+    public void holdoArm()
     {
         armMotor.set(0.1);
     }
