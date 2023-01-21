@@ -3,7 +3,6 @@ package frc.robot.commands;
 import java.lang.invoke.MethodHandles;
 import frc.robot.subsystems.Gatherer;
 import frc.robot.RobotContainer;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -48,7 +47,7 @@ public class TurnOffGathererIntake extends CommandBase
     @Override
     public void execute()
     {
-        Gatherer.turnOff();
+        gatherer.turnOff();
         isFinished = true;
     }
 

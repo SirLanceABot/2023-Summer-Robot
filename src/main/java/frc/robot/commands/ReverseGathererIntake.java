@@ -1,45 +1,39 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
-import frc.robot.subsystems.Gatherer;
-
 import java.lang.invoke.MethodHandles;
-
+import frc.robot.subsystems.Gatherer;
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-/** 
- * An example command that uses an example subsystem. 
- */
-public class TurnOnGathererIntake extends CommandBase 
+//accesses Gatherer
+public class ReverseGathererIntake extends CommandBase
 {
-    // This string gets the full name of the class, including the package name
-    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+    //gets class name and package
+    private final static String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
-    // *** STATIC INITIALIZATION BLOCK ***
-    // This block of code is run first when the class is loaded
     static
     {
         System.out.println("Loading: " + fullClassName);
     }
 
-    // *** CLASS AND INSTANCE VARIABLES ***
-    private final Gatherer gatherer;
+    //instance variables
     private boolean isFinished;
 
-    /**
+    private Gatherer gatherer;
+
+     /**
      * Creates a new ExampleCommand.
      *
      * @param subsystem The subsystem used by this command.
      */
-    public TurnOnGathererIntake(Gatherer gatherer) 
+
+    public ReverseGathererIntake(Gatherer gatherer)
     {
         this.gatherer = gatherer;
-        
-        // Use addRequirements() here to declare subsystem dependencies.
+
         addRequirements(this.gatherer);
+        isFinished = false;
     }
 
     // Called when the command is initially scheduled.
@@ -53,7 +47,7 @@ public class TurnOnGathererIntake extends CommandBase
     @Override
     public void execute()
     {
-        gatherer.gatherGamePiece();
+        gatherer.freeGamePiece();
         isFinished = true;
     }
 

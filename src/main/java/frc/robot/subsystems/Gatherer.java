@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
 import frc.robot.Constants;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -35,7 +34,6 @@ public class Gatherer extends Subsystem4237
 
     public static Object gatherGamePiece;
 
-
     public Gatherer()
     {
         configGathererMotor();
@@ -61,8 +59,7 @@ public class Gatherer extends Subsystem4237
         reverseLimitSwitch.enableLimitSwitch(false);
     }
 
-
-    public static void gatherGamePiece()
+    public void gatherGamePiece()
     {
         motorSpeed = 0.5;
         // gathererMotor.set(-0.5);
@@ -76,7 +73,7 @@ public class Gatherer extends Subsystem4237
         motorSpeed = -0.5;
     }
 
-    public static void turnOff()
+    public void turnOff()
     {
         motorSpeed = 0.0;
     }
