@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm.ArmPosition;
+
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -13,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** 
  * An example command that uses an example subsystem. 
  */
-public class extendArm extends CommandBase 
+public class RetractArm extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -27,16 +29,18 @@ public class extendArm extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Arm arm;
-
+    private final double position;
+    private boolean isFinished;
 
     /**
      * Creates a new ExampleCommand.
      *
      * @param Arm The subsystem used by this command.
      */
-    public extendArm(Arm arm) 
+    public RetractArm(Arm arm, ArmPosition position) 
     {
         this.arm = arm;
+        this.position = position.value;
         
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(this.arm);
@@ -50,21 +54,26 @@ public class extendArm extends CommandBase
     //  {
     //     return false;
     //  }
-        boolean isFinished = false;
+        isFinished = false;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute()
     {
-        Joystick extendButton = new Joystick(1);     
+        // Joystick extendButtonB = new Joystick(1);     
 
-        boolean buttonA = extendButton.getRawButton(1);    
+        // boolean buttonB = extendButtonB.getRawButton(1);    
 
-        if (buttonA)
+        // if (buttonB)
+        // {
+        //   arm.retractoArm();  
+        // }       
+        arm.retractoArm();
+        if (arm.getArmPosition() == position)
         {
-          arm.extendoArm();
-        }       
+            isFinished = true;
+        }
     }
 
     // Called once the command ends or is interrupted.
@@ -78,7 +87,6 @@ public class extendArm extends CommandBase
     @Override
     public boolean isFinished()
     {
-        return true;
-    }
-    
+        return isFinished;
+    } 
 }

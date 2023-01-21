@@ -30,7 +30,15 @@ public class Arm extends Subsystem4237
     {
         System.out.println("Loading: " + fullClassName);
     }
-
+    public enum ArmPosition
+    {
+        kFullyExtended(18.0), kThreeQuaterExtended(16.0), kHalfExtended(9.0), kIn(0.0);
+        public final double value;
+        private ArmPosition(double value)
+        {
+            this.value = value;
+        }
+    }
     int ArmMotorPort = Constants.MotorConstants.ARM_MOTOR_PORT;
     private final CANSparkMax armMotor = new CANSparkMax (ArmMotorPort, MotorType.kBrushless);
     private final SparkMaxLimitSwitch forwardLimitSwitch = armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
@@ -99,7 +107,7 @@ public class Arm extends Subsystem4237
         // This method will be called once per scheduler run during simulation
     }
 
-    public void rectroArm()
+    public void retractoArm()
     {
         armMotor.set(-1.0);
     }
