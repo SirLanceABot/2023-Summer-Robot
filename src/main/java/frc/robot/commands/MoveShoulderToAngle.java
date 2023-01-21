@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Shoulder.LevelAngle;
 
 import java.lang.invoke.MethodHandles;
 
@@ -20,23 +21,24 @@ public class MoveShoulderToAngle extends CommandBase
     private final Shoulder shoulder;
     private boolean isFinished;
     private double shoulderAngle;
-    private int desiredLevel;
+    // private int desiredLevel;
     private double desiredAngle;
     
-    //TODO: determine correct angles for levels
-    private final double LEVEL_0_ANGLE = 5;         // Gatherer Position
-    private final double LEVEL_1_ANGLE = 30;        // Low Scoring Position
-    private final double LEVEL_2_ANGLE = 60;        // Middle Scoring Position
-    private final double LEVEL_3_ANGLE = 100;       // High Scoring Position
+    // //TODO: determine correct angles for levels
+    // private final double LEVEL_0_ANGLE = 5;         // Gatherer Position
+    // private final double LEVEL_1_ANGLE = 30;        // Low Scoring Position
+    // private final double LEVEL_2_ANGLE = 60;        // Middle Scoring Position
+    // private final double LEVEL_3_ANGLE = 100;       // High Scoring Position
      
     /**
      * Creates a new RaiseShoulder.
      *
      * @param shoudler The subsystem used by this command.
      */
-    public MoveShoulderToAngle(Shoulder shoulder) 
+    public MoveShoulderToAngle(Shoulder shoulder, LevelAngle desiredLevel) 
     {
         this.shoulder = shoulder;
+        this.desiredAngle = desiredLevel.value;
         
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(this.shoulder);
@@ -54,50 +56,42 @@ public class MoveShoulderToAngle extends CommandBase
     public void execute()
     {
         shoulderAngle = shoulder.getShoulderAngle();
-        
-        //TODO: how do we get desiredLevel?
 
-        // set desired angle based on constants
-        switch(desiredLevel)
-        {
-            case 0:
-                desiredAngle = LEVEL_0_ANGLE;
-                break;
-            case 1:
-                desiredAngle = LEVEL_1_ANGLE;
-                break;
-            case 2:
-                desiredAngle = LEVEL_2_ANGLE;
-                break;
-            case 3:
-                desiredAngle = LEVEL_3_ANGLE;
-                break;
-        }
+        // // set desired angle based on constants
+        // switch(desiredLevel)
+        // {
+        //     case 0:
+        //         desiredAngle = LEVEL_0_ANGLE;
+        //         break;
+        //     case 1:
+        //         desiredAngle = LEVEL_1_ANGLE;
+        //         break;
+        //     case 2:
+        //         desiredAngle = LEVEL_2_ANGLE;
+        //         break;
+        //     case 3:
+        //         desiredAngle = LEVEL_3_ANGLE;
+        //         break;
+        // }
 
+        //TODO: make a buffer zone?
         // move shoulder to angle
-        while(shoulderAngle < desiredAngle)
+        if(shoulderAngle < desiredAngle)
         {
             shoulder.moveUp();
         }
-        while(shoulderAngle > desiredAngle)
+        if(shoulderAngle > desiredAngle)
         {
             shoulder.moveDown();
         }
-
-        //TODO: do we want to check if it is at the correct angle?
-
-
-        shoulder.hold();    // once shoulder is at correct angle, hold position
-        
-       
-        isFinished = true;  
+        if(shoulderAngle == desiredAngle)
+        {
+            shoulder.hold();    // once shoulder is done moving, hold position
+            isFinished = true;
+        }
     }
 
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted)
-    {}
-
+ 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() 
@@ -105,5 +99,11 @@ public class MoveShoulderToAngle extends CommandBase
         return isFinished;
     }
 
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted)
+    {
+        
+    }
 
 }
