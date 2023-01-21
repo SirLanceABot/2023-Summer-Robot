@@ -27,7 +27,7 @@ public class TurnOnGathererIntake extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Gatherer gatherer;
-
+    private boolean isFinished;
 
     /**
      * Creates a new ExampleCommand.
@@ -45,12 +45,17 @@ public class TurnOnGathererIntake extends CommandBase
     // Called when the command is initially scheduled.
     @Override
     public void initialize()
-    {}
+    {
+        isFinished = false;
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute()
-    {}
+    {
+        Gatherer.gatherGamePiece();
+        isFinished = true;
+    }
 
     // Called once the command ends or is interrupted.
     @Override
@@ -61,6 +66,6 @@ public class TurnOnGathererIntake extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        return false;
+        return isFinished;
     }
 }

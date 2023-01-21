@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.lang.invoke.MethodHandles;
 import frc.robot.subsystems.Gatherer;
 import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -17,6 +18,9 @@ public class TurnOffGathererIntake extends CommandBase
         System.out.println("Loading: " + fullClassName);
     }
 
+    //instance variables
+    private boolean isFinished;
+
     private Gatherer gatherer;
 
      /**
@@ -30,17 +34,23 @@ public class TurnOffGathererIntake extends CommandBase
         this.gatherer = gatherer;
 
         addRequirements(this.gatherer);
+        isFinished = false;
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize()
-    {}
+    {
+        isFinished = false;
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute()
-    {}
+    {
+        Gatherer.turnOff();
+        isFinished = true;
+    }
 
     // Called once the command ends or is interrupted.
     @Override
@@ -51,6 +61,6 @@ public class TurnOffGathererIntake extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        return false;
+        return isFinished;
     }
 }

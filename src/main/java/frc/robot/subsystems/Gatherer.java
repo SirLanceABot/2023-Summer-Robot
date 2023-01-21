@@ -16,6 +16,8 @@ public class Gatherer extends Subsystem4237
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
+    public static Object turnOff;
+
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
     static
@@ -29,7 +31,9 @@ public class Gatherer extends Subsystem4237
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
     private RelativeEncoder gathererEncoder;
-    private double motorSpeed;
+    private static double motorSpeed;
+
+    public static Object gatherGamePiece;
 
 
     public Gatherer()
@@ -58,7 +62,7 @@ public class Gatherer extends Subsystem4237
     }
 
 
-    public void gatherGamePiece()
+    public static void gatherGamePiece()
     {
         motorSpeed = 0.5;
         // gathererMotor.set(-0.5);
@@ -72,7 +76,7 @@ public class Gatherer extends Subsystem4237
         motorSpeed = -0.5;
     }
 
-    public void turnOff()
+    public static void turnOff()
     {
         motorSpeed = 0.0;
     }
