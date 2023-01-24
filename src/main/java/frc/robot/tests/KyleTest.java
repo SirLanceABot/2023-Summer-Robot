@@ -3,6 +3,7 @@ package frc.robot.tests;
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj.Joystick;
+// import frc.robot.subsystems.Arm;
 
 public class KyleTest implements Test
 {
@@ -18,28 +19,34 @@ public class KyleTest implements Test
 
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
-
+    private Joystick joystick = new Joystick(0);
+    // private final Arm arm;
 
 
     // *** CLASS CONSTRUCTOR ***
     public KyleTest()
-    {}
+    {
+        
+    }
 
     /**
      * This method runs one time before the periodic() method.
      */
     public void init()
-    {}
+    {
+        
+    }
 
     /**
      * This method runs periodically (every 20ms).
      */
 
-  Joystick extendButton = new Joystick(1); 
     public void periodic()
     {
-        boolean buttonA = extendButton.getRawButton(1);
-        
+        if (joystick.getRawButton(1) == true)
+        {
+            // arm.extendoArm();
+        }
     }
     
     /**

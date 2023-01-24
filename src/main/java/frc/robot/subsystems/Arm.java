@@ -48,9 +48,7 @@ public class Arm extends Subsystem4237
     private RelativeEncoder armEncoder;
     private double armPosition = 0.0;
 
-    /** 
-     * Creates a new ExampleSubsystem. 
-     */
+    // Creates a new ExampleSubsystem. 
     public Arm()
     {
         configCANSparkMax();
@@ -117,17 +115,19 @@ public class Arm extends Subsystem4237
 
     public void retractoArm()
     {
+        // Set the motor to maximum backward speed
         armMotor.set(-1.0);
     }
 
     public void extendoArm()
     {
+        // Set the motor to maximum forward speed
         armMotor.set(1.0);
-
     }
     
     public void holdoArm()
     {
-        armMotor.set(0.1);
+        // Hold the motor in place
+        armMotor.set(0.01);
     }
 }

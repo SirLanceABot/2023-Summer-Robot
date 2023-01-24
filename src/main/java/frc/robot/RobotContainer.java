@@ -33,12 +33,12 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot		= true;
-	private boolean useExampleSubsystem	= true;
-	private boolean useGrabber 			= true;
-	private boolean useGatherer 		= true;
+	private boolean useFullRobot		= false;
+	private boolean useExampleSubsystem	= false;
+	private boolean useGrabber 			= false;
+	private boolean useGatherer 		= false;
 	private boolean useArm 				= true;
-	private boolean useShoulder			= true;
+	private boolean useShoulder			= false;
 
 
 	private final ExampleSubsystem exampleSubsystem;

@@ -9,9 +9,7 @@ import frc.robot.subsystems.Arm.ArmPosition;
 import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** 
- * An example command that uses an example subsystem. 
- */
+// An example command that uses an example subsystem. 
 public class MoveArm extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
@@ -41,7 +39,7 @@ public class MoveArm extends CommandBase
         this.max = desiredPosition.max;
         this.min = desiredPosition.min;
 
-        // Use addRequirements() here to declare subsystem dependencies.
+        // Declares subsystem dependencies
         addRequirements(this.arm);
     }
 
