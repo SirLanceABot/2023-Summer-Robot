@@ -2,9 +2,7 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 import frc.robot.subsystems.Gatherer;
-import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
 //accesses Gatherer
 public class TurnOffGathererIntake extends CommandBase
@@ -33,7 +31,6 @@ public class TurnOffGathererIntake extends CommandBase
         this.gatherer = gatherer;
 
         addRequirements(this.gatherer);
-        isFinished = false;
     }
 
     // Called when the command is initially scheduled.

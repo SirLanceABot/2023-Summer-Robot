@@ -162,7 +162,7 @@ public class Grabber extends Subsystem4237
     @Override
     public String toString()
     {
-        return "Grabber()";
+        return "Encoder Distance: " + String.format("%.4f", encoderDistance);
     }
 }
 

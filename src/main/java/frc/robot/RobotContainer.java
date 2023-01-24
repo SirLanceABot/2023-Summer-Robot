@@ -9,6 +9,11 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.Gatherer;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Shoulder;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,8 +35,17 @@ public class RobotContainer
 	
 	private boolean useFullRobot		= true;
 	private boolean useExampleSubsystem	= true;
+	private boolean useGrabber 			= true;
+	private boolean useGatherer 		= true;
+	private boolean useArm 				= true;
+	private boolean useShoulder			= true;
+
 
 	private final ExampleSubsystem exampleSubsystem;
+	public static Grabber grabber;
+	private final Arm arm;
+	private final Shoulder shoulder;
+	private final Gatherer gatherer;
 	// private Joystick joystick;
 	
 	/** 
@@ -41,7 +55,13 @@ public class RobotContainer
 	RobotContainer()
 	{
 		// Create the needed subsystems
-		exampleSubsystem = (useFullRobot || useExampleSubsystem) ? new ExampleSubsystem() : null;
+		exampleSubsystem 	= (useFullRobot || useExampleSubsystem) ? new ExampleSubsystem() 	: null;
+		grabber 			= (useFullRobot || useGrabber) ? new Grabber() 						: null;
+		arm 				= (useFullRobot || useArm) ? new Arm() 								: null;
+		shoulder 			= (useFullRobot || useShoulder) ? new Shoulder() 					: null;
+		gatherer 			= (useFullRobot || useGatherer) ? new Gatherer() 					: null;
+
+
 
 		// Configure the trigger bindings
 		configureBindings();

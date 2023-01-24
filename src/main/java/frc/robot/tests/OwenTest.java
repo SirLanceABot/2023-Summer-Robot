@@ -1,6 +1,10 @@
 package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.Gatherer;
+import edu.wpi.first.wpilibj.Joystick;
 
 public class OwenTest implements Test
 {
@@ -16,7 +20,8 @@ public class OwenTest implements Test
 
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
-
+    private static final Joystick JOYSTICK = new Joystick(0);
+    private static final Grabber GRABBER = RobotContainer.grabber;
 
 
     // *** CLASS CONSTRUCTOR ***
@@ -33,7 +38,17 @@ public class OwenTest implements Test
      * This method runs periodically (every 20ms).
      */
     public void periodic()
-    {}
+    {
+        if(JOYSTICK.getRawButton(3))
+        {
+            GRABBER.releaseGamePiece();
+        }
+
+        if(JOYSTICK.getRawButton(4))
+        {
+            GRABBER.grabGamePiece();
+        }
+    }
     
     /**
      * This method runs one time after the periodic() method.
