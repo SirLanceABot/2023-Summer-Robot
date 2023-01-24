@@ -16,6 +16,12 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Compressor;
 
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Encoder;
@@ -24,7 +30,10 @@ import edu.wpi.first.wpilibj.Encoder;
 public class Grabber extends Subsystem4237
 {
     // This string gets the full name of the class, including the package name
+    private PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+    private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 2, 3);
+    private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 2,3);
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
@@ -48,6 +57,8 @@ public class Grabber extends Subsystem4237
     GamePiece currentGamePiece = GamePiece.kNone;
     double speed = 0;
     double encoderDistance;
+    Value state = Value.kOff;
+    Value angle = Value.kOff;
     private RelativeEncoder grabberMotorEncoder;
     int GrabberMotorPort= Constants.MotorConstants.GRABBER_MOTOR_PORT;
     private final CANSparkMax grabberMotor = new CANSparkMax(GrabberMotorPort, MotorType.kBrushless);
@@ -88,7 +99,7 @@ public class Grabber extends Subsystem4237
 
     public Grabber()
     {
-        configCANSparkMax();
+        // configCANSparkMax();
         readPeriodicInputs();
         writePeriodicOutputs();
         // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
@@ -96,17 +107,17 @@ public class Grabber extends Subsystem4237
     
     public void grabGamePiece()
     {
-        speed = 0.33;
+        state = Value.kForward;
         if(encoderDistance == 3 && currentGamePiece == GamePiece.kCone || encoderDistance == 1 && currentGamePiece == GamePiece.kCube)
         {
-            speed = 0.05;
+            state = Value.kOff;
         }
 
     }
 
     public void releaseGamePiece()
     {
-        grabberMotor.set(-0.1);
+        state = Value.kReverse;;
     }
 
     public boolean isGrabberClosed()
@@ -133,18 +144,24 @@ public class Grabber extends Subsystem4237
         }
     }
 
+    public void aimGrabberDown()
+    {
+        angle = Value.kForward;
+    }
+
 
     @Override
     public synchronized void readPeriodicInputs()
     {
-        encoderDistance = grabberMotorEncoder.getPosition();
+        // encoderDistance = grabberMotorEncoder.getPosition();
 
     }
 
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        grabberMotor.set(speed);
+        grabberControlSolenoid.set(state);
+        grabberAngleControlSolenoid.set(angle);
     }
 
     @Override
