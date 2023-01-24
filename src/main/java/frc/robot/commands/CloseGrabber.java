@@ -56,7 +56,16 @@ public class CloseGrabber extends CommandBase
     @Override
     public void execute()
     {
+        grabber.grabGamePiece();
 
+        if(grabber.isGrabberClosed())
+        {
+            isFinished = true;
+        }
+        else
+        {
+            isFinished = false;
+        }
     }
 
     // Called once the command ends or is interrupted.
@@ -69,5 +78,10 @@ public class CloseGrabber extends CommandBase
     public boolean isFinished() 
     {
         return false;
+    }
+
+    public String toString()
+    {
+        return "CloseGrabber()";
     }
 }

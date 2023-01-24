@@ -94,7 +94,7 @@ public class Grabber extends Subsystem4237
         // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
     }
     
-    public void grabGamePiece(GamePiece currentGamePiece, double speed)
+    public void grabGamePiece()
     {
         speed = 0.33;
         if(encoderDistance == 3 && currentGamePiece == GamePiece.kCone || encoderDistance == 1 && currentGamePiece == GamePiece.kCube)
@@ -108,6 +108,31 @@ public class Grabber extends Subsystem4237
     {
         grabberMotor.set(-0.1);
     }
+
+    public boolean isGrabberClosed()
+    {
+        if(encoderDistance == 3 && currentGamePiece == GamePiece.kCone || encoderDistance == 1 && currentGamePiece == GamePiece.kCube)
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }
+    }
+
+    public boolean isGrabberOpen()
+    {
+        if(encoderDistance == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     @Override
     public synchronized void readPeriodicInputs()
@@ -132,6 +157,12 @@ public class Grabber extends Subsystem4237
     public void simulationPeriodic()
     {
         // This method will be called once per scheduler run during simulation
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Grabber()";
     }
 }
 
