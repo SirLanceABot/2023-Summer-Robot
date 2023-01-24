@@ -20,7 +20,6 @@ public class MoveShoulderToAngle extends CommandBase
 
     private final Shoulder shoulder;
     private boolean isFinished;
-    private double shoulderAngle;
     private LevelAngle desiredAngle;
 
     
@@ -28,7 +27,7 @@ public class MoveShoulderToAngle extends CommandBase
     // private final double LEVEL_1_ANGLE = 30;        // Low Scoring Position
     // private final double LEVEL_2_ANGLE = 60;        // Middle Scoring Position
     // private final double LEVEL_3_ANGLE = 100;       // High Scoring Position
-     
+    
     /**
      * Creates a new RaiseShoulder.
      *
@@ -54,37 +53,17 @@ public class MoveShoulderToAngle extends CommandBase
     @Override
     public void execute()
     {
-        shoulderAngle = shoulder.getAngle();
-
-        // // set desired angle based on constants
-        // switch(desiredLevel)
-        // {
-        //     case 0:
-        //         desiredAngle = LEVEL_0_ANGLE;
-        //         break;
-        //     case 1:
-        //         desiredAngle = LEVEL_1_ANGLE;
-        //         break;
-        //     case 2:
-        //         desiredAngle = LEVEL_2_ANGLE;
-        //         break;
-        //     case 3:
-        //         desiredAngle = LEVEL_3_ANGLE;
-        //         break;
-        // }
-
-        // move shoulder to angle
-        if(shoulderAngle < desiredAngle.min)
+        //TODO: use angles or encoder ticks?
+        if(shoulder.getAngle() < desiredAngle.min)
         {
             shoulder.moveUp();
         }
-        else if(shoulderAngle > desiredAngle.max)
+        else if(shoulder.getAngle() > desiredAngle.max)
         {
             shoulder.moveDown();
         }
         else
-        {
-            shoulder.hold();    // once shoulder is done moving, hold position
+        { 
             isFinished = true;
         }
     }
@@ -101,7 +80,7 @@ public class MoveShoulderToAngle extends CommandBase
     @Override
     public void end(boolean interrupted)
     {
-        
+        shoulder.hold();    // once shoulder is done moving, hold position
     }
 
 }
