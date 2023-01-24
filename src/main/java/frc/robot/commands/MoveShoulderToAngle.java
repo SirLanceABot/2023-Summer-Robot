@@ -21,10 +21,9 @@ public class MoveShoulderToAngle extends CommandBase
     private final Shoulder shoulder;
     private boolean isFinished;
     private double shoulderAngle;
-    // private int desiredLevel;
-    private double desiredAngle;
+    private LevelAngle desiredAngle;
+
     
-    // //TODO: determine correct angles for levels
     // private final double LEVEL_0_ANGLE = 5;         // Gatherer Position
     // private final double LEVEL_1_ANGLE = 30;        // Low Scoring Position
     // private final double LEVEL_2_ANGLE = 60;        // Middle Scoring Position
@@ -38,7 +37,7 @@ public class MoveShoulderToAngle extends CommandBase
     public MoveShoulderToAngle(Shoulder shoulder, LevelAngle desiredLevel) 
     {
         this.shoulder = shoulder;
-        this.desiredAngle = desiredLevel.value;
+        this.desiredAngle = desiredLevel;
         
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(this.shoulder);
@@ -55,7 +54,7 @@ public class MoveShoulderToAngle extends CommandBase
     @Override
     public void execute()
     {
-        shoulderAngle = shoulder.getShoulderAngle();
+        shoulderAngle = shoulder.getAngle();
 
         // // set desired angle based on constants
         // switch(desiredLevel)
@@ -74,24 +73,23 @@ public class MoveShoulderToAngle extends CommandBase
         //         break;
         // }
 
-        //TODO: make a buffer zone?
         // move shoulder to angle
-        if(shoulderAngle < desiredAngle)
+        if(shoulderAngle < desiredAngle.min)
         {
             shoulder.moveUp();
         }
-        if(shoulderAngle > desiredAngle)
+        else if(shoulderAngle > desiredAngle.max)
         {
             shoulder.moveDown();
         }
-        if(shoulderAngle == desiredAngle)
+        else
         {
             shoulder.hold();    // once shoulder is done moving, hold position
             isFinished = true;
         }
     }
 
- 
+
     // Returns true when the command should end.
     @Override
     public boolean isFinished() 

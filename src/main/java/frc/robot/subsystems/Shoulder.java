@@ -27,12 +27,14 @@ public class Shoulder extends Subsystem4237
     //TODO: determine real angles
     public enum LevelAngle
     {
-        kGatherer(5.0), kLow(30.0), kMiddle(60.0), kHigh(100.0);
-        public final double value;
+        kGatherer(0.0, 10.0), kLow(25.0, 35.0), kMiddle(55.0, 65.0), kHigh(95.0, 105.0);
+        public final double min;
+        public final double max;
 
-        private LevelAngle(double value)
+        private LevelAngle(double min, double max)
         {
-            this.value = value;
+            this.min = min;
+            this.max = max;
         }
     }
 
@@ -46,10 +48,11 @@ public class Shoulder extends Subsystem4237
     private static final double kD = 0.000;
     private static final double kF = 0.04;
 
-    private double shoulderSpeed;
-    private double currentShoulderPosition;
-    private double currentShoulderAngle;
+    private double motorSpeed;
+    private double currentPosition;
+    private double currentAngle;
     
+    //TODO: change calculation
     private final double TICKS_PER_DEGREE = 5.69;
 
     public Shoulder()
@@ -102,47 +105,47 @@ public class Shoulder extends Subsystem4237
         }
     }
 
-    public double getShoulderPosition() // encoder ticks
+    public double getPosition() // encoder ticks
     {
-        return currentShoulderPosition;
+        return currentPosition;
     }
 
-    public double getShoulderAngle()    // angle
+    public double getAngle()    // angle
     {
-        return currentShoulderAngle;
+        return currentAngle;
     }
 
     public void moveUp()
     {
-        shoulderSpeed = 0.5;
+        motorSpeed = 0.5;
     }
 
     public void moveDown()
     {
-        shoulderSpeed = -0.5;
+        motorSpeed = -0.5;
     }
 
     public void off()
     {
-        shoulderSpeed = 0.0;
+        motorSpeed = 0.0;
     }
 
     public void hold()
     {
-        shoulderSpeed = 0.1;
+        motorSpeed = 0.1;
     }
 
     @Override
     public synchronized void readPeriodicInputs()
     {
-        currentShoulderPosition = shoulderMotor.getSelectedSensorPosition();
-        currentShoulderAngle = currentShoulderPosition / TICKS_PER_DEGREE;
+        currentPosition = shoulderMotor.getSelectedSensorPosition();
+        currentAngle = currentPosition / TICKS_PER_DEGREE;
     }
 
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        shoulderMotor.set(ControlMode.PercentOutput, shoulderSpeed);
+        shoulderMotor.set(ControlMode.PercentOutput, motorSpeed);
     }
 
     @Override
@@ -155,6 +158,12 @@ public class Shoulder extends Subsystem4237
     public void simulationPeriodic()
     {
         // This method will be called once per scheduler run during simulation
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Encoder Position: " + String.format("%.4f", currentPosition);
     }
     
 }
