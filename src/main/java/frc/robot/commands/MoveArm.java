@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** 
  * An example command that uses an example subsystem. 
  */
-public class ExtendArm extends CommandBase 
+public class MoveArm extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -35,7 +35,7 @@ public class ExtendArm extends CommandBase
      *
      * @param Arm The subsystem used by this command.
      */
-    public ExtendArm(Arm arm, ArmPosition desiredPosition) 
+    public MoveArm(Arm arm, ArmPosition desiredPosition) 
     {
         this.arm = arm;
         this.max = desiredPosition.max;
@@ -49,38 +49,31 @@ public class ExtendArm extends CommandBase
     @Override
     public void initialize()
     {
-    //  public boolean isFinished()
-    //  {
-    //     return false;
-    //  }
-        isFinished = false;
+        isFinished = false;        
     }
-
+    
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute()
     {
-        // Joystick extendButtonB = new Joystick(1);     
-
-        // boolean buttonB = extendButtonB.getRawButton(1);    
-
-        // if (buttonB)
-        // {
-        //   arm.retractoArm();  
-        // }       
-        arm.extendoArm();
-        if (arm.getArmPosition() <= max && arm.getArmPosition() >= min)
+        if (arm.getArmPosition() < min)
+        {
+            arm.extendoArm();
+        }
+        else if (arm.getArmPosition() > max)
+        {
+            arm.retractoArm();
+        }
+        else
         {
             isFinished = true;
         }
-    
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
     {
-        if (isFinished == true)
         arm.holdoArm();
     }
 

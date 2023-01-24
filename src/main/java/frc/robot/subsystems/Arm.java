@@ -32,11 +32,13 @@ public class Arm extends Subsystem4237
     }
     public enum ArmPosition
     {
-        kFullyExtended(18.0), kThreeQuaterExtended(16.0), kHalfExtended(9.0), kIn(0.0);
-        public final double value;
-        private ArmPosition(double value)
+        kFullyExtended(17.0,19.0), kThreeQuarterExtended(15.0,16.0), kHalfExtended(8.0,9.0), kIn(0.0,1.0);
+        public final double min; 
+        public final double max;
+        private ArmPosition(double min, double max)
         {
-            this.value = value;
+            this.min = min;
+            this.max = max;
         }
     }
     int ArmMotorPort = Constants.MotorConstants.ARM_MOTOR_PORT;
@@ -88,12 +90,18 @@ public class Arm extends Subsystem4237
     public synchronized void readPeriodicInputs()
     {
         armPosition = armEncoder.getPosition();
-        SmartDashboard.putNumber("armEncoder", armPosition);
     }
 
     @Override
     public synchronized void writePeriodicOutputs()
     {}
+
+    @Override
+    public String toString()
+    {
+        SmartDashboard.putNumber("armEncoder", armPosition);
+        return "Current Arm Position: " + armPosition;
+    }
 
     @Override
     public void periodic()
@@ -115,6 +123,7 @@ public class Arm extends Subsystem4237
     public void extendoArm()
     {
         armMotor.set(1.0);
+
     }
     
     public void holdoArm()

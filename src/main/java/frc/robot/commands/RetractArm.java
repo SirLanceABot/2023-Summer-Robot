@@ -8,8 +8,6 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmPosition;
 
 import java.lang.invoke.MethodHandles;
-
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** 
@@ -29,7 +27,8 @@ public class RetractArm extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Arm arm;
-    private final double position;
+    private final double min;
+    private final double max;
     private boolean isFinished;
 
     /**
@@ -37,10 +36,11 @@ public class RetractArm extends CommandBase
      *
      * @param Arm The subsystem used by this command.
      */
-    public RetractArm(Arm arm, ArmPosition position) 
+    public RetractArm(Arm arm, ArmPosition desiredPosition) 
     {
         this.arm = arm;
-        this.position = position.value;
+        this.min = desiredPosition.min;
+        this.max = desiredPosition.max;
         
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(this.arm);
@@ -70,7 +70,7 @@ public class RetractArm extends CommandBase
         //   arm.retractoArm();  
         // }       
         arm.retractoArm();
-        if (arm.getArmPosition() == position)
+        if (arm.getArmPosition() >= min && arm.getArmPosition() <= max)
         {
             isFinished = true;
         }
@@ -80,6 +80,7 @@ public class RetractArm extends CommandBase
     @Override
     public void end(boolean interrupted)
     {
+        if (isFinished == true)
         arm.holdoArm();
     }
 
