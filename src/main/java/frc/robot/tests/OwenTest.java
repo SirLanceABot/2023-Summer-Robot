@@ -20,7 +20,7 @@ public class OwenTest implements Test
 
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
-    private static final Joystick JOYSTICK = new Joystick(0);
+    private static final Joystick JOYSTICK = new Joystick(1);
     private static final Grabber GRABBER = RobotContainer.grabber;
 
 
@@ -39,6 +39,7 @@ public class OwenTest implements Test
      */
     public void periodic()
     {
+        // Joystick();
         if(JOYSTICK.getRawButton(3))
         {
             GRABBER.releaseGamePiece();

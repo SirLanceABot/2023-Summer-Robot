@@ -32,8 +32,8 @@ public class Grabber extends Subsystem4237
     // This string gets the full name of the class, including the package name
     private PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
-    private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 2, 3);
-    private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 2,3);
+    private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 5);
+    private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 6,7);
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
