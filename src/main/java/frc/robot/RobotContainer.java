@@ -43,7 +43,7 @@ public class RobotContainer
 
 
 	public final ExampleSubsystem exampleSubsystem;
-	public static Grabber grabber;
+	public final Grabber grabber;
 	public final Arm arm;
 	public final Shoulder shoulder;
 	public final Gatherer gatherer;
