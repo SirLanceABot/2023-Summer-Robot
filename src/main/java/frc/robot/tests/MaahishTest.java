@@ -2,6 +2,8 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import frc.robot.RobotContainer;
+
 public class MaahishTest implements Test
 {
     // This string gets the full name of the class, including the package name
@@ -16,12 +18,14 @@ public class MaahishTest implements Test
 
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
-
+    private final RobotContainer robotContainer;
 
 
     // *** CLASS CONSTRUCTOR ***
-    public MaahishTest()
-    {}
+    public MaahishTest(RobotContainer robotContainer)
+    {
+        this.robotContainer = robotContainer;
+    }
 
     /**
      * This method runs one time before the periodic() method.

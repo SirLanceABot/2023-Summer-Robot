@@ -1,13 +1,14 @@
 package frc.robot;
 
 import java.lang.invoke.MethodHandles;
+import frc.robot.tests.Test;
 
 // *** IMPORTANT - PLEASE READ ***
 // 1. Put your test code in your own frc.robot.tests.[yourname]Test.java file
 // 2. Uncomment one of the IMPORT statements below
-// 3. Uncomment one of the CLASS VARIABLES below
+// 3. Uncomment one of the INITIALIZATION statements below
 // 4. Test your code
-// 5. Comment your IMPORT statement and CLASS VARIABLE statement when finished
+// 5. Undo the changes to this file when finished with testing
 
 
 // *** IMPORT statements ***
@@ -39,20 +40,26 @@ public class TestMode
     }
 
     // *** CLASS VARIABLES ***
-    // Uncomment one of these statements
+    private final Test myTest;
+    
 
-    private static final ExampleTest myTest = new ExampleTest();
-    // private static final DavidTest myTest = new DavidTest();
-    // private static final KyleTest myTest = new KyleTest();
-    // private static final LoganTest myTest = new LoganTest();
-    // private static final MaahishTest myTest = new MaahishTest();
-    // private static final MatthewTest myTest = new MatthewTest();
-    // private static final OwenTest myTest = new OwenTest();
-    // private static final SamTest myTest = new SamTest();
-    // private static final TanuTest myTest = new TanuTest();
-    // private static final JWoodTest myTest = new JWoodTest();
-    // private static final RThomasTest myTest = new RThomasTest();
+    public TestMode(RobotContainer robotContainer)
+    {
+        // *** INITIALIZATION statements ***
+        // Uncomment one of these statements
 
+        myTest = new ExampleTest(robotContainer);
+        // myTest = new DavidTest(robotContainer);
+        // myTest = new KyleTest(robotContainer);
+        // myTest = new LoganTest(robotContainer);
+        // myTest = new MaahishTest(robotContainer);
+        // myTest = new MatthewTest(robotContainer);
+        // myTest = new OwenTest(robotContainer);
+        // myTest = new SamTest(robotContainer);
+        // myTest = new TanuTest(robotContainer);
+        // myTest = new JWoodTest(robotContainer);
+        // myTest = new RThomasTest(robotContainer);
+    }
 
     /**
      * This method runs one time before the periodic() method.

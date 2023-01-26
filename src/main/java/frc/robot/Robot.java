@@ -165,7 +165,7 @@ public class Robot extends TimedRobot
         CommandScheduler.getInstance().cancelAll();
 
         // Create a TestMode object to test one team members code.
-        testMode = new TestMode();
+        testMode = new TestMode(robotContainer);
 
         testMode.init();
     }

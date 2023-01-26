@@ -2,6 +2,9 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.ExampleSubsystem;
+
 public class ExampleTest implements Test
 {
     // This string gets the full name of the class, including the package name
@@ -16,12 +19,16 @@ public class ExampleTest implements Test
 
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
-
+    private final RobotContainer robotContainer;
+    private final ExampleSubsystem exampleSubsystem;
 
 
     // *** CLASS CONSTRUCTOR ***
-    public ExampleTest()
-    {}
+    public ExampleTest(RobotContainer robotContainer)
+    {
+        this.robotContainer = robotContainer;
+        this.exampleSubsystem = robotContainer.exampleSubsystem;
+    }
 
     /**
      * This method runs one time before the periodic() method.

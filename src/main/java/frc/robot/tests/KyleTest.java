@@ -3,7 +3,8 @@ package frc.robot.tests;
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj.Joystick;
-// import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm;
+import frc.robot.RobotContainer;
 
 public class KyleTest implements Test
 {
@@ -19,14 +20,16 @@ public class KyleTest implements Test
 
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
+    private final RobotContainer robotContainer;
+    private final Arm arm;
     private Joystick joystick = new Joystick(0);
-    // private final Arm arm;
 
 
     // *** CLASS CONSTRUCTOR ***
-    public KyleTest()
+    public KyleTest(RobotContainer robotContainer)
     {
-        
+        this.robotContainer = robotContainer;
+        arm = this.robotContainer.arm;
     }
 
     /**
@@ -45,7 +48,7 @@ public class KyleTest implements Test
     {
         if (joystick.getRawButton(1) == true)
         {
-            // arm.extendoArm();
+            arm.extendoArm();
         }
     }
     
