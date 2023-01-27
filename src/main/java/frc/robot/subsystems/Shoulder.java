@@ -54,7 +54,9 @@ public class Shoulder extends Subsystem4237
     
     // private final TalonFX oldShoulderMotor = new TalonFX(ShoulderMotorPort);
     
-    private final CANSparkMax shoulderMotor = new CANSparkMax(ShoulderMotorPort,  MotorType.kBrushless);
+    // private final CANSparkMax shoulderMotor = new CANSparkMax(ShoulderMotorPort,  MotorType.kBrushless);
+    private final CANSparkMax shoulderMotor = new CANSparkMax(7,  MotorType.kBrushless);    //test
+
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
 
@@ -91,23 +93,23 @@ public class Shoulder extends Subsystem4237
         shoulderMotor.restoreFactoryDefaults();
 
         // Invert the direction of the motor
-        shoulderMotor.setInverted(false);
+        shoulderMotor.setInverted(true);
 
         // Brake or Coast mode
         shoulderMotor.setIdleMode(IdleMode.kBrake);
 
         // Set the Feedback Sensor and PID Controller
-        relativeEncoder = shoulderMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-        analogSensor = shoulderMotor.getAnalog(SparkMaxAnalogSensor.Mode.kRelative);
-        pidController = shoulderMotor.getPIDController();   //TODO: what goes inside ()?
+        relativeEncoder = shoulderMotor.getEncoder();
+        // analogSensor = shoulderMotor.getAnalog(SparkMaxAnalogSensor.Mode.kRelative);
+        // pidController = shoulderMotor.getPIDController();   //TODO: what goes inside ()?
 
         // Configure PID controller
-        pidController.setP(kP);
-        pidController.setI(kI);
-        pidController.setD(kD);
-        pidController.setIZone(kIz);
-        pidController.setFF(kFF);
-        pidController.setOutputRange(kMinOutput, kMaxOutput);
+        // pidController.setP(kP);
+        // pidController.setI(kI);
+        // pidController.setD(kD);
+        // pidController.setIZone(kIz);
+        // pidController.setFF(kFF);
+        // pidController.setOutputRange(kMinOutput, kMaxOutput);
 
         // Soft Limits
         //TODO: determine soft limit values
@@ -171,6 +173,11 @@ public class Shoulder extends Subsystem4237
     //     }
     // }
 
+    public void resetEndcoder()
+    {
+        relativeEncoder.setPosition(0.0);
+    }
+
     public double getPosition() // encoder ticks
     {
         return currentPosition;
@@ -188,12 +195,12 @@ public class Shoulder extends Subsystem4237
 
     public void moveUp()
     {
-        motorSpeed = 0.5;
+        motorSpeed = 0.1;
     }
 
     public void moveDown()
     {
-        motorSpeed = -0.5;
+        motorSpeed = -0.1;
     }
 
     public void off()
@@ -203,15 +210,15 @@ public class Shoulder extends Subsystem4237
 
     public void hold()
     {
-        motorSpeed = 0.1;
+        motorSpeed = 0.01;
     }
 
     @Override
     public synchronized void readPeriodicInputs()
     {
         currentPosition = relativeEncoder.getPosition();
-        currentAngle = currentPosition / TICKS_PER_DEGREE;
-        currentVelocity = relativeEncoder.getVelocity();
+        // currentAngle = currentPosition / TICKS_PER_DEGREE;
+        // currentVelocity = relativeEncoder.getVelocity();
 
         // currentPosition = oldShoulderMotor.getSelectedSensorPosition();  // TALON FX
 
@@ -240,7 +247,7 @@ public class Shoulder extends Subsystem4237
     @Override
     public String toString()
     {
-        return "Encoder Position: " + String.format("%.4f", currentPosition) + "\n" + "Encoder Velocity: " + String.format("%.4f", currentVelocity);
+        return "Encoder Position: " + String.format("%.4f", currentPosition) + "   Encoder Velocity: " + String.format("%.4f", currentVelocity) + "\n";
     }
     
 }

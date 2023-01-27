@@ -38,8 +38,8 @@ public class RobotContainer
 	private boolean useExampleSubsystem	= false;
 	private boolean useGrabber 			= false;
 	private boolean useGatherer 		= false;
-	private boolean useArm 				= true;
-	private boolean useShoulder			= false;
+	private boolean useArm 				= false;
+	private boolean useShoulder			= true;
 
 
 	public final ExampleSubsystem exampleSubsystem;
