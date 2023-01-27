@@ -30,6 +30,7 @@ public class Arm extends Subsystem4237
     {
         System.out.println("Loading: " + fullClassName);
     }
+
     public enum ArmPosition
     {
         kFullyExtended(17.0,19.0), kThreeQuarterExtended(15.0,16.0), kHalfExtended(8.0,9.0), kIn(0.0,1.0);
@@ -41,6 +42,7 @@ public class Arm extends Subsystem4237
             this.max = max;
         }
     }
+    
     int ArmMotorPort = Constants.MotorConstants.ARM_MOTOR_PORT;
     private final CANSparkMax armMotor = new CANSparkMax (ArmMotorPort, MotorType.kBrushless);
     private final SparkMaxLimitSwitch forwardLimitSwitch = armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);

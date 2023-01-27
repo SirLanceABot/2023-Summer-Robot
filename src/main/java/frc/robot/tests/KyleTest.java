@@ -23,7 +23,7 @@ public class KyleTest implements Test
     private final RobotContainer robotContainer;
     private final Arm arm;
     private Joystick joystick = new Joystick(0);
-
+    private Arm.ArmPosition desiredPosition;
 
     // *** CLASS CONSTRUCTOR ***
     public KyleTest(RobotContainer robotContainer)
@@ -46,9 +46,34 @@ public class KyleTest implements Test
 
     public void periodic()
     {
-        if (joystick.getRawButton(1) == true)
+        if (joystick.getRawButtonPressed(5) == true)
+        {   // Leftmost button = all the way in
+            desiredPosition = Arm.ArmPosition.kIn;
+        }
+        else if (joystick.getRawButtonPressed(3) == true)
+        {   // Second to leftmost buton = half
+            desiredPosition = Arm.ArmPosition.kHalfExtended;
+        }
+        else if (joystick.getRawButtonPressed(4) == true)
+        {   // Second to rightmost button = 3/4
+            desiredPosition = Arm.ArmPosition.kThreeQuarterExtended;
+        }
+        else if (joystick.getRawButtonPressed(6) == true)
+        {   // Rightmost button = fully extenden
+            desiredPosition = Arm.ArmPosition.kFullyExtended;
+        }
+
+        if (arm.getArmPosition() < desiredPosition.min)
         {
             arm.extendoArm();
+        }
+        else if (arm.getArmPosition() > desiredPosition.max)
+        {
+            arm.retractoArm();
+        }
+        else 
+        {
+            arm.holdoArm();
         }
     }
     
