@@ -32,8 +32,9 @@ public class Grabber extends Subsystem4237
     // This string gets the full name of the class, including the package name
     private PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
-    private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 5);
-    private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 6,7);
+    private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
+    private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 6);
+    // private final CANSparkMax clawMotor = new CANSparkMax(1, com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless);
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
@@ -42,7 +43,7 @@ public class Grabber extends Subsystem4237
         System.out.println("Loading: " + fullClassName);
     }
 
-    // private final CANSparkMax clawMotor = new CANSparkMax(1, com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless);
+    
     public static enum GamePiece
     {
         kCone, kCube, kNone;
@@ -56,42 +57,42 @@ public class Grabber extends Subsystem4237
 
     GamePiece currentGamePiece = GamePiece.kNone;
     double speed = 0;
-    double encoderDistance;
+    double encoderDistance = 3;
     Value state = Value.kOff;
     Value angle = Value.kOff;
-    private RelativeEncoder grabberMotorEncoder;
-    int GrabberMotorPort= Constants.MotorConstants.GRABBER_MOTOR_PORT;
-    private final CANSparkMax grabberMotor = new CANSparkMax(GrabberMotorPort, MotorType.kBrushless);
-    private SparkMaxLimitSwitch forwardLimitSwitch;
-    private SparkMaxLimitSwitch reverseLimitSwitch;
+    // private RelativeEncoder grabberMotorEncoder;
+    // int GrabberMotorPort= Constants.MotorConstants.GRABBER_MOTOR_PORT;
+    // private final CANSparkMax grabberMotor = new CANSparkMax(GrabberMotorPort, MotorType.kBrushless);
+    // private SparkMaxLimitSwitch forwardLimitSwitch;
+    // private SparkMaxLimitSwitch reverseLimitSwitch;
     
     private void configCANSparkMax()
     {   
-        grabberMotorEncoder = grabberMotor.getEncoder();
+        // grabberMotorEncoder = grabberMotor.getEncoder();
         //Factory Defaults
-        grabberMotor.restoreFactoryDefaults();
+        // grabberMotor.restoreFactoryDefaults();
 
         //Invert the direction of the motor
-        grabberMotor.setInverted(false);
+        // grabberMotor.setInverted(false);
 
         //Brake or Coast mode
-        grabberMotor.setIdleMode(IdleMode.kBrake);
+        // grabberMotor.setIdleMode(IdleMode.kBrake);
 
         //Set the Feedback Sensor
         // clawMotor.
         // clawMotor.setSensorPhase(false);
 
         //Soft Limits
-        grabberMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
-        grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-        grabberMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        // grabberMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+        // grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+        // grabberMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        // grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
         //Hard Limits
-        forwardLimitSwitch = grabberMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-        forwardLimitSwitch.enableLimitSwitch(false);
-        reverseLimitSwitch = grabberMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-        reverseLimitSwitch.enableLimitSwitch(false);
+        // forwardLimitSwitch = grabberMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        // forwardLimitSwitch.enableLimitSwitch(false);
+        // reverseLimitSwitch = grabberMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        // reverseLimitSwitch.enableLimitSwitch(false);
 
 
 
@@ -100,18 +101,18 @@ public class Grabber extends Subsystem4237
     public Grabber()
     {
         // configCANSparkMax();
-        readPeriodicInputs();
-        writePeriodicOutputs();
+        // readPeriodicInputs();
+        // writePeriodicOutputs();
         // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
     }
     
     public void grabGamePiece()
     {
         state = Value.kForward;
-        if(encoderDistance == 3 && currentGamePiece == GamePiece.kCone || encoderDistance == 1 && currentGamePiece == GamePiece.kCube)
-        {
-            state = Value.kOff;
-        }
+        // if(encoderDistance == 3 && currentGamePiece == GamePiece.kCone || encoderDistance == 1 && currentGamePiece == GamePiece.kCube)
+        // {
+        //     state = Value.kOff;
+        // }
 
     }
 
@@ -161,7 +162,7 @@ public class Grabber extends Subsystem4237
     public synchronized void writePeriodicOutputs()
     {
         grabberControlSolenoid.set(state);
-        grabberAngleControlSolenoid.set(angle);
+        grabberAngleControlSolenoid.set(state);
     }
 
     @Override

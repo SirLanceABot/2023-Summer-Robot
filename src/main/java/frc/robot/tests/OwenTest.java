@@ -4,6 +4,8 @@ import java.lang.invoke.MethodHandles;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Grabber;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.commands.CloseGrabber;
+import frc.robot.commands.OpenGrabber;
 
 public class OwenTest implements Test
 {
@@ -21,8 +23,10 @@ public class OwenTest implements Test
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
 
-    private final Joystick JOYSTICK = new Joystick(1);
+    private final Joystick joystick = new Joystick(0);
     private final Grabber grabber;// = RobotContainer.grabber;
+    // private final CloseGrabber closeGrabber;
+    // private final OpenGrabber openGrabber;
 
 
     // *** CLASS CONSTRUCTOR ***
@@ -44,12 +48,12 @@ public class OwenTest implements Test
     public void periodic()
     {
         // Joystick();
-        if(JOYSTICK.getRawButton(3))
+        if(joystick.getRawButton(3))
         {
             grabber.releaseGamePiece();
         }
 
-        if(JOYSTICK.getRawButton(4))
+        if(joystick.getRawButton(4))
         {
             grabber.grabGamePiece();
         }

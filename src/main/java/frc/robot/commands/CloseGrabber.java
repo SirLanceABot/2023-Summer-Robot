@@ -56,7 +56,8 @@ public class CloseGrabber extends CommandBase
     @Override
     public void execute()
     {
-        grabber.grabGamePiece();
+        grabber.writePeriodicOutputs();
+        
 
         if(grabber.isGrabberClosed())
         {
