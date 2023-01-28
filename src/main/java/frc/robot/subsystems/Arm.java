@@ -49,7 +49,8 @@ public class Arm extends Subsystem4237
     private final SparkMaxLimitSwitch reverseLimitSwitch = armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     private RelativeEncoder armEncoder;
     private double armPosition = 0.0;
-
+    private double armSpeed = 0.0;
+    
     // Creates a new ExampleSubsystem. 
     public Arm()
     {
@@ -85,6 +86,23 @@ public class Arm extends Subsystem4237
     {
         return armPosition;
     }
+    public void retractoArm()
+    {
+        // Set the motor to maximum backward speed
+        armSpeed = -0.3;
+    }
+
+    public void extendoArm()
+    {
+        // Set the motor to maximum forward speed
+        armSpeed = 0.3;
+    }
+    
+    public void holdoArm()
+    {
+        // Hold the motor in place
+        armSpeed = 0.01;
+    }
 
     @Override
     public synchronized void readPeriodicInputs()
@@ -94,7 +112,9 @@ public class Arm extends Subsystem4237
 
     @Override
     public synchronized void writePeriodicOutputs()
-    {}
+    {
+        armMotor.set(armSpeed);
+    }
 
     @Override
     public String toString()
@@ -115,21 +135,4 @@ public class Arm extends Subsystem4237
         // This method will be called once per scheduler run during simulation
     }
 
-    public void retractoArm()
-    {
-        // Set the motor to maximum backward speed
-        armMotor.set(-1.0);
-    }
-
-    public void extendoArm()
-    {
-        // Set the motor to maximum forward speed
-        armMotor.set(1.0);
-    }
-    
-    public void holdoArm()
-    {
-        // Hold the motor in place
-        armMotor.set(0.01);
-    }
 }

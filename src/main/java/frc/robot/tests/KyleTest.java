@@ -46,36 +46,54 @@ public class KyleTest implements Test
 
     public void periodic()
     {
-        if (joystick.getRawButtonPressed(5) == true)
-        {   // Leftmost button = all the way in
-            desiredPosition = Arm.ArmPosition.kIn;
-        }
-        else if (joystick.getRawButtonPressed(3) == true)
-        {   // Second to leftmost buton = half
-            desiredPosition = Arm.ArmPosition.kHalfExtended;
-        }
-        else if (joystick.getRawButtonPressed(4) == true)
-        {   // Second to rightmost button = 3/4
-            desiredPosition = Arm.ArmPosition.kThreeQuarterExtended;
-        }
-        else if (joystick.getRawButtonPressed(6) == true)
-        {   // Rightmost button = fully extenden
-            desiredPosition = Arm.ArmPosition.kFullyExtended;
-        }
-
-        if (arm.getArmPosition() < desiredPosition.min)
-        {
-            arm.extendoArm();
-        }
-        else if (arm.getArmPosition() > desiredPosition.max)
+        if (joystick.getRawButton(3))
         {
             arm.retractoArm();
         }
-        else 
+        else if (joystick.getRawButton(4))
+        {
+            arm.extendoArm();
+        }
+        else if (joystick.getRawButton(1))
         {
             arm.holdoArm();
         }
+        // if (joystick.getRawButtonPressed(5))
+        // {   // Leftmost button = all the way in
+        //     desiredPosition = Arm.ArmPosition.kIn;
+        //     System.out.println("In");
+        // }
+        // else if (joystick.getRawButtonPressed(3))
+        // {   // Second to leftmost buton = half
+        //     desiredPosition = Arm.ArmPosition.kHalfExtended;
+        //     System.out.println("Half");
+        // }
+        // else if (joystick.getRawButtonPressed(4))
+        // {   // Second to rightmost button = 3/4
+        //     desiredPosition = Arm.ArmPosition.kThreeQuarterExtended;
+        //     System.out.println("3/4");
+        // }
+        // else if (joystick.getRawButtonPressed(6))
+        // {   // Rightmost button = fully extenden
+        //     desiredPosition = Arm.ArmPosition.kFullyExtended;
+        //     System.out.println("All Out");
+        // }
+       
+        // if (arm.getArmPosition() < desiredPosition.min)
+        // {
+        //     arm.extendoArm();
+        // }
+        // else if (arm.getArmPosition() > desiredPosition.max)
+        // {
+        //     arm.retractoArm();
+        // }
+        // else 
+        // {
+        //     arm.holdoArm();
+        // }
     }
+
+
     
     /**
      * This method runs one time after the periodic() method.
