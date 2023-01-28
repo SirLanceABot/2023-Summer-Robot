@@ -101,9 +101,14 @@ public class Arm extends Subsystem4237
     public void holdoArm()
     {
         // Hold the motor in place
-        armSpeed = 0.01;
+        armSpeed = 0.05;
     }
 
+    public void stopoArm()
+    {
+        //Stops motor
+        armSpeed = 0.0;
+    }
     @Override
     public synchronized void readPeriodicInputs()
     {
