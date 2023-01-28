@@ -60,6 +60,8 @@ public class SamTest implements Test
         {
             shoulder.hold();
         }
+
+        // shoulder.moveDown();
         
         System.out.println(shoulder);
     }

@@ -21,6 +21,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 
 public class Shoulder extends Subsystem4237
@@ -55,7 +56,8 @@ public class Shoulder extends Subsystem4237
     // private final TalonFX oldShoulderMotor = new TalonFX(ShoulderMotorPort);
     
     // private final CANSparkMax shoulderMotor = new CANSparkMax(ShoulderMotorPort,  MotorType.kBrushless);
-    private final CANSparkMax shoulderMotor = new CANSparkMax(7,  MotorType.kBrushless);    //test
+    private final CANSparkMax shoulderMotor = new CANSparkMax(3,  MotorType.kBrushless);    //test
+    private final Timer encoderResetTimer = new Timer();
 
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
@@ -77,6 +79,10 @@ public class Shoulder extends Subsystem4237
     private double currentPosition;
     private double currentAngle;
     private double currentVelocity;
+    private boolean resetEncoderNow;
+    private boolean resetEncoderNowLS;
+    private boolean hasEncoderReset;
+    private boolean previousLSPressed = false;
     
     //TODO: change calculation for new gear ratio
     // private final double TICKS_PER_DEGREE = 5.69;    // TALON FX
@@ -100,6 +106,8 @@ public class Shoulder extends Subsystem4237
 
         // Set the Feedback Sensor and PID Controller
         relativeEncoder = shoulderMotor.getEncoder();
+        relativeEncoder.setPositionConversionFactor(4096);  // get position will now return raw encoder ticks
+        
         // analogSensor = shoulderMotor.getAnalog(SparkMaxAnalogSensor.Mode.kRelative);
         // pidController = shoulderMotor.getPIDController();   //TODO: what goes inside ()?
 
@@ -113,16 +121,16 @@ public class Shoulder extends Subsystem4237
 
         // Soft Limits
         //TODO: determine soft limit values
-        shoulderMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+        shoulderMotor.setSoftLimit(SoftLimitDirection.kForward, 103000);
         shoulderMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
         shoulderMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
         shoulderMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
         // Hard Limits
-        forwardLimitSwitch = shoulderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-        forwardLimitSwitch.enableLimitSwitch(false);
-        reverseLimitSwitch = shoulderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-        reverseLimitSwitch.enableLimitSwitch(false);
+        forwardLimitSwitch = shoulderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        forwardLimitSwitch.enableLimitSwitch(true);
+        reverseLimitSwitch = shoulderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        reverseLimitSwitch.enableLimitSwitch(true);
     }
 
     // FOLLOWING CODE IS FOR TALON FX
@@ -159,7 +167,7 @@ public class Shoulder extends Subsystem4237
 
     //     //Todo: determine current limit values,and if we wantto use both Supply and Stator limits
     //     //Current limits
-    //     oldShoulderMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, 20, 25, 1.0));
+    //     oldShoulderMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, 20, 25, 1.0));=p;;;;
     //     oldShoulderMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(false, 20, 25, 1.0));
     // }
 
@@ -175,7 +183,10 @@ public class Shoulder extends Subsystem4237
 
     public void resetEndcoder()
     {
-        relativeEncoder.setPosition(0.0);
+        resetEncoderNow = true;
+        hasEncoderReset = false;
+        encoderResetTimer.reset();
+        encoderResetTimer.start();
     }
 
     public double getPosition() // encoder ticks
@@ -217,18 +228,49 @@ public class Shoulder extends Subsystem4237
     public synchronized void readPeriodicInputs()
     {
         currentPosition = relativeEncoder.getPosition();
+        currentVelocity = relativeEncoder.getVelocity();
+        resetEncoderNowLS = reverseLimitSwitch.isPressed();
+        if(resetEncoderNowLS && !previousLSPressed)
+        {
+            hasEncoderReset = false;
+            previousLSPressed = true;
+        }
+        else if(!resetEncoderNowLS && previousLSPressed)
+            previousLSPressed = false;
+
         // currentAngle = currentPosition / TICKS_PER_DEGREE;
-        // currentVelocity = relativeEncoder.getVelocity();
 
         // currentPosition = oldShoulderMotor.getSelectedSensorPosition();  // TALON FX
 
     }
 
+    //TODO: when going down and hit reverse limit switch, cannot immediatly go up
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        shoulderMotor.set(motorSpeed);
-
+        if(resetEncoderNow || resetEncoderNowLS)
+        {
+            shoulderMotor.set(0.0);
+            relativeEncoder.setPosition(0.0);
+            resetEncoderNow = false;
+            resetEncoderNowLS = false;
+        }
+        else if(!hasEncoderReset)
+        {
+            if(Math.abs(currentPosition) < 0.5 )
+                hasEncoderReset = true;
+            else if(encoderResetTimer.hasElapsed(0.1))
+            {
+                relativeEncoder.setPosition(0.0);
+                encoderResetTimer.reset();
+                encoderResetTimer.start();
+            }
+        }
+        else
+        {
+            shoulderMotor.set(motorSpeed);
+        }
+        
         // oldShoulderMotor.set(ControlMode.PercentOutput, motorSpeed);     // TALON FX
     }
 
@@ -248,6 +290,7 @@ public class Shoulder extends Subsystem4237
     public String toString()
     {
         return "Encoder Position: " + String.format("%.4f", currentPosition) + "   Encoder Velocity: " + String.format("%.4f", currentVelocity) + "\n";
+        // return "Forward LSP: " + forwardLimitSwitch.isPressed() + " Reverse LSP: " + reverseLimitSwitch.isPressed() + "\n";
     }
     
 }
