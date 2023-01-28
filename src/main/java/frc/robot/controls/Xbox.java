@@ -3,11 +3,13 @@ package frc.robot.controls;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
+// import 
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
-
-public class Xbox extends Joystick
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+// import edu.wpi.first.wpilibj.GenericHID.getRawAxis;
+public class Xbox
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -147,6 +149,7 @@ public class Xbox extends Joystick
     // *** CLASS & INSTANCE VARIABLES ***
     private final ArrayList<RumbleEvent> rumbleEvents = new ArrayList<RumbleEvent>();
     private int rumbleCounter = 0;
+    private final Joystick joystick;
 
     // set the default axis values
     private final double DEFAULT_DEADZONE = 0.1;
@@ -166,8 +169,8 @@ public class Xbox extends Joystick
     // *** CLASS CONSTRUCTOR ***
     protected Xbox(int port)
     {
-        super(port);
-
+        // super(port);
+        joystick = new Joystick(port);
         System.out.println(fullClassName + " : Constructor Started");
 
         initXbox();
@@ -189,14 +192,15 @@ public class Xbox extends Joystick
         }
     }
 
-    @Override
+    // @Override
     /**
      * Public method to get the value of an axis
      * @param axis
      */
     public double getRawAxis(int axis)
     {
-        double value = super.getRawAxis(axis);
+        // double value = getRawAxis(axis);
+        double value = joystick.getRawAxis(axis);
 
         if(axisIsFlipped[axis])
         {
@@ -256,12 +260,14 @@ public class Xbox extends Joystick
                 return true;
         }
         else
-            return super.getRawButton(button);
+            return joystick.getRawButton(button);
+            //return getRawButton(button);
     }
 
     public Dpad getDpad()
     {
-        return Dpad.getEnum(getPOV());
+        return Dpad.getEnum(joystick.getPOV());
+        // return Dpad.getEnum(getPOV());
     }
 
     /**
@@ -425,14 +431,14 @@ public class Xbox extends Joystick
 
             if (startTime >= matchTime && matchTime > startTime - duration)
             {
-                setRumble(RumbleType.kLeftRumble, rumbleEvents.get(rumbleCounter).leftPower);
-                setRumble(RumbleType.kRightRumble, rumbleEvents.get(rumbleCounter).rightPower);
+                joystick.setRumble(RumbleType.kLeftRumble, rumbleEvents.get(rumbleCounter).leftPower);
+                joystick.setRumble(RumbleType.kRightRumble, rumbleEvents.get(rumbleCounter).rightPower);
             }
             else if (matchTime <= startTime - duration)
             {
                 rumbleCounter++;
-                setRumble(RumbleType.kLeftRumble, 0.0);
-                setRumble(RumbleType.kRightRumble, 0.0); 
+                joystick.setRumble(RumbleType.kLeftRumble, 0.0);
+                joystick.setRumble(RumbleType.kRightRumble, 0.0); 
             }
         }
     }
