@@ -40,16 +40,20 @@ public class OwenTest implements Test
      * This method runs one time before the periodic() method.
      */
     public void init()
-    {}
+    {
+        
+    }
 
     /**
      * This method runs periodically (every 20ms).
      */
     public void periodic()
     {
+        // grabber.compressorEnable();
         // Joystick();
         if(joystick.getRawButton(3))
         {
+
             grabber.releaseGamePiece();
         }
 

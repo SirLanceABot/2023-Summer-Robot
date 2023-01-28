@@ -22,7 +22,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Compressor;
-
+import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Encoder;
 
@@ -34,6 +35,7 @@ public class Grabber extends Subsystem4237
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
     private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
     private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 6);
+    private final Compressor compressor = new Compressor(moduleType);
     // private final CANSparkMax clawMotor = new CANSparkMax(1, com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless);
 
     // *** STATIC INITIALIZATION BLOCK ***
@@ -109,10 +111,6 @@ public class Grabber extends Subsystem4237
     public void grabGamePiece()
     {
         state = Value.kForward;
-        // if(encoderDistance == 3 && currentGamePiece == GamePiece.kCone || encoderDistance == 1 && currentGamePiece == GamePiece.kCube)
-        // {
-        //     state = Value.kOff;
-        // }
 
     }
 
@@ -149,6 +147,23 @@ public class Grabber extends Subsystem4237
     {
         angle = Value.kForward;
     }
+
+    // //compressor controls
+    // /**
+    //  * Disables the compressor automatic control loop
+    //  */
+    // public void compressorDisable()
+    // {
+    //     compressor.disable();
+    // }
+
+    // /**
+    //  * Enables the compressor automatic control loop
+    //  */
+    // public void compressorEnable()
+    // {
+    //     compressor.enableDigital();
+    // }
 
 
     @Override
