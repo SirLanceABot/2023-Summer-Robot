@@ -40,7 +40,7 @@ public class SamTest implements Test
      */
     public void init()
     {
-        shoulder.resetEndcoder();
+        // shoulder.resetEndcoder();
     }
 
     /**
@@ -56,14 +56,18 @@ public class SamTest implements Test
         {
             shoulder.moveDown();
         }
+        else if(joystick.getRawButton(3))
+        {
+            shoulder.resetEncoder();
+        }
         else
         {
-            shoulder.hold();
+            shoulder.off();
         }
 
         // shoulder.moveDown();
         
-        System.out.println(shoulder);
+        // System.out.println(shoulder);
     }
     
     /**

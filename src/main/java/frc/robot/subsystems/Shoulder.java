@@ -50,13 +50,20 @@ public class Shoulder extends Subsystem4237
         }
     }
 
+    public enum ResetState
+    {
+        kStart, kTry, kDone;
+    }
+
+
+
     int ShoulderMotorPort = Constants.MotorConstants.SHOULDER_MOTOR_PORT;
     private static final int TIMEOUT_MS = 30;
     
     // private final TalonFX oldShoulderMotor = new TalonFX(ShoulderMotorPort);
     
     // private final CANSparkMax shoulderMotor = new CANSparkMax(ShoulderMotorPort,  MotorType.kBrushless);
-    private final CANSparkMax shoulderMotor = new CANSparkMax(3,  MotorType.kBrushless);    //test
+    private final CANSparkMax shoulderMotor = new CANSparkMax(7,  MotorType.kBrushless);    //test
     private final Timer encoderResetTimer = new Timer();
 
     private SparkMaxLimitSwitch forwardLimitSwitch;
@@ -75,14 +82,18 @@ public class Shoulder extends Subsystem4237
     private static final double kMaxOutput = 1;
     private static final double kMinOutput = -1;
 
+    private final int RESET_ATTEMPT_LIMIT = 5;
+
     private double motorSpeed;
     private double currentPosition;
     private double currentAngle;
     private double currentVelocity;
-    private boolean resetEncoderNow;
-    private boolean resetEncoderNowLS;
-    private boolean hasEncoderReset;
+    private int resetAttemptCounter = 0;
     private boolean previousLSPressed = false;
+    private boolean enableLSReset = false;      // Enable or Disable reverse limit switch reseting encoder
+
+    private ResetState resetState = ResetState.kDone;
+
     
     //TODO: change calculation for new gear ratio
     // private final double TICKS_PER_DEGREE = 5.69;    // TALON FX
@@ -181,12 +192,9 @@ public class Shoulder extends Subsystem4237
     //     }
     // }
 
-    public void resetEndcoder()
+    public void resetEncoder()
     {
-        resetEncoderNow = true;
-        hasEncoderReset = false;
-        encoderResetTimer.reset();
-        encoderResetTimer.start();
+        resetState = ResetState.kStart;       
     }
 
     public double getPosition() // encoder ticks
@@ -229,42 +237,56 @@ public class Shoulder extends Subsystem4237
     {
         currentPosition = relativeEncoder.getPosition();
         currentVelocity = relativeEncoder.getVelocity();
-        resetEncoderNowLS = reverseLimitSwitch.isPressed();
-        if(resetEncoderNowLS && !previousLSPressed)
+        if(enableLSReset)
         {
-            hasEncoderReset = false;
-            previousLSPressed = true;
+            if(reverseLimitSwitch.isPressed() && !previousLSPressed)
+            {
+                previousLSPressed = true;
+                resetState = ResetState.kStart;
+                
+            }
+            else if(!reverseLimitSwitch.isPressed() && previousLSPressed)
+                previousLSPressed = false;
         }
-        else if(!resetEncoderNowLS && previousLSPressed)
-            previousLSPressed = false;
-
         // currentAngle = currentPosition / TICKS_PER_DEGREE;
 
         // currentPosition = oldShoulderMotor.getSelectedSensorPosition();  // TALON FX
 
     }
 
-    //TODO: when going down and hit reverse limit switch, cannot immediatly go up
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        if(resetEncoderNow || resetEncoderNowLS)
+        if(resetState == ResetState.kStart)
         {
+            encoderResetTimer.reset();
+            encoderResetTimer.start();
             shoulderMotor.set(0.0);
             relativeEncoder.setPosition(0.0);
-            resetEncoderNow = false;
-            resetEncoderNowLS = false;
+            resetState = ResetState.kTry;
+            resetAttemptCounter++;
         }
-        else if(!hasEncoderReset)
+        else if(resetState == ResetState.kTry && resetAttemptCounter < RESET_ATTEMPT_LIMIT)
         {
             if(Math.abs(currentPosition) < 0.5 )
-                hasEncoderReset = true;
+            {
+                resetState = ResetState.kDone;
+                resetAttemptCounter = 0;
+            }
             else if(encoderResetTimer.hasElapsed(0.1))
             {
+                resetAttemptCounter++;
                 relativeEncoder.setPosition(0.0);
                 encoderResetTimer.reset();
                 encoderResetTimer.start();
+                System.out.println("Attempts: " + resetAttemptCounter);
             }
+        }
+        else if(resetAttemptCounter == RESET_ATTEMPT_LIMIT)
+        {
+            resetState = ResetState.kDone;
+            resetAttemptCounter = 0;
+            System.out.println("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
         }
         else
         {
@@ -289,7 +311,8 @@ public class Shoulder extends Subsystem4237
     @Override
     public String toString()
     {
-        return "Encoder Position: " + String.format("%.4f", currentPosition) + "   Encoder Velocity: " + String.format("%.4f", currentVelocity) + "\n";
+        return "Encoder Position: " + String.format("%.4f", currentPosition) + "\n";
+        // return "Encoder Position: " + String.format("%.4f", currentPosition) + "   Encoder Velocity: " + String.format("%.4f", currentVelocity) + "\n";
         // return "Forward LSP: " + forwardLimitSwitch.isPressed() + " Reverse LSP: " + reverseLimitSwitch.isPressed() + "\n";
     }
     
