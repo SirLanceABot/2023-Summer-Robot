@@ -16,9 +16,6 @@ import com.revrobotics.REVLibError;
 
 import java.lang.invoke.MethodHandles;
 
-/**
- * Use this class as a template to create other subsystems.
- */
 public class Arm extends Subsystem4237
 {
     // This string gets the full name of the class, including the package name
@@ -33,6 +30,7 @@ public class Arm extends Subsystem4237
 
     public enum ArmPosition
     {
+        // Placeholder values used; real values to be determined when we have the arm length
         kFullyExtended(39.0,44.0), kThreeQuarterExtended(24.0,29.0), kHalfExtended(10.0,15.0), kIn(0.0,5.0);
         public final double min; 
         public final double max;
@@ -47,12 +45,12 @@ public class Arm extends Subsystem4237
     private final CANSparkMax armMotor = new CANSparkMax (ArmMotorPort, MotorType.kBrushless);
     private final SparkMaxLimitSwitch forwardLimitSwitch = armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     private final SparkMaxLimitSwitch reverseLimitSwitch = armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    private final Timer encoderResetTimer = new Timer();
     private RelativeEncoder armEncoder;
     private double armPosition = 0.0;
     private double armSpeed = 0.0;
     private boolean resetEncoderNow = false;
     private boolean hasEncoderReset = true;    
-    private final Timer encoderResetTimer = new Timer();
     
     // Creates a new ExampleSubsystem. 
     public Arm()
@@ -97,15 +95,16 @@ public class Arm extends Subsystem4237
     {
         return armPosition;
     }
+
     public void retractoArm()
     {
-        // Set the motor to maximum backward speed
+        // Set the motor to move backward
         armSpeed = -0.3;
     }
 
     public void extendoArm()
     {
-        // Set the motor to maximum forward speed
+        // Set the motor to move forward
         armSpeed = 0.3;
     }
     
@@ -117,13 +116,13 @@ public class Arm extends Subsystem4237
 
     public void gestapoArm()
     {
-        //Stops motor
+        // Stops the motor
         armSpeed = 0.0;
     }
 
     public void moveArmToDesired(ArmPosition desiredPosition)
     {
-        if (getArmPosition() < desiredPosition.min)
+        if (getArmPosition() < desiredPosition.min) 
         {
             extendoArm();
         }
@@ -137,6 +136,12 @@ public class Arm extends Subsystem4237
         }
     }
 
+    public int convertBooleanToInt(boolean bool)
+    {
+        int integer = (bool) ? 1 : 0;
+        return integer;
+    }
+
     @Override
     public synchronized void readPeriodicInputs()
     {
@@ -146,7 +151,6 @@ public class Arm extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        
         if (resetEncoderNow)
         {
             armMotor.set(0.0);
@@ -191,5 +195,4 @@ public class Arm extends Subsystem4237
     {
         // This method will be called once per scheduler run during simulation
     }
-
 }

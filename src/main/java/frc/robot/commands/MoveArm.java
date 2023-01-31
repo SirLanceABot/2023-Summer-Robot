@@ -9,7 +9,6 @@ import frc.robot.subsystems.Arm.ArmPosition;
 import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-// An example command that uses an example subsystem. 
 public class MoveArm extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
@@ -27,11 +26,6 @@ public class MoveArm extends CommandBase
     private ArmPosition desiredPosition;
     private boolean isFinished;
 
-    /**
-     * Creates a new ExampleCommand.
-     *
-     * @param Arm The subsystem used by this command.
-     */
     public MoveArm(Arm arm, ArmPosition desiredPosition) 
     {
         this.arm = arm;
