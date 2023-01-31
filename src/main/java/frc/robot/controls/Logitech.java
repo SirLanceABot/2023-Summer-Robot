@@ -1,7 +1,8 @@
 package frc.robot.controls;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -323,18 +324,14 @@ public class Logitech
         setAxisSettings(axis, axisSettings.axisDeadzone, axisSettings.axisMinOutput, axisSettings.axisMaxOutput, axisSettings.axisIsFlipped, axisSettings.axisScale);
     }
 
-    public Supplier<Double> getAxisSupplier(Axis axis)
+    public DoubleSupplier getAxisSupplier(Axis axis)
     {
-        Supplier<Double> supplier;
-        supplier = () -> {return getRawAxis(axis);};
-        return supplier;
+        return () -> getRawAxis(axis);
     }
-    
-    public Supplier<Boolean> getButtonSupplier(Button button)
+
+    public BooleanSupplier getButtonSupplier(Button button)
     {
-        Supplier<Boolean> supplier;
-        supplier = () -> {return getRawButton(button);};
-        return supplier;
+        return () -> getRawButton(button);
     }
 
     public String toString()

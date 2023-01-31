@@ -3,8 +3,8 @@ package frc.robot.controls;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
-// import 
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -48,6 +48,10 @@ public class Xbox
             this.value = value;
         }
 
+        /**
+         * @param value
+         * @return 
+         */
         public static Dpad getEnum(int value)
         {
             for(Dpad d : Dpad.values())
@@ -449,18 +453,14 @@ public class Xbox
         rumbleCounter = 0;
     }
 
-    public Supplier<Double> getAxisSupplier(Axis axis)
+    public DoubleSupplier getAxisSupplier(Axis axis)
     {
-        Supplier<Double> supplier;
-        supplier = () -> {return getRawAxis(axis);};
-        return supplier;
+        return () -> getRawAxis(axis);
     }
 
-    public Supplier<Boolean> getButtonSupplier(Button button)
+    public BooleanSupplier getButtonSupplier(Button button)
     {
-        Supplier<Boolean> supplier;
-        supplier = () -> {return getRawButton(button);};
-        return supplier;
+        return () -> getRawButton(button);
     }
     
     @Override
