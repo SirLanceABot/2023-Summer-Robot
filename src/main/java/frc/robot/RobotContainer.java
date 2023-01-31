@@ -93,12 +93,12 @@ public class RobotContainer
 
 	private void configureDriverBindings()
 	{
-		driverController.configureAxes();
+		// driverController.configureAxes();
 	}
 
 	private void configureOperatorBindings()
 	{
-		operatorController.configureAxes();
+		// operatorController.configureAxes();
 	}
 
 	/**
