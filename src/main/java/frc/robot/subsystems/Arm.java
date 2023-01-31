@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
-
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 // package frc.robot.subsystems;
@@ -33,7 +33,7 @@ public class Arm extends Subsystem4237
 
     public enum ArmPosition
     {
-        kFullyExtended(17.0,19.0), kThreeQuarterExtended(15.0,16.0), kHalfExtended(8.0,9.0), kIn(0.0,1.0);
+        kFullyExtended(39.0,44.0), kThreeQuarterExtended(24.0,29.0), kHalfExtended(10.0,15.0), kIn(0.0,5.0);
         public final double min; 
         public final double max;
         private ArmPosition(double min, double max)
@@ -50,6 +50,9 @@ public class Arm extends Subsystem4237
     private RelativeEncoder armEncoder;
     private double armPosition = 0.0;
     private double armSpeed = 0.0;
+    private boolean resetEncoderNow = false;
+    private boolean hasEncoderReset = true;    
+    private final Timer encoderResetTimer = new Timer();
     
     // Creates a new ExampleSubsystem. 
     public Arm()
@@ -77,10 +80,18 @@ public class Arm extends Subsystem4237
         //Hard Limits
         forwardLimitSwitch.enableLimitSwitch(false);
         reverseLimitSwitch.enableLimitSwitch(false);
+
         // Encoder
         armEncoder = armMotor.getEncoder();
     }
 
+    public void resetEncoder()
+    {
+        resetEncoderNow = true;
+        hasEncoderReset = false;
+        encoderResetTimer.reset();
+        encoderResetTimer.start();
+    }
    
     public double getArmPosition()
     {
@@ -104,11 +115,28 @@ public class Arm extends Subsystem4237
         armSpeed = 0.05;
     }
 
-    public void stopoArm()
+    public void gestapoArm()
     {
         //Stops motor
         armSpeed = 0.0;
     }
+
+    public void moveArmToDesired(ArmPosition desiredPosition)
+    {
+        if (getArmPosition() < desiredPosition.min)
+        {
+            extendoArm();
+        }
+        else if (getArmPosition() > desiredPosition.max)
+        {
+            retractoArm();
+        }
+        else 
+        {
+            gestapoArm();
+        }
+    }
+
     @Override
     public synchronized void readPeriodicInputs()
     {
@@ -118,7 +146,31 @@ public class Arm extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        armMotor.set(armSpeed);
+        
+        if (resetEncoderNow)
+        {
+            armMotor.set(0.0);
+            armEncoder.setPosition(0.0);
+            resetEncoderNow = false;
+            hasEncoderReset = true;
+        }
+        else if (!hasEncoderReset)
+        {
+            if(Math.abs(armPosition) < 0.5)
+            {
+                hasEncoderReset = true;
+            }
+            else if (encoderResetTimer.hasElapsed(0.1))
+            {
+                armEncoder.setPosition(0.0);
+                encoderResetTimer.reset();
+                encoderResetTimer.start();
+            }
+        }
+        else 
+        {
+            armMotor.set(armSpeed);
+        }
     }
 
     @Override

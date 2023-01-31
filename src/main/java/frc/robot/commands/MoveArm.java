@@ -24,8 +24,7 @@ public class MoveArm extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Arm arm;
-    private final double max;
-    private final double min;
+    private ArmPosition desiredPosition;
     private boolean isFinished;
 
     /**
@@ -36,8 +35,7 @@ public class MoveArm extends CommandBase
     public MoveArm(Arm arm, ArmPosition desiredPosition) 
     {
         this.arm = arm;
-        this.max = desiredPosition.max;
-        this.min = desiredPosition.min;
+        this.desiredPosition = desiredPosition;
 
         // Declares subsystem dependencies
         addRequirements(this.arm);
@@ -54,13 +52,9 @@ public class MoveArm extends CommandBase
     @Override
     public void execute()
     {
-        if (arm.getArmPosition() < min)
+        if (arm.getArmPosition() < desiredPosition.min || arm.getArmPosition() > desiredPosition.max)
         {
-            arm.extendoArm();
-        }
-        else if (arm.getArmPosition() > max)
-        {
-            arm.retractoArm();
+            arm.moveArmToDesired(desiredPosition);
         }
         else
         {

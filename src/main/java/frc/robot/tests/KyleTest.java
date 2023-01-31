@@ -37,7 +37,8 @@ public class KyleTest implements Test
      */
     public void init()
     {
-        
+        arm.resetEncoder();
+        desiredPosition = Arm.ArmPosition.kIn;
     }
 
     /**
@@ -46,60 +47,28 @@ public class KyleTest implements Test
 
     public void periodic()
     {
-        // if (joystick.getRawButton(3))
-        // {
-        //     arm.retractoArm();
-        // }
-        // else if (joystick.getRawButton(4))
-        // {
-        //     arm.extendoArm();
-        // }
-        // else if (joystick.getRawButton(6))
-        // {
-        //     arm.stopoArm();
-        // }
-        // else if (joystick.getRawButton(1))
-        // {
-        //     arm.holdoArm();
-        // }
         if (joystick.getRawButtonPressed(5))
         {   // Leftmost button = all the way in
             desiredPosition = Arm.ArmPosition.kIn;
-            System.out.println("In");
+            System.out.println("In, desiredPosition.min = " + desiredPosition.min + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(3))
         {   // Second to leftmost buton = half
             desiredPosition = Arm.ArmPosition.kHalfExtended;
-            System.out.println("Half");
+            System.out.println("Half, desiredPosition.min = " + desiredPosition.min + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(4))
         {   // Second to rightmost button = 3/4
             desiredPosition = Arm.ArmPosition.kThreeQuarterExtended;
-            System.out.println("3/4");
+            System.out.println("3/4, desiredPosition.min = " + desiredPosition.min + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(6))
         {   // Rightmost button = fully extenden
             desiredPosition = Arm.ArmPosition.kFullyExtended;
-            System.out.println("All Out");
+            System.out.println("All Out, desiredPosition.min = " + desiredPosition.min + " armPosition = " + arm.getArmPosition());
         }
-        else 
-        {
-            desiredPosition = Arm.ArmPosition.kIn;
-            System.out.println("Started");
-        }
-       
-        if (arm.getArmPosition() < desiredPosition.min)
-        {
-            arm.extendoArm();
-        }
-        else if (arm.getArmPosition() > desiredPosition.max)
-        {
-            arm.retractoArm();
-        }
-        else 
-        {
-            arm.holdoArm();
-        }
+
+        arm.moveArmToDesired(desiredPosition);
     }
 
 
