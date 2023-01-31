@@ -12,7 +12,8 @@ import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Gatherer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
-
+import frc.robot.controls.DriverController;
+import frc.robot.controls.OperatorController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -32,14 +33,16 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot		= false;
-	private boolean useBindings			= false;
+	private boolean useFullRobot			= false;
+	private boolean useBindings				= false;
 
-	private boolean useExampleSubsystem	= false;
-	private boolean useGrabber 			= false;
-	private boolean useGatherer 		= false;
-	private boolean useArm 				= true;
-	private boolean useShoulder			= false;
+	private boolean useExampleSubsystem		= false;
+	private boolean useGrabber 				= false;
+	private boolean useGatherer 			= false;
+	private boolean useArm 					= true;
+	private boolean useShoulder				= false;
+	private boolean useDriverController		= false;
+	private boolean useOperatorController 	= false;
 
 
 	public final ExampleSubsystem exampleSubsystem;
@@ -47,6 +50,8 @@ public class RobotContainer
 	public final Arm arm;
 	public final Shoulder shoulder;
 	public final Gatherer gatherer;
+	public final DriverController driverController;
+	public final OperatorController operatorController;
 	// private Joystick joystick;
 	
 	/** 
@@ -61,6 +66,9 @@ public class RobotContainer
 		arm 				= (useFullRobot || useArm) 				? new Arm() 				: null;
 		shoulder 			= (useFullRobot || useShoulder) 		? new Shoulder() 			: null;
 		gatherer 			= (useFullRobot || useGatherer) 		? new Gatherer() 			: null;
+		driverController 	= (useBindings || useDriverController) 	? new DriverController(5) 	: null;
+		operatorController 	= (useBindings || useOperatorController) ? new OperatorController(6) : null;
+		
 
 
 		// Configure the trigger bindings
@@ -78,7 +86,20 @@ public class RobotContainer
 	 * joysticks}.
 	 */
 	private void configureBindings()
-	{}
+	{
+		configureDriverBindings();
+		configureOperatorBindings();
+	}
+
+	private void configureDriverBindings()
+	{
+		driverController.configureAxes();
+	}
+
+	private void configureOperatorBindings()
+	{
+		operatorController.configureAxes();
+	}
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.

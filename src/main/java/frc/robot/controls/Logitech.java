@@ -1,10 +1,11 @@
 package frc.robot.controls;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-public class Logitech extends Joystick
+public class Logitech
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -98,6 +99,8 @@ public class Logitech extends Joystick
 
 
     // *** CLASS & INSTANCE VARIABLES ***
+    private final Joystick joystick;
+    
     private static final double DEFAULT_DEADZONE = 0.1;
     private static final double DEFAULT_MAX_OUTPUT = 1.0;
     private static final double DEFAULT_MIN_OUTPUT = 0.0;
@@ -116,7 +119,8 @@ public class Logitech extends Joystick
     // *** CLASS CONSTRUCTOR ***
     protected Logitech(int port)
     {
-        super(port);
+        // super(port);
+        joystick = new Joystick(port);
 
         System.out.println(fullClassName + " : Constructor Started");
       
@@ -143,10 +147,10 @@ public class Logitech extends Joystick
      * Returns the value of the specified axis
      * @param axis
      */
-    @Override
     public double getRawAxis(int axis)
     {
-        double value = super.getRawAxis(axis);
+        // double value = super.getRawAxis(axis);
+        double value = joystick.getRawAxis(axis);
 
         if(axisIsFlipped[axis])
         {
@@ -199,12 +203,12 @@ public class Logitech extends Joystick
      */
     public boolean getRawButton(Button button)
     {
-        return super.getRawButton(button.value);
+        return joystick.getRawButton(button.value);
     }
 
     public Dpad getDpad()
     {
-        return Dpad.getEnum(getPOV());
+        return Dpad.getEnum(joystick.getPOV());
     }
 
     /**
@@ -319,8 +323,19 @@ public class Logitech extends Joystick
         setAxisSettings(axis, axisSettings.axisDeadzone, axisSettings.axisMinOutput, axisSettings.axisMaxOutput, axisSettings.axisIsFlipped, axisSettings.axisScale);
     }
 
+    public Supplier<Double> getAxisSupplier(Axis axis)
+    {
+        Supplier<Double> supplier;
+        supplier = () -> {return getRawAxis(axis);};
+        return supplier;
+    }
     
-    
+    public Supplier<Boolean> getButtonSupplier(Button button)
+    {
+        Supplier<Boolean> supplier;
+        supplier = () -> {return getRawButton(button);};
+        return supplier;
+    }
 
     public String toString()
     {

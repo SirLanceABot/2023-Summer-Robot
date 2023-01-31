@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 // import 
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -448,6 +449,20 @@ public class Xbox
         rumbleCounter = 0;
     }
 
+    public Supplier<Double> getAxisSupplier(Axis axis)
+    {
+        Supplier<Double> supplier;
+        supplier = () -> {return getRawAxis(axis);};
+        return supplier;
+    }
+
+    public Supplier<Boolean> getButtonSupplier(Button button)
+    {
+        Supplier<Boolean> supplier;
+        supplier = () -> {return getRawButton(button);};
+        return supplier;
+    }
+    
     @Override
     public String toString()
     {
