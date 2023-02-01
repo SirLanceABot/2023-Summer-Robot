@@ -16,6 +16,9 @@ import com.revrobotics.REVLibError;
 
 import java.lang.invoke.MethodHandles;
 
+/**
+ * Class containing one NEO 550 motor and two limit switches
+ */
 public class Arm extends Subsystem4237
 {
     // This string gets the full name of the class, including the package name
@@ -83,6 +86,9 @@ public class Arm extends Subsystem4237
         armEncoder = armMotor.getEncoder();
     }
 
+    /**
+     * Resets the encoders for the arm encoder
+     */
     public void resetEncoder()
     {
         resetEncoderNow = true;
@@ -91,35 +97,50 @@ public class Arm extends Subsystem4237
         encoderResetTimer.start();
     }
    
+    /**
+     * @return Returns the current position of the arm
+     */
     public double getArmPosition()
     {
         return armPosition;
     }
 
+    /**
+     * Set the motor to move backward
+     */
     public void retractoArm()
     {
-        // Set the motor to move backward
         armSpeed = -0.3;
     }
 
+    /**
+     * Set the motor to move forward
+     */
     public void extendoArm()
     {
-        // Set the motor to move forward
         armSpeed = 0.3;
     }
     
+    /**
+     * Hold the motor in place by setting it to move very slowly
+     */
     public void holdoArm()
     {
-        // Hold the motor in place
         armSpeed = 0.05;
     }
 
+    /**
+     * Stops the motor
+     */
     public void gestapoArm()
     {
-        // Stops the motor
         armSpeed = 0.0;
     }
 
+    /**
+     * Moves the arm forward if the desired position is farther extended than the current position,
+     * and moves it backwards if the desired position is farther inwards
+     */
     public void moveArmToDesired(ArmPosition desiredPosition)
     {
         if (getArmPosition() < desiredPosition.min) 
@@ -136,18 +157,15 @@ public class Arm extends Subsystem4237
         }
     }
 
-    public int convertBooleanToInt(boolean bool)
-    {
-        int integer = (bool) ? 1 : 0;
-        return integer;
-    }
-
     @Override
     public synchronized void readPeriodicInputs()
     {
         armPosition = armEncoder.getPosition();
     }
 
+    /**
+     * Resets the encoders after a set period of time
+     */
     @Override
     public synchronized void writePeriodicOutputs()
     {

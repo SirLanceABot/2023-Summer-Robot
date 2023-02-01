@@ -9,6 +9,9 @@ import frc.robot.subsystems.Arm.ArmPosition;
 import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Command that moves the arm to where the user tells it to go
+ */
 public class MoveArm extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
@@ -35,14 +38,20 @@ public class MoveArm extends CommandBase
         addRequirements(this.arm);
     }
 
-    // Called when the command is initially scheduled.
+    /**
+     * Called when the command is initially scheduled.
+     * Sets isFinished to false, indicating that the command still needs to run
+     */ 
     @Override
     public void initialize()
     {
         isFinished = false;        
     }
     
-    // Called every time the scheduler runs while the command is scheduled.
+    /**
+     * Called every time the scheduler runs while the command is scheduled.
+     * Checks if the arm is in the desired position, and moves it accordingly.
+     */
     @Override
     public void execute()
     {
@@ -56,14 +65,19 @@ public class MoveArm extends CommandBase
         }
     }
 
-    // Called once the command ends or is interrupted.
+    /**
+     * Called once the command ends or is interrupted.
+     * Stops the motor, preventing the arm from moving.
+     */
     @Override
     public void end(boolean interrupted)
     {
-        arm.holdoArm();
+        arm.gestapoArm();
     }
 
-    // Returns true when the command should end.
+    /**
+     * Returns true when the command should end.
+     */ 
     @Override
     public boolean isFinished()
     {
