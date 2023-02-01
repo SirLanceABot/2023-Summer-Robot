@@ -68,6 +68,9 @@ public class Grabber extends Subsystem4237
     // private SparkMaxLimitSwitch forwardLimitSwitch;
     // private SparkMaxLimitSwitch reverseLimitSwitch;
     
+    /**
+     * 
+     */
     private void configCANSparkMax()
     {   
         // grabberMotorEncoder = grabberMotor.getEncoder();

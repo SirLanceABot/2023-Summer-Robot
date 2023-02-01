@@ -29,6 +29,9 @@ public class Gatherer extends Subsystem4237
     private final CANSparkMax gathererMotor = new CANSparkMax(GathererMotorPort, MotorType.kBrushless);
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
+    /**
+     *
+     */
     private RelativeEncoder gathererEncoder;
     private static double motorSpeed;
 

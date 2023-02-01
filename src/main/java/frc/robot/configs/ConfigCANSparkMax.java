@@ -18,7 +18,13 @@ public final class ConfigCANSparkMax
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
 
+    /**
+     *
+     */
     private RelativeEncoder relativeEncoder;
+    /**
+     *
+     */
     private SparkMaxAnalogSensor analogSensor;
 
 

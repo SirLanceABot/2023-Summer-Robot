@@ -58,6 +58,9 @@ public class Shoulder extends Subsystem4237
 
 
     int ShoulderMotorPort = Constants.MotorConstants.SHOULDER_MOTOR_PORT;
+    /**
+     *
+     */
     private static final int TIMEOUT_MS = 30;
     
     // private final TalonFX oldShoulderMotor = new TalonFX(ShoulderMotorPort);
@@ -97,6 +100,9 @@ public class Shoulder extends Subsystem4237
     
     //TODO: change calculation for new gear ratio
     // private final double TICKS_PER_DEGREE = 5.69;    // TALON FX
+    /**
+     *
+     */
     private final double TICKS_PER_DEGREE = 11.38;
 
     public Shoulder()
