@@ -59,7 +59,6 @@ public class Arm extends Subsystem4237
     private boolean resetEncoderNow = false;
     private boolean hasEncoderReset = true;    
     
-    // Creates a new ExampleSubsystem. 
     public Arm()
     {
         configCANSparkMax();
@@ -84,8 +83,8 @@ public class Arm extends Subsystem4237
         armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
         
         //Hard Limits
-        forwardLimitSwitch.enableLimitSwitch(false);
-        reverseLimitSwitch.enableLimitSwitch(false);
+        forwardLimitSwitch.enableLimitSwitch(true);
+        reverseLimitSwitch.enableLimitSwitch(true);
 
         // Encoder
         armEncoder = armMotor.getEncoder();

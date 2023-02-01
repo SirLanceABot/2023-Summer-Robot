@@ -10,6 +10,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+/**
+ * Class containing one NEO 550 (according to Owen) and two limit switches
+ */
 public class Gatherer extends Subsystem4237
 {
     // This string gets the full name of the class, including the package name
@@ -62,20 +65,28 @@ public class Gatherer extends Subsystem4237
         reverseLimitSwitch.enableLimitSwitch(false);
     }
 
+    /**
+     * Sets the motor speed to positive to pull in the game piece
+     */
     public void gatherGamePiece()
     {
         motorSpeed = 0.5;
         // gathererMotor.set(-0.5);
     }
 
-    // Incase gamepiece gets jammed or we need to release it
-    // reverse direction of motors to push gamepiece out
+    /**
+    * In case gamepiece gets jammed or we need to release it,
+    * reverse the direction of motors to push gamepiece out
+    */
     public void freeGamePiece()
     {
         // gathererMotor.set(-0.5);
         motorSpeed = -0.5;
     }
 
+    /*
+     * Turn off the motors
+     */
     public void turnOff()
     {
         motorSpeed = 0.0;
@@ -94,15 +105,17 @@ public class Gatherer extends Subsystem4237
         gathererMotor.set(motorSpeed);
     }
 
+    /*
+     * This method will be called once per scheduler run
+     */
     @Override
     public void periodic()
-    {
-        // This method will be called once per scheduler run
-    }
+    {}
 
+    /*
+     * This method will be called once per scheduler run during simulation
+     */
     @Override
     public void simulationPeriodic()
-    {
-        // This method will be called once per scheduler run during simulation
-    }
+    {}
 }
