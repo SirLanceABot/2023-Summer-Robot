@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.shuffleboard;
 
 import java.lang.invoke.MethodHandles;
 
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.util.sendable.SendableRegistry;
 
-public class Shuffleboard4237 
+public class OperatorControllerTab 
 {
-    
+        
 }

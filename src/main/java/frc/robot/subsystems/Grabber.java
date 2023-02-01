@@ -57,11 +57,20 @@ public class Grabber extends Subsystem4237
         kOpen, kClosed;
     }
 
+    public class PeriodicIO
+    {
+        //INPUTS
+
+        //OUTPUTS
+        Value state = Value.kOff;
+        Value angle = Value.kOff;
+    }
+
     GamePiece currentGamePiece = GamePiece.kNone;
     double speed = 0;
     double encoderDistance = 3;
-    Value state = Value.kOff;
-    Value angle = Value.kOff;
+    private PeriodicIO periodicIO;
+    
     // private RelativeEncoder grabberMotorEncoder;
     // int GrabberMotorPort= Constants.MotorConstants.GRABBER_MOTOR_PORT;
     // private final CANSparkMax grabberMotor = new CANSparkMax(GrabberMotorPort, MotorType.kBrushless);
@@ -69,7 +78,7 @@ public class Grabber extends Subsystem4237
     // private SparkMaxLimitSwitch reverseLimitSwitch;
     
     /**
-     * 
+     * Makes the configurations of a Spark Max Motor
      */
     private void configCANSparkMax()
     {   
@@ -103,23 +112,33 @@ public class Grabber extends Subsystem4237
 
     }
 
+    /**
+     * Contructor for the grabber mechanism
+     */
     public Grabber()
     {
         // configCANSparkMax();
         // readPeriodicInputs();
         // writePeriodicOutputs();
         // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
+        periodicIO = new PeriodicIO();
     }
     
+    /**
+     * Releases the air on the pneumatics allowing the grabber to close
+     */
     public void grabGamePiece()
     {
-        state = Value.kForward;
+        periodicIO.state = Value.kForward;
 
     }
 
+    /**
+     * Gives air to the pneumatics allowing the grabber to open
+     */
     public void releaseGamePiece()
     {
-        state = Value.kReverse;;
+        periodicIO.state = Value.kReverse;;
     }
 
     // public boolean isGrabberClosed()
@@ -134,34 +153,44 @@ public class Grabber extends Subsystem4237
     //     }
     // }
 
+    /**
+     * @return true if the grabber is open
+     */
     public boolean isGrabberOpen()
     {
         return true;
     }
 
+    /**
+     * using pnuematics it controls the angle at which the grabber is pointed
+     */
     public void aimGrabberDown()
     {
-        angle = Value.kForward;
+        periodicIO.angle = Value.kForward;
     }
 
     // //compressor controls
     // /**
     //  * Disables the compressor automatic control loop
     //  */
-    // public void compressorDisable()
-    // {
-    //     compressor.disable();
-    // }
+    public void compressorDisable()
+    {
+        compressor.disable();
+    }
 
     // /**
     //  * Enables the compressor automatic control loop
     //  */
-    // public void compressorEnable()
-    // {
-    //     compressor.enableDigital();
-    // }
+    public void compressorEnable()
+    {
+        compressor.enableDigital();
+    }
 
 
+    /* (non-Javadoc)
+     * @see frc.robot.subsystems.Subsystem4237#readPeriodicInputs()
+     * Gets motor inputs such as encoders
+     */
     @Override
     public synchronized void readPeriodicInputs()
     {
@@ -169,11 +198,15 @@ public class Grabber extends Subsystem4237
 
     }
 
+    /* (non-Javadoc)
+     * @see frc.robot.subsystems.Subsystem4237#writePeriodicOutputs()
+     * Sets motor speeds and directions
+     */
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        grabberControlSolenoid.set(state);
-        grabberAngleControlSolenoid.set(state);
+        grabberControlSolenoid.set(periodicIO.state);
+        grabberAngleControlSolenoid.set(periodicIO.state);
     }
 
     @Override
