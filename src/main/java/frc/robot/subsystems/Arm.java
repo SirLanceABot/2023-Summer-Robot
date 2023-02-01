@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -10,9 +9,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-// package frc.robot.subsystems;
-import com.revrobotics.REVLibError;
 
 import java.lang.invoke.MethodHandles;
 
@@ -43,14 +39,22 @@ public class Arm extends Subsystem4237
             this.max = max;
         }
     }
+
+    private class PeriodicIO
+    {
+        // Inputs
+        private double armPosition = 0.0;
+
+        // Outputs
+    }
     
-    int ArmMotorPort = Constants.MotorConstants.ARM_MOTOR_PORT;
+    private PeriodicIO periodicIO;
+    private final int ArmMotorPort = Constants.MotorConstants.ARM_MOTOR_PORT;
     private final CANSparkMax armMotor = new CANSparkMax (ArmMotorPort, MotorType.kBrushless);
     private final SparkMaxLimitSwitch forwardLimitSwitch = armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     private final SparkMaxLimitSwitch reverseLimitSwitch = armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     private final Timer encoderResetTimer = new Timer();
     private RelativeEncoder armEncoder;
-    private double armPosition = 0.0;
     private double armSpeed = 0.0;
     private boolean resetEncoderNow = false;
     private boolean hasEncoderReset = true;    
@@ -59,6 +63,7 @@ public class Arm extends Subsystem4237
     public Arm()
     {
         configCANSparkMax();
+        periodicIO = new PeriodicIO();
     }
 
     private void configCANSparkMax()
@@ -93,8 +98,6 @@ public class Arm extends Subsystem4237
     {
         resetEncoderNow = true;
         hasEncoderReset = false;
-        encoderResetTimer.reset();
-        encoderResetTimer.start();
     }
    
     /**
@@ -102,7 +105,7 @@ public class Arm extends Subsystem4237
      */
     public double getArmPosition()
     {
-        return armPosition;
+        return periodicIO.armPosition;
     }
 
     /**
@@ -160,7 +163,7 @@ public class Arm extends Subsystem4237
     @Override
     public synchronized void readPeriodicInputs()
     {
-        armPosition = armEncoder.getPosition();
+        periodicIO.armPosition = armEncoder.getPosition();
     }
 
     /**
@@ -175,10 +178,12 @@ public class Arm extends Subsystem4237
             armEncoder.setPosition(0.0);
             resetEncoderNow = false;
             hasEncoderReset = true;
+            encoderResetTimer.reset();
+            encoderResetTimer.start();
         }
         else if (!hasEncoderReset)
         {
-            if(Math.abs(armPosition) < 0.5)
+            if(Math.abs(periodicIO.armPosition) < 0.5)
             {
                 hasEncoderReset = true;
             }
@@ -198,8 +203,8 @@ public class Arm extends Subsystem4237
     @Override
     public String toString()
     {
-        SmartDashboard.putNumber("armEncoder", armPosition);
-        return "Current Arm Position: " + armPosition;
+        SmartDashboard.putNumber("armEncoder", periodicIO.armPosition);
+        return "Current Arm Position: " + periodicIO.armPosition;
     }
 
     @Override
