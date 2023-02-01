@@ -40,7 +40,7 @@ public class SamTest implements Test
      */
     public void init()
     {
-        // shoulder.resetEndcoder();
+        shoulder.resetEncoder();
     }
 
     /**
@@ -67,7 +67,7 @@ public class SamTest implements Test
 
         // shoulder.moveDown();
         
-        // System.out.println(shoulder);
+        System.out.println(shoulder);
     }
     
     /**
