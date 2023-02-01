@@ -59,14 +59,14 @@ public class CloseGrabber extends CommandBase
         grabber.writePeriodicOutputs();
         
 
-        if(grabber.isGrabberClosed())
-        {
-            isFinished = true;
-        }
-        else
-        {
-            isFinished = false;
-        }
+        // if(grabber.isGrabberClosed())
+        // {
+        //     isFinished = true;
+        // }
+        // else
+        // {
+        //     isFinished = false;
+        // }
     }
 
     // Called once the command ends or is interrupted.

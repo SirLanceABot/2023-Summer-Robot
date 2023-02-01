@@ -119,28 +119,21 @@ public class Grabber extends Subsystem4237
         state = Value.kReverse;;
     }
 
-    public boolean isGrabberClosed()
-    {
-        if(encoderDistance == 3 && currentGamePiece == GamePiece.kCone || encoderDistance == 1 && currentGamePiece == GamePiece.kCube)
-        {
-            return true;
-        }
-        else 
-        {
-            return false;
-        }
-    }
+    // public boolean isGrabberClosed()
+    // {
+    //     if(encoderDistance == 3 && currentGamePiece == GamePiece.kCone || encoderDistance == 1 && currentGamePiece == GamePiece.kCube)
+    //     {
+    //         return true;
+    //     }
+    //     else 
+    //     {
+    //         return false;
+    //     }
+    // }
 
     public boolean isGrabberOpen()
     {
-        if(encoderDistance == 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
 
     public void aimGrabberDown()
