@@ -25,6 +25,11 @@ public final class Constants
     {
         System.out.println("Loading: " + fullClassName);
     }
+
+    public static class CANbusConstants
+    {
+        public static final int CANDLE_PORT = 1;
+    }
     
     public static class OperatorConstants
     {
