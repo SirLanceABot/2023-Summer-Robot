@@ -66,13 +66,13 @@ public class AutonomousTab
         createColumnPlayedPiece2Box();
         createCurrentlyContainingGamePieceBox();
         
-        createSendDataButton();
-        successfulDownload = createSuccessfulDownloadBox();
+        // createSendDataButton();
+        // successfulDownload = createSuccessfulDownloadBox();
         successfulDownload.setBoolean(false);
 
         // createMessageBox();
 
-        errorMessageBox = createErrorMessageBox();
+        // errorMessageBox = createErrorMessageBox();
         // errorMessageBox.setString("No Errors");
 
         System.out.println(fullClassName + ": Constructor Finished");
