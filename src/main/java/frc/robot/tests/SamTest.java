@@ -56,10 +56,6 @@ public class SamTest implements Test
         {
             shoulder.moveDown();
         }
-        else if(joystick.getRawButton(3))
-        {
-            shoulder.resetEncoder();
-        }
         else
         {
             shoulder.off();
@@ -67,7 +63,7 @@ public class SamTest implements Test
 
         // shoulder.moveDown();
         
-        System.out.println(shoulder);
+        // System.out.println(shoulder);
     }
     
     /**
