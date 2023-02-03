@@ -27,6 +27,14 @@ public class Gatherer extends Subsystem4237
         System.out.println("Loading: " + fullClassName);
     }
 
+    private class PeriodicIO
+    {
+        // Inputs
+
+        // Outputs
+        private double motorSpeed = 0.0;
+    }
+
     int GathererMotorPort = Constants.MotorConstants.GATHERER_MOTOR_PORT;
 
     private final CANSparkMax gathererMotor = new CANSparkMax(GathererMotorPort, MotorType.kBrushless);
@@ -36,8 +44,9 @@ public class Gatherer extends Subsystem4237
      *
      */
     private RelativeEncoder gathererEncoder;
-    private static double motorSpeed;
+    // private static double motorSpeed;
 
+    private final PeriodicIO periodicIO = new PeriodicIO();
     public static Object gatherGamePiece;
 
     public Gatherer()
@@ -70,7 +79,7 @@ public class Gatherer extends Subsystem4237
      */
     public void gatherGamePiece()
     {
-        motorSpeed = 0.5;
+        periodicIO.motorSpeed = 0.5;
         // gathererMotor.set(-0.5);
     }
 
@@ -81,7 +90,7 @@ public class Gatherer extends Subsystem4237
     public void freeGamePiece()
     {
         // gathererMotor.set(-0.5);
-        motorSpeed = -0.5;
+        periodicIO.motorSpeed = -0.5;
     }
 
     /*
@@ -89,7 +98,7 @@ public class Gatherer extends Subsystem4237
      */
     public void turnOff()
     {
-        motorSpeed = 0.0;
+        periodicIO.motorSpeed = 0.0;
     }
 
 
@@ -102,7 +111,7 @@ public class Gatherer extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        gathererMotor.set(motorSpeed);
+        gathererMotor.set(periodicIO.motorSpeed);
     }
 
     /*
