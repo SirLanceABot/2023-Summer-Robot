@@ -11,6 +11,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Gatherer;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
@@ -43,6 +44,7 @@ public class RobotContainer
 	private boolean useGatherer 			= false;
 	private boolean useArm 					= true;
 	private boolean useShoulder				= false;
+	private boolean useCandle				= false;
 	private boolean useDriverController		= false;
 	private boolean useOperatorController 	= false;
 	private boolean useAutonomousTabData	= false;
@@ -54,6 +56,7 @@ public class RobotContainer
 	public final Arm arm;
 	public final Shoulder shoulder;
 	public final Gatherer gatherer;
+	public final Candle4237 candle;
 	public final MainShuffleboard mainShuffleboard;
 	public final AutonomousTabData autonomousTabData;
 	public final DriverController driverController;
@@ -72,6 +75,7 @@ public class RobotContainer
 		arm 				= (useFullRobot || useArm) 				? new Arm() 				: null;
 		shoulder 			= (useFullRobot || useShoulder) 		? new Shoulder() 			: null;
 		gatherer 			= (useFullRobot || useGatherer) 		? new Gatherer() 			: null;
+		candle 				= (useFullRobot || useCandle)			? new Candle4237() 			: null;
 		driverController 	= (useBindings || useDriverController) 	? new DriverController(5) 	: null;
 		operatorController 	= (useBindings || useOperatorController) ? new OperatorController(6) : null;
 		autonomousTabData	= (useBindings || useAutonomousTabData ) ? new AutonomousTabData()	: null;
