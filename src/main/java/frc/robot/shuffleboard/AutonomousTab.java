@@ -31,9 +31,11 @@ public class AutonomousTab
     private ShuffleboardTab autonomousTab = Shuffleboard.getTab("Autonomous");
 
     private AutonomousTabData autonomousTabData = new AutonomousTabData();
+    private final AutonomousTabData autonomousTabDataMain;
   
     // Create the Box objects
     private SendableChooser<AutonomousTabData.StartingLocation> startingLocationBox = new SendableChooser<>();
+    private SendableChooser<AutonomousTabData.AreGamePiecesPlayed> areGamePiecesPlayedBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.MoveOntoChargingStation> moveOntoChargingStationBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.PickUpGamePieces> pickUpGamePiecesBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.RowPlayedPiece1> rowPlayedPiece1Box = new SendableChooser<>();
@@ -53,11 +55,14 @@ public class AutonomousTab
     private String errorMessage = "No Errors";
 
     // *** CLASS CONSTRUCTOR ***
-    public AutonomousTab()
+    public AutonomousTab(AutonomousTabData autonomousTabData)
     {
         System.out.println(fullClassName + " : Constructor Started");
 
+        autonomousTabDataMain = autonomousTabData;
+
         createStartingLocationBox();
+        createAreGamePiecesPlayedBox();
         createMoveOntoChargingStationBox();
         createPickUpGamePiecesBox();
         createRowPlayedPiece1Box();
@@ -66,13 +71,13 @@ public class AutonomousTab
         createColumnPlayedPiece2Box();
         createCurrentlyContainingGamePieceBox();
         
-        // createSendDataButton();
-        // successfulDownload = createSuccessfulDownloadBox();
+        createSendDataButton();
+        createSuccessfulDownloadBox();
         successfulDownload.setBoolean(false);
 
         // createMessageBox();
 
-        // errorMessageBox = createErrorMessageBox();
+        createErrorMessageBox();
         // errorMessageBox.setString("No Errors");
 
         System.out.println(fullClassName + ": Constructor Finished");
@@ -102,6 +107,27 @@ public class AutonomousTab
     }
 
     /**
+    * <b>Starting Location</b> Box
+    * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
+    */
+    private void createAreGamePiecesPlayedBox()
+    {
+        //create and name the Box
+        SendableRegistry.add(areGamePiecesPlayedBox, "Are Game Pieces Played");
+        SendableRegistry.setName(areGamePiecesPlayedBox, "Are Game Pieces Played");
+        
+        //add options to  Box
+        areGamePiecesPlayedBox.setDefaultOption("Yes", AutonomousTabData.AreGamePiecesPlayed.kYes);
+        areGamePiecesPlayedBox.addOption("No", AutonomousTabData.AreGamePiecesPlayed.kNo);
+
+        //put the widget on the shuffleboard
+        autonomousTab.add(startingLocationBox)
+            .withWidget(BuiltInWidgets.kSplitButtonChooser)
+            .withPosition(0, 0)
+            .withSize(8, 2);
+    }
+
+    /**
     * <b>Move Onto Charging Station</b> Box
     * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
     */
@@ -112,8 +138,8 @@ public class AutonomousTab
         SendableRegistry.setName(moveOntoChargingStationBox, "Move Onto Charging Station");
 
         //add options to Box
-        moveOntoChargingStationBox.setDefaultOption("No", AutonomousTabData.MoveOntoChargingStation.kNo);
-        moveOntoChargingStationBox.addOption("Yes", AutonomousTabData.MoveOntoChargingStation.kYes);
+        moveOntoChargingStationBox.setDefaultOption("Yes", AutonomousTabData.MoveOntoChargingStation.kYes);
+        moveOntoChargingStationBox.addOption("No", AutonomousTabData.MoveOntoChargingStation.kNo);
 
         //put the widget on the shuffleboard
         autonomousTab.add(moveOntoChargingStationBox)
@@ -154,6 +180,7 @@ public class AutonomousTab
         SendableRegistry.setName(rowPlayedPiece1Box, "Row Played Piece 1");
 
         //add options to Box
+        rowPlayedPiece1Box.addOption("0", AutonomousTabData.RowPlayedPiece1.k0);
         rowPlayedPiece1Box.setDefaultOption("1", AutonomousTabData.RowPlayedPiece1.k1);
         rowPlayedPiece1Box.addOption("2", AutonomousTabData.RowPlayedPiece1.k2);
         rowPlayedPiece1Box.addOption("3", AutonomousTabData.RowPlayedPiece1.k3);
@@ -176,6 +203,7 @@ public class AutonomousTab
         SendableRegistry.setName(columnPlayedPiece1Box, "Column Played Piece 1");
 
         //add options to Box
+        columnPlayedPiece1Box.addOption("0", AutonomousTabData.ColumnPlayedPiece1.k0);
         columnPlayedPiece1Box.setDefaultOption("1", AutonomousTabData.ColumnPlayedPiece1.k1);
         columnPlayedPiece1Box.addOption("2", AutonomousTabData.ColumnPlayedPiece1.k2);
         columnPlayedPiece1Box.addOption("3", AutonomousTabData.ColumnPlayedPiece1.k3);
@@ -198,7 +226,8 @@ public class AutonomousTab
         SendableRegistry.setName(rowPlayedPiece2Box, "Row Played Piece 2");
 
         //add options to Box
-        rowPlayedPiece2Box.setDefaultOption("1", AutonomousTabData.RowPlayedPiece2.k1);
+        rowPlayedPiece2Box.setDefaultOption("0", AutonomousTabData.RowPlayedPiece2.k0);
+        rowPlayedPiece2Box.addOption("1", AutonomousTabData.RowPlayedPiece2.k1);
         rowPlayedPiece2Box.addOption("2", AutonomousTabData.RowPlayedPiece2.k2);
         rowPlayedPiece2Box.addOption("3", AutonomousTabData.RowPlayedPiece2.k3);
 
@@ -220,7 +249,8 @@ public class AutonomousTab
         SendableRegistry.setName(columnPlayedPiece2Box, "Column Played Piece 2");
 
         //add options to Box
-        columnPlayedPiece2Box.setDefaultOption("1", AutonomousTabData.ColumnPlayedPiece2.k1);
+        columnPlayedPiece2Box.setDefaultOption("0", AutonomousTabData.ColumnPlayedPiece2.k0);
+        columnPlayedPiece2Box.addOption("1", AutonomousTabData.ColumnPlayedPiece2.k1);
         columnPlayedPiece2Box.addOption("2", AutonomousTabData.ColumnPlayedPiece2.k2);
         columnPlayedPiece2Box.addOption("3", AutonomousTabData.ColumnPlayedPiece2.k3);
 
@@ -252,4 +282,166 @@ public class AutonomousTab
             .withPosition(13, 3)
             .withSize(6, 2);
     }
+
+    /**
+     * <b>Send Data</b> Button
+     * <p>
+     * Create an entry in the Network Table and add the Button to the Shuffleboard
+     * Tab
+     * 
+     * @return
+     */
+    private void createSendDataButton()
+    {
+        SendableRegistry.add(sendDataButton, "Send Data");
+        SendableRegistry.setName(sendDataButton, "Send Data");
+
+        sendDataButton.setDefaultOption("No", false);
+        sendDataButton.addOption("Yes", true);
+
+        autonomousTab.add(sendDataButton)
+            .withWidget(BuiltInWidgets.kSplitButtonChooser)
+            .withPosition(23, 1)
+            .withSize(4, 2);
+    }
+
+    private void createSuccessfulDownloadBox()
+    {
+        Map<String, Object> booleanBoxProperties = new HashMap<>();
+        booleanBoxProperties.put("Color when true", "Lime");
+        booleanBoxProperties.put("Color when false", "Red");
+        
+        autonomousTab.add("Successful Download?", false)
+             .withWidget(BuiltInWidgets.kBooleanBox)
+             .withPosition(23, 4)
+             .withSize(4, 4)
+             .withProperties(booleanBoxProperties)
+             .getEntry();
+    }
+
+    private void createErrorMessageBox()
+    {
+         autonomousTab.add("Error Messages", "No Errors")
+             .withWidget(BuiltInWidgets.kTextView)
+             .withPosition(1, 10)
+             .withSize(26, 2)
+             .getEntry();
+    }
+
+    private void updateAutonomousTabData()
+    {
+        autonomousTabData.startingLocation = startingLocationBox.getSelected();
+        autonomousTabData.areGamePiecesPlayed = areGamePiecesPlayedBox.getSelected();
+        autonomousTabData.moveOntoChargingStation = moveOntoChargingStationBox.getSelected();
+        autonomousTabData.pickUpGamePieces = pickUpGamePiecesBox.getSelected();
+        autonomousTabData.rowPlayedPiece1 = rowPlayedPiece1Box.getSelected();
+        autonomousTabData.columnPlayedPiece1 = columnPlayedPiece1Box.getSelected();
+        autonomousTabData.rowPlayedPiece2 = rowPlayedPiece2Box.getSelected();
+        autonomousTabData.columnPlayedPiece2 = columnPlayedPiece2Box.getSelected();
+        autonomousTabData.currentlyContainingGamePiece = currentlyContainingGamePieceBox.getSelected();
+    }
+
+    public boolean wasSendDataButtonPressed()
+    {
+        boolean isNewData = false;
+        boolean isSendDataButtonPressed = sendDataButton.getSelected();
+
+        updateIsDataValidAndErrorMessage();
+
+        if(isSendDataButtonPressed && !previousStateOfSendButton)
+        {
+            previousStateOfSendButton = true;
+            isNewData = true;
+
+            if(isDataValid)
+            {
+                successfulDownload.setBoolean(true);
+                updateAutonomousTabData();
+            }
+            else
+            {
+                successfulDownload.setBoolean(false);
+                DriverStation.reportWarning(errorMessage, false);
+                errorMessageBox.setString(errorMessage);
+            }
+        }
+        
+        if (!isSendDataButtonPressed && previousStateOfSendButton)
+        {
+            previousStateOfSendButton = false;
+        }
+
+        return isNewData;
+    }
+
+    public AutonomousTabData getAutonomousTabData()
+    {
+        return autonomousTabData;
+    }
+
+    public void updateIsDataValidAndErrorMessage()
+    {
+        errorMessage = "No Errors";
+        String msg = "";
+        boolean isValid = true;
+
+        boolean isMiddle = (startingLocationBox.getSelected() == AutonomousTabData.StartingLocation.kMiddle);
+        boolean isPiecesPlayed = (areGamePiecesPlayedBox.getSelected() == AutonomousTabData.AreGamePiecesPlayed.kYes);
+        boolean isPiecesPlayedFalse = (areGamePiecesPlayedBox.getSelected() == AutonomousTabData.AreGamePiecesPlayed.kNo);
+        boolean isMoveOntoStation = (moveOntoChargingStationBox.getSelected() == AutonomousTabData.MoveOntoChargingStation.kYes);
+        boolean isPiecesPickedUp = (pickUpGamePiecesBox.getSelected() == AutonomousTabData.PickUpGamePieces.kNo);
+        boolean isRow1 = (rowPlayedPiece1Box.getSelected() == AutonomousTabData.RowPlayedPiece1.k1);
+        boolean isColumn1 = (columnPlayedPiece1Box.getSelected() == AutonomousTabData.ColumnPlayedPiece1.k1);
+        boolean isRow2False = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.k0);
+        boolean isRow2True = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.k1);
+        boolean isColumn2False = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.k0);
+        boolean isColumn2True = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.k1);
+        boolean isPiecesContained = (currentlyContainingGamePieceBox.getSelected() == AutonomousTabData.CurrentlyContainingGamePiece.kYes);
+        
+        if(!isMiddle && isMoveOntoStation)
+        {
+            isValid = false;
+            
+            msg += "[ Not Possible ]  \n";
+        }
+        
+        if(isRow2True && isMoveOntoStation || isColumn2True && isMoveOntoStation)
+        {
+            isValid = false;
+            
+            msg += "[ Not Possible ]  \n";
+        }
+
+        if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
+        {
+            isValid = false;
+            
+            msg += "[ Not Possible ]  \n";
+        }
+
+        if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
+        {
+            isValid = false;
+            
+            msg += "[ Not Possible ]  \n";
+        }
+
+        if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
+        {
+            isValid = false;
+            
+            msg += "[ Not Possible ]  \n";
+        }
+
+        if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
+        {
+            isValid = false;
+            
+            msg += "[ Not Possible ]  \n";
+        }
+        
+
+        
+        
+    }   
 }

@@ -14,6 +14,8 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
+import frc.robot.shuffleboard.AutonomousTabData;
+import frc.robot.shuffleboard.MainShuffleboard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,6 +45,8 @@ public class RobotContainer
 	private boolean useShoulder				= false;
 	private boolean useDriverController		= false;
 	private boolean useOperatorController 	= false;
+	private boolean useAutonomousTabData	= false;
+	private boolean useMainShuffleboard		= false;
 
 
 	public final ExampleSubsystem exampleSubsystem;
@@ -50,6 +54,8 @@ public class RobotContainer
 	public final Arm arm;
 	public final Shoulder shoulder;
 	public final Gatherer gatherer;
+	public final MainShuffleboard mainShuffleboard;
+	public final AutonomousTabData autonomousTabData;
 	public final DriverController driverController;
 	public final OperatorController operatorController;
 	// private Joystick joystick;
@@ -68,6 +74,8 @@ public class RobotContainer
 		gatherer 			= (useFullRobot || useGatherer) 		? new Gatherer() 			: null;
 		driverController 	= (useBindings || useDriverController) 	? new DriverController(5) 	: null;
 		operatorController 	= (useBindings || useOperatorController) ? new OperatorController(6) : null;
+		autonomousTabData	= (useBindings || useAutonomousTabData ) ? new AutonomousTabData()	: null;
+		mainShuffleboard 	= (useBindings || useMainShuffleboard)	? new MainShuffleboard(this)	: null;
 		
 
 

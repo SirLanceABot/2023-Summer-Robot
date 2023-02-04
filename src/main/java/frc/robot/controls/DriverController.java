@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 //import edu.wpi.first.wpilibj.DriverStation;
 
-public class DriverController extends Xbox
+public class DriverController extends Xbox 
 {
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 

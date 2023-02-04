@@ -9,7 +9,7 @@ public class AutonomousTabData
 
     //-------------------------------------------------------------------//
 
-    public static enum GamePiecesPlayed
+    public static enum AreGamePiecesPlayed
     {
         kYes, kNo;
     }
@@ -19,7 +19,7 @@ public class AutonomousTabData
 
     public static enum RowPlayedPiece1
     {
-        k1(1), k2(2), k3(3);
+        k0(0), k1(1), k2(2), k3(3);
         
         public int value;
 
@@ -33,7 +33,7 @@ public class AutonomousTabData
 
     public static enum ColumnPlayedPiece1
     {
-        k1(1), k2(2), k3(3);
+        k0(0), k1(1), k2(2), k3(3);
         
         public int value;
 
@@ -47,7 +47,7 @@ public class AutonomousTabData
 
     public static enum RowPlayedPiece2
     {
-        k1(1), k2(2), k3(3);
+        k0(0), k1(1), k2(2), k3(3);
         
         public int value;
 
@@ -61,7 +61,7 @@ public class AutonomousTabData
 
     public static enum ColumnPlayedPiece2
     {
-        k1(1), k2(2), k3(3);
+        k0(0), k1(1), k2(2), k3(3);
         
         public int value;
 
@@ -95,13 +95,13 @@ public class AutonomousTabData
     //-------------------------------------------------------------------//
 
     public StartingLocation startingLocation = StartingLocation.kMiddle;
-    public GamePiecesPlayed gamePiecesPlayed = GamePiecesPlayed.kYes;
+    public AreGamePiecesPlayed areGamePiecesPlayed = AreGamePiecesPlayed.kYes;
     public MoveOntoChargingStation moveOntoChargingStation = MoveOntoChargingStation.kYes;
     public PickUpGamePieces pickUpGamePieces = PickUpGamePieces.kNo;
     public RowPlayedPiece1 rowPlayedPiece1 = RowPlayedPiece1.k1;
     public ColumnPlayedPiece1 columnPlayedPiece1 = ColumnPlayedPiece1.k1;
-    public RowPlayedPiece2 rowPlayedPiece2 = RowPlayedPiece2.k1;
-    public ColumnPlayedPiece2 columnPlayedPiece2 = ColumnPlayedPiece2.k1;
+    public RowPlayedPiece2 rowPlayedPiece2 = RowPlayedPiece2.k0;
+    public ColumnPlayedPiece2 columnPlayedPiece2 = ColumnPlayedPiece2.k0;
     public CurrentlyContainingGamePiece currentlyContainingGamePiece = CurrentlyContainingGamePiece.kYes;
 
     public String toString()
@@ -111,7 +111,7 @@ public class AutonomousTabData
         str += "\n*****  AUTONOMOUS SELECTION  *****\n";
         str += "Starting Location     : "  + startingLocation   + "\n";
         str += "Move Onto Charging Station           : "  + moveOntoChargingStation   + "\n";
-        str += " Game Pieces Played             :" + gamePiecesPlayed  + "\n";
+        str += " Are Game Pieces Played             :" + areGamePiecesPlayed  + "\n";
         str += " Pick Up Game Pieces             :" + pickUpGamePieces  + "\n";
         str += " Row of First Game Piece             :" + rowPlayedPiece1  + "\n";
         str += " Column of First Game Piece             :" + columnPlayedPiece1  + "\n";
@@ -125,8 +125,8 @@ public class AutonomousTabData
     public void updateData(AutonomousTabData atd)
     {
         startingLocation = atd.startingLocation;
+        areGamePiecesPlayed = atd.areGamePiecesPlayed;
         moveOntoChargingStation = atd.moveOntoChargingStation;
-        gamePiecesPlayed = atd.gamePiecesPlayed;
         pickUpGamePieces = atd.pickUpGamePieces;
         rowPlayedPiece1 = atd.rowPlayedPiece1;
         columnPlayedPiece1 = atd.columnPlayedPiece1;

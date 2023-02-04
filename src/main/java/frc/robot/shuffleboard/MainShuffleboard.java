@@ -4,7 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import frc.robot.RobotContainer;
 
-// import frc.robot.RobotContainer;
+import frc.robot.RobotContainer;
 
 public class MainShuffleboard 
 {
@@ -18,15 +18,18 @@ public class MainShuffleboard
     }
 
     // *** CLASS & INSTANCE VARIABLES ***
-    // private static final DriverControllerTab DRIVER_CONTROLLER_TAB= RobotContainer.DRIVER_CONTROLLER_TAB;
-    // private static final OperatorControllerTab OPERATOR_CONTROLLER_TAB = RobotContainer.OPERATOR_CONTROLLER_TAB;
-    // private static final AutonomousTab AUTONOMOUS_TAB =  RobotContainer.AUTONOMOUS_TAB;
+    private final DriverControllerTab driverControllerTab;
+    private  final OperatorControllerTab operatorControllerTab;
+    private  final AutonomousTab autonomousTab;
     
     
     // *** CLASS CONSTRUCTOR ***
-    public MainShuffleboard()
+    public MainShuffleboard(RobotContainer robotContainer)
     {
         System.out.println(fullClassName + " : Constructor Started");
+        driverControllerTab = new DriverControllerTab(robotContainer.driverController);
+        operatorControllerTab = new OperatorControllerTab(robotContainer.operatorController);
+        autonomousTab = new AutonomousTab(robotContainer.autonomousTabData);
 
         System.out.println(fullClassName + ": Constructor Finished");
     }

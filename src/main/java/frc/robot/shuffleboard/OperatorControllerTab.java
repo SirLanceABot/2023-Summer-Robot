@@ -38,6 +38,7 @@ public class OperatorControllerTab
     // *** CLASS & INSTANCE VARIABLES ***
     private final AxisObjects shroudObjects = new AxisObjects();
     private final AxisObjects shooterPowerObjects = new AxisObjects();
+    private final OperatorController operatorController;
 
     // private final OperatorController OPERATOR_CONTROLLER = RobotContainer.OPERATOR_CONTROLLER;
 
@@ -45,9 +46,10 @@ public class OperatorControllerTab
 
 
     // *** CLASS CONSTRUCTOR ***
-    public OperatorControllerTab()
+    public OperatorControllerTab(OperatorController operatorController)
     {
         System.out.println(fullClassName + " : Constructor Started");
+        this.operatorController = operatorController;
 
         initOperatorControllerTab();
 

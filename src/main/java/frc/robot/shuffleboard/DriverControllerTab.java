@@ -41,15 +41,17 @@ public class DriverControllerTab
     private final AxisObjects rightXObjects = new AxisObjects();
     // private final AxisObjects rightYObjects = new AxisObjects();
 
-    // private final DriverController driverController = RobotContainer.driverController;
+    private final DriverController driverController;
 
     private ShuffleboardTab driverControllerTab = Shuffleboard.getTab("Driver Controller");
 
 
     // *** CLASS CONSTRUCTOR ***
-    public DriverControllerTab()
+    public DriverControllerTab( DriverController driverController)
     {
         System.out.println(fullClassName + " : Constructor Started");
+
+        this.driverController = driverController;
 
         initDriverControllerTab();
 
