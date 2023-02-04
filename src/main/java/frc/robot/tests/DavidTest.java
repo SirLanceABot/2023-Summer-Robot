@@ -2,7 +2,9 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Candle4237;
 
 public class DavidTest implements Test
 {
@@ -19,12 +21,15 @@ public class DavidTest implements Test
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
+    private final Candle4237 candle;
+    private Joystick joystick = new Joystick(1);
 
 
     // *** CLASS CONSTRUCTOR ***
     public DavidTest(RobotContainer robotContainer)
     {
         this.robotContainer = robotContainer;
+        candle = this.robotContainer.candle;
     }
 
     /**
@@ -37,13 +42,22 @@ public class DavidTest implements Test
      * This method runs periodically (every 20ms).
      */
     public void periodic()
-    {}
+    {
+        if (joystick.getRawButton(3))
+            candle.signalCube();
+        else if (joystick.getRawButton(4))
+            candle.signalCone();
+        else
+            candle.turnOffLight();
+    }
     
     /**
      * This method runs one time after the periodic() method.
      */
     public void exit()
-    {}
+    {
+        candle.turnOffLight();
+    }
 
     // *** METHODS ***
     // Put any additional methods here.
