@@ -41,7 +41,7 @@ public class Candle4237
     public void signalCube()
     {
         // candle.setLEDs(redValue, greenValue, blueValue, whiteValue, LED #, count)
-        // candle.setLEDs(123, 84, 185, 255, 0, 1);
+        candle.setLEDs(123, 84, 185, 255, 0, 1);
         
     }
 
@@ -50,11 +50,11 @@ public class Candle4237
      */
     public void signalCone()
     {
-        // candle.setLEDs(237, 194, 0, 255, 0, 1);
+        candle.setLEDs(237, 194, 0, 255, 0, 1);
     }
 
     public void turnOffLight()
     {
-        // candle.setLEDs(0, 0, 0, 0, 0, 1);
+        candle.setLEDs(0, 0, 0, 0, 0, 1);
     }
 }

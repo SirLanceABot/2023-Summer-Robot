@@ -42,7 +42,7 @@ public class RobotContainer
 	private boolean useExampleSubsystem		= false;
 	private boolean useGrabber 				= false;
 	private boolean useGatherer 			= false;
-	private boolean useArm 					= true;
+	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
 	private boolean useCandle				= false;
 	private boolean useDriverController		= false;
