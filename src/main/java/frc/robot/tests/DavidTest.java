@@ -50,7 +50,8 @@ public class DavidTest implements Test
         else if (joystick.getRawButtonPressed(6))
             candle.turnOffLight();
         else if (joystick.getRawButtonPressed(5))
-            candle.signalReadyToDrop();
+            candle.rainbowAnimation();
+            candle.animate();
     }
     
     /**
