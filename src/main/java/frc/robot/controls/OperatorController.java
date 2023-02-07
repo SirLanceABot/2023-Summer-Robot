@@ -2,9 +2,11 @@ package frc.robot.controls;
 
 import java.lang.invoke.MethodHandles;
 
+import frc.robot.PeriodicIO;
+
 //import edu.wpi.first.wpilibj.DriverStation;
 
-public class OperatorController extends Xbox
+public class OperatorController extends Xbox implements PeriodicIO
 {
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
@@ -17,6 +19,13 @@ public class OperatorController extends Xbox
     
 
     // *** INNER ENUMS and INNER CLASSES ***
+
+    private class PeriodicIO
+    {
+
+    }
+
+    private PeriodicIO periodicIO;
     
     // *** CLASS CONSTRUCTOR ***
     public OperatorController(int port)
@@ -25,6 +34,8 @@ public class OperatorController extends Xbox
 
         System.out.println(fullClassName + " : Constructor Started");
 
+        registerPeriodicIO();
+        periodicIO = new PeriodicIO();
         configureAxes();
         createRumbleEvents();
         // checkForTriggerConflict();
@@ -47,12 +58,12 @@ public class OperatorController extends Xbox
 
     public void configureAxes()
     {
-        setAxisSettings(Axis.kLeftX, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kLeftY, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kLeftTrigger, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kRightTrigger, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kRightX, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kRightY, 0, 0, 0, false, null);
+        setAxisSettings(Axis.kLeftX, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kLeftY, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kLeftTrigger, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kRightTrigger, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kRightX, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kRightY, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
     }
 
     // public void checkForTriggerConflict()
@@ -71,4 +82,27 @@ public class OperatorController extends Xbox
     //         }
     //     }
     // }
+
+    @Override
+    public synchronized void readPeriodicInputs()
+    {
+        // TODO find joystick values
+    }
+
+    @Override
+    public synchronized void writePeriodicOutputs()
+    {
+        checkRumbleEvent();
+    }
+
+    @Override
+    public String toString()
+    {
+        String str = "";
+
+        // str = str + ""
+
+
+        return str;
+    }
 }

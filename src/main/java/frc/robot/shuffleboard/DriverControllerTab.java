@@ -151,36 +151,36 @@ public class DriverControllerTab
             .withSize(width, height);
     }
 
-    // private DriverController.AxisSettings getAxisSettingsFromShuffleboard(AxisObjects axisObjects)
+    private DriverController.AxisSettings getAxisSettingsFromShuffleboard(AxisObjects axisObjects)
     {
-        // DriverController.AxisSettings axisSettings = DRIVER_CONTROLLER.new AxisSettings();
+        DriverController.AxisSettings axisSettings = driverController.new AxisSettings();
 
         // These MUST be read from the shuffleboard as a String, then converted to a Double because it is a "Text Box"
-        // axisSettings.axisDeadzone = Double.valueOf(axisObjects.deadzoneEntry.getString("0.1"));
-        // axisSettings.axisMinOutput = Double.valueOf(axisObjects.minOutputEntry.getString("0.0"));
-        // axisSettings.axisMaxOutput = Double.valueOf(axisObjects.maxOutputEntry.getString("1.0"));
+        axisSettings.axisDeadzone = Double.valueOf(axisObjects.deadzoneEntry.getString("0.1"));
+        axisSettings.axisMinOutput = Double.valueOf(axisObjects.minOutputEntry.getString("0.0"));
+        axisSettings.axisMaxOutput = Double.valueOf(axisObjects.maxOutputEntry.getString("1.0"));
         
-        // axisSettings.axisIsFlipped = axisObjects.isFlipped.getSelected();
-        // axisSettings.axisScale = axisObjects.axisScaleComboBox.getSelected();
+        axisSettings.axisIsFlipped = axisObjects.isFlipped.getSelected();
+        axisSettings.axisScale = axisObjects.axisScaleComboBox.getSelected();
 
         // // System.out.println(axisSettings);
-        // return axisSettings;
+        return axisSettings;
     }
 
     public void setDriverControllerAxisSettings()
     {
-        // DriverController.AxisSettings axisSettings = DRIVER_CONTROLLER.new AxisSettings();
+        DriverController.AxisSettings axisSettings = driverController.new AxisSettings();
 
-        // axisSettings = getAxisSettingsFromShuffleboard(moveXObjects);
+        axisSettings = getAxisSettingsFromShuffleboard(moveXObjects);
         // DRIVER_CONTROLLER.setAxisSettings(DriverController.DriverAxisAction.kMoveX.axis, axisSettings);
 
-        // axisSettings = getAxisSettingsFromShuffleboard(moveYObjects);
+        axisSettings = getAxisSettingsFromShuffleboard(moveYObjects);
         // DRIVER_CONTROLLER.setAxisSettings(DriverController.DriverAxisAction.kMoveY.axis, axisSettings);
 
-        // axisSettings = getAxisSettingsFromShuffleboard(rightXObjects);
+        axisSettings = getAxisSettingsFromShuffleboard(rightXObjects);
         // DRIVER_CONTROLLER.setAxisSettings(DriverController.DriverAxisAction.kRotate.axis, axisSettings);
 
         // axisSettings = getAxisSettingsFromShuffleboard(rightYObjects);
-        // DRIVER_CONTROLLER.setAxisSettings(DriverController.Axis.kRightY, axisSettings);
+        // driverController.setAxisSettings(DriverController.Axis.kRightY, axisSettings);
     }
 }

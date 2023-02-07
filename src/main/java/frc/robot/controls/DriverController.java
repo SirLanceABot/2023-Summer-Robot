@@ -3,12 +3,13 @@ package frc.robot.controls;
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.PeriodicIO;
 
 //import frc.constants.Port;
 
 //import edu.wpi.first.wpilibj.DriverStation;
 
-public class DriverController extends Xbox 
+public class DriverController extends Xbox implements PeriodicIO
 {
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
@@ -21,7 +22,12 @@ public class DriverController extends Xbox
     
 
     // *** INNER ENUMS and INNER CLASSES ***
-    
+    private class PeriodicIO
+    {
+
+    }
+    private PeriodicIO periodicIO;
+
     // *** CLASS CONSTRUCTOR ***
     public DriverController(int port)
     {
@@ -29,6 +35,8 @@ public class DriverController extends Xbox
 
         System.out.println(fullClassName + " : Constructor Started");
 
+        registerPeriodicIO();
+        periodicIO = new PeriodicIO();
         configureAxes();
         createRumbleEvents();
         // checkForTriggerConflict();
@@ -51,28 +59,34 @@ public class DriverController extends Xbox
 
     public void configureAxes()
     {
-        setAxisSettings(Axis.kLeftX, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kLeftY, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kLeftTrigger, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kRightTrigger, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kRightX, 0, 0, 0, false, null);
-        setAxisSettings(Axis.kRightY, 0, 0, 0, false, null);
+        setAxisSettings(Axis.kLeftX, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kLeftY, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kLeftTrigger, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kRightTrigger, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kRightX, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kRightY, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
     }
 
-    // public void checkForTriggerConflict()
-    // {
-    //     for(DriverButtonAction dba : DriverButtonAction.values())
-    //     {
-    //         if(dba.button == Button.kLeftTrigger || dba.button == Button.kRightTrigger)
-    //         {
-    //             for(DriverAxisAction daa : DriverAxisAction.values())
-    //             {
-    //                 if(daa.axis == Axis.kLeftTrigger && dba.button == Button.kLeftTrigger)
-    //                     DriverStation.reportWarning("ERROR - Left Trigger is button and axis", false);
-    //                 if(daa.axis == Axis.kRightTrigger && dba.button == Button.kRightTrigger)
-    //                     DriverStation.reportWarning("ERROR - Right Trigger is button and axis", false);
-    //             }
-    //         }
-    //     }
-    // }
+    @Override
+    public synchronized void readPeriodicInputs()
+    {
+        // TODO Put in joystick values
+    }
+
+    @Override
+    public synchronized void writePeriodicOutputs()
+    {
+        checkRumbleEvent();
+    }
+
+    @Override
+    public String toString()
+    {
+        String str = "";
+
+        // str = str + ""
+
+
+        return str;
+    }
 }

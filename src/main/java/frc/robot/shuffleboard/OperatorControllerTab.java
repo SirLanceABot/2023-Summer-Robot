@@ -40,8 +40,6 @@ public class OperatorControllerTab
     private final AxisObjects shooterPowerObjects = new AxisObjects();
     private final OperatorController operatorController;
 
-    // private final OperatorController OPERATOR_CONTROLLER = RobotContainer.OPERATOR_CONTROLLER;
-
     private ShuffleboardTab operatorControllerTab = Shuffleboard.getTab("Operator Controller");
 
 
@@ -140,25 +138,25 @@ public class OperatorControllerTab
             .withSize(width, height);
     }
 
-    // private OperatorController.AxisSettings getAxisSettingsFromShuffleboard(AxisObjects axisObjects)
+    private OperatorController.AxisSettings getAxisSettingsFromShuffleboard(AxisObjects axisObjects)
     {
-        // OperatorController.AxisSettings axisSettings = OPERATOR_CONTROLLER.new AxisSettings();
+        OperatorController.AxisSettings axisSettings = operatorController.new AxisSettings();
 
         // These MUST be read from the shuffleboard as a String, then converted to a Double because it is a "Text Box"
-        // axisSettings.axisDeadzone = Double.valueOf(axisObjects.deadzoneEntry.getString("0.1"));
-        // axisSettings.axisMinOutput = Double.valueOf(axisObjects.minOutputEntry.getString("0.0"));
-        // axisSettings.axisMaxOutput = Double.valueOf(axisObjects.maxOutputEntry.getString("1.0"));
+        axisSettings.axisDeadzone = Double.valueOf(axisObjects.deadzoneEntry.getString("0.1"));
+        axisSettings.axisMinOutput = Double.valueOf(axisObjects.minOutputEntry.getString("0.0"));
+        axisSettings.axisMaxOutput = Double.valueOf(axisObjects.maxOutputEntry.getString("1.0"));
 
-        // axisSettings.axisIsFlipped = axisObjects.isFlipped.getSelected();
-        // axisSettings.axisScale = axisObjects.axisScaleComboBox.getSelected();
+        axisSettings.axisIsFlipped = axisObjects.isFlipped.getSelected();
+        axisSettings.axisScale = axisObjects.axisScaleComboBox.getSelected();
 
         // // System.out.println(axisSettings);
-        // return axisSettings;
+        return axisSettings;
     }
 
     public void setOperatorControllerAxisSettings()
     {
-        // OperatorController.AxisSettings axisSettings = OPERATOR_CONTROLLER.new AxisSettings();
+        OperatorController.AxisSettings axisSettings = operatorController.new AxisSettings();
 
         // axisSettings = getAxisSettingsFromShuffleboard(shroudObjects);
         // OPERATOR_CONTROLLER.setAxisSettings(OperatorController.OperatorAxisAction.kShroud.axis, axisSettings);

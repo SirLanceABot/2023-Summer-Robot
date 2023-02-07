@@ -94,6 +94,13 @@ public class AutonomousTabData
 
     //-------------------------------------------------------------------//
 
+    public static enum AutonomousCommands
+    {
+        kNeither, kChargingStation, kTwoGamePieces
+    }
+
+    //-------------------------------------------------------------------//
+
     public StartingLocation startingLocation = StartingLocation.kMiddle;
     public AreGamePiecesPlayed areGamePiecesPlayed = AreGamePiecesPlayed.kYes;
     public MoveOntoChargingStation moveOntoChargingStation = MoveOntoChargingStation.kYes;
@@ -103,6 +110,7 @@ public class AutonomousTabData
     public RowPlayedPiece2 rowPlayedPiece2 = RowPlayedPiece2.k0;
     public ColumnPlayedPiece2 columnPlayedPiece2 = ColumnPlayedPiece2.k0;
     public CurrentlyContainingGamePiece currentlyContainingGamePiece = CurrentlyContainingGamePiece.kYes;
+    public AutonomousCommands autonomousCommands = AutonomousCommands.kNeither;
 
     public String toString()
     {
@@ -118,6 +126,7 @@ public class AutonomousTabData
         str += " Row of Second Game Piece             :" + rowPlayedPiece2  + "\n";
         str += " Column of Second Game Piece             :" + columnPlayedPiece2  + "\n";
         str += " Does the Robot Currently Contain a Game Piece             :" + currentlyContainingGamePiece + "\n";
+        str += " Autonomous Commands             :" + autonomousCommands + "\n";
 
         return str;
     }
@@ -133,6 +142,7 @@ public class AutonomousTabData
         rowPlayedPiece2 = atd.rowPlayedPiece2;
         columnPlayedPiece2 = atd.columnPlayedPiece2;
         currentlyContainingGamePiece = atd.currentlyContainingGamePiece;
+        autonomousCommands = atd.autonomousCommands;
     }
 
 

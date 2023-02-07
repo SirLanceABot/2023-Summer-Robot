@@ -446,6 +446,10 @@ public class Xbox
                 joystick.setRumble(RumbleType.kRightRumble, 0.0); 
             }
         }
+        else if(rumbleEvents.size() <= rumbleCounter)
+        {
+            resetRumbleCounter();
+        }
     }
 
     public void resetRumbleCounter()

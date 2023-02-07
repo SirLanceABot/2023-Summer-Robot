@@ -40,44 +40,41 @@ public class MainShuffleboard
     // DRIVER CONTROLLER TAB
     public void setDriverControllerSettings()
     {
-        // if(DRIVER_CONTROLLER_TAB != null)
-        //     DRIVER_CONTROLLER_TAB.setDriverControllerAxisSettings();
+        if(driverControllerTab != null)
+            driverControllerTab.setDriverControllerAxisSettings();
     }
-
-    //-------------------------------------------------------------------//
-    // BACKUP CONTROLLER TAB
 
     //-------------------------------------------------------------------//
     // OPERATOR CONTROLLER TAB
     public void setOperatorControllerSettings()
     {
-        // if(OPERATOR_CONTROLLER_TAB != null)
-            // OPERATOR_CONTROLLER_TAB.setOperatorControllerAxisSettings();
+        if(operatorControllerTab != null)
+            operatorControllerTab.setOperatorControllerAxisSettings();
     }
 
     //-------------------------------------------------------------------//
     // AUTONOMOUS TAB
-    // public AutonomousTabData getAutonomousTabData()
+    public AutonomousTabData getAutonomousTabData()
     {
-        // if(AUTONOMOUS_TAB != null)
-        // {
-        //     return AUTONOMOUS_TAB.getAutonomousTabData();
-        // }
-        // else
-        // {
-        //     return new AutonomousTabData();
-        // }
+        if(autonomousTab != null)
+        {
+            return autonomousTab.getAutonomousTabData();
+        }
+        else
+        {
+            return new AutonomousTabData();
+        }
     }
 
-    // public boolean wasSendDataButtonPressed()
+    public boolean wasSendDataButtonPressed()
     {
-        // if(AUTONOMOUS_TAB != null)
-        // {
-            // return AUTONOMOUS_TAB.wasSendDataButtonPressed();
-        // }
-        // else
-        // {
-            // return false;
-        // }
+        if(autonomousTab != null)
+        {
+            return autonomousTab.wasSendDataButtonPressed();
+        }
+        else
+        {
+            return false;
+        }
     }
 }

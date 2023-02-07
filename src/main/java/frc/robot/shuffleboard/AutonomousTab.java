@@ -43,6 +43,7 @@ public class AutonomousTab
     private SendableChooser<AutonomousTabData.RowPlayedPiece2> rowPlayedPiece2Box = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.ColumnPlayedPiece2> columnPlayedPiece2Box = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.CurrentlyContainingGamePiece> currentlyContainingGamePieceBox = new SendableChooser<>();
+    private SendableChooser<AutonomousTabData.AutonomousCommands> autonomousCommandsBox = new SendableChooser<>();
 
     private NetworkTableEntry successfulDownload;
     private NetworkTableEntry errorMessageBox;
@@ -70,6 +71,7 @@ public class AutonomousTab
         createRowPlayedPiece2Box();
         createColumnPlayedPiece2Box();
         createCurrentlyContainingGamePieceBox();
+        createAutonomousCommandsBox();
         
         createSendDataButton();
         createSuccessfulDownloadBox();
@@ -284,6 +286,28 @@ public class AutonomousTab
     }
 
     /**
+    * <b>Autonomous Commands 2</b> Box
+    * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
+    */
+    private void createAutonomousCommandsBox()
+    {
+        //create and name the Box
+        SendableRegistry.add(autonomousCommandsBox, "Autonomous Commands");
+        SendableRegistry.setName(autonomousCommandsBox, "Autonomous Commands");
+
+        //add options to Box
+        autonomousCommandsBox.setDefaultOption("Neither", AutonomousTabData.AutonomousCommands.kNeither);
+        autonomousCommandsBox.addOption("Charging Station", AutonomousTabData.AutonomousCommands.kChargingStation);
+        autonomousCommandsBox.addOption("2 Game Pieces", AutonomousTabData.AutonomousCommands.kTwoGamePieces);
+
+        //put the widget on the shuffleboard
+        autonomousTab.add(autonomousCommandsBox)
+            .withWidget(BuiltInWidgets.kSplitButtonChooser)
+            .withPosition(13, 3)
+            .withSize(6, 2);
+    }
+
+    /**
      * <b>Send Data</b> Button
      * <p>
      * Create an entry in the Network Table and add the Button to the Shuffleboard
@@ -339,6 +363,7 @@ public class AutonomousTab
         autonomousTabData.rowPlayedPiece2 = rowPlayedPiece2Box.getSelected();
         autonomousTabData.columnPlayedPiece2 = columnPlayedPiece2Box.getSelected();
         autonomousTabData.currentlyContainingGamePiece = currentlyContainingGamePieceBox.getSelected();
+        autonomousTabData.autonomousCommands = autonomousCommandsBox.getSelected();
     }
 
     public boolean wasSendDataButtonPressed()
@@ -397,6 +422,9 @@ public class AutonomousTab
         boolean isColumn2False = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.k0);
         boolean isColumn2True = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.k1);
         boolean isPiecesContained = (currentlyContainingGamePieceBox.getSelected() == AutonomousTabData.CurrentlyContainingGamePiece.kYes);
+        boolean isNoCommand = (autonomousCommandsBox.getSelected() == AutonomousTabData.AutonomousCommands.kNeither);
+        boolean isChargingStationCommand = (autonomousCommandsBox.getSelected() == AutonomousTabData.AutonomousCommands.kChargingStation);
+        boolean is2GamePieceCommand = (autonomousCommandsBox.getSelected() == AutonomousTabData.AutonomousCommands.kTwoGamePieces);
         
         if(!isMiddle && isMoveOntoStation)
         {
