@@ -63,6 +63,13 @@ public class SamTest implements Test
         SmartDashboard.putNumber("LimelightY", y);
         SmartDashboard.putNumber("LimelightArea", area);
 
+        if(x > 1)
+            System.out.println("Move Right");
+        if(x < -1)
+            System.out.println("Move Left");
+        if(x > -1 && x < 1)
+            System.out.println("Hold Still");
+
 
         // if(joystick.getRawButton(1))    //A
         // {
