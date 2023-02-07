@@ -44,6 +44,7 @@ public class Arm extends Subsystem4237
     {
         // Inputs
         private double armPosition = 0.0;
+        private double armSpeed = 0.0;
 
         // Outputs
     }
@@ -55,7 +56,6 @@ public class Arm extends Subsystem4237
     private final SparkMaxLimitSwitch reverseLimitSwitch = armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     private final Timer encoderResetTimer = new Timer();
     private RelativeEncoder armEncoder;
-    private double armSpeed = 0.0;
     private boolean resetEncoderNow = false;
     private boolean hasEncoderReset = true;    
     
@@ -111,7 +111,7 @@ public class Arm extends Subsystem4237
      */
     public void retractoArm()
     {
-        armSpeed = -0.3;
+        periodicIO.armSpeed = -0.3;
     }
 
     /**
@@ -119,7 +119,7 @@ public class Arm extends Subsystem4237
      */
     public void extendoArm()
     {
-        armSpeed = 0.3;
+        periodicIO.armSpeed = 0.3;
     }
     
     /**
@@ -127,7 +127,7 @@ public class Arm extends Subsystem4237
      */
     public void holdoArm()
     {
-        armSpeed = 0.05;
+        periodicIO.armSpeed = 0.05;
     }
 
     /**
@@ -135,7 +135,7 @@ public class Arm extends Subsystem4237
      */
     public void gestapoArm()
     {
-        armSpeed = 0.0;
+        periodicIO.armSpeed = 0.0;
     }
 
     /**
@@ -194,15 +194,8 @@ public class Arm extends Subsystem4237
         }
         else 
         {
-            armMotor.set(armSpeed);
+            armMotor.set(periodicIO.armSpeed);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        SmartDashboard.putNumber("armEncoder", periodicIO.armPosition);
-        return "Current Arm Position: " + periodicIO.armPosition;
     }
 
     @Override
@@ -215,5 +208,12 @@ public class Arm extends Subsystem4237
     public void simulationPeriodic()
     {
         // This method will be called once per scheduler run during simulation
+    }
+
+    @Override
+    public String toString()
+    {
+        SmartDashboard.putNumber("armEncoder", periodicIO.armPosition);
+        return "Current Arm Position: " + periodicIO.armPosition;
     }
 }

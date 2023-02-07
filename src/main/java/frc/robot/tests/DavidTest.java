@@ -43,12 +43,14 @@ public class DavidTest implements Test
      */
     public void periodic()
     {
-        if (joystick.getRawButton(3))
+        if (joystick.getRawButtonPressed(3))
             candle.signalCube();
-        else if (joystick.getRawButton(4))
+        else if (joystick.getRawButtonPressed(4))
             candle.signalCone();
-        else
+        else if (joystick.getRawButtonPressed(6))
             candle.turnOffLight();
+        else if (joystick.getRawButtonPressed(5))
+            candle.signalReadyToDrop();
     }
     
     /**
