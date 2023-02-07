@@ -2,14 +2,13 @@ package frc.robot.sensors;
 
 import java.lang.invoke.MethodHandles;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PeriodicIO;
 
 /**
  * This abstract class will be extended for every subsystem on the robot. 
  * Every subsystem will automatically be added to the array list for periodic inputs and outputs.
  */
-abstract class Sensor4237 extends SubsystemBase implements PeriodicIO
+abstract class Sensor4237 implements PeriodicIO
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
