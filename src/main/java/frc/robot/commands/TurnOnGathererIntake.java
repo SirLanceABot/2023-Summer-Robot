@@ -64,7 +64,9 @@ public class TurnOnGathererIntake extends CommandBase
      */
     @Override
     public void end(boolean interrupted)
-    {}
+    {
+        gatherer.turnOff();
+    }
 
     /**
      * Returns true when the command should end.

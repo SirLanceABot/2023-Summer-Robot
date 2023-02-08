@@ -52,6 +52,7 @@ public class Gatherer extends Subsystem4237
     public Gatherer()
     {
         configGathererMotor();
+        
     }
 
     private void configGathererMotor()

@@ -36,7 +36,7 @@ public class Grabber extends Subsystem4237
     private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
     private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 6);
     private final Compressor compressor = new Compressor(moduleType);
-    // private final CANSparkMax clawMotor = new CANSparkMax(1, com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless);
+    // private final CANSparkMax suctionMotor = new CANSparkMax(1, com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless);
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
@@ -64,6 +64,7 @@ public class Grabber extends Subsystem4237
         //OUTPUTS
         Value state = Value.kOff;
         Value angle = Value.kOff;
+        double grabberMotorControl;
     }
 
     GamePiece currentGamePiece = GamePiece.kNone;
@@ -71,42 +72,43 @@ public class Grabber extends Subsystem4237
     double encoderDistance = 3;
     private PeriodicIO periodicIO;
     
-    // private RelativeEncoder grabberMotorEncoder;
-    // int GrabberMotorPort= Constants.MotorConstants.GRABBER_MOTOR_PORT;
-    // private final CANSparkMax grabberMotor = new CANSparkMax(GrabberMotorPort, MotorType.kBrushless);
-    // private SparkMaxLimitSwitch forwardLimitSwitch;
-    // private SparkMaxLimitSwitch reverseLimitSwitch;
+    private RelativeEncoder grabberMotorEncoder;
+    int GrabberMotorPort= Constants.MotorConstants.GRABBER_MOTOR_PORT;
+    private final CANSparkMax grabberMotor = new CANSparkMax(GrabberMotorPort, MotorType.kBrushless);
+    private SparkMaxLimitSwitch forwardLimitSwitch;
+    private SparkMaxLimitSwitch reverseLimitSwitch;
     
     /**
      * Makes the configurations of a Spark Max Motor
      */
     private void configCANSparkMax()
     {   
-        // grabberMotorEncoder = grabberMotor.getEncoder();
-        //Factory Defaults
-        // grabberMotor.restoreFactoryDefaults();
+        grabberMotorEncoder = grabberMotor.getEncoder();
+        // Factory Defaults
+        grabberMotor.restoreFactoryDefaults();
 
-        //Invert the direction of the motor
-        // grabberMotor.setInverted(false);
+        // Invert the direction of the motor
+        grabberMotor.setInverted(false);
 
-        //Brake or Coast mode
-        // grabberMotor.setIdleMode(IdleMode.kBrake);
+        // Brake or Coast mode
+        grabberMotor.setIdleMode(IdleMode.kBrake);
 
-        //Set the Feedback Sensor
-        // clawMotor.
-        // clawMotor.setSensorPhase(false);
+        // Set the Feedback Sensor
+        // grabberMotor.setSensorPhase(false);
+        grabberMotorEncoder = grabberMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+        // analogSensor = grabberMotor.getAnalog(SparkMaxAnalogSensor.Mode.kRelative);
 
-        //Soft Limits
-        // grabberMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
-        // grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-        // grabberMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        // grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        // Soft Limits
+        grabberMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+        grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+        grabberMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
-        //Hard Limits
-        // forwardLimitSwitch = grabberMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-        // forwardLimitSwitch.enableLimitSwitch(false);
-        // reverseLimitSwitch = grabberMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-        // reverseLimitSwitch.enableLimitSwitch(false);
+        // Hard Limits
+        forwardLimitSwitch = grabberMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        forwardLimitSwitch.enableLimitSwitch(false);
+        reverseLimitSwitch = grabberMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        reverseLimitSwitch.enableLimitSwitch(false);
 
 
 
@@ -130,6 +132,7 @@ public class Grabber extends Subsystem4237
     public void grabGamePiece()
     {
         periodicIO.state = Value.kForward;
+        periodicIO.grabberMotorControl = 0.4;
 
     }
 
@@ -138,7 +141,8 @@ public class Grabber extends Subsystem4237
      */
     public void releaseGamePiece()
     {
-        periodicIO.state = Value.kReverse;;
+        periodicIO.state = Value.kReverse;
+        periodicIO.grabberMotorControl = 0.0;
     }
 
     // public boolean isGrabberClosed()
@@ -194,7 +198,7 @@ public class Grabber extends Subsystem4237
     @Override
     public synchronized void readPeriodicInputs()
     {
-        // encoderDistance = grabberMotorEncoder.getPosition();
+        encoderDistance = grabberMotorEncoder.getPosition();
 
     }
 
@@ -207,6 +211,7 @@ public class Grabber extends Subsystem4237
     {
         grabberControlSolenoid.set(periodicIO.state);
         grabberAngleControlSolenoid.set(periodicIO.state);
+        grabberMotor.set(periodicIO.grabberMotorControl);
     }
 
     @Override

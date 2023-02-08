@@ -56,7 +56,6 @@ public class CloseGrabber extends CommandBase
     @Override
     public void execute()
     {
-        grabber.writePeriodicOutputs();
         
 
         // if(grabber.isGrabberClosed())

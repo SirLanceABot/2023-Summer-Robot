@@ -91,6 +91,14 @@ public class AutonomousCommandList extends CommandBase
 
     private void addCommand(Command command)
     {
+        // Command commandList[20];
+        // Command startingCommand = kDelay;
+        // int counter;
+        // for(counter = 0; counter <= size(commandList); counter++)
+        // {
+        //     startingCommand.andThen(commandList[counter]);
+        // }
+        
         commandList.add(command);
     }
 
