@@ -131,8 +131,8 @@ public class Grabber extends Subsystem4237
      */
     public void grabGamePiece()
     {
-        periodicIO.state = Value.kForward;
-        periodicIO.grabberMotorControl = 0.4;
+        // periodicIO.state = Value.kForward;
+        periodicIO.grabberMotorControl = 0.5;
 
     }
 
@@ -141,7 +141,7 @@ public class Grabber extends Subsystem4237
      */
     public void releaseGamePiece()
     {
-        periodicIO.state = Value.kReverse;
+        // periodicIO.state = Value.kReverse;
         periodicIO.grabberMotorControl = 0.0;
     }
 

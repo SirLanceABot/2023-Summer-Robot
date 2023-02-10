@@ -1,6 +1,10 @@
 package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Grabber;
 import edu.wpi.first.wpilibj.Joystick;
@@ -22,7 +26,7 @@ public class OwenTest implements Test
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
-
+    private final CANSparkMax grabberMotor = new CANSparkMax(3, MotorType.kBrushless);
     private final Joystick joystick = new Joystick(0);
     private final Grabber grabber;// = RobotContainer.grabber;
     // private final CloseGrabber closeGrabber;
@@ -54,12 +58,12 @@ public class OwenTest implements Test
         if(joystick.getRawButton(3))
         {
 
-            grabber.releaseGamePiece();
+            grabberMotor.set(0.5);
         }
 
         if(joystick.getRawButton(4))
         {
-            grabber.grabGamePiece();
+            grabberMotor.set(0.0);
         }
     }
     

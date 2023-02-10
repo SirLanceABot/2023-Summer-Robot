@@ -446,7 +446,7 @@ public class Xbox
                 joystick.setRumble(RumbleType.kRightRumble, 0.0); 
             }
         }
-        else if(rumbleEvents.size() <= rumbleCounter)
+        else if(rumbleEvents.size() <= rumbleCounter || DriverStation.isDisabled() &&rumbleCounter > 0)
         {
             resetRumbleCounter();
         }

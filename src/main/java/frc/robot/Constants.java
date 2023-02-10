@@ -38,16 +38,17 @@ public final class Constants
     public static class OperatorConstants
     {
         public static final int kDriverControllerPort = 0;
+        public static final int kOperatorControllerPort = 1;
 
 
     }
 
     public static class MotorConstants
     {
-        public static final int GATHERER_MOTOR_PORT = 1;
-        public static final int GRABBER_MOTOR_PORT = 2;
-        public static final int ARM_MOTOR_PORT = 3;
-        public static final int SHOULDER_MOTOR_PORT = 4;
+        public static final int GATHERER_MOTOR_PORT = 2;
+        public static final int GRABBER_MOTOR_PORT = 3;
+        public static final int ARM_MOTOR_PORT = 4;
+        public static final int SHOULDER_MOTOR_PORT = 5;
     }
 
     public static class Motor
