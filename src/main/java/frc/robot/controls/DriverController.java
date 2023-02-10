@@ -63,7 +63,7 @@ public class DriverController extends Xbox implements PeriodicIO
         setAxisSettings(Axis.kLeftY, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
         setAxisSettings(Axis.kLeftTrigger, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
         setAxisSettings(Axis.kRightTrigger, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
-        setAxisSettings(Axis.kRightX, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
+        setAxisSettings(Axis.kRightX, 0.1, 0.0, 1.0, true, AxisScale.kLinear);
         setAxisSettings(Axis.kRightY, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
     }
 

@@ -5,16 +5,25 @@
 package frc.robot;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Gatherer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle4237;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.commands.LockWheels;
+import frc.robot.commands.SwerveDrive;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
+import frc.robot.controls.Xbox;
+import frc.robot.sensors.Accelerometer4237;
+import frc.robot.sensors.Gyro4237;
 import frc.robot.shuffleboard.AutonomousTabData;
 import frc.robot.shuffleboard.MainShuffleboard;
 
@@ -37,31 +46,35 @@ public class RobotContainer
     }
 	
 	private boolean useFullRobot			= false;
-	private boolean useBindings				= false;
+	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
+	private boolean useDrivetrain   		= true;
 	private boolean useGrabber 				= false;
-	private boolean useGatherer 			= false;
 	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
+	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= false;
+	private boolean useDriverController		= true;
 	private boolean useOperatorController 	= false;
 	private boolean useAutonomousTabData	= false;
 	private boolean useMainShuffleboard		= false;
 
 
 	public final ExampleSubsystem exampleSubsystem;
+	public final Drivetrain drivetrain;
 	public final Grabber grabber;
 	public final Arm arm;
 	public final Shoulder shoulder;
 	public final Gatherer gatherer;
 	public final Candle4237 candle;
-	public final MainShuffleboard mainShuffleboard;
-	public final AutonomousTabData autonomousTabData;
 	public final DriverController driverController;
 	public final OperatorController operatorController;
-	// private Joystick joystick;
+	public final AutonomousTabData autonomousTabData;
+	public final MainShuffleboard mainShuffleboard;
+	//FIXME should these be done the same way
+	public final Accelerometer4237 accelerometer = new Accelerometer4237();
+	public final Gyro4237 gyro = new Gyro4237();
 	
 	/** 
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -71,15 +84,16 @@ public class RobotContainer
 	{
 		// Create the needed subsystems
 		exampleSubsystem 	= (useFullRobot || useExampleSubsystem) ? new ExampleSubsystem() 	: null;
+		drivetrain 			= (useFullRobot || useDrivetrain) ? new Drivetrain(Constants.DrivetrainSetup.DRIVETRAIN_DATA, accelerometer, gyro) 	 : null;
 		grabber 			= (useFullRobot || useGrabber) 			? new Grabber() 			: null;
 		arm 				= (useFullRobot || useArm) 				? new Arm() 				: null;
 		shoulder 			= (useFullRobot || useShoulder) 		? new Shoulder() 			: null;
 		gatherer 			= (useFullRobot || useGatherer) 		? new Gatherer() 			: null;
 		candle 				= (useFullRobot || useCandle)			? new Candle4237() 			: null;
-		driverController 	= (useBindings || useDriverController) 	? new DriverController(5) 	: null;
-		operatorController 	= (useBindings || useOperatorController) ? new OperatorController(6) : null;
-		autonomousTabData	= (useBindings || useAutonomousTabData ) ? new AutonomousTabData()	: null;
-		mainShuffleboard 	= (useBindings || useMainShuffleboard)	? new MainShuffleboard(this)	: null;
+		driverController 	= (useFullRobot || useDriverController) 	? new DriverController(0) 	: null;
+		operatorController 	= (useFullRobot || useOperatorController) ? new OperatorController(1) : null;
+		autonomousTabData	= (useFullRobot || useAutonomousTabData ) ? new AutonomousTabData()	: null;
+		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)	? new MainShuffleboard(this)	: null;
 		
 
 
@@ -105,7 +119,19 @@ public class RobotContainer
 
 	private void configureDriverBindings()
 	{
-		// driverController.configureAxes();
+		if(driverController != null && drivetrain != null)
+        {
+			BooleanSupplier aButton = () -> {return driverController.getRawButton(Xbox.Button.kA); };
+			Trigger aButtonTrigger = new Trigger(aButton);
+			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
+			aButtonTrigger.toggleOnTrue(new LockWheels(drivetrain));
+			//JoystickButton drivetrainA = new JoystickButton(joystick,1);
+			Supplier<Double> leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY); };
+			Supplier<Double> leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX); };
+			Supplier<Double> rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX); };
+			
+			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+        }
 	}
 
 	private void configureOperatorBindings()
