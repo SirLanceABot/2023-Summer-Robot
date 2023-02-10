@@ -71,6 +71,7 @@ public class Candle4237 extends Subsystem4237
     public void signalCube()
     {
         periodicIO.status = ledStatus.kPurple;
+        periodicIO.toAnimate = ledAnimation.kDisabled;
     }
 
     /**
@@ -79,6 +80,7 @@ public class Candle4237 extends Subsystem4237
     public void signalCone()
     {
         periodicIO.status = ledStatus.kYellow;
+        periodicIO.toAnimate = ledAnimation.kDisabled;
     }
 
     /**
@@ -87,6 +89,7 @@ public class Candle4237 extends Subsystem4237
     public void signalReadyToDrop()
     {
         periodicIO.status = ledStatus.kWhite;
+        periodicIO.toAnimate = ledAnimation.kDisabled;
     }
 
     /**
@@ -95,62 +98,162 @@ public class Candle4237 extends Subsystem4237
     public void turnOffLight()
     {
         periodicIO.status = ledStatus.kOff;
-        animation = null;
+        periodicIO.toAnimate = ledAnimation.kDisabled;
     }
 
-    public void animate()
+    /**
+     * Set the animation to whatever is passed to it
+     */
+    public void setAnimation(ledAnimation toAnimate)
     {
-        switch (periodicIO.toAnimate)
+        periodicIO.toAnimate = toAnimate;
+        switch (toAnimate)
         {
             case kColorFlow: 
-                animation = new ColorFlowAnimation(128, 20, 70, 0, 0.7, ledCount, Direction.Forward);
+                animation = new ColorFlowAnimation(0, 255, 46, 0, 0.7, ledCount, Direction.Forward);
                 break;
             case kFire: 
-                animation = new FireAnimation(0.5, 0.7, ledCount, 0.7, 0.5);
+                animation = new FireAnimation(0.5, 0.7, ledCount, 0.3, 0.25);
                 break;
             case kLarson: 
-                animation = new LarsonAnimation(0, 255, 46, 0, 1, ledCount, BounceMode.Front, 3);
+                animation = new LarsonAnimation(128, 20, 70, 0, 0.4, ledCount, BounceMode.Front, 5);
                 break;
             case kRainbow: 
-                animation = new RainbowAnimation(1, 0.1, ledCount);
+                animation = new RainbowAnimation(1, 0.5, ledCount);
                 break;
             case kRgbFade: 
-                animation = new RgbFadeAnimation(0.7, 0.4, ledCount);
+                animation = new RgbFadeAnimation(0.4, 0.7, ledCount);
                 break;
             case kSingleFade: 
                 animation = new SingleFadeAnimation(50, 2, 200, 0, 0.5, ledCount);
                 break;
             case kStrobe: 
-                animation = new StrobeAnimation(240, 10, 180, 0, 98.0 / 256.0, ledCount);
+                animation = new StrobeAnimation(150, 150, 0, 0, 0.1, ledCount);
                 break;
             case kTwinkle: 
-                animation = new TwinkleAnimation(30, 70, 60, 0, 0.4, ledCount, TwinklePercent.Percent6);
+                animation = new TwinkleAnimation(0, 0, 255, 0, 0.3, ledCount, TwinklePercent.Percent30);
                 break;
             case kTwinkleOff: 
-                animation = new TwinkleOffAnimation(70, 90, 175, 0, 0.8, ledCount, TwinkleOffPercent.Percent100);
+                animation = new TwinkleOffAnimation(255, 0, 255, 0, 0.5, ledCount, TwinkleOffPercent.Percent76);
                 break;
             case kDisabled: 
                 animation = null;
                 break;
         }
+
+        if (toAnimate != ledAnimation.kDisabled)
+            periodicIO.status = ledStatus.kAnimated;
     }
 
-    public void rainbowAnimation()
+    /**
+     * Moves the animation to the next one in the order
+     */
+    public void incrementAnimation()
     {
-        periodicIO.toAnimate = ledAnimation.kRainbow;
-        periodicIO.status = ledStatus.kAnimated;
+        switch (periodicIO.toAnimate)
+        {
+            case kColorFlow: 
+                periodicIO.toAnimate = ledAnimation.kFire;
+                break;
+            case kFire: 
+                periodicIO.toAnimate = ledAnimation.kLarson;
+                break;
+            case kLarson: 
+                periodicIO.toAnimate = ledAnimation.kRainbow;
+                break;
+            case kRainbow: 
+                periodicIO.toAnimate = ledAnimation.kRgbFade;
+                break;
+            case kRgbFade: 
+                periodicIO.toAnimate = ledAnimation.kSingleFade;
+                break;
+            case kSingleFade: 
+                periodicIO.toAnimate = ledAnimation.kStrobe;
+                break;
+            case kStrobe: 
+                periodicIO.toAnimate = ledAnimation.kTwinkle;
+                break;
+            case kTwinkle: 
+                periodicIO.toAnimate = ledAnimation.kTwinkleOff;
+                break;
+            case kTwinkleOff: 
+                periodicIO.toAnimate = ledAnimation.kColorFlow;
+                break;
+            case kDisabled:  
+                periodicIO.toAnimate = ledAnimation.kColorFlow;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Moves the animation to the previous one in the order
+     */
+    public void decrementAnimation()
+    {
+        switch (periodicIO.toAnimate)
+        {
+            case kColorFlow: 
+                periodicIO.toAnimate = ledAnimation.kTwinkleOff;
+                break;
+            case kFire: 
+                periodicIO.toAnimate = ledAnimation.kColorFlow;
+                break;
+            case kLarson: 
+                periodicIO.toAnimate = ledAnimation.kFire;
+                break;
+            case kRainbow: 
+                periodicIO.toAnimate = ledAnimation.kLarson;
+                break;
+            case kRgbFade: 
+                periodicIO.toAnimate = ledAnimation.kRainbow;
+                break;
+            case kSingleFade: 
+                periodicIO.toAnimate = ledAnimation.kRgbFade;
+                break;
+            case kStrobe: 
+                periodicIO.toAnimate = ledAnimation.kSingleFade;
+                break;
+            case kTwinkle: 
+                periodicIO.toAnimate = ledAnimation.kStrobe;
+                break;
+            case kTwinkleOff: 
+                periodicIO.toAnimate = ledAnimation.kTwinkle;
+                break;
+            case kDisabled:  
+                periodicIO.toAnimate = ledAnimation.kTwinkleOff;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Completely stops the current animation
+     */
+    public void stopAnimation()
+    {
+        periodicIO.toAnimate = ledAnimation.kDisabled;
+        candle.animate(null, 0);
     }
 
     @Override
     public synchronized void readPeriodicInputs()
     {}
 
+    int i;
     /**
-     * Sets the color of all LEDs based on the current status
+     * Sets the color/animation of all LEDs based on the current status
      */
     @Override  
     public synchronized void writePeriodicOutputs() 
     {
+        setAnimation(periodicIO.toAnimate);
+
+        if (periodicIO.status != ledStatus.kAnimated)
+            stopAnimation();
+
         switch (periodicIO.status)
         {
             case kPurple: 
@@ -160,20 +263,21 @@ public class Candle4237 extends Subsystem4237
                 candle.setLEDs(255, 185, 0, 50, 0, ledCount);
                 break; 
             case kWhite: 
-                candle.setLEDs(255, 255, 255, 255, 0, ledCount);
+                candle.setLEDs(255, 255, 220, 255, 0, ledCount);
                 break;
             case kOff: 
                 candle.setLEDs(0, 0, 0, 0, 0, ledCount);
-                animation = null;
                 break;
             case kAnimated: 
-                animate();
-                candle.animate(animation); // fix later
+                candle.animate(animation, 0);
                 break;
-            default:    // redundant? just to be safe
+            default:
                 candle.setLEDs(0, 0, 0, 0, 0, ledCount);
-                animation = null;
+                stopAnimation();
                 break;
         }
+
+        if (periodicIO.toAnimate != ledAnimation.kDisabled)
+            periodicIO.status = ledStatus.kAnimated;
     }
 }
