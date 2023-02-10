@@ -4,9 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
-import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import frc.robot.Constants;
-import frc.robot.sensors.Accelerometer4237;
 import frc.robot.sensors.Gyro4237;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,6 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 
 
 /** Represents a swerve drive style drivetrain. */
@@ -42,6 +42,14 @@ public class Drivetrain extends Subsystem4237
         private double ySpeed;
         private double turn;
         private boolean fieldRelative;
+        DoubleLogEntry flsLogEntry;
+        DoubleLogEntry frsLogEntry;
+        DoubleLogEntry blsLogEntry;
+        DoubleLogEntry brsLogEntry;
+        DoubleLogEntry fldLogEntry;
+        DoubleLogEntry frdLogEntry;
+        DoubleLogEntry bldLogEntry;
+        DoubleLogEntry brdLogEntry;
         
         // OUTPUTS
         private ChassisSpeeds chassisSpeeds;
@@ -67,7 +75,7 @@ public class Drivetrain extends Subsystem4237
     private final SwerveModule backRight;// = new SwerveModule(Port.Module.BACK_RIGHT);
 
     private final Gyro4237 gyro; //Pigeon2
-    private final Accelerometer4237 accelerometer;
+    private final DataLog log;
 
 
     // TODO: Make final by setting to an initial stopped state
@@ -79,16 +87,16 @@ public class Drivetrain extends Subsystem4237
     private PeriodicIO periodicIO;
     
     // *** CLASS CONSTRUCTOR ***
-    public Drivetrain(DrivetrainConfig dd, Accelerometer4237 accelerometer, Gyro4237 gyro)//, DriverController driverController)
+    public Drivetrain(DrivetrainConfig dd, Gyro4237 gyro, DataLog log)//, DriverController driverController)
     {
         // super();  // call the RobotDriveBase constructor
         // setSafetyEnabled(false);
   
   
         periodicIO = new PeriodicIO(); // all the periodic I/O appear here
-            
-        this.accelerometer = accelerometer;
+        
         this.gyro = gyro;
+        this.log = log;
 
 
         frontLeft = new SwerveModule(dd.frontLeftSwerveModule);
@@ -381,6 +389,38 @@ public class Drivetrain extends Subsystem4237
         frontRight.feed();
         backRight.feed();
     }
+
+
+    /**
+   * datalog
+   */
+
+   void logEncodersInit()
+   {
+
+    String EncoderName = new String("/SwerveEncoders/"); // make a prefix tree structure for the ultrasonic data
+    // f front; b back; r right; l left; s steer; d drive
+    periodicIO.flsLogEntry = new DoubleLogEntry(log, EncoderName+"fls", "RawCounts");
+    periodicIO.frsLogEntry = new DoubleLogEntry(log, EncoderName+"frs", "RawCounts");
+    periodicIO.blsLogEntry = new DoubleLogEntry(log, EncoderName+"bls", "RawCounts");
+    periodicIO.brsLogEntry = new DoubleLogEntry(log, EncoderName+"brs", "RawCounts");
+    periodicIO.fldLogEntry = new DoubleLogEntry(log, EncoderName+"fld", "RawCounts");
+    periodicIO.frdLogEntry = new DoubleLogEntry(log, EncoderName+"frd", "RawCounts");
+    periodicIO.bldLogEntry = new DoubleLogEntry(log, EncoderName+"bld", "RawCounts");
+    periodicIO.brdLogEntry = new DoubleLogEntry(log, EncoderName+"brd", "RawCounts");
+   }
+
+  void logEncoders()
+  {
+    periodicIO.flsLogEntry.append(frontLeft.getTurningEncoderPosition());
+    periodicIO.frsLogEntry.append(frontRight.getTurningEncoderPosition());
+    periodicIO.blsLogEntry.append(backLeft.getTurningEncoderPosition());
+    periodicIO.brsLogEntry.append(backRight.getTurningEncoderPosition());
+    periodicIO.fldLogEntry.append(frontLeft.getDrivingEncoderRate());
+    periodicIO.frdLogEntry.append(frontRight.getDrivingEncoderRate());
+    periodicIO.bldLogEntry.append(backLeft.getDrivingEncoderRate());
+    periodicIO.brdLogEntry.append(backRight.getDrivingEncoderRate());
+  }
 
         /**
      * Drive a "straight" distance in meters

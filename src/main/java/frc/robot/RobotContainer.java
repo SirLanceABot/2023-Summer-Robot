@@ -8,6 +8,8 @@ import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -60,7 +62,8 @@ public class RobotContainer
 	private boolean useOperatorController 	= false;
 	private boolean useAutonomousTabData	= false;
 	private boolean useMainShuffleboard		= false;
-	private boolean useVision				= true;
+	private boolean useVision				= false;
+	private boolean useDataLog				= true;
 
 
 	public final ExampleSubsystem exampleSubsystem;
@@ -78,6 +81,7 @@ public class RobotContainer
 	//FIXME should these be done the same way
 	public final Accelerometer4237 accelerometer = new Accelerometer4237();
 	public final Gyro4237 gyro = new Gyro4237();
+	public final DataLog log;
 	
 	/** 
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -86,8 +90,12 @@ public class RobotContainer
 	RobotContainer()
 	{
 		// Create the needed subsystems
+		if(useDataLog)
+			DataLogManager.start();
+			
+		log					= (useDataLog)								? DataLogManager.getLog()		: null;
 		exampleSubsystem 	= (useFullRobot || useExampleSubsystem)		? new ExampleSubsystem() 		: null;
-		drivetrain 			= (useFullRobot || useDrivetrain) ? new Drivetrain(Constants.DrivetrainSetup.DRIVETRAIN_DATA, accelerometer, gyro) 	 : null;
+		drivetrain 			= (useFullRobot || useDrivetrain) 			? new Drivetrain(Constants.DrivetrainSetup.DRIVETRAIN_DATA, gyro, log) 	 : null;
 		grabber 			= (useFullRobot || useGrabber) 				? new Grabber() 				: null;
 		arm 				= (useFullRobot || useArm) 					? new Arm() 					: null;
 		shoulder 			= (useFullRobot || useShoulder) 			? new Shoulder() 				: null;
@@ -134,7 +142,8 @@ public class RobotContainer
 			Supplier<Double> leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX); };
 			Supplier<Double> rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX); };
 			
-			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
         }
 	}
 

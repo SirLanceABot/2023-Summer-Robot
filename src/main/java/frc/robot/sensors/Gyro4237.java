@@ -4,7 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
-import frc.robot.PeriodicIO;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Gyro4237 extends Sensor4237
 {
@@ -22,7 +22,7 @@ public class Gyro4237 extends Sensor4237
     private class PeriodicIO
     {
         private double angle;
-        // private Rotation2d rotation2d;
+        private Rotation2d rotation2d;
     }
 
     private boolean resetGyro = false;
@@ -52,9 +52,9 @@ public class Gyro4237 extends Sensor4237
         //return gyro.getYaw(); // z-axis
     }
 
-    // public Rotation2d getRotation2d()
+    public Rotation2d getRotation2d()
     {
-        // return periodicIO.rotation2d;
+        return periodicIO.rotation2d;
         // return gyro.getRotation2d();
     }
 
