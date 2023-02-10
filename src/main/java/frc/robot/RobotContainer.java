@@ -26,6 +26,7 @@ import frc.robot.sensors.Accelerometer4237;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.shuffleboard.AutonomousTabData;
 import frc.robot.shuffleboard.MainShuffleboard;
+import frc.robot.vision.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -59,6 +60,7 @@ public class RobotContainer
 	private boolean useOperatorController 	= false;
 	private boolean useAutonomousTabData	= false;
 	private boolean useMainShuffleboard		= false;
+	private boolean useVision				= true;
 
 
 	public final ExampleSubsystem exampleSubsystem;
@@ -70,6 +72,7 @@ public class RobotContainer
 	public final Candle4237 candle;
 	public final DriverController driverController;
 	public final OperatorController operatorController;
+	public final Vision vision;
 	public final AutonomousTabData autonomousTabData;
 	public final MainShuffleboard mainShuffleboard;
 	//FIXME should these be done the same way
@@ -83,17 +86,18 @@ public class RobotContainer
 	RobotContainer()
 	{
 		// Create the needed subsystems
-		exampleSubsystem 	= (useFullRobot || useExampleSubsystem) ? new ExampleSubsystem() 	: null;
+		exampleSubsystem 	= (useFullRobot || useExampleSubsystem)		? new ExampleSubsystem() 		: null;
 		drivetrain 			= (useFullRobot || useDrivetrain) ? new Drivetrain(Constants.DrivetrainSetup.DRIVETRAIN_DATA, accelerometer, gyro) 	 : null;
-		grabber 			= (useFullRobot || useGrabber) 			? new Grabber() 			: null;
-		arm 				= (useFullRobot || useArm) 				? new Arm() 				: null;
-		shoulder 			= (useFullRobot || useShoulder) 		? new Shoulder() 			: null;
-		gatherer 			= (useFullRobot || useGatherer) 		? new Gatherer() 			: null;
-		candle 				= (useFullRobot || useCandle)			? new Candle4237() 			: null;
-		driverController 	= (useFullRobot || useDriverController) 	? new DriverController(0) 	: null;
-		operatorController 	= (useFullRobot || useOperatorController) ? new OperatorController(1) : null;
-		autonomousTabData	= (useFullRobot || useAutonomousTabData ) ? new AutonomousTabData()	: null;
-		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)	? new MainShuffleboard(this)	: null;
+		grabber 			= (useFullRobot || useGrabber) 				? new Grabber() 				: null;
+		arm 				= (useFullRobot || useArm) 					? new Arm() 					: null;
+		shoulder 			= (useFullRobot || useShoulder) 			? new Shoulder() 				: null;
+		gatherer 			= (useFullRobot || useGatherer) 			? new Gatherer() 				: null;
+		candle 				= (useFullRobot || useCandle)				? new Candle4237() 				: null;
+		driverController 	= (useFullRobot 	|| useDriverController) 	? new DriverController(0) 		: null;
+		operatorController 	= (useFullRobot 	|| useOperatorController) 	? new OperatorController(1)	 	: null;
+		autonomousTabData	= (useFullRobot 	|| useAutonomousTabData ) 	? new AutonomousTabData()		: null;
+		mainShuffleboard 	= (useFullRobot 	|| useMainShuffleboard)		? new MainShuffleboard(this)	: null;
+		vision 				= (useFullRobot || useVision)				? new Vision()					: null;
 		
 
 
