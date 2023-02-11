@@ -3,8 +3,9 @@ package frc.robot.shuffleboard;
 import java.lang.invoke.MethodHandles;
 
 import frc.robot.controls.OperatorController;
+import frc.robot.controls.Xbox;
 import frc.robot.RobotContainer;
-
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -27,17 +28,18 @@ public class OperatorControllerTab
     // *** INNER ENUMS & INNER CLASSES ***
     private class AxisObjects
     {
-        private NetworkTableEntry deadzoneEntry;
-        private NetworkTableEntry minOutputEntry;
-        private NetworkTableEntry maxOutputEntry;
+        private GenericEntry deadzoneEntry;
+        private GenericEntry minOutputEntry;
+        private GenericEntry maxOutputEntry;
         private SendableChooser<Boolean> isFlipped = new SendableChooser<>();
         private SendableChooser<OperatorController.AxisScale> axisScaleComboBox = new SendableChooser<>();
     }
 
 
     // *** CLASS & INSTANCE VARIABLES ***
-    private final AxisObjects shroudObjects = new AxisObjects();
-    private final AxisObjects shooterPowerObjects = new AxisObjects();
+    private final AxisObjects moveXObjects = new AxisObjects();
+    private final AxisObjects moveYObjects = new AxisObjects();
+    private final AxisObjects rightXObjects = new AxisObjects();
     private final OperatorController operatorController;
 
     private ShuffleboardTab operatorControllerTab = Shuffleboard.getTab("Operator Controller");
@@ -58,47 +60,48 @@ public class OperatorControllerTab
     // *** CLASS & INSTANCE METHODS ***
     private void initOperatorControllerTab()
     {
-        // createAxisWidgets(OperatorController.OperatorAxisAction.kShroud, "Shroud", shroudObjects, 0);
-        // createAxisWidgets(OperatorController.OperatorAxisAction.kShooterPower, "Shooter Power", shooterPowerObjects, 5);
+        createAxisWidgets(Xbox.Axis.kLeftX, "Move X", moveXObjects, 0);
+        createAxisWidgets(Xbox.Axis.kLeftY, "Move Y", moveYObjects, 5);
+        createAxisWidgets(Xbox.Axis.kRightX, "Rotate", rightXObjects, 10);
     }
 
-    // private void createAxisWidgets(OperatorController.OperatorAxisAction axis, String name, AxisObjects axisObjects, int column)
+    private void createAxisWidgets(Xbox.Axis axis, String name, AxisObjects axisObjects, int column)
     {
         int row = 0;
         int width = 4;
         int height = 2;
 
         // Get the current axis settings on the Driver Controller for the given axis
-        // OperatorController.AxisSettings axisSettings = OPERATOR_CONTROLLER.new AxisSettings();
-        // axisSettings = OPERATOR_CONTROLLER.getAxisSettings(axis.axis);
+        OperatorController.AxisSettings axisSettings = operatorController.new AxisSettings();
+        axisSettings = operatorController.getAxisSettings(axis);
 
         // // Create the text box to set the deadzone of the axis
-        // axisObjects.deadzoneEntry = createTextBox(name + " Deadzone", Double.toString(axisSettings.axisDeadzone), column, row, width, height);
+        axisObjects.deadzoneEntry = createTextBox(name + " Deadzone", Double.toString(axisSettings.axisDeadzone), column, row, width, height);
         
         // //Create the text box to set the min output of the axis
-        // row += 2;
-        // axisObjects.minOutputEntry = createTextBox(name + " Min Output", Double.toString(axisSettings.axisMinOutput), column, row, width, height);
+        row += 2;
+        axisObjects.minOutputEntry = createTextBox(name + " Min Output", Double.toString(axisSettings.axisMinOutput), column, row, width, height);
 
         // // Create the text box to set the max output of the axis
-        // row += 2;
-        // axisObjects.maxOutputEntry = createTextBox(name + " Max Output", Double.toString(axisSettings.axisMaxOutput), column, row, width, height);
+        row += 2;
+        axisObjects.maxOutputEntry = createTextBox(name + " Max Output", Double.toString(axisSettings.axisMaxOutput), column, row, width, height);
 
         // // Create the button to flip the axis (swap negative and positive)
-        // row += 2;
-        // createSplitButtonChooser(axisObjects.isFlipped, name + " Is Flipped", axisSettings.axisIsFlipped, column, row, width, height);
+        row += 2;
+        createSplitButtonChooser(axisObjects.isFlipped, name + " Is Flipped", axisSettings.axisIsFlipped, column, row, width, height);
 
         // // Create the combo box to set the axis scale
-        // row += 3;
-        // createComboBox(axisObjects.axisScaleComboBox, name + " Axis Scale", axisSettings.axisScale, column, row, width, height);
+        row += 3;
+        createComboBox(axisObjects.axisScaleComboBox, name + " Axis Scale", axisSettings.axisScale, column, row, width, height);
     }
     
-    // private NetworkTableEntry createTextBox(String title, String defaultValue, int column, int row, int width, int height)
+    private GenericEntry createTextBox(String title, String defaultValue, int column, int row, int width, int height)
     {
-        // return operatorControllerTab.add(title, defaultValue)
-        // .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
-        // .withPosition(column, row)  // sets position of widget
-        // .withSize(width, height)    // sets size of widget
-        // .getEntry();
+        return operatorControllerTab.add(title, defaultValue)
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(column, row)  // sets position of widget
+        .withSize(width, height)    // sets size of widget
+        .getEntry();
     }
 
     private void createComboBox(SendableChooser<OperatorController.AxisScale> comboBox, String title, OperatorController.AxisScale defaultValue, int column, int row, int width, int height)
@@ -158,11 +161,14 @@ public class OperatorControllerTab
     {
         OperatorController.AxisSettings axisSettings = operatorController.new AxisSettings();
 
-        // axisSettings = getAxisSettingsFromShuffleboard(shroudObjects);
-        // OPERATOR_CONTROLLER.setAxisSettings(OperatorController.OperatorAxisAction.kShroud.axis, axisSettings);
+        axisSettings = getAxisSettingsFromShuffleboard(moveXObjects);
+        operatorController.setAxisSettings(Xbox.Axis.kLeftX, axisSettings);
 
-        // axisSettings = getAxisSettingsFromShuffleboard(shooterPowerObjects);
-        // OPERATOR_CONTROLLER.setAxisSettings(OperatorController.OperatorAxisAction.kShooterPower.axis, axisSettings);
+        axisSettings = getAxisSettingsFromShuffleboard(moveYObjects);
+        operatorController.setAxisSettings(Xbox.Axis.kLeftY, axisSettings);
+
+        axisSettings = getAxisSettingsFromShuffleboard(rightXObjects);
+        operatorController.setAxisSettings(Xbox.Axis.kRightX, axisSettings);
     }
 }
 

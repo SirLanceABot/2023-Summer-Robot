@@ -173,13 +173,13 @@ public class DriverControllerTab
         DriverController.AxisSettings axisSettings = driverController.new AxisSettings();
 
         axisSettings = getAxisSettingsFromShuffleboard(moveXObjects);
-        // driverController.setAxisSettings(Xbox, axisSettings);
+        driverController.setAxisSettings(Xbox.Axis.kLeftX, axisSettings);
 
         axisSettings = getAxisSettingsFromShuffleboard(moveYObjects);
-        // DRIVER_CONTROLLER.setAxisSettings(DriverController.DriverAxisAction.kMoveY.axis, axisSettings);
+        driverController.setAxisSettings(Xbox.Axis.kLeftY, axisSettings);
 
         axisSettings = getAxisSettingsFromShuffleboard(rightXObjects);
-        // DRIVER_CONTROLLER.setAxisSettings(DriverController.DriverAxisAction.kRotate.axis, axisSettings);
+        driverController.setAxisSettings(Xbox.Axis.kRightX, axisSettings);
 
         // axisSettings = getAxisSettingsFromShuffleboard(rightYObjects);
         // driverController.setAxisSettings(DriverController.Axis.kRightY, axisSettings);
