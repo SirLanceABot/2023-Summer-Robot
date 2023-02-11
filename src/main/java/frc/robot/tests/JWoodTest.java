@@ -2,7 +2,9 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Shoulder;
 
 public class JWoodTest implements Test
 {
@@ -19,12 +21,16 @@ public class JWoodTest implements Test
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
+    private final Joystick joystick = new Joystick(0);
+    private final Shoulder shoulder;
 
 
     // *** CLASS CONSTRUCTOR ***
     public JWoodTest(RobotContainer robotContainer)
     {
         this.robotContainer = robotContainer;
+        this.shoulder = this.robotContainer.shoulder;
+
     }
 
     /**
@@ -37,13 +43,17 @@ public class JWoodTest implements Test
      * This method runs periodically (every 20ms).
      */
     public void periodic()
-    {}
+    {
+        shoulder.on(0.75);
+    }
     
     /**
      * This method runs one time after the periodic() method.
      */
     public void exit()
-    {}
+    {
+        shoulder.off();
+    }
 
     // *** METHODS ***
     // Put any additional methods here.

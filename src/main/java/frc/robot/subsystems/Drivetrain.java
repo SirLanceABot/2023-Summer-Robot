@@ -321,7 +321,7 @@ public class Drivetrain extends Subsystem4237
                 
                 periodicIO.swerveModuleStates = periodicIO.kinematics.toSwerveModuleStates(periodicIO.chassisSpeeds);
 
-                SwerveDriveKinematics.desaturateWheelSpeeds(periodicIO.swerveModuleStates, Constants.Drivetrain.MAX_DRIVE_SPEED);
+                SwerveDriveKinematics.desaturateWheelSpeeds(periodicIO.swerveModuleStates, Constants.DrivetrainConstants.MAX_DRIVE_SPEED);
                 break;
 
             case kLockwheels:

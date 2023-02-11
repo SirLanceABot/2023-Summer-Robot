@@ -259,6 +259,11 @@ public class Shoulder extends Subsystem4237
         periodicIO.motorSpeed = 0.0;
     }
 
+    public void on(double speed)
+    {
+        periodicIO.motorSpeed = speed;
+    }
+
     /** Holds the motor still */
     public void hold()
     {

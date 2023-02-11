@@ -21,9 +21,9 @@ import frc.robot.tests.Test;
 // import frc.robot.tests.MaahishTest;
 // import frc.robot.tests.MatthewTest;
 // import frc.robot.tests.OwenTest;
-import frc.robot.tests.SamTest;
+// import frc.robot.tests.SamTest;
 // import frc.robot.tests.TanuTest;
-// import frc.robot.tests.JWoodTest;
+import frc.robot.tests.JWoodTest;
 // import frc.robot.tests.RThomasTest;
 
 
@@ -55,9 +55,9 @@ public class TestMode
         // myTest = new MaahishTest(robotContainer);
         // myTest = new MatthewTest(robotContainer);
         // myTest = new OwenTest(robotContainer);
-        myTest = new SamTest(robotContainer);
+        // myTest = new SamTest(robotContainer);
         // myTest = new TanuTest(robotContainer);
-        // myTest = new JWoodTest(robotContainer);
+         myTest = new JWoodTest(robotContainer);
         // myTest = new RThomasTest(robotContainer);
     }
 

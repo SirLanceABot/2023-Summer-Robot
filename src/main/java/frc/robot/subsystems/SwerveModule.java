@@ -56,7 +56,7 @@ public class SwerveModule extends RobotDriveBase
             0.0789, 0.0, 0.000877,
             // FIXME Changing radians to degrees, divided by 57 roughly
             // 4.5, 0.0, 0.05, //4.5, 0.0, 0.05,
-            new TrapezoidProfile.Constraints(Constants.Drivetrain.MAX_MODULE_TURN_SPEED, Constants.Drivetrain.MAX_MODULE_TURN_ACCELERATION));
+            new TrapezoidProfile.Constraints(Constants.DrivetrainConstants.MAX_MODULE_TURN_SPEED, Constants.DrivetrainConstants.MAX_MODULE_TURN_ACCELERATION));
 
     //FIXME: Gains are for example purposes only - must be determined for your own robot!
     //First parameter is static gain (how much voltage it takes to move)
@@ -128,7 +128,7 @@ public class SwerveModule extends RobotDriveBase
         // driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 10, 15, 0.5));
         // driveMotor.configOpenloopRamp(openLoopRamp);
         driveMotor.configNeutralDeadband(0.001);
-        driveMotor.configVoltageCompSaturation(Constants.Drivetrain.MAX_BATTERY_VOLTAGE);
+        driveMotor.configVoltageCompSaturation(Constants.DrivetrainConstants.MAX_BATTERY_VOLTAGE);
         driveMotor.enableVoltageCompensation(true);
 
         // Setup PID through TalonFX
@@ -178,7 +178,7 @@ public class SwerveModule extends RobotDriveBase
         // turnMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 10, 15, 0.5));
         // turnMotor.configOpenloopRamp(openLoopRamp);
         turnMotor.configNeutralDeadband(0.001);
-        turnMotor.configVoltageCompSaturation(Constants.Drivetrain.MAX_BATTERY_VOLTAGE);
+        turnMotor.configVoltageCompSaturation(Constants.DrivetrainConstants.MAX_BATTERY_VOLTAGE);
         turnMotor.enableVoltageCompensation(true);
     }
 
@@ -299,7 +299,7 @@ public class SwerveModule extends RobotDriveBase
     public double getDrivingEncoderRate()
     {
         // FIXME Changing drivePID, changed nothing yet and probably do not need to because this will still return ticks / 100 ms
-        double velocity = driveMotor.getSelectedSensorVelocity() * Constants.Drivetrain.DRIVE_ENCODER_RATE_TO_METERS_PER_SEC;
+        double velocity = driveMotor.getSelectedSensorVelocity() * Constants.DrivetrainConstants.DRIVE_ENCODER_RATE_TO_METERS_PER_SEC;
         // FIXME Units conversion?
         // System.out.println(driveMotor.getDeviceID() + " " + velocity);
         return velocity;
@@ -308,7 +308,7 @@ public class SwerveModule extends RobotDriveBase
 
     public double getDrivingEncoderPosition()
 {
-        var position = driveMotor.getSelectedSensorPosition() * Constants.Drivetrain.DRIVE_ENCODER_POSITION_TO_METERS;
+        var position = driveMotor.getSelectedSensorPosition() * Constants.DrivetrainConstants.DRIVE_ENCODER_POSITION_TO_METERS;
         return position;
 }
 
@@ -330,7 +330,7 @@ public class SwerveModule extends RobotDriveBase
      */
     public static double normalizeVoltage(double outputVolts)
     {
-        return MathUtil.clamp(outputVolts / Constants.Drivetrain.MAX_BATTERY_VOLTAGE, -1.0, 1.0); //RobotController.getBatteryVoltage();
+        return MathUtil.clamp(outputVolts / Constants.DrivetrainConstants.MAX_BATTERY_VOLTAGE, -1.0, 1.0); //RobotController.getBatteryVoltage();
     }
 
     public void resetEncoders()

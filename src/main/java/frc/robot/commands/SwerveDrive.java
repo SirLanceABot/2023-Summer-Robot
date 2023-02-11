@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -8,12 +9,12 @@ import frc.robot.subsystems.Drivetrain;
 public class SwerveDrive extends CommandBase
 {
     private final Drivetrain drivetrain;
-    private Supplier<Double> xSpeed;
-    private Supplier<Double> ySpeed;
-    private Supplier<Double> turn;
+    private DoubleSupplier xSpeed;
+    private DoubleSupplier ySpeed;
+    private DoubleSupplier turn;
     private boolean fieldRelative;
     
-    public SwerveDrive(Drivetrain drivetrain, Supplier<Double> xSpeed, Supplier<Double> ySpeed, Supplier<Double> turn, boolean fieldRelative)
+    public SwerveDrive(Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier turn, boolean fieldRelative)
     {
         this.drivetrain = drivetrain;
         this.xSpeed = xSpeed;
@@ -33,7 +34,7 @@ public class SwerveDrive extends CommandBase
     public void execute()
     {
         if(drivetrain != null)
-            drivetrain.drive(xSpeed.get(), ySpeed.get(), turn.get(), fieldRelative);
+            drivetrain.drive(xSpeed.getAsDouble(), ySpeed.getAsDouble(), turn.getAsDouble(), fieldRelative);
     }
 
     @Override

@@ -88,7 +88,7 @@ public final class Constants
         public static final int OPERATOR = 1;
     }
 
-    public static class Drivetrain
+    public static class DrivetrainConstants
     {
         public static final double INCHES_TO_METERS = 0.0254;
         public static final double DRIVETRAIN_WHEELBASE_METERS = 23.5 * INCHES_TO_METERS;
@@ -121,10 +121,10 @@ public final class Constants
         // private static final double BACK_RIGHT_ENCODER_OFFSET   = -101.953125;
         private static final double BACK_RIGHT_ENCODER_OFFSET   = -103.271; //new swerve module
 
-        private static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(Drivetrain.DRIVETRAIN_WHEELBASE_METERS / 2, Drivetrain.DRIVETRAIN_TRACKWIDTH_METERS / 2);
-        private static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(Drivetrain.DRIVETRAIN_WHEELBASE_METERS / 2, -Drivetrain.DRIVETRAIN_TRACKWIDTH_METERS / 2);
-        private static final Translation2d BACK_LEFT_LOCATION = new Translation2d(-Drivetrain.DRIVETRAIN_WHEELBASE_METERS / 2, Drivetrain.DRIVETRAIN_TRACKWIDTH_METERS / 2);
-        private static final Translation2d BACK_RIGHT_LOCATION = new Translation2d(-Drivetrain.DRIVETRAIN_WHEELBASE_METERS / 2, -Drivetrain.DRIVETRAIN_TRACKWIDTH_METERS / 2);
+        private static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2, DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
+        private static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2, -DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
+        private static final Translation2d BACK_LEFT_LOCATION = new Translation2d(-DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2, DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
+        private static final Translation2d BACK_RIGHT_LOCATION = new Translation2d(-DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2, -DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
 
         private static final SwerveModuleConfig FRONT_LEFT = new SwerveModuleConfig(
             "Front Left", FRONT_LEFT_LOCATION, Motor.FRONT_LEFT_DRIVE, true, Sensor.FRONT_LEFT_ENCODER, FRONT_LEFT_ENCODER_OFFSET, Motor.FRONT_LEFT_TURN);

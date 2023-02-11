@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.util.datalog.DataLog;
@@ -52,6 +53,8 @@ public class RobotContainer
 	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
+	private boolean useAccelerometer		= false;
+	private boolean useGyro					= false;
 	private boolean useDrivetrain   		= true;
 	private boolean useGrabber 				= false;
 	private boolean useArm 					= false;
@@ -79,8 +82,8 @@ public class RobotContainer
 	public final AutonomousTabData autonomousTabData;
 	public final MainShuffleboard mainShuffleboard;
 	//FIXME should these be done the same way
-	public final Accelerometer4237 accelerometer = new Accelerometer4237();
-	public final Gyro4237 gyro = new Gyro4237();
+	public final Accelerometer4237 accelerometer;
+	public final Gyro4237 gyro;
 	public final DataLog log;
 	
 	/** 
@@ -96,16 +99,18 @@ public class RobotContainer
 		log					= (useDataLog)								? DataLogManager.getLog()		: null;
 
 		exampleSubsystem 	= (useFullRobot || useExampleSubsystem)		? new ExampleSubsystem() 		: null;
+		accelerometer		= (useFullRobot || useAccelerometer)		? new Accelerometer4237()		: null;
+		gyro 				= (useFullRobot || useGyro)					? new Gyro4237()				: null;	
 		drivetrain 			= (useFullRobot || useDrivetrain) 			? new Drivetrain(Constants.DrivetrainSetup.DRIVETRAIN_DATA, gyro, log) 	 : null;
 		grabber 			= (useFullRobot || useGrabber) 				? new Grabber() 				: null;
 		arm 				= (useFullRobot || useArm) 					? new Arm() 					: null;
 		shoulder 			= (useFullRobot || useShoulder) 			? new Shoulder() 				: null;
 		gatherer 			= (useFullRobot || useGatherer) 			? new Gatherer() 				: null;
 		candle 				= (useFullRobot || useCandle)				? new Candle4237() 				: null;
-		driverController 	= (useFullRobot 	|| useDriverController) 	? new DriverController(0) 		: null;
-		operatorController 	= (useFullRobot 	|| useOperatorController) 	? new OperatorController(1)	 	: null;
-		autonomousTabData	= (useFullRobot 	|| useAutonomousTabData ) 	? new AutonomousTabData()		: null;
-		mainShuffleboard 	= (useFullRobot 	|| useMainShuffleboard)		? new MainShuffleboard(this)	: null;
+		driverController 	= (useFullRobot || useDriverController) 	? new DriverController(0) 		: null;
+		operatorController 	= (useFullRobot || useOperatorController) 	? new OperatorController(1)	 	: null;
+		autonomousTabData	= (useFullRobot || useAutonomousTabData ) 	? new AutonomousTabData()		: null;
+		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)		? new MainShuffleboard(this)	: null;
 		vision 				= (useFullRobot || useVision)				? new Vision()					: null;
 		
 
@@ -134,15 +139,20 @@ public class RobotContainer
 	{
 		if(driverController != null && drivetrain != null)
         {
-			BooleanSupplier aButton = () -> {return driverController.getRawButton(Xbox.Button.kA); };
-			Trigger aButtonTrigger = new Trigger(aButton);
+			//BooleanSupplier aButton = () -> {return driverController.getRawButton(Xbox.Button.kA); };
+			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
+			Trigger xButtonTrigger = new Trigger(xButton);
 			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
-			aButtonTrigger.toggleOnTrue(new LockWheels(drivetrain));
+			xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain));
 			//JoystickButton drivetrainA = new JoystickButton(joystick,1);
-			Supplier<Double> leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
-			Supplier<Double> leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX) * 2.0; };
-			Supplier<Double> rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX) * 2.0; };
+			//DoubleSupplier leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
+			//DoubleSupplier leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX) * 2.0; };
+			//DoubleSupplier rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX) * 2.0; };
 			
+			DoubleSupplier leftYAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftY);
+			DoubleSupplier leftXAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftX);
+			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
+
 			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
         }
