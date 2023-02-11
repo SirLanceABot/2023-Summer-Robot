@@ -21,7 +21,7 @@ public class MainShuffleboard
     private final DriverControllerTab driverControllerTab;
     private  final OperatorControllerTab operatorControllerTab;
     private  final AutonomousTab autonomousTab;
-    
+    private final CameraTab cameraTab;
     
     // *** CLASS CONSTRUCTOR ***
     public MainShuffleboard(RobotContainer robotContainer)
@@ -30,6 +30,7 @@ public class MainShuffleboard
         driverControllerTab = new DriverControllerTab(robotContainer.driverController);
         operatorControllerTab = new OperatorControllerTab(robotContainer.operatorController);
         autonomousTab = new AutonomousTab(robotContainer.autonomousTabData);
+        cameraTab = new CameraTab();
 
         System.out.println(fullClassName + ": Constructor Finished");
     }

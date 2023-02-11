@@ -15,6 +15,7 @@ import frc.robot.RobotContainer;
 // import frc.vision.CameraWidget;
 // import frc.components.Intake;
 import frc.robot.vision.CameraWidget;
+import frc.robot.vision.Vision;
 
 public class CameraTab 
 {
