@@ -75,7 +75,7 @@ public class AutonomousTab
         
         createSendDataButton();
         createSuccessfulDownloadBox();
-        successfulDownload.setBoolean(false);
+        // successfulDownload.setBoolean(false);
 
         // createMessageBox();
 
@@ -104,7 +104,7 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(startingLocationBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(0, 0)
+            .withPosition(0, 5)
             .withSize(8, 2);
     }
 
@@ -123,7 +123,7 @@ public class AutonomousTab
         areGamePiecesPlayedBox.addOption("No", AutonomousTabData.AreGamePiecesPlayed.kNo);
 
         //put the widget on the shuffleboard
-        autonomousTab.add(startingLocationBox)
+        autonomousTab.add(areGamePiecesPlayedBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
             .withPosition(0, 0)
             .withSize(8, 2);
@@ -276,10 +276,8 @@ public class AutonomousTab
         //add options to Box
         currentlyContainingGamePieceBox.setDefaultOption("Yes", AutonomousTabData.CurrentlyContainingGamePiece.kYes);
         currentlyContainingGamePieceBox.addOption("No", AutonomousTabData.CurrentlyContainingGamePiece.kNo);
-        columnPlayedPiece2Box.addOption("3", AutonomousTabData.ColumnPlayedPiece2.k3);
-
         //put the widget on the shuffleboard
-        autonomousTab.add(columnPlayedPiece2Box)
+        autonomousTab.add(currentlyContainingGamePieceBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
             .withPosition(13, 3)
             .withSize(6, 2);
@@ -380,12 +378,12 @@ public class AutonomousTab
 
             if(isDataValid)
             {
-                successfulDownload.setBoolean(true);
+                // successfulDownload.setBoolean(true);
                 updateAutonomousTabData();
             }
             else
             {
-                successfulDownload.setBoolean(false);
+                // successfulDownload.setBoolean(false);
                 DriverStation.reportWarning(errorMessage, false);
                 errorMessageBox.setString(errorMessage);
             }

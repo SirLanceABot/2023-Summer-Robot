@@ -10,6 +10,8 @@ import frc.robot.subsystems.Grabber;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.CloseGrabber;
 import frc.robot.commands.OpenGrabber;
+import frc.robot.shuffleboard.AutonomousTab;
+import frc.robot.shuffleboard.MainShuffleboard;
 
 public class OwenTest implements Test
 {
@@ -28,7 +30,8 @@ public class OwenTest implements Test
     private final RobotContainer robotContainer;
     private final CANSparkMax grabberMotor = new CANSparkMax(3, MotorType.kBrushless);
     private final Joystick joystick = new Joystick(0);
-    private final Grabber grabber;// = RobotContainer.grabber;
+    // private final Grabber grabber;// = RobotContainer.grabber;
+    private final MainShuffleboard mainShuffleboard;
     // private final CloseGrabber closeGrabber;
     // private final OpenGrabber openGrabber;
 
@@ -37,7 +40,8 @@ public class OwenTest implements Test
     public OwenTest(RobotContainer robotContainer)
     {
         this.robotContainer = robotContainer;
-        this.grabber = robotContainer.grabber;
+        // this.grabber = robotContainer.grabber;
+        this.mainShuffleboard = robotContainer.mainShuffleboard;
     }
 
     /**
