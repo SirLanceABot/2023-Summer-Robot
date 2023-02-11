@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.PeriodicIO;
 
+/** Vision: contains one Limelight */
 public class Vision implements PeriodicIO
 {
     // This string gets the full name of the class, including the package name
@@ -40,16 +41,19 @@ public class Vision implements PeriodicIO
         periodicIO = new PeriodicIO();
     }
 
+    /** @return the x distance from the center of the target (double) */
     public double getX()
     {
         return periodicIO.x;
     }
 
+    /** @return the y distance from the center of the target (double) */
     public double getY()
     {
         return periodicIO.y;
     }
 
+    /** @return the area of view that the target takes up (double) */
     public double getArea()
     {
         return periodicIO.area;
