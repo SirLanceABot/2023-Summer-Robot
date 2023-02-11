@@ -3,8 +3,9 @@ package frc.robot.shuffleboard;
 import java.lang.invoke.MethodHandles;
 
 import frc.robot.controls.DriverController;
+import frc.robot.controls.Xbox;
 import frc.robot.RobotContainer;
-
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -27,9 +28,9 @@ public class DriverControllerTab
     // *** INNER ENUMS and INNER CLASSES ***
     private class AxisObjects
     {
-        private NetworkTableEntry deadzoneEntry;
-        private NetworkTableEntry minOutputEntry;
-        private NetworkTableEntry maxOutputEntry;
+        private GenericEntry deadzoneEntry;
+        private GenericEntry minOutputEntry;
+        private GenericEntry maxOutputEntry;
         private SendableChooser<Boolean> isFlipped = new SendableChooser<>();
         private SendableChooser<DriverController.AxisScale> axisScaleComboBox = new SendableChooser<>();
     }
@@ -61,53 +62,53 @@ public class DriverControllerTab
     // *** CLASS & INSTANCE METHODS ***
     private void initDriverControllerTab()
     {
-        // createAxisWidgets(DriverController.DriverAxisAction.kMoveX, "Move X", moveXObjects, 0);
-        // createAxisWidgets(DriverController.DriverAxisAction.kMoveY, "Move Y", moveYObjects, 5);
-        // createAxisWidgets(DriverController.DriverAxisAction.kRotate, "Rotate", rightXObjects, 10);
+        createAxisWidgets(Xbox.Axis.kLeftX, "Move X", moveXObjects, 0);
+        createAxisWidgets(Xbox.Axis.kLeftY, "Move Y", moveYObjects, 5);
+        createAxisWidgets(Xbox.Axis.kRightX, "Rotate", rightXObjects, 10);
         // createAxisWidgets(DriverController.DriverAxisAction.kRightY, "", rightYObjects, 15);
     }
 
-    // private void createAxisWidgets(DriverController.DriverAxisAction axis, String name, AxisObjects axisObjects, int column)
+    private void createAxisWidgets(Xbox.Axis axis, String name, AxisObjects axisObjects, int column)
     {
         int row = 0;
         int width = 4;
         int height = 2;
 
         // Get the current axis settings on the Driver Controller for the given axis
-        // DriverController.AxisSettings axisSettings = DRIVER_CONTROLLER.new AxisSettings();
-        // axisSettings = DRIVER_CONTROLLER.getAxisSettings(axis.axis);
+        DriverController.AxisSettings axisSettings = driverController.new AxisSettings();
+        axisSettings = driverController.getAxisSettings(axis);
 
         // Create the text box to set the deadzone of the axis
-        // axisObjects.deadzoneEntry = createTextBox(name + " Deadzone", Double.toString(axisSettings.axisDeadzone), column, row, width, height);
+        axisObjects.deadzoneEntry = createTextBox(name + " Deadzone", Double.toString(axisSettings.axisDeadzone), column, row, width, height);
         
-        // //Create the text box to set the min output of the axis
-        // row += 2;
-        // axisObjects.minOutputEntry = createTextBox(name + " Min Output", Double.toString(axisSettings.axisMinOutput), column, row, width, height);
+        //Create the text box to set the min output of the axis
+        row += 2;
+        axisObjects.minOutputEntry = createTextBox(name + " Min Output", Double.toString(axisSettings.axisMinOutput), column, row, width, height);
 
-        // // Create the text box to set the max output of the axis
-        // row += 2;
-        // axisObjects.maxOutputEntry = createTextBox(name + " Max Output", Double.toString(axisSettings.axisMaxOutput), column, row, width, height);
+        // Create the text box to set the max output of the axis
+        row += 2;
+        axisObjects.maxOutputEntry = createTextBox(name + " Max Output", Double.toString(axisSettings.axisMaxOutput), column, row, width, height);
 
-        // // Create the button to flip the axis (swap negative and positive)
-        // row += 2;
-        // createSplitButtonChooser(axisObjects.isFlipped, name + " Is Flipped", axisSettings.axisIsFlipped, column, row, width, height);
+        // Create the button to flip the axis (swap negative and positive)
+        row += 2;
+        createSplitButtonChooser(axisObjects.isFlipped, name + " Is Flipped", axisSettings.axisIsFlipped, column, row, width, height);
 
-        // // Create the combo box to set the axis scale
-        // row += 3;
-        // createComboBox(axisObjects.axisScaleComboBox, name + " Axis Scale", axisSettings.axisScale, column, row, width, height);
+        // Create the combo box to set the axis scale
+        row += 3;
+        createComboBox(axisObjects.axisScaleComboBox, name + " Axis Scale", axisSettings.axisScale, column, row, width, height);
     }
 
     /**
     * Create a <b>Text Box</b>
     * <p>Create an entry in the Network Table and add the Text Box to the Shuffleboard Tab
     */
-    // private NetworkTableEntry createTextBox(String title, String defaultValue, int column, int row, int width, int height)
+    private GenericEntry createTextBox(String title, String defaultValue, int column, int row, int width, int height)
     {
-        // return driverControllerTab.add(title, defaultValue)
-        //     .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
-        //     .withPosition(column, row)  // sets position of widget
-        //     .withSize(width, height)    // sets size of widget
-        //     .getEntry();
+        return driverControllerTab.add(title, defaultValue)
+            .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+            .withPosition(column, row)  // sets position of widget
+            .withSize(width, height)    // sets size of widget
+            .getEntry();
     }
 
     /**
@@ -172,7 +173,7 @@ public class DriverControllerTab
         DriverController.AxisSettings axisSettings = driverController.new AxisSettings();
 
         axisSettings = getAxisSettingsFromShuffleboard(moveXObjects);
-        // DRIVER_CONTROLLER.setAxisSettings(DriverController.DriverAxisAction.kMoveX.axis, axisSettings);
+        // driverController.setAxisSettings(Xbox, axisSettings);
 
         axisSettings = getAxisSettingsFromShuffleboard(moveYObjects);
         // DRIVER_CONTROLLER.setAxisSettings(DriverController.DriverAxisAction.kMoveY.axis, axisSettings);

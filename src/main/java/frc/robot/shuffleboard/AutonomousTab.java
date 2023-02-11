@@ -115,8 +115,8 @@ public class AutonomousTab
     private void createAreGamePiecesPlayedBox()
     {
         //create and name the Box
-        SendableRegistry.add(areGamePiecesPlayedBox, "Are Game Pieces Played");
-        SendableRegistry.setName(areGamePiecesPlayedBox, "Are Game Pieces Played");
+        SendableRegistry.add(areGamePiecesPlayedBox, "Are Pieces Played");
+        SendableRegistry.setName(areGamePiecesPlayedBox, "Are Pieces Played");
         
         //add options to  Box
         areGamePiecesPlayedBox.setDefaultOption("Yes", AutonomousTabData.AreGamePiecesPlayed.kYes);
@@ -136,8 +136,8 @@ public class AutonomousTab
     private void createMoveOntoChargingStationBox()
     {
         //create and name the Box
-        SendableRegistry.add(moveOntoChargingStationBox, "Move Onto Charging Station");
-        SendableRegistry.setName(moveOntoChargingStationBox, "Move Onto Charging Station");
+        SendableRegistry.add(moveOntoChargingStationBox, "Charge Station");
+        SendableRegistry.setName(moveOntoChargingStationBox, "Charge Station");
 
         //add options to Box
         moveOntoChargingStationBox.setDefaultOption("Yes", AutonomousTabData.MoveOntoChargingStation.kYes);
@@ -157,8 +157,8 @@ public class AutonomousTab
     private void createPickUpGamePiecesBox()
     {
         //create and name the Box
-        SendableRegistry.add(pickUpGamePiecesBox, "Pick Up Game Pieces");
-        SendableRegistry.setName(pickUpGamePiecesBox, "Pick Up Game Pieces");
+        SendableRegistry.add(pickUpGamePiecesBox, "Pick Up C or C");
+        SendableRegistry.setName(pickUpGamePiecesBox, "Pick Up C or C");
 
         //add options to Box
         pickUpGamePiecesBox.setDefaultOption("Yes", AutonomousTabData.PickUpGamePieces.kYes);
@@ -178,8 +178,8 @@ public class AutonomousTab
     private void createRowPlayedPiece1Box()
     {
         //create and name the Box
-        SendableRegistry.add(rowPlayedPiece1Box, "Row Played Piece 1");
-        SendableRegistry.setName(rowPlayedPiece1Box, "Row Played Piece 1");
+        SendableRegistry.add(rowPlayedPiece1Box, "Row Played 1");
+        SendableRegistry.setName(rowPlayedPiece1Box, "Row Played 1");
 
         //add options to Box
         rowPlayedPiece1Box.addOption("0", AutonomousTabData.RowPlayedPiece1.k0);
@@ -201,8 +201,8 @@ public class AutonomousTab
     private void createColumnPlayedPiece1Box()
     {
         //create and name the Box
-        SendableRegistry.add(columnPlayedPiece1Box, "Column Played Piece 1");
-        SendableRegistry.setName(columnPlayedPiece1Box, "Column Played Piece 1");
+        SendableRegistry.add(columnPlayedPiece1Box, "Column Played 1");
+        SendableRegistry.setName(columnPlayedPiece1Box, "Column Played 1");
 
         //add options to Box
         columnPlayedPiece1Box.addOption("0", AutonomousTabData.ColumnPlayedPiece1.k0);
@@ -224,8 +224,8 @@ public class AutonomousTab
     private void createRowPlayedPiece2Box()
     {
         //create and name the Box
-        SendableRegistry.add(rowPlayedPiece2Box, "Row Played Piece 2");
-        SendableRegistry.setName(rowPlayedPiece2Box, "Row Played Piece 2");
+        SendableRegistry.add(rowPlayedPiece2Box, "Row Played 2");
+        SendableRegistry.setName(rowPlayedPiece2Box, "Row Played 2");
 
         //add options to Box
         rowPlayedPiece2Box.setDefaultOption("0", AutonomousTabData.RowPlayedPiece2.k0);
@@ -247,8 +247,8 @@ public class AutonomousTab
     private void createColumnPlayedPiece2Box()
     {
         //create and name the Box
-        SendableRegistry.add(columnPlayedPiece2Box, "Column Played Piece 2");
-        SendableRegistry.setName(columnPlayedPiece2Box, "Column Played Piece 2");
+        SendableRegistry.add(columnPlayedPiece2Box, "Column Played 2");
+        SendableRegistry.setName(columnPlayedPiece2Box, "Column Played 2");
 
         //add options to Box
         columnPlayedPiece2Box.setDefaultOption("0", AutonomousTabData.ColumnPlayedPiece2.k0);
@@ -270,8 +270,8 @@ public class AutonomousTab
     private void createCurrentlyContainingGamePieceBox()
     {
         //create and name the Box
-        SendableRegistry.add(currentlyContainingGamePieceBox, "Currently Containing Game Piece");
-        SendableRegistry.setName(currentlyContainingGamePieceBox, "Currently Containing Game Piece");
+        SendableRegistry.add(currentlyContainingGamePieceBox, "Containing Game Piece");
+        SendableRegistry.setName(currentlyContainingGamePieceBox, "Containing Game Piece");
 
         //add options to Box
         currentlyContainingGamePieceBox.setDefaultOption("Yes", AutonomousTabData.CurrentlyContainingGamePiece.kYes);
@@ -290,18 +290,18 @@ public class AutonomousTab
     private void createAutonomousCommandsBox()
     {
         //create and name the Box
-        SendableRegistry.add(autonomousCommandsBox, "Autonomous Commands");
-        SendableRegistry.setName(autonomousCommandsBox, "Autonomous Commands");
+        SendableRegistry.add(autonomousCommandsBox, "Auto Commands");
+        SendableRegistry.setName(autonomousCommandsBox, "Auto Commands");
 
         //add options to Box
-        autonomousCommandsBox.setDefaultOption("Neither", AutonomousTabData.AutonomousCommands.kNeither);
-        autonomousCommandsBox.addOption("Charging Station", AutonomousTabData.AutonomousCommands.kChargingStation);
-        autonomousCommandsBox.addOption("2 Game Pieces", AutonomousTabData.AutonomousCommands.kTwoGamePieces);
+        autonomousCommandsBox.setDefaultOption("None", AutonomousTabData.AutonomousCommands.kNeither);
+        autonomousCommandsBox.addOption("Charge Station", AutonomousTabData.AutonomousCommands.kChargingStation);
+        autonomousCommandsBox.addOption("2 Pieces", AutonomousTabData.AutonomousCommands.kTwoGamePieces);
 
         //put the widget on the shuffleboard
         autonomousTab.add(autonomousCommandsBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(13, 3)
+            .withPosition(0, 0)
             .withSize(6, 2);
     }
 
