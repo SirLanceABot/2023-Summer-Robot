@@ -77,6 +77,9 @@ public class Gyro4237 extends Sensor4237
         if(resetGyro)
         {
             gyro.reset();
+            Timer.delay(0.25);
+            gyro.setYaw(180.0);
+            Timer.delay(0.25);
             resetGyro = false;
         }
 

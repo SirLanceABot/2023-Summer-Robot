@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Grabber;
@@ -54,7 +55,7 @@ public class RobotContainer
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= false;
+	private boolean useGyro					= true;
 	private boolean useDrivetrain   		= true;
 	private boolean useGrabber 				= false;
 	private boolean useArm 					= false;
@@ -81,7 +82,6 @@ public class RobotContainer
 	public final Vision vision;
 	public final AutonomousTabData autonomousTabData;
 	public final MainShuffleboard mainShuffleboard;
-	//FIXME should these be done the same way
 	public final Accelerometer4237 accelerometer;
 	public final Gyro4237 gyro;
 	public final DataLog log;
@@ -140,6 +140,10 @@ public class RobotContainer
 		if(driverController != null && drivetrain != null)
         {
 			//BooleanSupplier aButton = () -> {return driverController.getRawButton(Xbox.Button.kA); };
+			BooleanSupplier startButton = driverController.getButtonSupplier(Xbox.Button.kStart);
+			Trigger startButtonTrigger = new Trigger(startButton);
+			startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
+
 			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
 			Trigger xButtonTrigger = new Trigger(xButton);
 			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
