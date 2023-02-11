@@ -33,20 +33,8 @@ public class DavidTest implements Test
         this.robotContainer = robotContainer;
         candle = this.robotContainer.candle;
     }
-    public void createBlinkEvents()
-    {
-        createBlinkEvent(30.0, 2.0, 0.75, 0.75);
-        createBlinkEvent(10.0, 1.0, 1.0, 1.0);
-        createBlinkEvent(5.0, 0.25, 1.0, 1.0);
-        createBlinkEvent(4.0, 0.25, 1.0, 1.0);
-        createBlinkEvent(3.0, 0.25, 1.0, 1.0);
-        createBlinkEvent(2.0, 0.25, 1.0, 1.0);
-        createBlinkEvent(1.0, 0.25, 1.0, 1.0);
-    }
-    private void createBlinkEvent(double d, double e, double f, double g) 
-    {
-        
-    }
+   
+   
     /**
      * This method runs one time before the periodic() method.
      */

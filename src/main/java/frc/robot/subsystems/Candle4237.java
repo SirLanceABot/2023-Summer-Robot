@@ -238,6 +238,7 @@ public class Candle4237 extends Subsystem4237
                 break;
         }
     }
+    
 
     /**
      * Completely stops the current animation
@@ -294,12 +295,12 @@ public class Candle4237 extends Subsystem4237
     {
         public double startBlinkTime;
         public double blinkDuration;
-        public Enum BlinkColor;
-        public BlinkEvent(double startBlinkTime, double blinkDuration, Enum BlinkColor) 
+        public BlinkColor blinkColor;
+        public BlinkEvent(double startBlinkTime, double blinkDuration, BlinkColor blinkColor) 
         {
             this.startBlinkTime = startBlinkTime;
             this.blinkDuration = blinkDuration;
-            this.BlinkColor = BlinkColor;
+            this.blinkColor = blinkColor;
         }
         public int compareTo(BlinkEvent blinkEvent)
         {
@@ -323,15 +324,36 @@ public class Candle4237 extends Subsystem4237
 
             str += startBlinkTime + " ";
             str += blinkDuration + " ";
-            str += BlinkColor + " ";
+            str += blinkColor + " ";
             return str;
         }
     }
     
-
-       
-public void createBlinkEvent(double startBlinkTime, double blinkDuration, Enum BlinkColor)
+    public void createBlinkEvents()
     {
+        createBlinkEvent(30.0, 2.0, BlinkColor.kBlueBlink);
+    //     createBlinkEvent(10.0, 1.0, 1.0, 1.0);
+    //     createBlinkEvent(5.0, 0.25, 1.0, 1.0);
+    //     createBlinkEvent(4.0, 0.25, 1.0, 1.0);
+    //     createBlinkEvent(3.0, 0.25, 1.0, 1.0);
+    //     createBlinkEvent(2.0, 0.25, 1.0, 1.0);
+    //     createBlinkEvent(1.0, 0.25, 1.0);
+    }
+    public void createBlinkEvent(double startBlinkTime, double blinkDuration, BlinkColor blinkColor)
+    {
+        switch (blinkColor)
+        {
+            case kBlueBlink: 
+                candle.setLEDs(0, 0, 255, 50, 0, ledCount);
+                break;
+            case kGreenBlink: 
+                candle.setLEDs(0, 255, 0, 50, 0, ledCount);
+                break;
+            case kWhteBlink:
+                candle.setLEDs(255, 255, 200, 50, 0, ledCount);
+                break;
+        }
+
         boolean isNoOverlap = true;
         double endTime = startBlinkTime - blinkDuration;
         double reEndTime = 0;
@@ -364,14 +386,14 @@ public void createBlinkEvent(double startBlinkTime, double blinkDuration, Enum B
 
         if (isNoOverlap)
         {
-            blinkEvents.add(new BlinkEvent(startBlinkTime, blinkDuration, BlinkColor));
+            blinkEvents.add(new BlinkEvent(startBlinkTime, blinkDuration, blinkColor));
             blinkCounter++;
             Collections.sort(blinkEvents, Collections.reverseOrder());
             // System.out.println("Rumble Event Created: " + fail + " " + startTime + " " + duration + " " + leftPower + " " + rightPower);
         }
         else 
         {
-            System.out.println("Rumble Event Overlap: " + fail + " " + startBlinkTime + " " + blinkDuration + " " + BlinkColor);
+            System.out.println("Rumble Event Overlap: " + fail + " " + startBlinkTime + " " + blinkDuration + " " + blinkColor);
         }
     }
 
