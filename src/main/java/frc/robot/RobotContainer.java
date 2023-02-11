@@ -63,7 +63,7 @@ public class RobotContainer
 	private boolean useAutonomousTabData	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
-	private boolean useDataLog				= true;
+	private boolean useDataLog				= false;
 
 
 	public final ExampleSubsystem exampleSubsystem;
@@ -94,6 +94,7 @@ public class RobotContainer
 			DataLogManager.start();
 			
 		log					= (useDataLog)								? DataLogManager.getLog()		: null;
+
 		exampleSubsystem 	= (useFullRobot || useExampleSubsystem)		? new ExampleSubsystem() 		: null;
 		drivetrain 			= (useFullRobot || useDrivetrain) 			? new Drivetrain(Constants.DrivetrainSetup.DRIVETRAIN_DATA, gyro, log) 	 : null;
 		grabber 			= (useFullRobot || useGrabber) 				? new Grabber() 				: null;
@@ -142,8 +143,8 @@ public class RobotContainer
 			Supplier<Double> leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX); };
 			Supplier<Double> rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX); };
 			
-			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
-			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
+			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
         }
 	}
 
