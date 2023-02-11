@@ -80,7 +80,7 @@ public class Gyro4237 extends Sensor4237
             resetGyro = false;
         }
 
-        System.out.println(toString());
+        // System.out.println(periodicIO.angle + "   " + periodicIO.rotation2d.getDegrees());
     }
 
     @Override

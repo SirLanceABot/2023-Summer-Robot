@@ -139,9 +139,9 @@ public class RobotContainer
 			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
 			aButtonTrigger.toggleOnTrue(new LockWheels(drivetrain));
 			//JoystickButton drivetrainA = new JoystickButton(joystick,1);
-			Supplier<Double> leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY); };
-			Supplier<Double> leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX); };
-			Supplier<Double> rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX); };
+			Supplier<Double> leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
+			Supplier<Double> leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX) * 2.0; };
+			Supplier<Double> rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX) * 2.0; };
 			
 			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
