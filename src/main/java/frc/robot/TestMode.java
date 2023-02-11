@@ -14,7 +14,7 @@ import frc.robot.tests.Test;
 // *** IMPORT statements ***
 // Uncomment one of these statements
 
-// import frc.robot.tests.ExampleTest;
+import frc.robot.tests.ExampleTest;
 // import frc.robot.tests.DavidTest;
 // import frc.robot.tests.KyleTest;
 // import frc.robot.tests.LoganTest;
@@ -23,7 +23,7 @@ import frc.robot.tests.Test;
 // import frc.robot.tests.OwenTest;
 // import frc.robot.tests.SamTest;
 // import frc.robot.tests.TanuTest;
-import frc.robot.tests.JWoodTest;
+// import frc.robot.tests.JWoodTest;
 // import frc.robot.tests.RThomasTest;
 
 
@@ -48,7 +48,7 @@ public class TestMode
         // *** INITIALIZATION statements ***
         // Uncomment one of these statements
 
-        // myTest = new ExampleTest(robotContainer);
+        myTest = new ExampleTest(robotContainer);
         // myTest = new DavidTest(robotContainer);
         // myTest = new KyleTest(robotContainer);
         // myTest = new LoganTest(robotContainer);
@@ -57,7 +57,7 @@ public class TestMode
         // myTest = new OwenTest(robotContainer);
         // myTest = new SamTest(robotContainer);
         // myTest = new TanuTest(robotContainer);
-         myTest = new JWoodTest(robotContainer);
+        // myTest = new JWoodTest(robotContainer);
         // myTest = new RThomasTest(robotContainer);
     }
 
