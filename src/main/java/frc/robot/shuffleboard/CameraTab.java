@@ -14,18 +14,17 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.RobotContainer;
 // import frc.vision.CameraWidget;
 // import frc.components.Intake;
+import frc.robot.vision.CameraWidget;
 
 public class CameraTab 
 {
-    // private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
-    // private static final Intake INTAKE = RobotContainer.INTAKE;
-
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
     static
     {
-        // System.out.println("Loading: " + fullClassName);
+        System.out.println("Loading: " + fullClassName);
     }
 
     // *** CLASS & INSTANCE VARIABLES ***
@@ -36,7 +35,6 @@ public class CameraTab
 
     // Create text output boxes
     private NetworkTableEntry timeRemaining;
-    private NetworkTableEntry compressorState;
 
     private Double timeRemainingData = 0.0;
     String compressorStateString = "No data";
@@ -44,30 +42,29 @@ public class CameraTab
     // *** CLASS CONSTRUCTOR ***
     public CameraTab()
     {
-        // System.out.println(fullClassName + " : Constructor Started");
+        System.out.println(fullClassName + " : Constructor Started");
 
         // // limelight on shuffleboard
-        // CameraWidget cw = new CameraWidget(cameraTab);
-        // cw.name("LimeLight");
-        // cw.setLocation(0, 0, 16, 20); // small screen
-        // cw.setProperties(false, "white", false, "NONE");
+        CameraWidget cw = new CameraWidget(cameraTab);
+        cw.name("LimeLight");
+        cw.setLocation(0, 0, 16, 20); // small screen
+        cw.setProperties(false, "white", false, "NONE");
 
-        // cw.createCameraShuffleboardWidgetLL("limelight", new String[]{"http://10.42.37.11:5800"}); // could get URLs from NT
+        cw.createCameraShuffleboardWidgetLL("limelight", new String[]{"http://10.42.37.11:5800"}); // could get URLs from NT
 
-        // timeRemaining = createTimeRemainingBox();
-        // compressorState = createCompressorStateBox();
+        createTimeRemainingBox();
 
-        // System.out.println(fullClassName + ": Constructor Finished");
+        System.out.println(fullClassName + ": Constructor Finished");
     }
 
     // *** CLASS & INSTANCE METHODS ***
-    // private NetworkTableEntry createTimeRemainingBox()
+    private void createTimeRemainingBox()
     {
-        // return cameraTab.add("Time Remaining", timeRemainingData.toString())
-        //     .withWidget(BuiltInWidgets.kTextView)
-        //     .withPosition(24, 5)
-        //     .withSize(4, 2)
-        //     .getEntry();
+        cameraTab.add("Time Remaining", timeRemainingData.toString())
+            .withWidget(BuiltInWidgets.kTextView)
+            .withPosition(24, 5)
+            .withSize(4, 2)
+            .getEntry();
     }
 
     public void updateTimeRemaining()
@@ -84,40 +81,6 @@ public class CameraTab
             timeRemaining.setString("" + timeRemainingInt);
             oldTime = timeRemainingInt;
         }
-    }
-
-    // private NetworkTableEntry createCompressorStateBox()
-    {
-        // return cameraTab.add("Compressor State", compressorStateString)
-            // .withWidget(BuiltInWidgets.kTextView)
-            // .withPosition(20, 5)
-            // .withSize(4, 2)
-            // .getEntry();
-    }
-
-    public void updateCompressorState()
-    {
-        // if(INTAKE != null)
-        // {
-        //     if(INTAKE.isCompressorDisabled())
-        //     {
-        //         compressorStateString = "Disabled";
-        //     }
-        //     else if(INTAKE.isCompressorRunning())
-            // {
-        //         compressorStateString = "Running";
-        //     }
-        //     else
-        //     {
-        //         compressorStateString = "Off";
-        //     }
-        // }
-        // else
-        // {
-        //     compressorStateString = "Off";
-        // }
-
-        compressorState.setString(compressorStateString);
     }
 
     /**
@@ -174,7 +137,6 @@ public class CameraTab
     {
         updateTimeRemaining();
         updateLimeLightMode();
-        updateCompressorState();
     }
 }
 /*
