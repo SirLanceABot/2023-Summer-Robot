@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
@@ -18,6 +20,7 @@ import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.CANbusConstants;
 
 /**
@@ -46,6 +49,11 @@ public class Candle4237 extends Subsystem4237
         kSingleFade, kStrobe, kTwinkle, kTwinkleOff, kDisabled;
     }
 
+    public enum BlinkColor
+    {
+        kBlueBlink, kGreenBlink, kWhteBlink
+    }
+
     private class PeriodicIO
     {
         // Inputs
@@ -57,8 +65,10 @@ public class Candle4237 extends Subsystem4237
 
     private PeriodicIO periodicIO = new PeriodicIO();
     private final CANdle candle = new CANdle(CANbusConstants.CANDLE_PORT, "rio");
-    private final int ledCount = 68; // CANdle = 8, LED Strip = 60, LED Strip + CANdle = 68
+    private final static int ledCount = 68; // CANdle = 8, LED Strip = 60, LED Strip + CANdle = 68
     private Animation animation = null;
+    private final ArrayList<BlinkEvent> blinkEvents = new ArrayList<BlinkEvent>();
+    private int blinkCounter = 0;
 
     public Candle4237()
     {
@@ -279,5 +289,119 @@ public class Candle4237 extends Subsystem4237
 
         if (periodicIO.toAnimate != ledAnimation.kDisabled)
             periodicIO.status = ledStatus.kAnimated;
+    }    
+    public class BlinkEvent
+    {
+        public double startBlinkTime;
+        public double blinkDuration;
+        public Enum BlinkColor;
+        public BlinkEvent(double startBlinkTime, double blinkDuration, Enum BlinkColor) 
+        {
+            this.startBlinkTime = startBlinkTime;
+            this.blinkDuration = blinkDuration;
+            this.BlinkColor = BlinkColor;
+        }
+        public int compareTo(BlinkEvent blinkEvent)
+        {
+            if (startBlinkTime > blinkEvent.startBlinkTime)
+                return 1;
+            else if (startBlinkTime < blinkEvent.startBlinkTime)
+                return -1;
+            else 
+            {
+                if (blinkDuration > blinkEvent.blinkDuration)
+                    return 1;
+                else if (blinkDuration < blinkEvent.blinkDuration)
+                    return -1;
+                else
+                    return 0;
+            }
+        }
+        public String toString()
+        {
+            String str = "";
+
+            str += startBlinkTime + " ";
+            str += blinkDuration + " ";
+            str += BlinkColor + " ";
+            return str;
+        }
     }
-}
+    
+
+       
+public void createBlinkEvent(double startBlinkTime, double blinkDuration, Enum BlinkColor)
+    {
+        boolean isNoOverlap = true;
+        double endTime = startBlinkTime - blinkDuration;
+        double reEndTime = 0;
+        int fail = 0;
+
+        for (BlinkEvent blinkEvent : blinkEvents)
+        {
+            reEndTime = blinkEvent.startBlinkTime - blinkEvent.blinkDuration;
+            if (blinkEvent.startBlinkTime >= startBlinkTime && startBlinkTime > reEndTime)
+            {   
+                isNoOverlap = false;
+                fail = 1;
+            }    
+            else if (blinkEvent.startBlinkTime > endTime && endTime > reEndTime)
+            {   
+                isNoOverlap = false;
+                fail = 2;
+            }  
+            else if (startBlinkTime >= blinkEvent.startBlinkTime && blinkEvent.startBlinkTime > endTime)
+            {   
+                isNoOverlap = false;
+                fail = 3;
+            }  
+            else if (startBlinkTime > reEndTime && reEndTime > endTime)
+            {   
+                isNoOverlap = false;
+                fail = 4;
+            }  
+        }
+
+        if (isNoOverlap)
+        {
+            blinkEvents.add(new BlinkEvent(startBlinkTime, blinkDuration, BlinkColor));
+            blinkCounter++;
+            Collections.sort(blinkEvents, Collections.reverseOrder());
+            // System.out.println("Rumble Event Created: " + fail + " " + startTime + " " + duration + " " + leftPower + " " + rightPower);
+        }
+        else 
+        {
+            System.out.println("Rumble Event Overlap: " + fail + " " + startBlinkTime + " " + blinkDuration + " " + BlinkColor);
+        }
+    }
+
+    public void checkBlinkEvent()
+    {
+        if (blinkEvents.size() > blinkCounter)
+        {
+            double matchTime = DriverStation.getMatchTime();
+            double startTime = blinkEvents.get(blinkCounter).startBlinkTime;
+            double duration = blinkEvents.get(blinkCounter).blinkDuration;
+
+            if (startTime >= matchTime && matchTime > startTime - duration)
+            {
+                periodicIO.toAnimate = ledAnimation.kDisabled;
+                candle.setLEDs(0, 0, 255, 255, 0, ledCount);
+            }
+            else if (matchTime <= startTime - duration)
+            {
+                blinkCounter++;
+            }
+        }
+        else if(blinkEvents.size() <= blinkCounter || DriverStation.isDisabled() &&blinkCounter > 0)
+        {
+            resetBlinkCounter();
+        }
+    }
+
+    public void resetBlinkCounter()
+    {
+        blinkCounter = 0;
+    }
+    }
+
