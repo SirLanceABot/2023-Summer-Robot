@@ -43,11 +43,11 @@ public class Candle4237 extends Subsystem4237
         kPurple, kYellow, kWhite, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhteBlink;
     }
 
-    public enum LedAnimation
-    {
-        kColorFlow, kFire, kLarson, kRainbow, kRgbFade, 
-        kSingleFade, kStrobe, kTwinkle, kTwinkleOff, kDisabled;
-    }
+    // public enum LedAnimation
+    // {
+    //     kColorFlow, kFire, kLarson, kRainbow, kRgbFade, 
+    //     kSingleFade, kStrobe, kTwinkle, kTwinkleOff, kDisabled;
+    // }
 
     // public enum BlinkColor
     // {
@@ -88,6 +88,22 @@ public class Candle4237 extends Subsystem4237
             str += blinkDuration + " ";
             str += blinkColor + " ";
             return str;
+        }
+    }
+    public enum LedAnimation
+    {
+        kColorFlow, kFire, kLarson, kRainbow, kRgbFade, kSingleFade, kStrobe, kTwinkle, kTwinkleOff, kDisabled;
+
+        private static final LedAnimation[] vals = values();
+
+        public LedAnimation next()
+        {
+            System.out.println("Next Animation" + vals[(this.ordinal() + 1) % vals.length]);
+            return vals[(this.ordinal() + 1) % vals.length];
+        }
+        public LedAnimation prev()
+        {
+            return vals[(this.ordinal() - 1 + vals.length) % vals.length];
         }
     }
     private class PeriodicIO
@@ -194,90 +210,107 @@ public class Candle4237 extends Subsystem4237
     /**
      * Moves the animation to the next one in the order
      */
-    public void incrementAnimation()
+    // public void incrementAnimation()
+    // {
+    //     periodicIO.status = LedStatus.kAnimated;
+    //     switch (periodicIO.toAnimate)
+    //     {
+    //         case kColorFlow: 
+    //             periodicIO.toAnimate = LedAnimation.kFire;
+    //             break;
+    //         case kFire: 
+    //             periodicIO.toAnimate = LedAnimation.kLarson;
+    //             break;
+    //         case kLarson: 
+    //             periodicIO.toAnimate = LedAnimation.kRainbow;
+    //             break;
+    //         case kRainbow: 
+    //             periodicIO.toAnimate = LedAnimation.kRgbFade;
+    //             break;
+    //         case kRgbFade: 
+    //             periodicIO.toAnimate = LedAnimation.kSingleFade;
+    //             break;
+    //         case kSingleFade: 
+    //             periodicIO.toAnimate = LedAnimation.kStrobe;
+    //             break;
+    //         case kStrobe: 
+    //             periodicIO.toAnimate = LedAnimation.kTwinkle;
+    //             break;
+    //         case kTwinkle: 
+    //             periodicIO.toAnimate = LedAnimation.kTwinkleOff;
+    //             break;
+    //         case kTwinkleOff: 
+    //             periodicIO.toAnimate = LedAnimation.kColorFlow;
+    //             break;
+    //         case kDisabled:  
+    //             periodicIO.toAnimate = LedAnimation.kColorFlow;
+    //             break;
+    //         default:
+    //             break;
+    //     }
+       
+    // }
+
+    // // /**
+    // //  * Moves the animation to the previous one in the order
+    // //  */
+    // public void decrementAnimation()
+    // {
+    //     periodicIO.status = LedStatus.kAnimated;
+    //     switch (periodicIO.toAnimate)
+    //     {
+    //         case kColorFlow: 
+    //             periodicIO.toAnimate = LedAnimation.kTwinkleOff;
+    //             break;
+    //         case kFire: 
+    //             periodicIO.toAnimate = LedAnimation.kColorFlow;
+    //             break;
+    //         case kLarson: 
+    //             periodicIO.toAnimate = LedAnimation.kFire;
+    //             break;
+    //         case kRainbow: 
+    //             periodicIO.toAnimate = LedAnimation.kLarson;
+    //             break;
+    //         case kRgbFade: 
+    //             periodicIO.toAnimate = LedAnimation.kRainbow;
+    //             break;
+    //         case kSingleFade: 
+    //             periodicIO.toAnimate = LedAnimation.kRgbFade;
+    //             break;
+    //         case kStrobe: 
+    //             periodicIO.toAnimate = LedAnimation.kSingleFade;
+    //             break;
+    //         case kTwinkle: 
+    //             periodicIO.toAnimate = LedAnimation.kStrobe;
+    //             break;
+    //         case kTwinkleOff: 
+    //             periodicIO.toAnimate = LedAnimation.kTwinkle;
+    //             break;
+    //         case kDisabled:  
+    //             periodicIO.toAnimate = LedAnimation.kTwinkleOff;
+    //             break;
+    //         default:
+    //             break;
+    //     }
+        
+    // }
+    
+    public void incrementAnimation()  
+    {   
+        periodicIO.status = LedStatus.kAnimated;
+        periodicIO.toAnimate = periodicIO.toAnimate.next();
+        if(periodicIO.toAnimate == LedAnimation.kDisabled)
+            periodicIO.toAnimate = periodicIO.toAnimate.next();
+    }
+    public void decrementAnimation()  
     {
         periodicIO.status = LedStatus.kAnimated;
-        switch (periodicIO.toAnimate)
-        {
-            case kColorFlow: 
-                periodicIO.toAnimate = LedAnimation.kFire;
-                break;
-            case kFire: 
-                periodicIO.toAnimate = LedAnimation.kLarson;
-                break;
-            case kLarson: 
-                periodicIO.toAnimate = LedAnimation.kRainbow;
-                break;
-            case kRainbow: 
-                periodicIO.toAnimate = LedAnimation.kRgbFade;
-                break;
-            case kRgbFade: 
-                periodicIO.toAnimate = LedAnimation.kSingleFade;
-                break;
-            case kSingleFade: 
-                periodicIO.toAnimate = LedAnimation.kStrobe;
-                break;
-            case kStrobe: 
-                periodicIO.toAnimate = LedAnimation.kTwinkle;
-                break;
-            case kTwinkle: 
-                periodicIO.toAnimate = LedAnimation.kTwinkleOff;
-                break;
-            case kTwinkleOff: 
-                periodicIO.toAnimate = LedAnimation.kColorFlow;
-                break;
-            case kDisabled:  
-                periodicIO.toAnimate = LedAnimation.kColorFlow;
-                break;
-            default:
-                break;
-        }
-       
+        periodicIO.toAnimate = periodicIO.toAnimate.prev();
+        if(periodicIO.toAnimate == LedAnimation.kDisabled)
+            periodicIO.toAnimate = periodicIO.toAnimate.prev();
     }
 
-    /**
-     * Moves the animation to the previous one in the order
-     */
-    public void decrementAnimation()
-    {
-        periodicIO.status = LedStatus.kAnimated;
-        switch (periodicIO.toAnimate)
-        {
-            case kColorFlow: 
-                periodicIO.toAnimate = LedAnimation.kTwinkleOff;
-                break;
-            case kFire: 
-                periodicIO.toAnimate = LedAnimation.kColorFlow;
-                break;
-            case kLarson: 
-                periodicIO.toAnimate = LedAnimation.kFire;
-                break;
-            case kRainbow: 
-                periodicIO.toAnimate = LedAnimation.kLarson;
-                break;
-            case kRgbFade: 
-                periodicIO.toAnimate = LedAnimation.kRainbow;
-                break;
-            case kSingleFade: 
-                periodicIO.toAnimate = LedAnimation.kRgbFade;
-                break;
-            case kStrobe: 
-                periodicIO.toAnimate = LedAnimation.kSingleFade;
-                break;
-            case kTwinkle: 
-                periodicIO.toAnimate = LedAnimation.kStrobe;
-                break;
-            case kTwinkleOff: 
-                periodicIO.toAnimate = LedAnimation.kTwinkle;
-                break;
-            case kDisabled:  
-                periodicIO.toAnimate = LedAnimation.kTwinkleOff;
-                break;
-            default:
-                break;
-        }
-        
-    }
+
 
     private void setColor()
     {
@@ -290,7 +323,7 @@ public class Candle4237 extends Subsystem4237
                 candle.setLEDs(255, 185, 0, 50, 0, ledCount);
                 break; 
             case kWhite: 
-                candle.setLEDs(255, 255, 220, 255, 0, ledCount);
+                candle.setLEDs(255, 255, 200, 255, 0, ledCount);
                 break;
             case kOff: 
                 candle.setLEDs(0, 0, 0, 0, 0, ledCount);
