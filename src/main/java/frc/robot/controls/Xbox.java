@@ -172,7 +172,7 @@ public class Xbox
 
 
     // *** CLASS CONSTRUCTOR ***
-    protected Xbox(int port)
+    Xbox(int port)
     {
         // super(port);
         joystick = new Joystick(port);
@@ -185,7 +185,7 @@ public class Xbox
 
     
     // *** CLASS & INSTANCE METHODS *** 
-    public void initXbox()
+    private void initXbox()
     {
         for(int index = 0; index <= NUMBER_OF_AXES - 1; index++)
         {
@@ -314,7 +314,7 @@ public class Xbox
     public void setAxisMinOutput(Axis axis, double axisMinOutput)
     {
         axisMinOutput = Math.abs(axisMinOutput);
-        axisMinOutput = Math.min(axisMinOutput, 1.0);
+        // axisMinOutput = Math.min(axisMinOutput, 1.0);
 
         this.axisMinOutput[axis.value] = axisMinOutput;
     }
@@ -327,7 +327,7 @@ public class Xbox
     public void setAxisMaxOutput(Axis axis, double axisMaxOutput)
     {
         axisMaxOutput = Math.abs(axisMaxOutput);
-        axisMaxOutput = Math.min(axisMaxOutput, 1.0);
+        // axisMaxOutput = Math.min(axisMaxOutput, 1.0);
 
         this.axisMaxOutput[axis.value] = axisMaxOutput;
     }
@@ -381,7 +381,7 @@ public class Xbox
         
     }
     
-    public void createRumbleEvent(double startTime, double duration, double leftPower, double rightPower)
+    void createRumbleEvent(double startTime, double duration, double leftPower, double rightPower)
     {
         boolean isNoOverlap = true;
         double endTime = startTime - duration;
@@ -426,9 +426,9 @@ public class Xbox
         }
     }
 
-    public void checkRumbleEvent()
+    void checkRumbleEvent()
     {
-        if (rumbleEvents.size() > rumbleCounter)
+        if (DriverStation.isEnabled() && rumbleEvents.size() > rumbleCounter)
         {
             double matchTime = DriverStation.getMatchTime();
             double startTime = rumbleEvents.get(rumbleCounter).startTime;
@@ -446,7 +446,7 @@ public class Xbox
                 joystick.setRumble(RumbleType.kRightRumble, 0.0); 
             }
         }
-        else if(rumbleEvents.size() <= rumbleCounter || DriverStation.isDisabled() &&rumbleCounter > 0)
+        else if(DriverStation.isDisabled() && rumbleCounter > 0)
         {
             resetRumbleCounter();
         }

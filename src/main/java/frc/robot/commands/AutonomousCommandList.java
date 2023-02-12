@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AutonomousCommandList extends CommandBase
 {
+    //This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
     // *** STATIC INITIALIZATION BLOCK ***

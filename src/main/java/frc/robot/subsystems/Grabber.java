@@ -31,11 +31,8 @@ import edu.wpi.first.wpilibj.Encoder;
 public class Grabber extends Subsystem4237
 {
     // This string gets the full name of the class, including the package name
-    private PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
-    private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
-    private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 6);
-    private final Compressor compressor = new Compressor(moduleType);
+    
     // private final CANSparkMax suctionMotor = new CANSparkMax(1, com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless);
 
     // *** STATIC INITIALIZATION BLOCK ***
@@ -66,6 +63,11 @@ public class Grabber extends Subsystem4237
         Value angle = Value.kOff;
         double grabberMotorControl;
     }
+
+    private PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
+    private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
+    private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 6);
+    private final Compressor compressor = new Compressor(moduleType);
 
     GamePiece currentGamePiece = GamePiece.kNone;
     double speed = 0;

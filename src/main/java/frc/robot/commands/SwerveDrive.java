@@ -35,7 +35,7 @@ public class SwerveDrive extends CommandBase
     {
         if(drivetrain != null)
             // change robot speed
-            drivetrain.drive(2.0 * xSpeed.getAsDouble(), 2.0 * ySpeed.getAsDouble(), 2.0 * turn.getAsDouble(), fieldRelative);
+            drivetrain.drive(xSpeed.getAsDouble(), ySpeed.getAsDouble(), turn.getAsDouble(), fieldRelative);
     }
 
     @Override
