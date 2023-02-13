@@ -72,7 +72,7 @@ public class MoveArm extends CommandBase
     @Override
     public void end(boolean interrupted)
     {
-        arm.gestapoArm();
+        arm.stopArm();
     }
 
     /**

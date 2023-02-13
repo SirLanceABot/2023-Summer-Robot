@@ -476,54 +476,5 @@ public class Candle4237 extends Subsystem4237
         else // if (periodicIO.status == kSectioned)
             periodicIO.status = LedStatus.kOff;
     }
-
-    // public void sectionStrip(int sectionCount)
-    // {
-    //     ledCount = stripLedCount / sectionCount;
-    //     for (int i = 0; i <= sectionCount - 1; ++i)
-    //     {
-    //         startLed = i * ledCount + candleLedCount;
-    //         if (i == 0)
-    //             periodicIO.status = LedStatus.kGreenBlink;
-    //         else if (i == 1)
-    //             periodicIO.status = LedStatus.kPurple;
-    //         else if (i == 2)
-    //             periodicIO.status = LedStatus.kWhite;
-    //         setColor();
-    //     }
-    // }
-
-    // public void sectionStrip(int sectionCount)
-    // {
-    //     ledCount = stripLedCount / sectionCount;
-    //     for (int i = 0; i < sectionCount - 1; ++i)
-    //     {
-            
-    //         startLed = i * sectionCount + candleLedCount;
-    //         setColor();
-    //     }
-    //     // LedStatus[] sectionColors = new LedStatus[sectionCount - 1];
-    //     // for (int i = 0; i < sectionCount - 1; ++i)
-    //     // {
-    //     //     System.out.println("Section Split Working"); 
-    //     //     sectionColors[i] = LedStatus.kOff;
-    //     // }
-    //     // colorStripSection(sectionColors);
-    // }
-
-    // public void colorStripSection(LedStatus[] sectionColors)
-    // {
-    //     for (int i = 0; i < sectionCount - 1; ++i)
-    //     {
-    //         periodicIO.status = LedStatus.kOff;
-    //         startLed = i * ledCount + 8;
-    //         while (sectionColors[i] == LedStatus.kOff)
-    //         {
-    //             if (periodicIO.status != LedStatus.kOff)
-    //                 sectionColors[i] = periodicIO.status;
-    //         }
-    //         setColor();
-    //     }
-    // }
 }
 

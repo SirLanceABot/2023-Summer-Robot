@@ -109,7 +109,7 @@ public class Arm extends Subsystem4237
     /**
      * Set the motor to move backward
      */
-    public void retractoArm()
+    public void retractArm()
     {
         periodicIO.armSpeed = -0.3;
     }
@@ -117,7 +117,7 @@ public class Arm extends Subsystem4237
     /**
      * Set the motor to move forward
      */
-    public void extendoArm()
+    public void extendArm()
     {
         periodicIO.armSpeed = 0.3;
     }
@@ -125,7 +125,7 @@ public class Arm extends Subsystem4237
     /**
      * Hold the motor in place by setting it to move very slowly
      */
-    public void holdoArm()
+    public void holdArm()
     {
         periodicIO.armSpeed = 0.05;
     }
@@ -133,7 +133,7 @@ public class Arm extends Subsystem4237
     /**
      * Stops the motor
      */
-    public void gestapoArm()
+    public void stopArm()
     {
         periodicIO.armSpeed = 0.0;
     }
@@ -146,15 +146,15 @@ public class Arm extends Subsystem4237
     {
         if (getArmPosition() < desiredPosition.min) 
         {
-            extendoArm();
+            extendArm();
         }
         else if (getArmPosition() > desiredPosition.max)
         {
-            retractoArm();
+            retractArm();
         }
         else 
         {
-            gestapoArm();
+            stopArm();
         }
     }
 
@@ -213,7 +213,6 @@ public class Arm extends Subsystem4237
     @Override
     public String toString()
     {
-        SmartDashboard.putNumber("armEncoder", periodicIO.armPosition);
         return "Current Arm Position: " + periodicIO.armPosition;
     }
 }
