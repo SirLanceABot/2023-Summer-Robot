@@ -40,7 +40,7 @@ public class Candle4237 extends Subsystem4237
 
     public enum LedStatus
     {
-        kPurple, kYellow, kWhite, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhteBlink;
+        kPurple, kYellow, kWhite, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhoteBlink, kSectioned;
     }
 
     // public enum LedAnimation
@@ -53,7 +53,7 @@ public class Candle4237 extends Subsystem4237
     // {
         
     // }
-    public class BlinkEvent implements Comparable<BlinkEvent>
+    private class BlinkEvent implements Comparable<BlinkEvent>
     {
         public double startBlinkTime;
         public double blinkDuration;
@@ -80,6 +80,7 @@ public class Candle4237 extends Subsystem4237
                     return 0;
             }
         }
+
         public String toString()
         {
             String str = "";
@@ -90,7 +91,22 @@ public class Candle4237 extends Subsystem4237
             return str;
         }
     }
-    
+
+    private class Section 
+    {
+        public int startLed;
+        public int ledCount;
+        public LedStatus status;
+
+        public Section(int startLed, int ledCount, LedStatus status)
+        {
+            this.startLed = startLed;
+            this.ledCount = ledCount;
+            this.status = status;
+        }
+    }
+
+
     public enum LedAnimation
     {
         kColorFlow, kFire, kLarson, kRainbow, kRgbFade, kSingleFade, kStrobe, kTwinkle, kTwinkleOff, kDisabled;
@@ -107,6 +123,7 @@ public class Candle4237 extends Subsystem4237
             return vals[(this.ordinal() - 1 + vals.length) % vals.length];
         }
     }
+
     private class PeriodicIO
     {
         // Inputs
@@ -118,25 +135,43 @@ public class Candle4237 extends Subsystem4237
 
     private PeriodicIO periodicIO = new PeriodicIO();
     private final CANdle candle = new CANdle(CANbusConstants.CANDLE_PORT, "rio");
-    private final static int ledCount = 68; // CANdle = 8, LED Strip = 60, LED Strip + CANdle = 68
+    private final static int totalLedCount = 68; // CANdle = 8, LED Strip = 60, LED Strip + CANdle = 68
+    private final static int stripLedCount = 60;
+    private final static int candleLedCount = 8;
     private Animation animation = null;
     private final ArrayList<BlinkEvent> blinkEvents = new ArrayList<BlinkEvent>();
+    private final ArrayList<Section> sections = new ArrayList<Section>();
     private int blinkCounter = 0;
+    private int sectionCount = 1;
+    private int startLed = 0;
+    private int ledCount = totalLedCount;
 
     public Candle4237()
     {
         System.out.println(fullClassName + " : Constructor Started");
         periodicIO.status = LedStatus.kOff;
-        createBlinkEvents();
+        // createBlinkEvents();
+        createSections();
         System.out.println(fullClassName + ": Constructor Finished");
     }
-
+    /*
+     * Resets Led count
+     */
+    public void resetLedCount()
+    {
+        startLed = 0;
+        ledCount = totalLedCount;
+    }
     /**
      * Sets the LED(s) to cube purple
      */
     public void signalCube()
     {
-        periodicIO.status = LedStatus.kPurple;
+        if (periodicIO.status == LedStatus.kSectioned)
+            sections.get(1).status = LedStatus.kPurple;
+        else
+            periodicIO.status = LedStatus.kPurple;
+
         periodicIO.toAnimate = LedAnimation.kDisabled;
     }
 
@@ -145,7 +180,11 @@ public class Candle4237 extends Subsystem4237
      */
     public void signalCone()
     {
-        periodicIO.status = LedStatus.kYellow;
+        if (periodicIO.status == LedStatus.kSectioned)
+            sections.get(1).status = LedStatus.kYellow;
+        else 
+            periodicIO.status = LedStatus.kYellow;
+
         periodicIO.toAnimate = LedAnimation.kDisabled;
     }
 
@@ -154,7 +193,11 @@ public class Candle4237 extends Subsystem4237
      */
     public void signalReadyToDrop()
     {
-        periodicIO.status = LedStatus.kWhite;
+        if (periodicIO.status == LedStatus.kSectioned)
+            sections.get(1).status = LedStatus.kWhite;
+        else 
+            periodicIO.status = LedStatus.kWhite;
+
         periodicIO.toAnimate = LedAnimation.kDisabled;
     }
 
@@ -163,7 +206,11 @@ public class Candle4237 extends Subsystem4237
      */
     public void turnOffLight()
     {
-        periodicIO.status = LedStatus.kOff;
+        if (periodicIO.status == LedStatus.kSectioned)
+            sections.get(1).status = LedStatus.kOff;
+        else 
+            periodicIO.status = LedStatus.kOff;
+
         periodicIO.toAnimate = LedAnimation.kDisabled;
     }
 
@@ -175,31 +222,31 @@ public class Candle4237 extends Subsystem4237
         switch (periodicIO.toAnimate)
         {
             case kColorFlow: 
-                animation = new ColorFlowAnimation(0, 255, 46, 0, 0.7, ledCount, Direction.Forward);
+                animation = new ColorFlowAnimation(0, 255, 46, 0, 0.7, totalLedCount, Direction.Forward);
                 break;
             case kFire: 
-                animation = new FireAnimation(0.5, 0.7, ledCount, 0.3, 0.25);
+                animation = new FireAnimation(0.5, 0.7, totalLedCount, 0.3, 0.25);
                 break;
             case kLarson: 
-                animation = new LarsonAnimation(128, 20, 70, 0, 0.4, ledCount, BounceMode.Front, 5);
+                animation = new LarsonAnimation(128, 20, 70, 0, 0.4, totalLedCount, BounceMode.Front, 5);
                 break;
             case kRainbow: 
-                animation = new RainbowAnimation(1, 0.5, ledCount);
+                animation = new RainbowAnimation(1, 0.5, totalLedCount);
                 break;
             case kRgbFade: 
-                animation = new RgbFadeAnimation(0.4, 0.7, ledCount);
+                animation = new RgbFadeAnimation(0.4, 0.7, totalLedCount);
                 break;
             case kSingleFade: 
-                animation = new SingleFadeAnimation(50, 2, 200, 0, 0.5, ledCount);
+                animation = new SingleFadeAnimation(50, 2, 200, 0, 0.5, totalLedCount);
                 break;
             case kStrobe: 
-                animation = new StrobeAnimation(150, 150, 0, 0, 0.1, ledCount);
+                animation = new StrobeAnimation(150, 150, 0, 0, 0.1, totalLedCount);
                 break;
             case kTwinkle: 
-                animation = new TwinkleAnimation(0, 0, 255, 0, 0.3, ledCount, TwinklePercent.Percent30);
+                animation = new TwinkleAnimation(0, 0, 255, 0, 0.3, totalLedCount, TwinklePercent.Percent30);
                 break;
             case kTwinkleOff: 
-                animation = new TwinkleOffAnimation(255, 0, 255, 0, 0.5, ledCount, TwinkleOffPercent.Percent76);
+                animation = new TwinkleOffAnimation(255, 0, 255, 0, 0.5, totalLedCount, TwinkleOffPercent.Percent76);
                 break;
             case kDisabled: 
                 animation = null;
@@ -207,94 +254,6 @@ public class Candle4237 extends Subsystem4237
         }
         candle.animate(animation, 0);
     }
-
-    /**
-     * Moves the animation to the next one in the order
-     */
-    // public void incrementAnimation()
-    // {
-    //     periodicIO.status = LedStatus.kAnimated;
-    //     switch (periodicIO.toAnimate)
-    //     {
-    //         case kColorFlow: 
-    //             periodicIO.toAnimate = LedAnimation.kFire;
-    //             break;
-    //         case kFire: 
-    //             periodicIO.toAnimate = LedAnimation.kLarson;
-    //             break;
-    //         case kLarson: 
-    //             periodicIO.toAnimate = LedAnimation.kRainbow;
-    //             break;
-    //         case kRainbow: 
-    //             periodicIO.toAnimate = LedAnimation.kRgbFade;
-    //             break;
-    //         case kRgbFade: 
-    //             periodicIO.toAnimate = LedAnimation.kSingleFade;
-    //             break;
-    //         case kSingleFade: 
-    //             periodicIO.toAnimate = LedAnimation.kStrobe;
-    //             break;
-    //         case kStrobe: 
-    //             periodicIO.toAnimate = LedAnimation.kTwinkle;
-    //             break;
-    //         case kTwinkle: 
-    //             periodicIO.toAnimate = LedAnimation.kTwinkleOff;
-    //             break;
-    //         case kTwinkleOff: 
-    //             periodicIO.toAnimate = LedAnimation.kColorFlow;
-    //             break;
-    //         case kDisabled:  
-    //             periodicIO.toAnimate = LedAnimation.kColorFlow;
-    //             break;
-    //         default:
-    //             break;
-    //     }
-       
-    // }
-
-    /**
-     * Moves the animation to the previous one in the order
-     */
-    // public void decrementAnimation()
-    // {
-    //     periodicIO.status = LedStatus.kAnimated;
-    //     switch (periodicIO.toAnimate)
-    //     {
-    //         case kColorFlow: 
-    //             periodicIO.toAnimate = LedAnimation.kTwinkleOff;
-    //             break;
-    //         case kFire: 
-    //             periodicIO.toAnimate = LedAnimation.kColorFlow;
-    //             break;
-    //         case kLarson: 
-    //             periodicIO.toAnimate = LedAnimation.kFire;
-    //             break;
-    //         case kRainbow: 
-    //             periodicIO.toAnimate = LedAnimation.kLarson;
-    //             break;
-    //         case kRgbFade: 
-    //             periodicIO.toAnimate = LedAnimation.kRainbow;
-    //             break;
-    //         case kSingleFade: 
-    //             periodicIO.toAnimate = LedAnimation.kRgbFade;
-    //             break;
-    //         case kStrobe: 
-    //             periodicIO.toAnimate = LedAnimation.kSingleFade;
-    //             break;
-    //         case kTwinkle: 
-    //             periodicIO.toAnimate = LedAnimation.kStrobe;
-    //             break;
-    //         case kTwinkleOff: 
-    //             periodicIO.toAnimate = LedAnimation.kTwinkle;
-    //             break;
-    //         case kDisabled:  
-    //             periodicIO.toAnimate = LedAnimation.kTwinkleOff;
-    //             break;
-    //         default:
-    //             break;
-    //     }
-        
-    // }
     
     /**
      * Moves the animation to the next one in the order
@@ -320,36 +279,36 @@ public class Candle4237 extends Subsystem4237
 
 
 
-    private void setColor()
+    private void setColor(int startLed, int ledCount, LedStatus status)
     {
-        switch (periodicIO.status)
+        switch (status)
         {
             case kPurple: 
-                candle.setLEDs(255, 0, 255, 50, 0, ledCount);
+                candle.setLEDs(255, 0, 255, 50, startLed, ledCount);
                 break;
             case kYellow: 
-                candle.setLEDs(255, 185, 0, 50, 0, ledCount);
+                candle.setLEDs(255, 185, 0, 50, startLed, ledCount);
                 break; 
             case kWhite: 
-                candle.setLEDs(255, 255, 200, 255, 0, ledCount);
+                candle.setLEDs(255, 255, 200, 255, startLed, ledCount);
                 break;
             case kOff: 
-                candle.setLEDs(0, 0, 0, 0, 0, ledCount);
+                candle.setLEDs(0, 0, 0, 0, startLed, ledCount);
                 break;
             case kAnimated: 
                 // candle.animate(animation, 0);
                 break;
             case kBlueBlink: 
-                candle.setLEDs(0, 0, 255, 255, 0, ledCount);
+                candle.setLEDs(0, 0, 255, 255, startLed, ledCount);
                 break;
             case kGreenBlink: 
-                candle.setLEDs(0, 255, 0, 50, 0, ledCount);
+                candle.setLEDs(0, 255, 0, 50, startLed, ledCount);
                 break;
-            case kWhteBlink:
-                candle.setLEDs(255, 255, 200, 50, 0, ledCount);
+            case kWhoteBlink:
+                candle.setLEDs(255, 255, 200, 50, startLed, ledCount);
                 break;
             default:
-                candle.setLEDs(0, 0, 0, 0, 0, ledCount);
+                candle.setLEDs(0, 0, 0, 0, startLed, ledCount);
                 stopAnimation();
                 break;
         }
@@ -368,7 +327,7 @@ public class Candle4237 extends Subsystem4237
     private void stopColor()
     {
         periodicIO.status = LedStatus.kOff;
-        candle.setLEDs(0, 0, 0, 0, 0, ledCount);
+        candle.setLEDs(0, 0, 0, 0, startLed, ledCount);
     }
 
     @Override
@@ -382,17 +341,28 @@ public class Candle4237 extends Subsystem4237
     public synchronized void writePeriodicOutputs() 
     {
         checkBlinkEvent();
-        if(periodicIO.status != LedStatus.kOff && periodicIO.status != LedStatus.kAnimated)
+        if(periodicIO.status != LedStatus.kOff && periodicIO.status != LedStatus.kAnimated && periodicIO.status != LedStatus.kSectioned)
+        {
+            resetLedCount();
+            stopAnimation();
+            setColor(startLed, ledCount, periodicIO.status);
+        }
+        else if (periodicIO.status == LedStatus.kSectioned)
         {
             stopAnimation();
-            setColor();
+            for (Section section : sections)
+            {
+                System.out.println(this.startLed + " " + this.ledCount + " " + periodicIO.status);
+                setColor(section.startLed, section.ledCount, section.status);
+            }
         }
-        else if(periodicIO.status == LedStatus.kAnimated)
+        else if (periodicIO.status == LedStatus.kAnimated)
         {
             setAnimation();
         }
         else
         {
+            resetLedCount();
             stopAnimation();
             stopColor();
         }
@@ -409,6 +379,7 @@ public class Candle4237 extends Subsystem4237
     {
         createBlinkEvent(15.0, 2.0, LedStatus.kBlueBlink);
     }
+
     public void createBlinkEvent(double startBlinkTime, double blinkDuration, LedStatus blinkColor)
     {
         boolean isNoOverlap = true;
@@ -485,5 +456,74 @@ public class Candle4237 extends Subsystem4237
     {
         blinkCounter = 0;
     }
+
+    public void createSections()
+    {
+        createSection(8, 20, LedStatus.kYellow);
+        createSection(28, 20, LedStatus.kPurple);
+        createSection(48, 20, LedStatus.kWhite);
     }
+
+    public void createSection(int startLed, int ledCount, LedStatus status)
+    {
+        sections.add(new Section(startLed, ledCount, status));
+    }
+
+    public void toggleSectioned()
+    {
+        if (periodicIO.status != LedStatus.kSectioned)
+            periodicIO.status = LedStatus.kSectioned;
+        else // if (periodicIO.status == kSectioned)
+            periodicIO.status = LedStatus.kOff;
+    }
+
+    // public void sectionStrip(int sectionCount)
+    // {
+    //     ledCount = stripLedCount / sectionCount;
+    //     for (int i = 0; i <= sectionCount - 1; ++i)
+    //     {
+    //         startLed = i * ledCount + candleLedCount;
+    //         if (i == 0)
+    //             periodicIO.status = LedStatus.kGreenBlink;
+    //         else if (i == 1)
+    //             periodicIO.status = LedStatus.kPurple;
+    //         else if (i == 2)
+    //             periodicIO.status = LedStatus.kWhite;
+    //         setColor();
+    //     }
+    // }
+
+    // public void sectionStrip(int sectionCount)
+    // {
+    //     ledCount = stripLedCount / sectionCount;
+    //     for (int i = 0; i < sectionCount - 1; ++i)
+    //     {
+            
+    //         startLed = i * sectionCount + candleLedCount;
+    //         setColor();
+    //     }
+    //     // LedStatus[] sectionColors = new LedStatus[sectionCount - 1];
+    //     // for (int i = 0; i < sectionCount - 1; ++i)
+    //     // {
+    //     //     System.out.println("Section Split Working"); 
+    //     //     sectionColors[i] = LedStatus.kOff;
+    //     // }
+    //     // colorStripSection(sectionColors);
+    // }
+
+    // public void colorStripSection(LedStatus[] sectionColors)
+    // {
+    //     for (int i = 0; i < sectionCount - 1; ++i)
+    //     {
+    //         periodicIO.status = LedStatus.kOff;
+    //         startLed = i * ledCount + 8;
+    //         while (sectionColors[i] == LedStatus.kOff)
+    //         {
+    //             if (periodicIO.status != LedStatus.kOff)
+    //                 sectionColors[i] = periodicIO.status;
+    //         }
+    //         setColor();
+    //     }
+    // }
+}
 

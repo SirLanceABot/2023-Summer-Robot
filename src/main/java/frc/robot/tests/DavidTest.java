@@ -58,6 +58,8 @@ public class DavidTest implements Test
             candle.decrementAnimation();
         else if (joystick.getRawButtonPressed(12))
             candle.incrementAnimation();
+        else if (joystick.getRawButtonPressed(10))
+            candle.toggleSectioned();
     }
     
     /**
