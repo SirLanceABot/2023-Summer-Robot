@@ -10,7 +10,7 @@ public class DriveDistanceAuto extends CommandBase
     private double xSpeed;
     private double ySpeed;
     private double distanceToDriveMeters;
-    private boolean isFinished;
+    // private boolean isFinished;
     private Translation2d startingPosition;
 
 
@@ -29,7 +29,7 @@ public class DriveDistanceAuto extends CommandBase
     @Override
     public void initialize()
     {
-        isFinished = false;
+        // isFinished = false;
         if(drivetrain != null)
         {
             startingPosition = drivetrain.getCurrentTranslation();
@@ -43,16 +43,16 @@ public class DriveDistanceAuto extends CommandBase
     {
         if(drivetrain != null)
         {
-            double distanceDrivenMeters = drivetrain.getDistanceDrivenMeters(startingPosition);
-            if(Math.abs(distanceDrivenMeters) < Math.abs(distanceToDriveMeters))
-            {
-                drivetrain.drive(xSpeed, ySpeed, 0.0, false);
-            }
-            else
-            {
-                drivetrain.stopMotor();
-                isFinished = true;
-            }
+            drivetrain.drive(xSpeed, ySpeed, 0.0, false);
+            // double distanceDrivenMeters = drivetrain.getDistanceDrivenMeters(startingPosition);
+            // if(Math.abs(distanceDrivenMeters) < Math.abs(distanceToDriveMeters))
+            // {
+            //     drivetrain.drive(xSpeed, ySpeed, 0.0, false);
+            // }
+            // else
+            // {
+            //     drivetrain.stopMotor();
+            // }
         }
     }
 
@@ -68,9 +68,14 @@ public class DriveDistanceAuto extends CommandBase
     public boolean isFinished()
     {
         if(drivetrain != null)
-            return isFinished;
-        else
-            return true;
+        {
+            double distanceDrivenMeters = drivetrain.getDistanceDrivenMeters(startingPosition);
+            if(Math.abs(distanceDrivenMeters) < Math.abs(distanceToDriveMeters))
+            {
+                return false;
+            } 
+        }
+        return true;
     }
 }
 

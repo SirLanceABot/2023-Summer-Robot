@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 
 
 /** Represents a swerve drive style drivetrain. */
@@ -54,7 +55,6 @@ public class Drivetrain extends Subsystem4237
         // OUTPUTS
         private ChassisSpeeds chassisSpeeds;
         private SwerveModuleState[] swerveModuleStates;
-        private SwerveDriveKinematics kinematics;
         private SwerveDriveOdometry odometry;
     }
 
@@ -76,6 +76,8 @@ public class Drivetrain extends Subsystem4237
 
     private final Gyro4237 gyro; //Pigeon2
     private final DataLog log;
+    private final SwerveDriveKinematics kinematics;
+    
 
 
     // TODO: Make final by setting to an initial stopped state
@@ -87,8 +89,9 @@ public class Drivetrain extends Subsystem4237
     private PeriodicIO periodicIO;
     
     // *** CLASS CONSTRUCTOR ***
-    public Drivetrain(DrivetrainConfig dd, Gyro4237 gyro, DataLog log)//, DriverController driverController)
+    public Drivetrain(Gyro4237 gyro, DataLog log)//, DriverController driverController)
     {
+        DrivetrainConfig dd = Constants.DrivetrainSetup.DRIVETRAIN_DATA;
         // super();  // call the RobotDriveBase constructor
         // setSafetyEnabled(false);
   
@@ -106,14 +109,14 @@ public class Drivetrain extends Subsystem4237
 
         // gyro = new WPI_Pigeon2(Port.Sensor.PIGEON, Port.Motor.CAN_BUS);
 
-        periodicIO.kinematics = new SwerveDriveKinematics(
+        kinematics = new SwerveDriveKinematics(
             dd.frontLeftSwerveModule.moduleLocation,
             dd.frontRightSwerveModule.moduleLocation,
             dd.backLeftSwerveModule.moduleLocation,
             dd.backRightSwerveModule.moduleLocation);
 
         periodicIO.odometry = new SwerveDriveOdometry(
-            periodicIO.kinematics, 
+            kinematics, 
             gyro.getRotation2d(),
             new SwerveModulePosition[] 
             {
@@ -281,7 +284,7 @@ public class Drivetrain extends Subsystem4237
     @Override
     public void readPeriodicInputs()
     {
-        if (resetOdometry)
+        if (DriverStation.isDisabled() && resetOdometry)
         {
             periodicIO.odometry.resetPosition(
                 new Rotation2d(), /*zero*/
@@ -295,7 +298,7 @@ public class Drivetrain extends Subsystem4237
                 new Pose2d(/*zeros facing X*/));
             resetOdometry = false;
         }
-        else 
+        else if (DriverStation.isAutonomousEnabled())
         {
             periodicIO.odometry.update(
                 gyro.getRotation2d(),
@@ -319,7 +322,7 @@ public class Drivetrain extends Subsystem4237
                 else
                     periodicIO.chassisSpeeds = new ChassisSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn);
                 
-                periodicIO.swerveModuleStates = periodicIO.kinematics.toSwerveModuleStates(periodicIO.chassisSpeeds);
+                periodicIO.swerveModuleStates = kinematics.toSwerveModuleStates(periodicIO.chassisSpeeds);
 
                 SwerveDriveKinematics.desaturateWheelSpeeds(periodicIO.swerveModuleStates, Constants.DrivetrainConstants.MAX_DRIVE_SPEED);
                 break;

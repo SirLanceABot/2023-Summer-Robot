@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import java.util.function.Supplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
@@ -9,10 +9,17 @@ public class LockWheels extends CommandBase
 {
     
     private final Drivetrain drivetrain;
+    private DoubleSupplier leftYAxis;
+    private DoubleSupplier leftXAxis;
+    private DoubleSupplier rightXAxis;
+
     
-    public LockWheels(Drivetrain drivetrain)
+    public LockWheels(Drivetrain drivetrain, DoubleSupplier leftYAxis, DoubleSupplier leftXAxis, DoubleSupplier rightXAxis)
     {
         this.drivetrain = drivetrain;
+        this.leftYAxis = leftYAxis;
+        this.leftXAxis = leftXAxis;
+        this.rightXAxis = rightXAxis;
 
         if(this.drivetrain != null)
             addRequirements(drivetrain);
@@ -36,10 +43,7 @@ public class LockWheels extends CommandBase
     @Override
     public boolean isFinished()
     {
-        if(drivetrain != null)
-            return false;
-        else
-            return true;
+        return false; 
     }
 
 }
