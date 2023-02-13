@@ -30,7 +30,7 @@ import frc.robot.sensors.Accelerometer4237;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.shuffleboard.AutonomousTabData;
 import frc.robot.shuffleboard.MainShuffleboard;
-import frc.robot.vision.Vision;
+import frc.robot.sensors.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a

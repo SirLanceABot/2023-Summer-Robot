@@ -1,4 +1,4 @@
-package frc.robot.vision;
+package frc.robot.sensors;
 
 import java.lang.invoke.MethodHandles;
 
@@ -6,10 +6,9 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.PeriodicIO;
+// import frc.robot.Constants.Sensor;
 
-/** Vision: contains one Limelight */
-public class Vision implements PeriodicIO
+public class Vision extends Sensor4237
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -37,9 +36,13 @@ public class Vision implements PeriodicIO
 
     public Vision()
     {   
-        registerPeriodicIO();
+        System.out.println(fullClassName + " : Constructor Started");
+
         periodicIO = new PeriodicIO();
+
+        System.out.println(fullClassName + " : Constructor Finished");
     }
+
 
     /** @return the x distance from the center of the target (double) */
     public double getX()
@@ -74,5 +77,5 @@ public class Vision implements PeriodicIO
         SmartDashboard.putNumber("LimelightY", periodicIO.y);
         SmartDashboard.putNumber("LimelightArea", periodicIO.area);
     }
+    
 }
-

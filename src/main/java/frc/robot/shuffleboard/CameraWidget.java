@@ -1,4 +1,5 @@
-package frc.robot.vision;
+package frc.robot.shuffleboard;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -6,8 +7,18 @@ import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-public class CameraWidget {
+public class CameraWidget 
+{
+    // This string gets the full name of the class, including the package name
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
+    static
+    {
+        System.out.println("Loading: " + fullClassName);
+    }
+    
     public ShuffleboardTab cameraTab;
     public String name;
     public int column;
@@ -29,10 +40,15 @@ public class CameraWidget {
     
     public CameraWidget(ShuffleboardTab cameraTab)
     {
+        System.out.println(fullClassName + " : Constructor Started");
+
         this.cameraTab = cameraTab;
+
+        System.out.println(fullClassName + " : Constructor Finished");
     }
 
-    public void setLocation(int row, int column, int height, int width) {
+    public void setLocation(int row, int column, int height, int width) 
+    {
         this.column = column;
         this.row = row;
         this.height = height;
@@ -40,12 +56,14 @@ public class CameraWidget {
         return;
     }
     
-    public void name(String name) {
+    public void name(String name) 
+    {
         this.name = name;
         return;
     }
 
-    public void setProperties(boolean showCrosshair, String crosshairColor, boolean showControls, String rotation) {
+    public void setProperties(boolean showCrosshair, String crosshairColor, boolean showControls, String rotation) 
+    {
         this.showCrosshair = showCrosshair;
         this.crosshairColor = crosshairColor;
         this.showControls = showControls;
@@ -53,7 +71,8 @@ public class CameraWidget {
         return;
     }
     
-    public void createCameraShuffleboardWidget(VideoSource camera) {
+    public void createCameraShuffleboardWidget(VideoSource camera) 
+    {
         // Name Type Default Value Notes
         // ----------------- --------- --------
         // ----------------------------------------------------
@@ -69,13 +88,17 @@ public class CameraWidget {
         cameraWidgetProperties.put("Show controls", this.showControls);
         cameraWidgetProperties.put("Rotation", this.rotation);
 
-        cameraTab.add(this.name + " Camera", camera)
-                .withWidget(BuiltInWidgets.kCameraStream)
-                .withPosition(this.column, this.row)
-                .withSize(this.width, this.height)
-                .withProperties(cameraWidgetProperties);
+        if(cameraTab != null)
+        {
+            cameraTab.add(this.name + " Camera", camera)
+                    .withWidget(BuiltInWidgets.kCameraStream)
+                    .withPosition(this.column, this.row)
+                    .withSize(this.width, this.height)
+                    .withProperties(cameraWidgetProperties);
+        }
     }
-    public void createCameraShuffleboardWidgetLL(String camera, String[] URL) {
+    public void createCameraShuffleboardWidgetLL(String camera, String[] URL)
+    {
         // Name Type Default Value Notes
         // ----------------- --------- --------
         // ----------------------------------------------------
@@ -92,10 +115,13 @@ public class CameraWidget {
         cameraWidgetProperties.put("Rotation", this.rotation);
 
         // ComplexWidget addCamera(String title, String cameraName, String... cameraUrls)
-        cameraTab.addCamera(this.name + " Camera", camera, URL)
-                .withWidget(BuiltInWidgets.kCameraStream)
-                .withPosition(this.column, this.row)
-                .withSize(this.width, this.height)
-                .withProperties(cameraWidgetProperties);
-    }    
+        if(cameraTab != null)
+        {
+            cameraTab.addCamera(this.name + " Camera", camera, URL)
+                    .withWidget(BuiltInWidgets.kCameraStream)
+                    .withPosition(this.column, this.row)
+                    .withSize(this.width, this.height)
+                    .withProperties(cameraWidgetProperties);
+        }
+    }  
 }

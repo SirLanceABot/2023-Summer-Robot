@@ -16,13 +16,13 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder;
+// import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.StringLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
+// import edu.wpi.first.util.datalog.DataLog;
+// import edu.wpi.first.util.datalog.StringLogEntry;
+// import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 
@@ -40,7 +40,7 @@ public class Shoulder extends Subsystem4237
     // This block of code is run first when the class is loaded
     static
     {
-        // System.out.println("Loading: " + fullClassName);
+        System.out.println("Loading: " + fullClassName);
         // DataLogManager.log("Loading: " + fullClassName);
     }
     
@@ -119,9 +119,13 @@ public class Shoulder extends Subsystem4237
 
     /** Creates a new Shoulder */
     public Shoulder()
-    {   
+    { 
+        System.out.println(fullClassName + " : Constructor Started");
+
         configShoulderMotor();
         periodicIO = new PeriodicIO();
+
+        System.out.println(fullClassName + " : Constructor Finished");
     }
 
     /** Configures Neo motor */

@@ -2,15 +2,15 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.lang.model.util.ElementScanner14;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Joystick;
+// import javax.lang.model.util.ElementScanner14;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.networktables.NetworkTable;
+// import edu.wpi.first.networktables.NetworkTableEntry;
+// import edu.wpi.first.networktables.NetworkTableInstance;
+// import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.RobotContainer;
 // import frc.robot.subsystems.Shoulder;
-import frc.robot.vision.Vision;
+import frc.robot.sensors.Vision;
 
 public class SamTest implements Test
 {
@@ -28,17 +28,21 @@ public class SamTest implements Test
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
     // private final Shoulder shoulder;
-    private final Joystick joystick;
+    // private final Joystick joystick;
     private final Vision vision;
   
 
     // *** CLASS CONSTRUCTOR ***
     public SamTest(RobotContainer robotContainer)
     {
+        System.out.println(fullClassName + " : Constructor Started");
+
         this.robotContainer = robotContainer;
         vision = this.robotContainer.vision;
         // shoulder = this.robotContainer.shoulder;
-        joystick = new Joystick(0);
+        // joystick = new Joystick(0);
+
+        System.out.println(fullClassName + " : Constructor Finished");
     }
 
     /**
