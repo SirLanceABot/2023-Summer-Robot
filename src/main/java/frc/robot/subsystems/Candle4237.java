@@ -90,6 +90,7 @@ public class Candle4237 extends Subsystem4237
             return str;
         }
     }
+    
     public enum LedAnimation
     {
         kColorFlow, kFire, kLarson, kRainbow, kRgbFade, kSingleFade, kStrobe, kTwinkle, kTwinkleOff, kDisabled;
@@ -251,9 +252,9 @@ public class Candle4237 extends Subsystem4237
        
     // }
 
-    // // /**
-    // //  * Moves the animation to the previous one in the order
-    // //  */
+    /**
+     * Moves the animation to the previous one in the order
+     */
     // public void decrementAnimation()
     // {
     //     periodicIO.status = LedStatus.kAnimated;
@@ -295,6 +296,9 @@ public class Candle4237 extends Subsystem4237
         
     // }
     
+    /**
+     * Moves the animation to the next one in the order
+     */
     public void incrementAnimation()  
     {   
         periodicIO.status = LedStatus.kAnimated;
@@ -302,6 +306,10 @@ public class Candle4237 extends Subsystem4237
         if(periodicIO.toAnimate == LedAnimation.kDisabled)
             periodicIO.toAnimate = periodicIO.toAnimate.next();
     }
+
+    /**
+     * Moves the animation to the previous one in the order
+     */
     public void decrementAnimation()  
     {
         periodicIO.status = LedStatus.kAnimated;
