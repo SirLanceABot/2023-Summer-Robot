@@ -2,6 +2,8 @@ package frc.robot.sensors;
 
 import java.lang.invoke.MethodHandles;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
+
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,6 +30,7 @@ public class Gyro4237 extends Sensor4237
 
     private final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.Sensor.PIGEON, Constants.Motor.CAN_BUS);
     private boolean resetGyro = false;
+    private Timer timer = new Timer();
 
     // private final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.Sensor.PIGEON, Constants.Motor.CAN_BUS);
     private final PeriodicIO periodicIO = new PeriodicIO();
@@ -40,6 +43,12 @@ public class Gyro4237 extends Sensor4237
         periodicIO.angle = gyro.getYaw();
         periodicIO.rotation2d = gyro.getRotation2d();
     }
+
+    // public void initPigeon()
+    // {
+    //     gyro.configFactoryDefault();
+    //     // gyro.configMountPose(); forward and up axes????
+    // }
 
     public void reset()
     {
@@ -77,8 +86,15 @@ public class Gyro4237 extends Sensor4237
         if(resetGyro)
         {
             gyro.reset();
+            //timer.start();
+            //timer.hasElapsed(0.25);
+            //timer.reset();
             Timer.delay(0.25);
+        
             gyro.setYaw(180.0);
+            //timer.start();
+            //timer.hasElapsed(0.25);
+            //timer.reset();
             Timer.delay(0.25);
             resetGyro = false;
         }
@@ -91,4 +107,6 @@ public class Gyro4237 extends Sensor4237
     {
         return String.format("Gyro %f \n", periodicIO.angle);
     }
+
+    
 }
