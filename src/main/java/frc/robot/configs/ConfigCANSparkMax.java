@@ -45,8 +45,8 @@ public final class ConfigCANSparkMax
         motor.setIdleMode(IdleMode.kBrake);
 
         // Set the Feedback Sensor
-        relativeEncoder = motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-        analogSensor = motor.getAnalog(SparkMaxAnalogSensor.Mode.kRelative);
+        relativeEncoder = motor.getEncoder();
+        // analogSensor = motor.getAnalog(SparkMaxAnalogSensor.Mode.kRelative);
 
         // Soft Limits
         motor.setSoftLimit(SoftLimitDirection.kForward, 0);
