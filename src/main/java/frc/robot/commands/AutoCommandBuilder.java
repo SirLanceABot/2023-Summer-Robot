@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.shuffleboard.AutonomousTabData;
 import frc.robot.shuffleboard.AutonomousTabData.StartingLocation;
-import frc.robot.shuffleboard.AutonomousTabData.TeamColor;
+// import frc.robot.shuffleboard.AutonomousTabData.TeamColor;
 import frc.robot.shuffleboard.AutonomousTabData.PlayPreload;
 import frc.robot.shuffleboard.AutonomousTabData.MoveOntoChargingStation;
 import frc.robot.shuffleboard.AutonomousTabData.PickUpGamePieces;
@@ -122,11 +122,11 @@ public class AutoCommandBuilder extends SequentialCommandGroup
 
     private void strafeDrive()
     {
-        if((autonomousTabData.teamColor == TeamColor.kRed))
+        // if((autonomousTabData.teamColor == TeamColor.kRed))
         {
             add(new DriveDistanceAuto(drivetrain, 0.0, -0.5, 2.0)); 
         }
-        else
+        // else
         {
             add(new DriveDistanceAuto(drivetrain, 0.0, 0.5, 2.0));
         }
@@ -157,12 +157,12 @@ public class AutoCommandBuilder extends SequentialCommandGroup
     private void goToChargingStation()
     {
         add(new DriveDistanceAuto(drivetrain, 0.75, 0.0, 4.27));
-        if(autonomousTabData.teamColor == TeamColor.kRed && autonomousTabData.startingLocation == StartingLocation.kLeft || autonomousTabData.teamColor == TeamColor.kBlue && autonomousTabData.startingLocation == StartingLocation.kRight)
+        // if(autonomousTabData.teamColor == TeamColor.kRed && autonomousTabData.startingLocation == StartingLocation.kLeft || autonomousTabData.teamColor == TeamColor.kBlue && autonomousTabData.startingLocation == StartingLocation.kRight)
         {
             add(new DriveDistanceAuto(drivetrain, 0.0, -0.5, 1.0));
         } 
 
-        if(autonomousTabData.teamColor == TeamColor.kBlue && autonomousTabData.startingLocation == StartingLocation.kLeft || autonomousTabData.teamColor == TeamColor.kRed && autonomousTabData.startingLocation == StartingLocation.kRight)
+        // if(autonomousTabData.teamColor == TeamColor.kBlue && autonomousTabData.startingLocation == StartingLocation.kLeft || autonomousTabData.teamColor == TeamColor.kRed && autonomousTabData.startingLocation == StartingLocation.kRight)
         {
             add(new DriveDistanceAuto(drivetrain, 0.0, 0.5, 1.0));
         } 
