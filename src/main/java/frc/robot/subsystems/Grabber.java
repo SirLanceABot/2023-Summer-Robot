@@ -1,13 +1,6 @@
 package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -16,16 +9,12 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.Solenoid;
+// import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsControlModule;
+// import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.Encoder;
 
 
 public class Grabber extends Subsystem4237
@@ -64,21 +53,38 @@ public class Grabber extends Subsystem4237
         double grabberMotorControl;
     }
 
-    private PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
+    private final PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
     private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
     private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 6);
     private final Compressor compressor = new Compressor(moduleType);
 
     GamePiece currentGamePiece = GamePiece.kNone;
-    double speed = 0;
+    // double speed = 0;
     double encoderDistance = 3;
     private PeriodicIO periodicIO;
     
     private RelativeEncoder grabberMotorEncoder;
-    int GrabberMotorPort= Constants.MotorConstants.GRABBER_MOTOR_PORT;
+    private final int GrabberMotorPort = Constants.MotorConstants.GRABBER_MOTOR_PORT;
     private final CANSparkMax grabberMotor = new CANSparkMax(GrabberMotorPort, MotorType.kBrushless);
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
+
+    /**
+     * Contructor for the grabber mechanism
+     */
+    public Grabber()
+    {
+        System.out.println(fullClassName + " : Constructor Started");
+
+        // configCANSparkMax();
+        // readPeriodicInputs();
+        // writePeriodicOutputs();
+        // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
+        periodicIO = new PeriodicIO();
+        configCANSparkMax();
+
+        System.out.println(fullClassName + ": Constructor Finished");
+    }
     
     /**
      * Makes the configurations of a Spark Max Motor
@@ -116,17 +122,7 @@ public class Grabber extends Subsystem4237
 
     }
 
-    /**
-     * Contructor for the grabber mechanism
-     */
-    public Grabber()
-    {
-        // configCANSparkMax();
-        // readPeriodicInputs();
-        // writePeriodicOutputs();
-        // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
-        periodicIO = new PeriodicIO();
-    }
+    
     
     /**
      * Releases the air on the pneumatics allowing the grabber to close
@@ -190,6 +186,11 @@ public class Grabber extends Subsystem4237
     public void compressorEnable()
     {
         compressor.enableDigital();
+    }
+
+    public double getGrabberEncoder()
+    {
+        return encoderDistance;
     }
 
 

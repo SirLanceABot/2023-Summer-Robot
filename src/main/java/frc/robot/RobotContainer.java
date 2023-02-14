@@ -34,6 +34,8 @@ import frc.robot.sensors.Gyro4237;
 import frc.robot.shuffleboard.AutonomousTabData;
 import frc.robot.shuffleboard.MainShuffleboard;
 import frc.robot.sensors.Vision;
+// import frc.robot.vision.Vision;
+import frc.robot.commands.AutoCommandBuilder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -58,19 +60,20 @@ public class RobotContainer
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= true;
-	private boolean useDrivetrain   		= true;
+	private boolean useGyro					= false;
+	private boolean useDrivetrain   		= false;
 	private boolean useGrabber 				= false;
 	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= true;
+	private boolean useDriverController		= false;
 	private boolean useOperatorController 	= false;
 	private boolean useAutonomousTabData	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= true;
 	private boolean useDataLog				= false;
+	private boolean useAutoCommandBuilder	= true;
 
 
 	public final ExampleSubsystem exampleSubsystem;
@@ -88,6 +91,7 @@ public class RobotContainer
 	public final Accelerometer4237 accelerometer;
 	public final Gyro4237 gyro;
 	public final DataLog log;
+	public final AutoCommandBuilder autoCommandBuilder;
 	
 	/** 
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -115,6 +119,7 @@ public class RobotContainer
 		autonomousTabData	= (useFullRobot || useAutonomousTabData ) 	? new AutonomousTabData()		: null;
 		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)		? new MainShuffleboard(this)	: null;
 		vision 				= (useFullRobot || useVision)				? new Vision()					: null;
+		autoCommandBuilder 	= (useFullRobot || useAutoCommandBuilder)	? new AutoCommandBuilder(this)	: null;
 		
 
 

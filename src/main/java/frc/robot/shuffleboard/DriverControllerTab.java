@@ -4,9 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import frc.robot.controls.DriverController;
 import frc.robot.controls.Xbox;
-import frc.robot.RobotContainer;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -40,6 +38,10 @@ public class DriverControllerTab
     private final AxisObjects moveXObjects = new AxisObjects();
     private final AxisObjects moveYObjects = new AxisObjects();
     private final AxisObjects rightXObjects = new AxisObjects();
+    private final AxisObjects rightYObjects = new AxisObjects();
+    private final AxisObjects leftTriggerObjects = new AxisObjects();
+    private final AxisObjects rightTriggerObjects = new AxisObjects();
+
     // private final AxisObjects rightYObjects = new AxisObjects();
 
     private final DriverController driverController;
@@ -65,6 +67,9 @@ public class DriverControllerTab
         createAxisWidgets(Xbox.Axis.kLeftX, "Move X", moveXObjects, 0);
         createAxisWidgets(Xbox.Axis.kLeftY, "Move Y", moveYObjects, 5);
         createAxisWidgets(Xbox.Axis.kRightX, "Rotate", rightXObjects, 10);
+        createAxisWidgets(Xbox.Axis.kRightY, "Right Y", rightYObjects, 15);
+        createAxisWidgets(Xbox.Axis.kLeftTrigger, "Left Trigger", leftTriggerObjects, 20);
+        createAxisWidgets(Xbox.Axis.kRightTrigger, "Right Trigger", rightTriggerObjects, 25);
         // createAxisWidgets(DriverController.DriverAxisAction.kRightY, "", rightYObjects, 15);
     }
 
@@ -181,7 +186,13 @@ public class DriverControllerTab
         axisSettings = getAxisSettingsFromShuffleboard(rightXObjects);
         driverController.setAxisSettings(Xbox.Axis.kRightX, axisSettings);
 
-        // axisSettings = getAxisSettingsFromShuffleboard(rightYObjects);
-        // driverController.setAxisSettings(DriverController.Axis.kRightY, axisSettings);
+        axisSettings = getAxisSettingsFromShuffleboard(rightYObjects);
+        driverController.setAxisSettings(DriverController.Axis.kRightY, axisSettings);
+
+        axisSettings = getAxisSettingsFromShuffleboard(leftTriggerObjects);
+        driverController.setAxisSettings(DriverController.Axis.kLeftTrigger, axisSettings);
+
+        axisSettings = getAxisSettingsFromShuffleboard(rightTriggerObjects);
+        driverController.setAxisSettings(DriverController.Axis.kRightTrigger, axisSettings);
     }
 }

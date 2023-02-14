@@ -35,16 +35,17 @@ public class AutonomousTab
   
     // Create the Box objects
     private SendableChooser<AutonomousTabData.StartingLocation> startingLocationBox = new SendableChooser<>();
-    private SendableChooser<AutonomousTabData.AreGamePiecesPlayed> areGamePiecesPlayedBox = new SendableChooser<>();
+    private SendableChooser<AutonomousTabData.PlayPreload> playPreloadBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.MoveOntoChargingStation> moveOntoChargingStationBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.PickUpGamePieces> pickUpGamePiecesBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.RowPlayedPiece1> rowPlayedPiece1Box = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.ColumnPlayedPiece1> columnPlayedPiece1Box = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.RowPlayedPiece2> rowPlayedPiece2Box = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.ColumnPlayedPiece2> columnPlayedPiece2Box = new SendableChooser<>();
-    private SendableChooser<AutonomousTabData.CurrentlyContainingGamePiece> currentlyContainingGamePieceBox = new SendableChooser<>();
+    private SendableChooser<AutonomousTabData.ContainingPreload> containingPreloadBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.AutonomousCommands> autonomousCommandsBox = new SendableChooser<>();
-
+    private SendableChooser<AutonomousTabData.DriveToSecondPiece> driveToSecondPieceBox = new SendableChooser<>();
+    
     private NetworkTableEntry successfulDownload;
     private NetworkTableEntry errorMessageBox;
 
@@ -63,15 +64,16 @@ public class AutonomousTab
         autonomousTabDataMain = autonomousTabData;
 
         createStartingLocationBox();
-        createAreGamePiecesPlayedBox();
+        createPlayPreloadBox();
         createMoveOntoChargingStationBox();
         createPickUpGamePiecesBox();
         createRowPlayedPiece1Box();
         createColumnPlayedPiece1Box();
         createRowPlayedPiece2Box();
         createColumnPlayedPiece2Box();
-        createCurrentlyContainingGamePieceBox();
+        createContainingPreloadBox();
         createAutonomousCommandsBox();
+        createDriveToSecondPieceBox();
         
         createSendDataButton();
         createSuccessfulDownloadBox();
@@ -104,29 +106,29 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(startingLocationBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(0, 5)
-            .withSize(8, 2);
+            .withPosition(0, 2)
+            .withSize(6, 2);
     }
 
     /**
     * <b>Starting Location</b> Box
     * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
     */
-    private void createAreGamePiecesPlayedBox()
+    private void createPlayPreloadBox()
     {
         //create and name the Box
-        SendableRegistry.add(areGamePiecesPlayedBox, "Are Pieces Played");
-        SendableRegistry.setName(areGamePiecesPlayedBox, "Are Pieces Played");
+        SendableRegistry.add(playPreloadBox, "Play Preload?");
+        SendableRegistry.setName(playPreloadBox, "Play Preload?");
         
         //add options to  Box
-        areGamePiecesPlayedBox.setDefaultOption("Yes", AutonomousTabData.AreGamePiecesPlayed.kYes);
-        areGamePiecesPlayedBox.addOption("No", AutonomousTabData.AreGamePiecesPlayed.kNo);
+        playPreloadBox.setDefaultOption("Yes", AutonomousTabData.PlayPreload.kYes);
+        playPreloadBox.addOption("No", AutonomousTabData.PlayPreload.kNo);
 
         //put the widget on the shuffleboard
-        autonomousTab.add(areGamePiecesPlayedBox)
+        autonomousTab.add(playPreloadBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(0, 0)
-            .withSize(8, 2);
+            .withPosition(11, 0)
+            .withSize(4, 2);
     }
 
     /**
@@ -146,7 +148,7 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(moveOntoChargingStationBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(1, 3)
+            .withPosition(1, 5)
             .withSize(4, 2);
     }
 
@@ -157,8 +159,8 @@ public class AutonomousTab
     private void createPickUpGamePiecesBox()
     {
         //create and name the Box
-        SendableRegistry.add(pickUpGamePiecesBox, "Pick Up C or C");
-        SendableRegistry.setName(pickUpGamePiecesBox, "Pick Up C or C");
+        SendableRegistry.add(pickUpGamePiecesBox, "Pick Up Game Piece");
+        SendableRegistry.setName(pickUpGamePiecesBox, "Pick Up Game Piece");
 
         //add options to Box
         pickUpGamePiecesBox.setDefaultOption("Yes", AutonomousTabData.PickUpGamePieces.kYes);
@@ -167,8 +169,8 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(pickUpGamePiecesBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(6, 3)
-            .withSize(6, 2);
+            .withPosition(16, 0)
+            .withSize(4, 2);
     }
 
     /**
@@ -178,20 +180,20 @@ public class AutonomousTab
     private void createRowPlayedPiece1Box()
     {
         //create and name the Box
-        SendableRegistry.add(rowPlayedPiece1Box, "Row Played 1");
-        SendableRegistry.setName(rowPlayedPiece1Box, "Row Played 1");
+        SendableRegistry.add(rowPlayedPiece1Box, "Row Played Preload");
+        SendableRegistry.setName(rowPlayedPiece1Box, "Row Played Preload");
 
         //add options to Box
-        rowPlayedPiece1Box.addOption("0", AutonomousTabData.RowPlayedPiece1.k0);
-        rowPlayedPiece1Box.setDefaultOption("1", AutonomousTabData.RowPlayedPiece1.k1);
-        rowPlayedPiece1Box.addOption("2", AutonomousTabData.RowPlayedPiece1.k2);
-        rowPlayedPiece1Box.addOption("3", AutonomousTabData.RowPlayedPiece1.k3);
+        rowPlayedPiece1Box.addOption("None", AutonomousTabData.RowPlayedPiece1.kNone);
+        rowPlayedPiece1Box.setDefaultOption("Bottom", AutonomousTabData.RowPlayedPiece1.kBottom);
+        rowPlayedPiece1Box.addOption("Middle", AutonomousTabData.RowPlayedPiece1.kMiddle);
+        rowPlayedPiece1Box.addOption("Top", AutonomousTabData.RowPlayedPiece1.kTop);
 
         //put the widget on the shuffleboard
         autonomousTab.add(rowPlayedPiece1Box)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(1, 6)
-            .withSize(4, 2);
+            .withPosition(8, 3)
+            .withSize(6, 2);
     }
 
     /**
@@ -201,20 +203,20 @@ public class AutonomousTab
     private void createColumnPlayedPiece1Box()
     {
         //create and name the Box
-        SendableRegistry.add(columnPlayedPiece1Box, "Column Played 1");
-        SendableRegistry.setName(columnPlayedPiece1Box, "Column Played 1");
+        SendableRegistry.add(columnPlayedPiece1Box, "Column Played Preload");
+        SendableRegistry.setName(columnPlayedPiece1Box, "Column Played Preload");
 
         //add options to Box
-        columnPlayedPiece1Box.addOption("0", AutonomousTabData.ColumnPlayedPiece1.k0);
-        columnPlayedPiece1Box.setDefaultOption("1", AutonomousTabData.ColumnPlayedPiece1.k1);
-        columnPlayedPiece1Box.addOption("2", AutonomousTabData.ColumnPlayedPiece1.k2);
-        columnPlayedPiece1Box.addOption("3", AutonomousTabData.ColumnPlayedPiece1.k3);
+        columnPlayedPiece1Box.addOption("None", AutonomousTabData.ColumnPlayedPiece1.kNone);
+        columnPlayedPiece1Box.setDefaultOption("Left", AutonomousTabData.ColumnPlayedPiece1.kLeft);
+        columnPlayedPiece1Box.addOption("Middle", AutonomousTabData.ColumnPlayedPiece1.kMiddle);
+        columnPlayedPiece1Box.addOption("Right", AutonomousTabData.ColumnPlayedPiece1.kRight);
 
         //put the widget on the shuffleboard
         autonomousTab.add(columnPlayedPiece1Box)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(9, 0)
-            .withSize(16, 2);
+            .withPosition(8, 6)
+            .withSize(6, 2);
     }
 
     /**
@@ -224,19 +226,19 @@ public class AutonomousTab
     private void createRowPlayedPiece2Box()
     {
         //create and name the Box
-        SendableRegistry.add(rowPlayedPiece2Box, "Row Played 2");
-        SendableRegistry.setName(rowPlayedPiece2Box, "Row Played 2");
+        SendableRegistry.add(rowPlayedPiece2Box, "Row Played Piece 2");
+        SendableRegistry.setName(rowPlayedPiece2Box, "Row Played Piece 2");
 
         //add options to Box
-        rowPlayedPiece2Box.setDefaultOption("0", AutonomousTabData.RowPlayedPiece2.k0);
-        rowPlayedPiece2Box.addOption("1", AutonomousTabData.RowPlayedPiece2.k1);
-        rowPlayedPiece2Box.addOption("2", AutonomousTabData.RowPlayedPiece2.k2);
-        rowPlayedPiece2Box.addOption("3", AutonomousTabData.RowPlayedPiece2.k3);
+        rowPlayedPiece2Box.setDefaultOption("None", AutonomousTabData.RowPlayedPiece2.kNone);
+        rowPlayedPiece2Box.addOption("Bottom", AutonomousTabData.RowPlayedPiece2.kBottom);
+        rowPlayedPiece2Box.addOption("Middle", AutonomousTabData.RowPlayedPiece2.kMiddle);
+        rowPlayedPiece2Box.addOption("Top", AutonomousTabData.RowPlayedPiece2.kTop);
 
         //put the widget on the shuffleboard
         autonomousTab.add(rowPlayedPiece2Box)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(6, 6)
+            .withPosition(15, 3)
             .withSize(6, 2);
     }
 
@@ -247,19 +249,19 @@ public class AutonomousTab
     private void createColumnPlayedPiece2Box()
     {
         //create and name the Box
-        SendableRegistry.add(columnPlayedPiece2Box, "Column Played 2");
-        SendableRegistry.setName(columnPlayedPiece2Box, "Column Played 2");
+        SendableRegistry.add(columnPlayedPiece2Box, "Column Played Piece 2");
+        SendableRegistry.setName(columnPlayedPiece2Box, "Column Played Piece 2");
 
         //add options to Box
-        columnPlayedPiece2Box.setDefaultOption("0", AutonomousTabData.ColumnPlayedPiece2.k0);
-        columnPlayedPiece2Box.addOption("1", AutonomousTabData.ColumnPlayedPiece2.k1);
-        columnPlayedPiece2Box.addOption("2", AutonomousTabData.ColumnPlayedPiece2.k2);
-        columnPlayedPiece2Box.addOption("3", AutonomousTabData.ColumnPlayedPiece2.k3);
+        columnPlayedPiece2Box.setDefaultOption("None", AutonomousTabData.ColumnPlayedPiece2.kNone);
+        columnPlayedPiece2Box.addOption("Left", AutonomousTabData.ColumnPlayedPiece2.kLeft);
+        columnPlayedPiece2Box.addOption("Middle", AutonomousTabData.ColumnPlayedPiece2.kMiddle);
+        columnPlayedPiece2Box.addOption("Right", AutonomousTabData.ColumnPlayedPiece2.kRight);
 
         //put the widget on the shuffleboard
         autonomousTab.add(columnPlayedPiece2Box)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(13, 3)
+            .withPosition(15, 6)
             .withSize(6, 2);
     }
 
@@ -267,20 +269,20 @@ public class AutonomousTab
     * <b>Column for Piece 2</b> Box
     * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
     */
-    private void createCurrentlyContainingGamePieceBox()
+    private void createContainingPreloadBox()
     {
         //create and name the Box
-        SendableRegistry.add(currentlyContainingGamePieceBox, "Containing Game Piece");
-        SendableRegistry.setName(currentlyContainingGamePieceBox, "Containing Game Piece");
+        SendableRegistry.add(containingPreloadBox, "Containing Preload?");
+        SendableRegistry.setName(containingPreloadBox, "Containing Preload?");
 
         //add options to Box
-        currentlyContainingGamePieceBox.setDefaultOption("Yes", AutonomousTabData.CurrentlyContainingGamePiece.kYes);
-        currentlyContainingGamePieceBox.addOption("No", AutonomousTabData.CurrentlyContainingGamePiece.kNo);
+        containingPreloadBox.setDefaultOption("Yes", AutonomousTabData.ContainingPreload.kYes);
+        containingPreloadBox.addOption("No", AutonomousTabData.ContainingPreload.kNo);
         //put the widget on the shuffleboard
-        autonomousTab.add(currentlyContainingGamePieceBox)
+        autonomousTab.add(containingPreloadBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(13, 3)
-            .withSize(6, 2);
+            .withPosition(7, 0)
+            .withSize(4, 2);
     }
 
     /**
@@ -303,6 +305,26 @@ public class AutonomousTab
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
             .withPosition(0, 0)
             .withSize(6, 2);
+    }
+
+    /**
+    * <b>Team Color 2</b> Box
+    * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
+    */
+    private void createDriveToSecondPieceBox()
+    {
+        //create and name the Box
+        SendableRegistry.add(driveToSecondPieceBox, "Drive To Second Piece");
+        SendableRegistry.setName(driveToSecondPieceBox, "Drive To Second Piece");
+
+        //add options to Box
+        driveToSecondPieceBox.setDefaultOption("Yes", AutonomousTabData.DriveToSecondPiece.kYes);
+        driveToSecondPieceBox.addOption("No", AutonomousTabData.DriveToSecondPiece.kNo);
+        //put the widget on the shuffleboard
+        autonomousTab.add(driveToSecondPieceBox)
+            .withWidget(BuiltInWidgets.kSplitButtonChooser)
+            .withPosition(0, 10)
+            .withSize(4, 2);
     }
 
     /**
@@ -345,23 +367,24 @@ public class AutonomousTab
     {
          autonomousTab.add("Error Messages", "No Errors")
              .withWidget(BuiltInWidgets.kTextView)
-             .withPosition(1, 10)
-             .withSize(26, 2)
+             .withPosition(22, 10)
+             .withSize(6, 2)
              .getEntry();
     }
 
     private void updateAutonomousTabData()
     {
         autonomousTabData.startingLocation = startingLocationBox.getSelected();
-        autonomousTabData.areGamePiecesPlayed = areGamePiecesPlayedBox.getSelected();
+        autonomousTabData.playPreload = playPreloadBox.getSelected();
         autonomousTabData.moveOntoChargingStation = moveOntoChargingStationBox.getSelected();
         autonomousTabData.pickUpGamePieces = pickUpGamePiecesBox.getSelected();
         autonomousTabData.rowPlayedPiece1 = rowPlayedPiece1Box.getSelected();
         autonomousTabData.columnPlayedPiece1 = columnPlayedPiece1Box.getSelected();
         autonomousTabData.rowPlayedPiece2 = rowPlayedPiece2Box.getSelected();
         autonomousTabData.columnPlayedPiece2 = columnPlayedPiece2Box.getSelected();
-        autonomousTabData.currentlyContainingGamePiece = currentlyContainingGamePieceBox.getSelected();
+        autonomousTabData.containingPreload = containingPreloadBox.getSelected();
         autonomousTabData.autonomousCommands = autonomousCommandsBox.getSelected();
+        autonomousTabData.driveToSecondPiece = driveToSecondPieceBox.getSelected();
     }
 
     public boolean wasSendDataButtonPressed()
@@ -409,17 +432,17 @@ public class AutonomousTab
         boolean isValid = true;
 
         boolean isMiddle = (startingLocationBox.getSelected() == AutonomousTabData.StartingLocation.kMiddle);
-        boolean isPiecesPlayed = (areGamePiecesPlayedBox.getSelected() == AutonomousTabData.AreGamePiecesPlayed.kYes);
-        boolean isPiecesPlayedFalse = (areGamePiecesPlayedBox.getSelected() == AutonomousTabData.AreGamePiecesPlayed.kNo);
+        boolean isPiecesPlayed = (playPreloadBox.getSelected() == AutonomousTabData.PlayPreload.kYes);
+        boolean isPiecesPlayedFalse = (playPreloadBox.getSelected() == AutonomousTabData.PlayPreload.kNo);
         boolean isMoveOntoStation = (moveOntoChargingStationBox.getSelected() == AutonomousTabData.MoveOntoChargingStation.kYes);
         boolean isPiecesPickedUp = (pickUpGamePiecesBox.getSelected() == AutonomousTabData.PickUpGamePieces.kNo);
-        boolean isRow1 = (rowPlayedPiece1Box.getSelected() == AutonomousTabData.RowPlayedPiece1.k1);
-        boolean isColumn1 = (columnPlayedPiece1Box.getSelected() == AutonomousTabData.ColumnPlayedPiece1.k1);
-        boolean isRow2False = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.k0);
-        boolean isRow2True = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.k1);
-        boolean isColumn2False = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.k0);
-        boolean isColumn2True = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.k1);
-        boolean isPiecesContained = (currentlyContainingGamePieceBox.getSelected() == AutonomousTabData.CurrentlyContainingGamePiece.kYes);
+        boolean isRow1 = (rowPlayedPiece1Box.getSelected() == AutonomousTabData.RowPlayedPiece1.kBottom);
+        boolean isColumn1 = (columnPlayedPiece1Box.getSelected() == AutonomousTabData.ColumnPlayedPiece1.kLeft);
+        boolean isRow2False = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.kNone);
+        boolean isRow2True = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.kBottom);
+        boolean isColumn2False = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.kNone);
+        boolean isColumn2True = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.kLeft);
+        boolean isPiecesContained = (containingPreloadBox.getSelected() == AutonomousTabData.ContainingPreload.kYes);
         boolean isNoCommand = (autonomousCommandsBox.getSelected() == AutonomousTabData.AutonomousCommands.kNeither);
         boolean isChargingStationCommand = (autonomousCommandsBox.getSelected() == AutonomousTabData.AutonomousCommands.kChargingStation);
         boolean is2GamePieceCommand = (autonomousCommandsBox.getSelected() == AutonomousTabData.AutonomousCommands.kTwoGamePieces);

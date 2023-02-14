@@ -40,6 +40,10 @@ public class OperatorControllerTab
     private final AxisObjects moveXObjects = new AxisObjects();
     private final AxisObjects moveYObjects = new AxisObjects();
     private final AxisObjects rightXObjects = new AxisObjects();
+    private final AxisObjects rightYObjects = new AxisObjects();
+    private final AxisObjects leftTriggerObjects = new AxisObjects();
+    private final AxisObjects rightTriggerObjects = new AxisObjects();
+    
     private final OperatorController operatorController;
 
     private ShuffleboardTab operatorControllerTab = Shuffleboard.getTab("Operator Controller");
@@ -63,6 +67,9 @@ public class OperatorControllerTab
         createAxisWidgets(Xbox.Axis.kLeftX, "Move X", moveXObjects, 0);
         createAxisWidgets(Xbox.Axis.kLeftY, "Move Y", moveYObjects, 5);
         createAxisWidgets(Xbox.Axis.kRightX, "Rotate", rightXObjects, 10);
+        createAxisWidgets(Xbox.Axis.kRightY, "Right Y", rightYObjects, 15);
+        createAxisWidgets(Xbox.Axis.kLeftTrigger, "Left Trigger", leftTriggerObjects, 20);
+        createAxisWidgets(Xbox.Axis.kRightTrigger, "Right Trigger", rightTriggerObjects, 25);
     }
 
     private void createAxisWidgets(Xbox.Axis axis, String name, AxisObjects axisObjects, int column)
@@ -169,6 +176,15 @@ public class OperatorControllerTab
 
         axisSettings = getAxisSettingsFromShuffleboard(rightXObjects);
         operatorController.setAxisSettings(Xbox.Axis.kRightX, axisSettings);
+
+        axisSettings = getAxisSettingsFromShuffleboard(rightYObjects);
+        operatorController.setAxisSettings(OperatorController.Axis.kRightY, axisSettings);
+
+        axisSettings = getAxisSettingsFromShuffleboard(leftTriggerObjects);
+        operatorController.setAxisSettings(OperatorController.Axis.kLeftTrigger, axisSettings);
+
+        axisSettings = getAxisSettingsFromShuffleboard(rightTriggerObjects);
+        operatorController.setAxisSettings(OperatorController.Axis.kRightTrigger, axisSettings);
     }
 }
 

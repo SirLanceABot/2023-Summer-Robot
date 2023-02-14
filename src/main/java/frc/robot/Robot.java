@@ -9,6 +9,8 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.shuffleboard.AutonomousTabData;
+import frc.robot.commands.AutoCommandBuilder;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -86,7 +88,21 @@ public class Robot extends TimedRobot
      */
     @Override
     public void disabledPeriodic()
-    {}
+    {
+        if (robotContainer.mainShuffleboard != null)
+        {
+            boolean isNewData = robotContainer.mainShuffleboard.wasSendDataButtonPressed();
+
+            if (isNewData && robotContainer.autonomousTabData!= null && robotContainer.autoCommandBuilder != null)
+            {
+                robotContainer.autonomousTabData.updateData(robotContainer.mainShuffleboard.getAutonomousTabData());
+                System.out.println(robotContainer.autonomousTabData);
+
+                robotContainer.autoCommandBuilder.build();
+                System.out.println(robotContainer.autoCommandBuilder);
+            }
+        }
+    }
 
     /**
      * This method runs one time when the robot exits disabled mode.
