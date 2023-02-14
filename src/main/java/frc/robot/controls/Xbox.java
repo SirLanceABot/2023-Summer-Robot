@@ -7,6 +7,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 // import edu.wpi.first.wpilibj.GenericHID.getRawAxis;
@@ -381,6 +382,16 @@ public class Xbox
         
     }
     
+    public void setRumbleOn()
+    {
+        joystick.setRumble(GenericHID.RumbleType.kBothRumble, 0.50);
+    }
+
+    public void setRumbleOff()
+    {
+        joystick.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+    }
+
     void createRumbleEvent(double startTime, double duration, double leftPower, double rightPower)
     {
         boolean isNoOverlap = true;

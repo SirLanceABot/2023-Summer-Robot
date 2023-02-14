@@ -11,6 +11,8 @@ import java.lang.invoke.MethodHandles;
 import frc.robot.RobotContainer;
 // import frc.robot.subsystems.Shoulder;
 import frc.robot.sensors.Vision;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.commands.AutoAimToPost;
 
 public class SamTest implements Test
 {
@@ -30,6 +32,7 @@ public class SamTest implements Test
     // private final Shoulder shoulder;
     // private final Joystick joystick;
     private final Vision vision;
+    private final Drivetrain drivetrain;
   
 
     // *** CLASS CONSTRUCTOR ***
@@ -39,6 +42,7 @@ public class SamTest implements Test
 
         this.robotContainer = robotContainer;
         vision = this.robotContainer.vision;
+        drivetrain = this.robotContainer.drivetrain;
         // shoulder = this.robotContainer.shoulder;
         // joystick = new Joystick(0);
 
@@ -50,7 +54,11 @@ public class SamTest implements Test
      */
     public void init()
     {
+        System.out.println("SamTest Init");
         // shoulder.resetEncoder();
+        AutoAimToPost command = new AutoAimToPost(drivetrain, vision);
+        command.schedule();
+        System.out.println(command.isScheduled());
     }
 
     /**
@@ -58,9 +66,6 @@ public class SamTest implements Test
      */
     public void periodic()
     {
-        vision.getX();
-        
-
         // if(joystick.getRawButton(1))    //A
         // {
         //     shoulder.moveUp();

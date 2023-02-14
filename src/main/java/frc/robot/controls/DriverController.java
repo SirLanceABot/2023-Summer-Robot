@@ -57,6 +57,11 @@ public class DriverController extends Xbox implements PeriodicIO
         createRumbleEvent(1.0, 0.25, 1.0, 1.0);
     }
 
+    public void rumbleNow()
+    {
+        super.createRumbleEvent(DriverStation.getMatchTime(), 1.0, 1.0, 1.0);
+    }
+
     public void configureAxes()
     {
         setAxisSettings(Axis.kLeftX, 0.1, 0.0, 2.0, false, AxisScale.kSquared);
@@ -76,7 +81,7 @@ public class DriverController extends Xbox implements PeriodicIO
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        checkRumbleEvent();
+        // checkRumbleEvent();
     }
 
     @Override

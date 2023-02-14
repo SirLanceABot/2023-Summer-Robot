@@ -13,6 +13,8 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Grabber;
@@ -21,6 +23,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.LockWheels;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.controls.DriverController;
@@ -66,7 +69,7 @@ public class RobotContainer
 	private boolean useOperatorController 	= false;
 	private boolean useAutonomousTabData	= false;
 	private boolean useMainShuffleboard		= false;
-	private boolean useVision				= false;
+	private boolean useVision				= true;
 	private boolean useDataLog				= false;
 
 
@@ -144,6 +147,15 @@ public class RobotContainer
 			Trigger startButtonTrigger = new Trigger(startButton);
 			startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
 
+			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
+			Trigger yButtonTrigger = new Trigger(yButton);
+			yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
+						  .andThen( () -> driverController.setRumbleOn())
+						  .andThen( new WaitCommand(0.5))
+						  .andThen( () -> driverController.setRumbleOff()));
+			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
+
+
 			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
 			Trigger xButtonTrigger = new Trigger(xButton);
 			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
@@ -159,6 +171,7 @@ public class RobotContainer
 
 			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
+			
         }
 	}
 
@@ -174,6 +187,7 @@ public class RobotContainer
 	 */
 	public Command getAutonomousCommand()
 	{
-		return null;
+		AutoAimToPost command = new AutoAimToPost(drivetrain, vision);
+		return command;
 	}
 }
