@@ -40,7 +40,6 @@ public class Gyro4237 extends Sensor4237
     private ResetState resetState = ResetState.kDone;
     private Timer timer = new Timer();
 
-    // private final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.Sensor.PIGEON, Constants.Motor.CAN_BUS);
     private final PeriodicIO periodicIO = new PeriodicIO();
 
     public Gyro4237()
@@ -70,17 +69,17 @@ public class Gyro4237 extends Sensor4237
 
     public double getRoll()
     {
-        return gyro.getRoll(); // x-axis
+        return periodicIO.roll; // x-axis
     }
 
     public double getPitch()
     {
-        return gyro.getPitch(); // y-axis
+        return periodicIO.pitch; // y-axis
     }
 
     public double getYaw()
     {
-        return gyro.getYaw(); // z-axis
+        return periodicIO.yaw; // z-axis
     }
 
     public Rotation2d getRotation2d()
@@ -116,7 +115,7 @@ public class Gyro4237 extends Sensor4237
             resetState = ResetState.kTry;
         }
         else if (resetState == ResetState.kTry && timer.hasElapsed(Constants.Gyro.RESET_GYRO_DELAY))
-                resetState = ResetState.kDone;
+            resetState = ResetState.kDone;
 
         // System.out.println(periodicIO.angle + "   " + periodicIO.rotation2d.getDegrees());
     }
