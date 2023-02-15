@@ -3,6 +3,7 @@ package frc.robot.tests;
 import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.RobotContainer;
+import frc.robot.sensors.Gyro4237;
 import frc.robot.subsystems.Candle4237;
 
 public class DavidTest implements Test
@@ -22,6 +23,7 @@ public class DavidTest implements Test
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
     private final Candle4237 candle;
+    private final Gyro4237 gyro;
     private Joystick joystick = new Joystick(1);
    
     
@@ -32,6 +34,7 @@ public class DavidTest implements Test
     {
         this.robotContainer = robotContainer;
         candle = this.robotContainer.candle;
+        gyro = this.robotContainer.gyro;
     }
    
    
@@ -46,6 +49,7 @@ public class DavidTest implements Test
      */
     public void periodic()
     {
+        /* Candle testing
         if (joystick.getRawButtonPressed(5))
             candle.signalReadyToDrop();
         else if (joystick.getRawButtonPressed(3))
@@ -60,6 +64,9 @@ public class DavidTest implements Test
             candle.incrementAnimation();
         else if (joystick.getRawButtonPressed(10))
             candle.toggleSectioned();
+        */
+
+        System.out.println(gyro);
     }
     
     /**
@@ -67,7 +74,7 @@ public class DavidTest implements Test
      */
     public void exit()
     {
-        candle.turnOffLight();
+        // candle.turnOffLight();
     }
 
     // *** METHODS ***

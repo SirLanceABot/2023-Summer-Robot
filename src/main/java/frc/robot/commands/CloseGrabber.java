@@ -37,7 +37,7 @@ public class CloseGrabber extends CommandBase
      */
     public CloseGrabber(Grabber grabber) 
     {
-        System.out.println(fullClassName + " : Constructor Started");
+        System.out.println(fullClassName + ": Constructor Started");
         
         this.grabber = grabber;
         

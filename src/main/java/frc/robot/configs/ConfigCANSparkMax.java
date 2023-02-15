@@ -40,7 +40,11 @@ public final class ConfigCANSparkMax
 
     public ConfigCANSparkMax()
     {
+        System.out.println(fullClassName + ": Constructor Started");
+
         configCANSparkMax();
+
+        System.out.println(fullClassName + ": Constructor Finished");
     }
     
     private void configCANSparkMax()

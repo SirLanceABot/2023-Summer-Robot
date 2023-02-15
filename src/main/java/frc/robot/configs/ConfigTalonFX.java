@@ -23,7 +23,11 @@ public class ConfigTalonFX
 
     public ConfigTalonFX()
     {
+        System.out.println(fullClassName + ": Constructor Started");
+
         configTalonFX();
+        
+        System.out.println(fullClassName + ": Constructor Finished");
     }
     
     private void configTalonFX()

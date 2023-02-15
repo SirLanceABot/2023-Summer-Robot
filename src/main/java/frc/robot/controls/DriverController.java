@@ -33,7 +33,7 @@ public class DriverController extends Xbox implements PeriodicIO
     {
         super(port);
 
-        System.out.println(fullClassName + " : Constructor Started");
+        System.out.println(fullClassName + ": Constructor Started");
 
         registerPeriodicIO();
         periodicIO = new PeriodicIO();

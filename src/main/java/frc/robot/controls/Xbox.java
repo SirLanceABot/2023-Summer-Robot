@@ -177,7 +177,8 @@ public class Xbox
     {
         // super(port);
         joystick = new Joystick(port);
-        System.out.println(fullClassName + " : Constructor Started");
+        
+        System.out.println(fullClassName + ": Constructor Started");
 
         initXbox();
        

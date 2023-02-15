@@ -49,6 +49,8 @@ public class MotorController4237 extends MotorSafety
 
     public MotorController4237(MotorControllerType motorControllerType, int port)
     {
+        System.out.println(fullClassName + ": Constructor Started");
+
         this.motorControllerType = motorControllerType;
         switch(motorControllerType)
         {
@@ -61,6 +63,8 @@ public class MotorController4237 extends MotorSafety
                 initCANSparkMax();
                 break;
         }
+
+        System.out.println(fullClassName + ": Constructor Finished");
     }
 
     private void initTalonFX()
