@@ -35,7 +35,7 @@ import frc.robot.shuffleboard.AutonomousTabData;
 import frc.robot.shuffleboard.MainShuffleboard;
 import frc.robot.sensors.Vision;
 // import frc.robot.vision.Vision;
-import frc.robot.commands.AutoCommandBuilder;
+import frc.robot.commands.AutoCommandList;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -73,7 +73,7 @@ public class RobotContainer
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= true;
 	private boolean useDataLog				= false;
-	private boolean useAutoCommandBuilder	= true;
+	private boolean useAutoCommandList		= true;
 
 
 	public final ExampleSubsystem exampleSubsystem;
@@ -91,7 +91,7 @@ public class RobotContainer
 	public final Accelerometer4237 accelerometer;
 	public final Gyro4237 gyro;
 	public final DataLog log;
-	public final AutoCommandBuilder autoCommandBuilder;
+	public final AutoCommandList autoCommandList;
 	
 	/** 
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -119,7 +119,7 @@ public class RobotContainer
 		autonomousTabData	= (useFullRobot || useAutonomousTabData ) 	? new AutonomousTabData()		: null;
 		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)		? new MainShuffleboard(this)	: null;
 		vision 				= (useFullRobot || useVision)				? new Vision()					: null;
-		autoCommandBuilder 	= (useFullRobot || useAutoCommandBuilder)	? new AutoCommandBuilder(this)	: null;
+		autoCommandList 	= (useFullRobot || useAutoCommandList)	? new AutoCommandList(this)	: null;
 		
 
 
@@ -147,7 +147,7 @@ public class RobotContainer
 	{
 		if(driverController != null && drivetrain != null)
         {
-			
+			//Axis, driving and rotating
 			DoubleSupplier leftYAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftY);
 			DoubleSupplier leftXAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftX);
 			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
@@ -156,6 +156,22 @@ public class RobotContainer
 			Trigger startButtonTrigger = new Trigger(startButton);
 			startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
 
+			//A Button
+			BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
+			Trigger aButtonTrigger = new Trigger(aButton);
+			//aButtonTrigger.toggleOnTrue(new AutoBalance));
+
+			//X Button-lockwheels
+			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
+			Trigger xButtonTrigger = new Trigger(xButton);
+			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
+			xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain, leftYAxis, leftXAxis, rightXAxis));
+			//JoystickButton drivetrainA = new JoystickButton(joystick,1);
+			//DoubleSupplier leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
+			//DoubleSupplier leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX) * 2.0; };
+			//DoubleSupplier rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX) * 2.0; };
+
+			//Y Button
 			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
 			yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
@@ -165,16 +181,6 @@ public class RobotContainer
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
 
-			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
-			Trigger xButtonTrigger = new Trigger(xButton);
-			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
-			xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain, leftYAxis, leftXAxis, rightXAxis));
-			//JoystickButton drivetrainA = new JoystickButton(joystick,1);
-			//DoubleSupplier leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
-			//DoubleSupplier leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX) * 2.0; };
-			//DoubleSupplier rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX) * 2.0; };
-			
-
 			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
 			
@@ -183,7 +189,37 @@ public class RobotContainer
 
 	private void configureOperatorBindings()
 	{
-		// operatorController.configureAxes();
+
+		//Left trigger 
+		BooleanSupplier leftTrigger = operatorController.getButtonSupplier(Xbox.Button.kLeftTrigger);
+		Trigger leftTriggerTrigger = new Trigger(leftTrigger);
+		//leftTriggerTrigger.toggleOnTrue(new DetractArm));
+
+		//Right trigger 
+		BooleanSupplier rightTrigger = operatorController.getButtonSupplier(Xbox.Button.kRightTrigger);
+		Trigger rightTriggerTrigger = new Trigger(rightTrigger);
+		//rightTriggerTrigger.toggleOnTrue(new ExtendArm));
+
+		//Dpad up button
+		BooleanSupplier dPadUp = operatorController.getDpadSupplier(Xbox.Dpad.kUp);
+		Trigger dPadUpTrigger = new Trigger(dPadUp);
+		//dPadUpTrigger.toggleOnTrue(new MoveArmUp));
+		
+		//Dpad down button
+		BooleanSupplier dPadDown = operatorController.getDpadSupplier(Xbox.Dpad.kDown);
+		Trigger dPadDownTrigger = new Trigger(dPadDown);
+		//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+
+		//X button
+		BooleanSupplier xButton = operatorController.getButtonSupplier(Xbox.Button.kX);
+		Trigger xButtonTrigger = new Trigger(xButton);
+		//xButtonTrigger.toggleOnTrue(new SuctionControl));
+
+		//Y button 
+		BooleanSupplier yButton = operatorController.getButtonSupplier(Xbox.Button.kY);
+		Trigger yButtonTrigger = new Trigger(yButton);
+		//yButtonTrigger.toggleOnTrue( new MoveWrist());
+
 	}
 
 	/**

@@ -478,6 +478,11 @@ public class Xbox
     {
         return () -> getRawButton(button);
     }
+
+    public BooleanSupplier getDpadSupplier(Dpad dpad)
+    {
+        return () -> getDpad() == dpad;
+    }
     
     @Override
     public String toString()
