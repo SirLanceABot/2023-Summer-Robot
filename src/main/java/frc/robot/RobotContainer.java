@@ -60,14 +60,14 @@ public class RobotContainer
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= false;
-	private boolean useDrivetrain   		= false;
+	private boolean useGyro					= true;
+	private boolean useDrivetrain   		= true;
 	private boolean useGrabber 				= false;
 	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= false;
+	private boolean useDriverController		= true;
 	private boolean useOperatorController 	= false;
 	private boolean useAutonomousTabData	= false;
 	private boolean useMainShuffleboard		= false;
@@ -175,9 +175,10 @@ public class RobotContainer
 			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
 			yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
-						  .andThen( () -> driverController.setRumbleOn())
+						  .andThen( new PrintCommand("Y") )                        
+						  .andThen( () -> driverController.setRumble(0.5))
 						  .andThen( new WaitCommand(0.5))
-						  .andThen( () -> driverController.setRumbleOff()));
+						  .andThen( () -> driverController.setRumble(0.0)));
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
 

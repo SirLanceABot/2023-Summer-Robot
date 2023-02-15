@@ -383,14 +383,9 @@ public class Xbox
         
     }
     
-    public void setRumbleOn()
+    public void setRumble(double intensity)
     {
-        joystick.setRumble(GenericHID.RumbleType.kBothRumble, 0.50);
-    }
-
-    public void setRumbleOff()
-    {
-        joystick.setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+        joystick.setRumble(GenericHID.RumbleType.kBothRumble, intensity);
     }
 
     void createRumbleEvent(double startTime, double duration, double leftPower, double rightPower)
