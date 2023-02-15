@@ -37,10 +37,15 @@ public class CloseGrabber extends CommandBase
      */
     public CloseGrabber(Grabber grabber) 
     {
+        System.out.println(fullClassName + " : Constructor Started");
+        
         this.grabber = grabber;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(this.grabber);
+        if (this.grabber != null)
+            addRequirements(this.grabber);
+
+        System.out.println(fullClassName + ": Constructor Finished");
     }
 
     // Called when the command is initially scheduled.

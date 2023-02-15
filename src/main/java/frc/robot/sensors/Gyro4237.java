@@ -28,7 +28,9 @@ public class Gyro4237 extends Sensor4237
     private class PeriodicIO
     {
         // Inputs
-        private double angle;
+        private double yaw;
+        private double pitch;
+        private double roll;
         private Rotation2d rotation2d;
 
         // Outputs
@@ -46,7 +48,7 @@ public class Gyro4237 extends Sensor4237
         //reset();
         // gyro.setYaw(180.0);
         initPigeon();
-        periodicIO.angle = gyro.getYaw();
+        // periodicIO.angle = gyro.getYaw();
         periodicIO.rotation2d = gyro.getRotation2d();
 
     }
@@ -66,12 +68,19 @@ public class Gyro4237 extends Sensor4237
         // gyro.reset();
     }
 
-    public double getAngle()
+    public void getRoll()
     {
-        return periodicIO.angle;
-        //return gyro.getRoll(); // x-axis
-        //return gyro.getPitch(); // y-axis
-        //return gyro.getYaw(); // z-axis
+        periodicIO.roll = gyro.getRoll(); // x-axis
+    }
+
+    public void getPitch()
+    {
+        periodicIO.pitch = gyro.getPitch(); // y-axis
+    }
+
+    public void getYaw()
+    {
+        periodicIO.yaw = gyro.getYaw(); // z-axis
     }
 
     public Rotation2d getRotation2d()
@@ -85,12 +94,14 @@ public class Gyro4237 extends Sensor4237
     {
         if (resetState == ResetState.kDone)
         {
-            // periodicIO.angle = gyro.getYaw(); // z-axis
-            // periodicIO.angle = gyro.getRoll(); // x-axis
-            periodicIO.angle = gyro.getPitch(); // y-axis
+            getRoll();
+            getPitch();
+            getYaw();
 
             periodicIO.rotation2d = gyro.getRotation2d();
         }
+
+        
     }
 
     @Override
@@ -113,7 +124,7 @@ public class Gyro4237 extends Sensor4237
     @Override
     public String toString()
     {
-        return String.format("Gyro %f \n", periodicIO.angle);
+        return String.format("Gyro %f \n", periodicIO.yaw);
     }
 
     

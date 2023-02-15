@@ -41,12 +41,15 @@ public class AutoAimToPost extends CommandBase
      */
     public AutoAimToPost(Drivetrain drivetrain, Vision vision) 
     {
-        System.out.println("Constructor");
+        System.out.println("Constructor Started");
+        
         this.drivetrain = drivetrain;
         this.vision = vision;
         
         if(this.drivetrain != null)
             addRequirements(drivetrain);
+        
+        System.out.println(fullClassName + ": Constructor Finished");
     }
 
     // Called when the command is initially scheduled.
