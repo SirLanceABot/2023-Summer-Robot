@@ -1,15 +1,23 @@
 package frc.robot.commands;
 
+import java.lang.invoke.MethodHandles;
 import java.util.function.DoubleSupplier;
-
 import javax.lang.model.util.ElementScanner14;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class LockWheels extends CommandBase
 {
-    
+    // This string gets the full name of the class, including the package name
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
+    static
+    {
+        System.out.println("Loading: " + fullClassName);
+    }
+
     private final Drivetrain drivetrain;
     private DoubleSupplier xSpeed;
     private DoubleSupplier ySpeed;

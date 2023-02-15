@@ -1,5 +1,6 @@
 package frc.robot.configs;
 
+import java.lang.invoke.MethodHandles;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
@@ -14,6 +15,16 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  */
 public final class ConfigCANSparkMax
 {
+    // This string gets the full name of the class, including the package name
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
+    static
+    {
+        System.out.println("Loading: " + fullClassName);
+    }
+
     private final CANSparkMax motor = new CANSparkMax(2, MotorType.kBrushless);
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;

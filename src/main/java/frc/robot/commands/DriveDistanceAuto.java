@@ -1,11 +1,22 @@
 package frc.robot.commands;
 
+import java.lang.invoke.MethodHandles;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class DriveDistanceAuto extends CommandBase
 {
+    // This string gets the full name of the class, including the package name
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
+    static
+    {
+        System.out.println("Loading: " + fullClassName);
+    }
+
     private Drivetrain drivetrain;
     private double xSpeed;
     private double ySpeed;

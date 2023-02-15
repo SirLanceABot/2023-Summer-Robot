@@ -1,5 +1,6 @@
 package frc.robot.configs;
 
+import java.lang.invoke.MethodHandles;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
@@ -17,6 +18,16 @@ import edu.wpi.first.wpilibj.MotorSafety;
 
 public class MotorController4237 extends MotorSafety
 {
+    // This string gets the full name of the class, including the package name
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
+    static
+    {
+        System.out.println("Loading: " + fullClassName);
+    }
+
     public enum MotorControllerType
     {
         kTalonFX, kCANSparkMax;

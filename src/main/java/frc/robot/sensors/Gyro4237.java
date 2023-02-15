@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import javax.swing.plaf.synth.SynthTextAreaUI;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -22,14 +23,23 @@ public class Gyro4237 extends Sensor4237
         System.out.println("Loading: " + fullClassName);
     }
 
-    private class PeriodicIO
+    public enum ResetState
     {
-        private double angle;
-        private Rotation2d rotation2d;
+        kStart, kTry, kDone;
     }
 
-    private final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.Sensor.PIGEON, Constants.Motor.CAN_BUS);
-    private boolean resetGyro = false;
+
+    private class PeriodicIO
+    {
+        // Inputs
+        private double angle;
+        private Rotation2d rotation2d;
+
+        // Outputs
+    }
+
+    private final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.Gyro.PIGEON_ID, Constants.Gyro.PIGEON_CAN_BUS);
+    private ResetState resetState = ResetState.kDone;
     private Timer timer = new Timer();
 
     // private final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.Sensor.PIGEON, Constants.Motor.CAN_BUS);
@@ -38,21 +48,25 @@ public class Gyro4237 extends Sensor4237
     public Gyro4237()
     {
         //reset();
-        gyro.setYaw(180.0);
-        Timer.delay(1.0);
+        // gyro.setYaw(180.0);
+        initPigeon();
         periodicIO.angle = gyro.getYaw();
         periodicIO.rotation2d = gyro.getRotation2d();
+
     }
 
-    // public void initPigeon()
-    // {
-    //     gyro.configFactoryDefault();
-    //     // gyro.configMountPose(); forward and up axes????
-    // }
+    public void initPigeon()
+    {
+        gyro.configFactoryDefault();
+        gyro.configMountPose(Constants.Gyro.FORWARD_AXIS, Constants.Gyro.UP_AXIS); //forward axis and up axis
+        // gyro.setYaw(180.0);  // 2022 robot started with front facing away from the driver station, 2023 will not
+        gyro.reset();
+        Timer.delay(0.5);
+    }
 
     public void reset()
     {
-        resetGyro = true;
+        resetState = ResetState.kStart;
         // gyro.reset();
     }
 
@@ -73,31 +87,29 @@ public class Gyro4237 extends Sensor4237
     @Override
     public synchronized void readPeriodicInputs()
     {
-        periodicIO.angle = gyro.getYaw(); // z-axis
-        // periodicIO.angle = gyro.getRoll(); // x-axis
-        // periodicIO.angle = gyro.getPitch(); // y-axis
+        if (resetState == ResetState.kDone)
+        {
+            // periodicIO.angle = gyro.getYaw(); // z-axis
+            // periodicIO.angle = gyro.getRoll(); // x-axis
+            periodicIO.angle = gyro.getPitch(); // y-axis
 
-        periodicIO.rotation2d = gyro.getRotation2d();
+            periodicIO.rotation2d = gyro.getRotation2d();
+        }
     }
 
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        if(resetGyro)
+        if(resetState == ResetState.kStart)
         {
             gyro.reset();
-            //timer.start();
-            //timer.hasElapsed(0.25);
-            //timer.reset();
-            Timer.delay(0.25);
-        
-            gyro.setYaw(180.0);
-            //timer.start();
-            //timer.hasElapsed(0.25);
-            //timer.reset();
-            Timer.delay(0.25);
-            resetGyro = false;
+            timer.reset();
+            timer.start();
+            // gyro.setYaw(180.0);
+            resetState = ResetState.kTry;
         }
+        else if (resetState == ResetState.kTry && timer.hasElapsed(Constants.Gyro.RESET_GYRO_DELAY))
+                resetState = ResetState.kDone;
 
         // System.out.println(periodicIO.angle + "   " + periodicIO.rotation2d.getDegrees());
     }

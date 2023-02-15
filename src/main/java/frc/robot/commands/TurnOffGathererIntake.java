@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class TurnOffGathererIntake extends CommandBase
 {
     // This string gets the full name of the class, including the package name
-    private final static String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
     static
     {
         System.out.println("Loading: " + fullClassName);

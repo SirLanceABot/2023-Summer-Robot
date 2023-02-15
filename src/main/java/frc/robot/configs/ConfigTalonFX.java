@@ -1,5 +1,6 @@
 package frc.robot.configs;
 
+import java.lang.invoke.MethodHandles;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
@@ -8,6 +9,16 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 public class ConfigTalonFX 
 {
+    // This string gets the full name of the class, including the package name
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
+    static
+    {
+        System.out.println("Loading: " + fullClassName);
+    }
+
     private final TalonFX talonFXMotor = new TalonFX(1);
 
     public ConfigTalonFX()

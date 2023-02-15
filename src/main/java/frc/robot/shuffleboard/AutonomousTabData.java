@@ -1,7 +1,19 @@
 package frc.robot.shuffleboard;
 
+import java.lang.invoke.MethodHandles;
+
 public class AutonomousTabData 
 {
+    // This string gets the full name of the class, including the package name
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
+    static
+    {
+        System.out.println("Loading: " + fullClassName);
+    }
+
     public static enum StartingLocation
     {
         kLeft, kMiddle, kRight;

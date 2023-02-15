@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.lang.invoke.MethodHandles;
 
+import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.DrivetrainConfig;
 import frc.robot.subsystems.SwerveModuleConfig;
@@ -78,8 +80,17 @@ public final class Constants
         private static final int BACK_RIGHT_ENCODER         =  2;
 
         public static final int PDH_CAN_ID                  =  1;
+    }
 
-        public static final int PIGEON = 0;
+    public static class Gyro 
+    {
+        public static final int PIGEON_ID = 0;
+        public static final String PIGEON_CAN_BUS = "rio";
+
+        public static final AxisDirection FORWARD_AXIS = AxisDirection.PositiveX;
+        public static final AxisDirection UP_AXIS = AxisDirection.PositiveZ;
+
+        public static final double RESET_GYRO_DELAY = 0.1;
     }
 
     public static class Controller
