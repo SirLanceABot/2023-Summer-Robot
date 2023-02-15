@@ -42,6 +42,7 @@ public class AutoBalance extends CommandBase
     */
     public AutoBalance(Drivetrain drivetrain, Gyro4237 gyro) 
     {
+        System.out.println("Constructor");
         this.drivetrain = drivetrain;
         this.gyro = gyro;
         
@@ -61,7 +62,7 @@ public class AutoBalance extends CommandBase
     @Override
     public void execute()
     {
-        // currentPitch = gyro.getPitch();
+        currentPitch = gyro.getPitch();
 
         error = BEAM_BALANCED_GOAL_DEGREES - currentPitch;
         drivePower =  -Math.min(BEAM_BALANCED_DRIVE_KP * error, 1);
@@ -73,8 +74,10 @@ public class AutoBalance extends CommandBase
 
         if(drivetrain != null)
         {
-            drivetrain.drive(0.0, -Math.signum(currentPitch)*0.50, 0.0, true);
+            // drivetrain.drive(0.0, -Math.signum(currentPitch)*0.50, 0.0, true);
+            
         }
+        System.out.println("Drive Power: " + drivePower);
     }
 
     // Called once the command ends or is interrupted.
@@ -83,8 +86,9 @@ public class AutoBalance extends CommandBase
     {
         if(drivetrain != null)
         {
-            drivetrain.drive(0.0, 0.0, 0.0, true);
-            drivetrain.lockWheels();
+            // drivetrain.drive(0.0, 0.0, 0.0, true);
+            // drivetrain.lockWheels();
+            System.out.println("End");
         }
     }
 
@@ -92,8 +96,9 @@ public class AutoBalance extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        if(Math.abs(currentPitch) <= BEAM_BALANCED_TOLERANCE)
+        if(Math.abs(error) <= BEAM_BALANCED_TOLERANCE)
         {
+            System.out.println("Finished");
             return true;
         }
         else
