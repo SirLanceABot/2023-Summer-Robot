@@ -15,8 +15,8 @@ public class MainShuffleboard
     }
 
     // *** CLASS & INSTANCE VARIABLES ***
-    // private final DriverControllerTab driverControllerTab;
-    // private  final OperatorControllerTab operatorControllerTab;
+    private final DriverControllerTab driverControllerTab;
+    private  final OperatorControllerTab operatorControllerTab;
     private  final AutonomousTab autonomousTab;
     // private final CameraTab cameraTab;
     
@@ -24,8 +24,8 @@ public class MainShuffleboard
     public MainShuffleboard(RobotContainer robotContainer)
     {
         System.out.println(fullClassName + " : Constructor Started");
-        // driverControllerTab = new DriverControllerTab(robotContainer.driverController);
-        // operatorControllerTab = new OperatorControllerTab(robotContainer.operatorController);
+        driverControllerTab = new DriverControllerTab(robotContainer.driverController);
+        operatorControllerTab = new OperatorControllerTab(robotContainer.operatorController);
         autonomousTab = new AutonomousTab(robotContainer.autonomousTabData);
         // cameraTab = new CameraTab();
 
@@ -38,16 +38,16 @@ public class MainShuffleboard
     // DRIVER CONTROLLER TAB
     public void setDriverControllerSettings()
     {
-        // if(driverControllerTab != null)
-            // driverControllerTab.setDriverControllerAxisSettings();
+        if(driverControllerTab != null)
+            driverControllerTab.setDriverControllerAxisSettings();
     }
 
     //-------------------------------------------------------------------//
     // OPERATOR CONTROLLER TAB
     public void setOperatorControllerSettings()
     {
-        // if(operatorControllerTab != null)
-            // operatorControllerTab.setOperatorControllerAxisSettings();
+        if(operatorControllerTab != null)
+            operatorControllerTab.setOperatorControllerAxisSettings();
     }
 
     //-------------------------------------------------------------------//

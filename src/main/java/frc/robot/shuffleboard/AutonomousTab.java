@@ -5,12 +5,17 @@ import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.shuffleboard.AutonomousTabData.AutonomousCommands;
+import frc.robot.shuffleboard.AutonomousTabData.DriveToSecondPiece;
+import frc.robot.shuffleboard.AutonomousTabData.MoveOntoChargingStation;
+import frc.robot.shuffleboard.AutonomousTabData.PickUpGamePieces;
+import frc.robot.shuffleboard.AutonomousTabData.RowPlayedPiece2;
 import edu.wpi.first.util.sendable.SendableRegistry;
 
 
@@ -39,15 +44,13 @@ public class AutonomousTab
     private SendableChooser<AutonomousTabData.MoveOntoChargingStation> moveOntoChargingStationBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.PickUpGamePieces> pickUpGamePiecesBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.RowPlayedPiece1> rowPlayedPiece1Box = new SendableChooser<>();
-    private SendableChooser<AutonomousTabData.ColumnPlayedPiece1> columnPlayedPiece1Box = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.RowPlayedPiece2> rowPlayedPiece2Box = new SendableChooser<>();
-    private SendableChooser<AutonomousTabData.ColumnPlayedPiece2> columnPlayedPiece2Box = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.ContainingPreload> containingPreloadBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.AutonomousCommands> autonomousCommandsBox = new SendableChooser<>();
     private SendableChooser<AutonomousTabData.DriveToSecondPiece> driveToSecondPieceBox = new SendableChooser<>();
-    
-    private NetworkTableEntry successfulDownload;
-    private NetworkTableEntry errorMessageBox;
+    private SendableChooser<AutonomousTabData.ScoreSecondPiece> scoreSecondPieceBox = new SendableChooser<>();
+    private GenericEntry successfulDownload;
+    private GenericEntry errorMessageBox;
 
     // Create the Button object
     private SendableChooser<Boolean> sendDataButton = new SendableChooser<>();
@@ -68,13 +71,12 @@ public class AutonomousTab
         createMoveOntoChargingStationBox();
         createPickUpGamePiecesBox();
         createRowPlayedPiece1Box();
-        createColumnPlayedPiece1Box();
         createRowPlayedPiece2Box();
-        createColumnPlayedPiece2Box();
         createContainingPreloadBox();
         createAutonomousCommandsBox();
         createDriveToSecondPieceBox();
-        
+        createScoreSecondPieceBox();
+
         createSendDataButton();
         createSuccessfulDownloadBox();
         // successfulDownload.setBoolean(false);
@@ -106,8 +108,8 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(startingLocationBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(0, 2)
-            .withSize(6, 2);
+            .withPosition(0, 3)
+            .withSize(5, 2);
     }
 
     /**
@@ -148,7 +150,7 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(moveOntoChargingStationBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(1, 5)
+            .withPosition(1, 6)
             .withSize(4, 2);
     }
 
@@ -197,29 +199,6 @@ public class AutonomousTab
     }
 
     /**
-    * <b>Column for Piece 1</b> Box
-    * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
-    */
-    private void createColumnPlayedPiece1Box()
-    {
-        //create and name the Box
-        SendableRegistry.add(columnPlayedPiece1Box, "Column Played Preload");
-        SendableRegistry.setName(columnPlayedPiece1Box, "Column Played Preload");
-
-        //add options to Box
-        columnPlayedPiece1Box.addOption("None", AutonomousTabData.ColumnPlayedPiece1.kNone);
-        columnPlayedPiece1Box.setDefaultOption("Left", AutonomousTabData.ColumnPlayedPiece1.kLeft);
-        columnPlayedPiece1Box.addOption("Middle", AutonomousTabData.ColumnPlayedPiece1.kMiddle);
-        columnPlayedPiece1Box.addOption("Right", AutonomousTabData.ColumnPlayedPiece1.kRight);
-
-        //put the widget on the shuffleboard
-        autonomousTab.add(columnPlayedPiece1Box)
-            .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(8, 6)
-            .withSize(6, 2);
-    }
-
-    /**
     * <b>Row for Piece 2</b> Box
     * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
     */
@@ -238,30 +217,7 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(rowPlayedPiece2Box)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(15, 3)
-            .withSize(6, 2);
-    }
-
-    /**
-    * <b>Column for Piece 2</b> Box
-    * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
-    */
-    private void createColumnPlayedPiece2Box()
-    {
-        //create and name the Box
-        SendableRegistry.add(columnPlayedPiece2Box, "Column Played Piece 2");
-        SendableRegistry.setName(columnPlayedPiece2Box, "Column Played Piece 2");
-
-        //add options to Box
-        columnPlayedPiece2Box.setDefaultOption("None", AutonomousTabData.ColumnPlayedPiece2.kNone);
-        columnPlayedPiece2Box.addOption("Left", AutonomousTabData.ColumnPlayedPiece2.kLeft);
-        columnPlayedPiece2Box.addOption("Middle", AutonomousTabData.ColumnPlayedPiece2.kMiddle);
-        columnPlayedPiece2Box.addOption("Right", AutonomousTabData.ColumnPlayedPiece2.kRight);
-
-        //put the widget on the shuffleboard
-        autonomousTab.add(columnPlayedPiece2Box)
-            .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(15, 6)
+            .withPosition(15, 12)
             .withSize(6, 2);
     }
 
@@ -323,8 +279,29 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(driveToSecondPieceBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(0, 10)
+            .withPosition(15, 5)
             .withSize(4, 2);
+    }
+
+    /**
+    * <b>Score Second Piece 1</b> Box
+    * <p>Create an entry in the Network Table and add the Box to the Shuffleboard Tab
+    */
+    private void createScoreSecondPieceBox()
+    {
+        //create and name the Box
+        SendableRegistry.add(scoreSecondPieceBox, "Score Second Piece");
+        SendableRegistry.setName(scoreSecondPieceBox, "Score Second Piece");
+
+        //add options to Box
+        scoreSecondPieceBox.addOption("No", AutonomousTabData.ScoreSecondPiece.kNo);
+        scoreSecondPieceBox.setDefaultOption("Yes", AutonomousTabData.ScoreSecondPiece.kYes);
+
+        //put the widget on the shuffleboard
+        autonomousTab.add(scoreSecondPieceBox)
+            .withWidget(BuiltInWidgets.kSplitButtonChooser)
+            .withPosition(15, 8)
+            .withSize(6, 2);
     }
 
     /**
@@ -379,12 +356,26 @@ public class AutonomousTab
         autonomousTabData.moveOntoChargingStation = moveOntoChargingStationBox.getSelected();
         autonomousTabData.pickUpGamePieces = pickUpGamePiecesBox.getSelected();
         autonomousTabData.rowPlayedPiece1 = rowPlayedPiece1Box.getSelected();
-        autonomousTabData.columnPlayedPiece1 = columnPlayedPiece1Box.getSelected();
         autonomousTabData.rowPlayedPiece2 = rowPlayedPiece2Box.getSelected();
-        autonomousTabData.columnPlayedPiece2 = columnPlayedPiece2Box.getSelected();
         autonomousTabData.containingPreload = containingPreloadBox.getSelected();
         autonomousTabData.autonomousCommands = autonomousCommandsBox.getSelected();
         autonomousTabData.driveToSecondPiece = driveToSecondPieceBox.getSelected();
+        autonomousTabData.scoreSecondPiece = scoreSecondPieceBox.getSelected();
+        if(autonomousTabData.autonomousCommands == AutonomousCommands.kChargingStation)
+        {
+            autonomousTabData.pickUpGamePieces = PickUpGamePieces.kNo;
+            autonomousTabData.driveToSecondPiece = DriveToSecondPiece.kNo;
+            autonomousTabData.moveOntoChargingStation = MoveOntoChargingStation.kYes;
+            autonomousTabData.rowPlayedPiece2 = RowPlayedPiece2.kNone;
+        }
+
+        if(autonomousTabData.autonomousCommands == AutonomousCommands.kTwoGamePieces)
+        {
+            // autonomousTabData.pickUpGamePieces = PickUpGamePieces.kYes;
+            autonomousTabData.driveToSecondPiece = DriveToSecondPiece.kYes;
+            autonomousTabData.moveOntoChargingStation = MoveOntoChargingStation.kNo;
+            // autonomousTabData.rowPlayedPiece2 = RowPlayedPiece2.kNone;
+        }
     }
 
     public boolean wasSendDataButtonPressed()
@@ -401,12 +392,12 @@ public class AutonomousTab
 
             if(isDataValid)
             {
-                // successfulDownload.setBoolean(true);
+                successfulDownload.setBoolean(true);
                 updateAutonomousTabData();
             }
             else
             {
-                // successfulDownload.setBoolean(false);
+                successfulDownload.setBoolean(false);
                 DriverStation.reportWarning(errorMessage, false);
                 errorMessageBox.setString(errorMessage);
             }
@@ -437,11 +428,8 @@ public class AutonomousTab
         boolean isMoveOntoStation = (moveOntoChargingStationBox.getSelected() == AutonomousTabData.MoveOntoChargingStation.kYes);
         boolean isPiecesPickedUp = (pickUpGamePiecesBox.getSelected() == AutonomousTabData.PickUpGamePieces.kNo);
         boolean isRow1 = (rowPlayedPiece1Box.getSelected() == AutonomousTabData.RowPlayedPiece1.kBottom);
-        boolean isColumn1 = (columnPlayedPiece1Box.getSelected() == AutonomousTabData.ColumnPlayedPiece1.kLeft);
         boolean isRow2False = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.kNone);
         boolean isRow2True = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.kBottom);
-        boolean isColumn2False = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.kNone);
-        boolean isColumn2True = (columnPlayedPiece2Box.getSelected() == AutonomousTabData.ColumnPlayedPiece2.kLeft);
         boolean isPiecesContained = (containingPreloadBox.getSelected() == AutonomousTabData.ContainingPreload.kYes);
         boolean isNoCommand = (autonomousCommandsBox.getSelected() == AutonomousTabData.AutonomousCommands.kNeither);
         boolean isChargingStationCommand = (autonomousCommandsBox.getSelected() == AutonomousTabData.AutonomousCommands.kChargingStation);
@@ -454,40 +442,40 @@ public class AutonomousTab
             msg += "[ Not Possible ]  \n";
         }
         
-        if(isRow2True && isMoveOntoStation || isColumn2True && isMoveOntoStation)
-        {
-            isValid = false;
+        // if(isRow2True && isMoveOntoStation || isColumn2True && isMoveOntoStation)
+        // {
+        //     isValid = false;
             
-            msg += "[ Not Possible ]  \n";
-        }
+        //     msg += "[ Not Possible ]  \n";
+        // }
 
-        if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
-        {
-            isValid = false;
+        // if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
+        // {
+        //     isValid = false;
             
-            msg += "[ Not Possible ]  \n";
-        }
+        //     msg += "[ Not Possible ]  \n";
+        // }
 
-        if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
-        {
-            isValid = false;
+        // if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
+        // {
+        //     isValid = false;
             
-            msg += "[ Not Possible ]  \n";
-        }
+        //     msg += "[ Not Possible ]  \n";
+        // }
 
-        if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
-        {
-            isValid = false;
+        // if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
+        // {
+        //     isValid = false;
             
-            msg += "[ Not Possible ]  \n";
-        }
+        //     msg += "[ Not Possible ]  \n";
+        // }
 
-        if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
-        {
-            isValid = false;
+        // if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
+        // {
+        //     isValid = false;
             
-            msg += "[ Not Possible ]  \n";
-        }
+        //     msg += "[ Not Possible ]  \n";
+        // }
         
 
         

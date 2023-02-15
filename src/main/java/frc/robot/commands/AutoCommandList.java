@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.shuffleboard.AutonomousTabData;
@@ -13,16 +14,17 @@ import frc.robot.shuffleboard.AutonomousTabData.MoveOntoChargingStation;
 import frc.robot.shuffleboard.AutonomousTabData.PickUpGamePieces;
 import frc.robot.shuffleboard.AutonomousTabData.RowPlayedPiece1;
 import frc.robot.shuffleboard.AutonomousTabData.AutonomousCommands;
-import frc.robot.shuffleboard.AutonomousTabData.ColumnPlayedPiece1;
 import frc.robot.shuffleboard.AutonomousTabData.RowPlayedPiece2;
-import frc.robot.shuffleboard.AutonomousTabData.ColumnPlayedPiece2;
+import frc.robot.shuffleboard.AutonomousTabData.ScoreSecondPiece;
 import frc.robot.shuffleboard.AutonomousTabData.ContainingPreload;
+import frc.robot.shuffleboard.AutonomousTabData.DriveToSecondPiece;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Shoulder.LevelAngle;
 
-public class AutoCommandBuilder extends SequentialCommandGroup
+public class AutoCommandList extends SequentialCommandGroup
 {
     //This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -47,21 +49,24 @@ public class AutoCommandBuilder extends SequentialCommandGroup
     private final Drivetrain drivetrain;
     private final Grabber grabber;
     private final Shoulder shoulder;
-    private static Command currentCommand;
+    // private final Command currentCommand;
+    
+    
 
     private static final ArrayList<Command> commandList = new ArrayList<>();
-
+ 
     // private  teamColor;
     // private static startingLocation;
     
     // *** CLASS CONSTRUCTOR ***
-    public AutoCommandBuilder(RobotContainer robotContainer)
+    public AutoCommandList(RobotContainer robotContainer)
     {
         this.autonomousTabData = robotContainer.autonomousTabData;
         // this.autonomous1 = autonomous1;
         this.drivetrain = robotContainer.drivetrain;
         this.grabber = robotContainer.grabber;
         this.shoulder = robotContainer.shoulder;
+        
         commandList.clear();
         
     }
@@ -70,7 +75,56 @@ public class AutoCommandBuilder extends SequentialCommandGroup
     public void build()
     {
         commandList.clear();
-        addCommands(new StopDrive(drivetrain));
+        DriverStation.Alliance alliance = DriverStation.getAlliance();
+        Shoulder.LevelAngle angle = LevelAngle.kGatherer;
+        Shoulder.LevelAngle angle2 = LevelAngle.kGatherer;
+        double distance = 0.0;
+        // RowPlayedPiece1 row1 = autonomousTabData.rowPlayedPiece1.getSelected();
+
+        add(new StopDrive(drivetrain));
+
+        switch(autonomousTabData.rowPlayedPiece1)
+        {
+            case kNone:
+                angle = LevelAngle.kGatherer;
+                break;
+            case kBottom:
+                angle = LevelAngle.kLow;
+                break;
+            case kMiddle:
+                angle = LevelAngle.kMiddle;
+                break;
+            case kTop:
+                angle = LevelAngle.kHigh;
+                break;
+        }
+
+        switch(autonomousTabData.rowPlayedPiece2)
+        {
+            case kNone:
+                angle2 = LevelAngle.kGatherer;
+                break;
+            case kBottom:
+                angle2 = LevelAngle.kLow;
+                break;
+            case kMiddle:
+                angle2 = LevelAngle.kMiddle;
+                break;
+            case kTop:
+                angle2 = LevelAngle.kHigh;
+                break;
+        }
+
+        if(alliance == DriverStation.Alliance.Red && autonomousTabData.startingLocation == StartingLocation.kLeft || alliance == DriverStation.Alliance.Blue && autonomousTabData.startingLocation == StartingLocation.kRight)
+        {
+            distance = 0.5;
+        }
+        
+        else
+        {
+            distance = -0.5;
+        }
+
         if(autonomousTabData.autonomousCommands != AutonomousCommands.kNeither)
         {
             switch(autonomousTabData.autonomousCommands)
@@ -78,75 +132,82 @@ public class AutoCommandBuilder extends SequentialCommandGroup
             case kNeither:
                 break;
             case kChargingStation:
-                driveOut();
-                moveShoulder(0.5);
+                moveShoulder(angle);
                 releasePiece();
-                goToChargingStation();
+                driveOut(4.26);
+                goToChargingStation(distance);
                 break;
             case kTwoGamePieces:
-                driveOut();
+                moveShoulder(angle);
                 releasePiece();
+                driveOut(4.4);
                 turnRobot180();
-                goToSecondGamePiece();
                 pickUpPiece2();
                 break;
             }
         }
         else
         {
-            if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes && autonomousTabData.rowPlayedPiece1 == RowPlayedPiece1.kBottom)
+            if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes)
             {
-                moveShoulder(0.25);
+                moveShoulder(angle);
                 releasePiece();
             }
 
-            if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes && autonomousTabData.rowPlayedPiece1 == RowPlayedPiece1.kMiddle)
+            if(autonomousTabData.driveToSecondPiece == DriveToSecondPiece.kYes)
             {
-                moveShoulder(0.5);
-                releasePiece();
+                turnRobot180();
+                driveOut(4.4);
             }
 
-            if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes && autonomousTabData.rowPlayedPiece1 == RowPlayedPiece1.kTop)
+            if(autonomousTabData.pickUpGamePieces == PickUpGamePieces.kYes)
             {
-                moveShoulder(0.75);
-                releasePiece();
+                add(new OpenGrabber(grabber));
             }
+
+            if(autonomousTabData.scoreSecondPiece == ScoreSecondPiece.kYes)
+            {
+                turnRobot180();
+                driveOut(4.4);
+                moveShoulder(angle2);
+            }
+
+            if(autonomousTabData.moveOntoChargingStation == MoveOntoChargingStation.kYes)
+            {
+                goToChargingStation(0.5);
+            }
+
+           
         }
         
     }
 
-    private void driveOut()
+    private void driveOut(double distance)
     {
-        add(new DriveDistanceAuto(drivetrain, 0.5, 0.0, 2.0));
+        add(new DriveDistanceAuto(drivetrain, 0.5, 0.0, distance));
     }
 
-    private void strafeDrive()
+    private void strafeDrive(double distance)
     {
-        // if((autonomousTabData.teamColor == TeamColor.kRed))
-        {
-            add(new DriveDistanceAuto(drivetrain, 0.0, -0.5, 2.0)); 
-        }
-        // else
-        {
-            add(new DriveDistanceAuto(drivetrain, 0.0, 0.5, 2.0));
-        }
+        add(new DriveDistanceAuto(drivetrain, 0.0, 0.5, distance)); 
     }
 
     private void releasePiece()
     {
-        // addCommand(new );
+        add(new OpenGrabber(grabber));
+        moveShoulder(LevelAngle.kGatherer);
     }
 
-    private void moveShoulder(double angle)
+    private void moveShoulder(LevelAngle level)
     {
-        // MoveShoulderToAngle(shoulder, angle);
+        add(new MoveShoulderToAngle(shoulder, level));
     }
 
 
 
     private void turnRobot180()
     {
-
+        add(new DriveDistanceAuto(drivetrain, 0.5, -0.5, 2));
     }
 
     private void goToSecondGamePiece()
@@ -154,18 +215,10 @@ public class AutoCommandBuilder extends SequentialCommandGroup
         add(new DriveDistanceAuto(drivetrain, 0.75, 0.0, 4.5));
     }
 
-    private void goToChargingStation()
+    private void goToChargingStation(double distance)
     {
         add(new DriveDistanceAuto(drivetrain, 0.75, 0.0, 4.27));
-        // if(autonomousTabData.teamColor == TeamColor.kRed && autonomousTabData.startingLocation == StartingLocation.kLeft || autonomousTabData.teamColor == TeamColor.kBlue && autonomousTabData.startingLocation == StartingLocation.kRight)
-        {
-            add(new DriveDistanceAuto(drivetrain, 0.0, -0.5, 1.0));
-        } 
-
-        // if(autonomousTabData.teamColor == TeamColor.kBlue && autonomousTabData.startingLocation == StartingLocation.kLeft || autonomousTabData.teamColor == TeamColor.kRed && autonomousTabData.startingLocation == StartingLocation.kRight)
-        {
-            add(new DriveDistanceAuto(drivetrain, 0.0, 0.5, 1.0));
-        } 
+        add(new DriveDistanceAuto(drivetrain, 0.0, distance, 1.0));
         add(new DriveDistanceAuto(drivetrain, -0.75, 0.0, 1.0));
     }
 
