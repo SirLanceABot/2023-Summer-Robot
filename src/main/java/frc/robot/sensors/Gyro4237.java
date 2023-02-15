@@ -68,19 +68,19 @@ public class Gyro4237 extends Sensor4237
         // gyro.reset();
     }
 
-    public void getRoll()
+    public double getRoll()
     {
-        periodicIO.roll = gyro.getRoll(); // x-axis
+        return gyro.getRoll(); // x-axis
     }
 
-    public void getPitch()
+    public double getPitch()
     {
-        periodicIO.pitch = gyro.getPitch(); // y-axis
+        return gyro.getPitch(); // y-axis
     }
 
-    public void getYaw()
+    public double getYaw()
     {
-        periodicIO.yaw = gyro.getYaw(); // z-axis
+        return gyro.getYaw(); // z-axis
     }
 
     public Rotation2d getRotation2d()
@@ -94,9 +94,9 @@ public class Gyro4237 extends Sensor4237
     {
         if (resetState == ResetState.kDone)
         {
-            getRoll();
-            getPitch();
-            getYaw();
+            periodicIO.yaw = gyro.getYaw();
+            periodicIO.pitch = gyro.getPitch();
+            periodicIO.roll = gyro.getRoll();
 
             periodicIO.rotation2d = gyro.getRotation2d();
         }
