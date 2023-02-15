@@ -1,9 +1,6 @@
 package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
-
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
-
 import frc.robot.Constants;
 import frc.robot.sensors.Gyro4237;
 import edu.wpi.first.math.geometry.Pose2d;

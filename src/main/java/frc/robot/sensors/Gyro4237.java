@@ -1,11 +1,7 @@
 package frc.robot.sensors;
 
 import java.lang.invoke.MethodHandles;
-
-import javax.swing.plaf.synth.SynthTextAreaUI;
-
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;

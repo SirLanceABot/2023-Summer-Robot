@@ -4,9 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import frc.robot.controls.OperatorController;
 import frc.robot.controls.Xbox;
-import frc.robot.RobotContainer;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
