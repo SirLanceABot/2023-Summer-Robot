@@ -31,61 +31,60 @@ public final class Constants
     {
         System.out.println("Loading: " + fullClassName);
     }
+    
+    private static final String CANIVORE = "CANivore";
+    private static final String ROBORIO = "rio";
 
-    public static class CANbusConstants
+    
+
+    public static class Subsystem
+    {
+        public static final int GATHERER_MOTOR_PORT     = 2;
+        public static final int GRABBER_MOTOR_PORT      = 3;
+        public static final int ARM_MOTOR_PORT          = 4;
+        public static final int SHOULDER_MOTOR_PORT     = 5;
+
+        public static final String CAN_BUS = ROBORIO;
+    }
+
+    public static class Drivetrain
+    {
+        private static final int FRONT_LEFT_DRIVE       = 7;
+        private static final int FRONT_LEFT_ENCODER     = 8;  
+        private static final int FRONT_LEFT_TURN        = 9;  
+
+        private static final int FRONT_RIGHT_DRIVE      = 10;
+        private static final int FRONT_RIGHT_ENCODER    = 11;  
+        private static final int FRONT_RIGHT_TURN       = 12;  
+
+        private static final int BACK_LEFT_DRIVE        = 4; 
+        private static final int BACK_LEFT_ENCODER      = 5; 
+        private static final int BACK_LEFT_TURN         = 6;  
+
+        private static final int BACK_RIGHT_DRIVE       = 1; 
+        private static final int BACK_RIGHT_ENCODER     = 2; 
+        private static final int BACK_RIGHT_TURN        = 3;  
+
+        public static final String CAN_BUS = CANIVORE;
+    }
+
+    public static class PowerDistributionHub
+    {
+        public static final int PDH_CAN_ID              = 1;
+
+        public static final String CAN_BUS = ROBORIO;
+    }
+
+    public static class Candle
     {
         public static final int CANDLE_PORT = 1;
-    }
-    
-    public static class OperatorConstants
-    {
-        public static final int kDriverControllerPort = 0;
-        public static final int kOperatorControllerPort = 1;
-
-
-    }
-
-    public static class MotorConstants
-    {
-        public static final int GATHERER_MOTOR_PORT = 2;
-        public static final int GRABBER_MOTOR_PORT = 3;
-        public static final int ARM_MOTOR_PORT = 4;
-        public static final int SHOULDER_MOTOR_PORT = 5;
-    }
-
-    public static class Motor
-    {
-        private static final int FRONT_LEFT_DRIVE   =  7;  // MM 2/28/22
-        private static final int FRONT_LEFT_TURN    =  9;  // MM 2/28/22
-
-        private static final int FRONT_RIGHT_DRIVE  = 10;  // MM 2/28/22
-        private static final int FRONT_RIGHT_TURN   = 12;  // MM 2/28/22
-
-        private static final int BACK_LEFT_DRIVE    =  4;  // MM 2/28/22
-        private static final int BACK_LEFT_TURN     =  6;  // MM 2/28/22
-
-        private static final int BACK_RIGHT_DRIVE   =  1;  // MM 2/28/22
-        private static final int BACK_RIGHT_TURN    =  3;  // MM 2/28/22
-
-        public static final String CAN_BUS = "CANivore";
-    }
-
-    public static class Sensor
-    {
-        public static final int COMPETITION_ROBOT           =  9;
-        
-        private static final int FRONT_LEFT_ENCODER         =  8;
-        private static final int FRONT_RIGHT_ENCODER        = 11;
-        private static final int BACK_LEFT_ENCODER          =  5;
-        private static final int BACK_RIGHT_ENCODER         =  2;
-
-        public static final int PDH_CAN_ID                  =  1;
+        public static final String CAN_BUS = ROBORIO;
     }
 
     public static class Gyro 
     {
         public static final int PIGEON_ID = 0;
-        public static final String PIGEON_CAN_BUS = "rio";
+        public static final String PIGEON_CAN_BUS = CANIVORE;
 
         public static final AxisDirection FORWARD_AXIS = AxisDirection.PositiveX;
         public static final AxisDirection UP_AXIS = AxisDirection.PositiveZ;
@@ -138,13 +137,13 @@ public final class Constants
         private static final Translation2d BACK_RIGHT_LOCATION = new Translation2d(-DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2, -DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
 
         private static final SwerveModuleConfig FRONT_LEFT = new SwerveModuleConfig(
-            "Front Left", FRONT_LEFT_LOCATION, Motor.FRONT_LEFT_DRIVE, true, Sensor.FRONT_LEFT_ENCODER, FRONT_LEFT_ENCODER_OFFSET, Motor.FRONT_LEFT_TURN);
+            "Front Left", FRONT_LEFT_LOCATION, Drivetrain.FRONT_LEFT_DRIVE, true, Drivetrain.FRONT_LEFT_ENCODER, FRONT_LEFT_ENCODER_OFFSET, Drivetrain.FRONT_LEFT_TURN);
         private static final SwerveModuleConfig FRONT_RIGHT = new SwerveModuleConfig(
-            "Front Right", FRONT_RIGHT_LOCATION, Motor.FRONT_RIGHT_DRIVE, false, Sensor.FRONT_RIGHT_ENCODER, FRONT_RIGHT_ENCODER_OFFSET, Motor.FRONT_RIGHT_TURN);
+            "Front Right", FRONT_RIGHT_LOCATION, Drivetrain.FRONT_RIGHT_DRIVE, false, Drivetrain.FRONT_RIGHT_ENCODER, FRONT_RIGHT_ENCODER_OFFSET, Drivetrain.FRONT_RIGHT_TURN);
         private static final SwerveModuleConfig BACK_LEFT = new SwerveModuleConfig(
-            "Back Left", BACK_LEFT_LOCATION, Motor.BACK_LEFT_DRIVE, true, Sensor.BACK_LEFT_ENCODER, BACK_LEFT_ENCODER_OFFSET, Motor.BACK_LEFT_TURN);
+            "Back Left", BACK_LEFT_LOCATION, Drivetrain.BACK_LEFT_DRIVE, true, Drivetrain.BACK_LEFT_ENCODER, BACK_LEFT_ENCODER_OFFSET, Drivetrain.BACK_LEFT_TURN);
         private static final SwerveModuleConfig BACK_RIGHT = new SwerveModuleConfig(
-            "Back Right", BACK_RIGHT_LOCATION, Motor.BACK_RIGHT_DRIVE, false, Sensor.BACK_RIGHT_ENCODER, BACK_RIGHT_ENCODER_OFFSET, Motor.BACK_RIGHT_TURN);
+            "Back Right", BACK_RIGHT_LOCATION, Drivetrain.BACK_RIGHT_DRIVE, false, Drivetrain.BACK_RIGHT_ENCODER, BACK_RIGHT_ENCODER_OFFSET, Drivetrain.BACK_RIGHT_TURN);
     }
 
     public static class DrivetrainSetup

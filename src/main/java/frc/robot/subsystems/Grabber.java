@@ -64,8 +64,8 @@ public class Grabber extends Subsystem4237
     private PeriodicIO periodicIO;
     
     private RelativeEncoder grabberMotorEncoder;
-    private final int GrabberMotorPort = Constants.MotorConstants.GRABBER_MOTOR_PORT;
-    private final CANSparkMax grabberMotor = new CANSparkMax(GrabberMotorPort, MotorType.kBrushless);
+    private final int grabberMotorPort = Constants.Subsystem.GRABBER_MOTOR_PORT;
+    private final CANSparkMax grabberMotor = new CANSparkMax(grabberMotorPort, MotorType.kBrushless);
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
 

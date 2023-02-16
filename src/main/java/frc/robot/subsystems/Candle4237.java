@@ -20,7 +20,8 @@ import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.CANbusConstants;
+
+import frc.robot.Constants;
 
 /**
  * Class containing one CANdle
@@ -133,7 +134,7 @@ public class Candle4237 extends Subsystem4237
     }
 
     private PeriodicIO periodicIO = new PeriodicIO();
-    private final CANdle candle = new CANdle(CANbusConstants.CANDLE_PORT, "rio");
+    private final CANdle candle = new CANdle(Constants.Candle.CANDLE_PORT, "rio");
     private final static int totalLedCount = 68; // CANdle = 8, LED Strip = 60, LED Strip + CANdle = 68
     private final static int stripLedCount = 60;
     private final static int candleLedCount = 8;

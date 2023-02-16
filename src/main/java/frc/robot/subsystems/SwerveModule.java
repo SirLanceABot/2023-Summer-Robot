@@ -79,11 +79,11 @@ public class SwerveModule extends RobotDriveBase
         moduleName = smd.moduleName;
 
         System.out.println(fullClassName + " : Constructor Started >> " + moduleName);
-        driveMotor = new TalonFX(smd.driveMotorChannel, Constants.Motor.CAN_BUS);
+        driveMotor = new TalonFX(smd.driveMotorChannel, Constants.Drivetrain.CAN_BUS);
         driveMotorInverted = smd.driveMotorInverted;
-        turnEncoder = new CANCoder(smd.turnEncoderChannel, Constants.Motor.CAN_BUS);  
+        turnEncoder = new CANCoder(smd.turnEncoderChannel, Constants.Drivetrain.CAN_BUS);  
         turnEncoderOffset = smd.turnEncoderOffset;
-        turnMotor = new TalonFX(smd.turnMotorChannel, Constants.Motor.CAN_BUS);
+        turnMotor = new TalonFX(smd.turnMotorChannel, Constants.Drivetrain.CAN_BUS);
 
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 20);
         configDriveTalon();

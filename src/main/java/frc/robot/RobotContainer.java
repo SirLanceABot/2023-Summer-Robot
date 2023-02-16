@@ -7,7 +7,6 @@ package frc.robot;
 import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -34,7 +33,6 @@ import frc.robot.sensors.Gyro4237;
 import frc.robot.shuffleboard.AutonomousTabData;
 import frc.robot.shuffleboard.MainShuffleboard;
 import frc.robot.sensors.Vision;
-// import frc.robot.vision.Vision;
 import frc.robot.commands.AutoCommandList;
 
 /**
@@ -108,14 +106,14 @@ public class RobotContainer
 		exampleSubsystem 	= (useFullRobot || useExampleSubsystem)		? new ExampleSubsystem() 		: null;
 		accelerometer		= (useFullRobot || useAccelerometer)		? new Accelerometer4237()		: null;
 		gyro 				= (useFullRobot || useGyro)					? new Gyro4237()				: null;	
-		drivetrain 			= (useFullRobot || useDrivetrain) 			? new Drivetrain(gyro, log) 	 : null;
+		drivetrain 			= (useFullRobot || useDrivetrain) 			? new Drivetrain(gyro, log) 	: null;
 		grabber 			= (useFullRobot || useGrabber) 				? new Grabber() 				: null;
 		arm 				= (useFullRobot || useArm) 					? new Arm() 					: null;
 		shoulder 			= (useFullRobot || useShoulder) 			? new Shoulder() 				: null;
 		gatherer 			= (useFullRobot || useGatherer) 			? new Gatherer() 				: null;
 		candle 				= (useFullRobot || useCandle)				? new Candle4237() 				: null;
-		driverController 	= (useFullRobot || useDriverController) 	? new DriverController(0) 		: null;
-		operatorController 	= (useFullRobot || useOperatorController) 	? new OperatorController(1)	 	: null;
+		driverController 	= (useFullRobot || useDriverController) 	? new DriverController(Constants.Controller.DRIVER) 		: null;
+		operatorController 	= (useFullRobot || useOperatorController) 	? new OperatorController(Constants.Controller.OPERATOR)	 	: null;
 		autonomousTabData	= (useFullRobot || useAutonomousTabData ) 	? new AutonomousTabData()		: null;
 		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)		? new MainShuffleboard(this)	: null;
 		vision 				= (useFullRobot || useVision)				? new Vision()					: null;

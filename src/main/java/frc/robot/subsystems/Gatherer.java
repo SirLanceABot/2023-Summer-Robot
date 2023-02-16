@@ -34,7 +34,7 @@ public class Gatherer extends Subsystem4237
         private double motorSpeed = 0.0;
     }
 
-    int GathererMotorPort = Constants.MotorConstants.GATHERER_MOTOR_PORT;
+    private final int GathererMotorPort = Constants.Subsystem.GATHERER_MOTOR_PORT;
 
     private final CANSparkMax gathererMotor = new CANSparkMax(GathererMotorPort, MotorType.kBrushless);
     private SparkMaxLimitSwitch forwardLimitSwitch;
