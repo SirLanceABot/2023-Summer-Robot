@@ -18,6 +18,8 @@ public class MainShuffleboard
     private final DriverControllerTab driverControllerTab;
     private  final OperatorControllerTab operatorControllerTab;
     private  final AutonomousTab autonomousTab;
+    private final CameraTab cameraTab;
+    private final SensorTab sensorTab;
     // private final CameraTab cameraTab;
     
     // *** CLASS CONSTRUCTOR ***
@@ -27,6 +29,8 @@ public class MainShuffleboard
         driverControllerTab = new DriverControllerTab(robotContainer.driverController);
         operatorControllerTab = new OperatorControllerTab(robotContainer.operatorController);
         autonomousTab = new AutonomousTab(robotContainer.autonomousTabData);
+        cameraTab = new CameraTab();
+        sensorTab = new SensorTab(robotContainer.shoulder, robotContainer.grabber, robotContainer.arm, robotContainer.drivetrain);
         // cameraTab = new CameraTab();
 
         System.out.println(fullClassName + ": Constructor Finished");
@@ -74,5 +78,21 @@ public class MainShuffleboard
         {
             return false;
         }
+    }
+
+    //-------------------------------------------------------------------//
+    // CAMERA TAB
+    public void setCameras()
+    {
+        if(cameraTab != null)
+            cameraTab.updateCameraTab();
+    }
+
+    //-------------------------------------------------------------------//
+    // SENSOR TAB
+    public void setSensors()
+    {
+        if(sensorTab != null)
+            sensorTab.createSensorBox();
     }
 }
