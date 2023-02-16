@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.sensors.Gyro4237;
@@ -22,17 +23,27 @@ public class AutoBalance extends CommandBase
         System.out.println("Loading: " + fullClassName);
     }
 
+    public enum BalanceState
+    {
+        // level means gyro is at zero, but not done balancing
+        // engaged  means gyro has been at zero for 1 second, and is done balancing
+        kNotLevel, kLevel, kBeenLevel;
+    }
+
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Drivetrain drivetrain;
     private final Gyro4237 gyro;
+    private final Timer finishBalanceTimer = new Timer();
+    private BalanceState balanceState = BalanceState.kNotLevel;
 
     private double currentPitch;
     private double error;
     private double drivePower;
 
-    private final double BEAM_BALANCED_GOAL_DEGREES = 0.0;
-    private final double BEAM_BALANCED_DRIVE_KP = 0.015;
-    private final double BEAM_BALANCED_TOLERANCE = 1.0;
+    private final double CS_BALANCE_GOAL_DEGREES = 0.0;
+    private final double CS_BALANCE_DRIVE_KP = 0.015;
+    private final double CS_BALANCE_TOLERANCE = 2.0;
+    private final double CS_BALANCE_MIN_TIME_LEVEL = 1.0;
 
 
     /**
@@ -63,32 +74,34 @@ public class AutoBalance extends CommandBase
     public void execute()
     {
         currentPitch = gyro.getPitch();
+        // System.out.println(currentPitch);
 
-        error = BEAM_BALANCED_GOAL_DEGREES - currentPitch;
-        drivePower =  -Math.min(BEAM_BALANCED_DRIVE_KP * error, 1);
+        error = CS_BALANCE_GOAL_DEGREES - currentPitch;
+        drivePower =  -Math.min(CS_BALANCE_DRIVE_KP * error, 1);
 
         if(Math.abs(drivePower) > 0.5)
         {
-            drivePower = Math.copySign(0.4, drivePower);
+            drivePower = Math.copySign(0.5, drivePower);
         }
 
         if(drivetrain != null)
         {
-            // drivetrain.drive(0.0, -Math.signum(currentPitch)*0.50, 0.0, true);
+            drivetrain.drive(0.0, -Math.signum(currentPitch)*0.50, 0.0, true);
             
         }
-        System.out.println("Drive Power: " + drivePower);
+        // System.out.println("Drive Power: " + drivePower);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
     {
+        System.out.println("End");
         if(drivetrain != null)
         {
-            // drivetrain.drive(0.0, 0.0, 0.0, true);
-            // drivetrain.lockWheels();
-            System.out.println("End");
+            drivetrain.drive(0.0, 0.0, 0.0, true);
+            drivetrain.lockWheels();
+            
         }
     }
 
@@ -96,14 +109,34 @@ public class AutoBalance extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        if(Math.abs(error) <= BEAM_BALANCED_TOLERANCE)
+        if(Math.abs(error) > CS_BALANCE_TOLERANCE)
         {
-            System.out.println("Finished");
-            return true;
+            balanceState = BalanceState.kNotLevel;
+            System.out.println("kNotLevel");
+            return false;
+        }
+        else if(Math.abs(error) <= CS_BALANCE_TOLERANCE && balanceState == BalanceState.kNotLevel)
+        {
+            finishBalanceTimer.reset();
+            finishBalanceTimer.start();
+            System.out.println("kLevel");
+            System.out.println("Timer Reset");
+            balanceState = BalanceState.kLevel;
+            return false;
+        }
+        else if(balanceState == BalanceState.kLevel)
+        {
+            balanceState = BalanceState.kBeenLevel;
+            System.out.println("kBeenLevel");
+            return false;
+        }
+        else if(balanceState == BalanceState.kBeenLevel && finishBalanceTimer.get() < CS_BALANCE_MIN_TIME_LEVEL)
+        {   
+            return false;
         }
         else
         {
-            return false;
+            return true;
         }
     }
 
