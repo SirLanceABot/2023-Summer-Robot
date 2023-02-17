@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.subsystems.Drivetrain;
@@ -42,7 +43,7 @@ public class AutoBalance extends CommandBase
 
     private final double CS_BALANCE_GOAL_DEGREES = 0.0;
     private final double CS_BALANCE_DRIVE_KP = 0.015;
-    private final double CS_BALANCE_TOLERANCE = 2.0;
+    private final double CS_BALANCE_TOLERANCE = 3.0;
     private final double CS_BALANCE_MIN_TIME_LEVEL = 1.0;
 
 
@@ -74,7 +75,7 @@ public class AutoBalance extends CommandBase
     public void execute()
     {
         currentPitch = gyro.getPitch();
-        // System.out.println(currentPitch);
+        SmartDashboard.putNumber("Current Pitch", currentPitch);
 
         error = CS_BALANCE_GOAL_DEGREES - currentPitch;
         drivePower =  -Math.min(CS_BALANCE_DRIVE_KP * error, 1);
@@ -86,7 +87,7 @@ public class AutoBalance extends CommandBase
 
         if(drivetrain != null)
         {
-            drivetrain.drive(0.0, -Math.signum(currentPitch)*0.50, 0.0, true);
+            drivetrain.drive(-Math.signum(currentPitch)*0.50, 0.0, 0.0, true);
             
         }
         // System.out.println("Drive Power: " + drivePower);

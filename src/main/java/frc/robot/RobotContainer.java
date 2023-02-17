@@ -23,6 +23,7 @@ import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.commands.AutoAimToPost;
+import frc.robot.commands.AutoBalance;
 import frc.robot.commands.LockWheels;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.controls.DriverController;
@@ -66,10 +67,10 @@ public class RobotContainer
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
 	private boolean useDriverController		= true;
-	private boolean useOperatorController 	= false;
+	private boolean useOperatorController 	= true;
 	private boolean useAutonomousTabData	= false;
 	private boolean useMainShuffleboard		= false;
-	private boolean useVision				= true;
+	private boolean useVision				= false;
 	private boolean useDataLog				= false;
 	private boolean useAutoCommandList		= true;
 
@@ -179,6 +180,11 @@ public class RobotContainer
 						  .andThen( () -> driverController.setRumble(0.0)));
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
+			//Left Trigger
+			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
+			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
+			lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+
 
 			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
@@ -228,7 +234,7 @@ public class RobotContainer
 	 */
 	public Command getAutonomousCommand()
 	{
-		AutoAimToPost command = new AutoAimToPost(drivetrain, vision);
+		AutoBalance command = new AutoBalance(drivetrain, gyro);
 		return command;
 	}
 }
