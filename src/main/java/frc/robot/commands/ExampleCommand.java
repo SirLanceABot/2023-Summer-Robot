@@ -63,4 +63,17 @@ public class ExampleCommand extends CommandBase
     {
         return false;
     }
+    
+    @Override
+    public boolean runsWhenDisabled()
+    {
+        return false;
+    }
+
+    @Override
+    public String toString()
+    {
+        String str = this.getClass().getSimpleName();
+        return String.format("Command: %s( )", str);
+    }
 }
