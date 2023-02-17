@@ -84,12 +84,12 @@ public final class Constants
     public static class Gyro 
     {
         public static final int PIGEON_ID = 0;
-        public static final String PIGEON_CAN_BUS = CANIVORE;
 
         public static final AxisDirection FORWARD_AXIS = AxisDirection.PositiveX;
         public static final AxisDirection UP_AXIS = AxisDirection.PositiveZ;
 
         public static final double RESET_GYRO_DELAY = 0.1;
+        public static final String PIGEON_CAN_BUS = CANIVORE;
     }
 
     public static class Controller
