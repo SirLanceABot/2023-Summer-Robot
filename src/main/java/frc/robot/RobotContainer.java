@@ -65,7 +65,7 @@ public class RobotContainer
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
 	private boolean useDriverController		= true;
-	private boolean useOperatorController 	= true;
+	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
 	private boolean useDataLog				= false;
@@ -187,36 +187,38 @@ public class RobotContainer
 	private void configureOperatorBindings()
 	{
 
-		//Left trigger 
-		BooleanSupplier leftTrigger = operatorController.getButtonSupplier(Xbox.Button.kLeftTrigger);
-		Trigger leftTriggerTrigger = new Trigger(leftTrigger);
-		//leftTriggerTrigger.toggleOnTrue(new DetractArm));
+		if(operatorController != null)
+		{
+			//Left trigger 
+			BooleanSupplier leftTrigger = operatorController.getButtonSupplier(Xbox.Button.kLeftTrigger);
+			Trigger leftTriggerTrigger = new Trigger(leftTrigger);
+			//leftTriggerTrigger.toggleOnTrue(new DetractArm));
 
-		//Right trigger 
-		BooleanSupplier rightTrigger = operatorController.getButtonSupplier(Xbox.Button.kRightTrigger);
-		Trigger rightTriggerTrigger = new Trigger(rightTrigger);
-		//rightTriggerTrigger.toggleOnTrue(new ExtendArm));
+			//Right trigger 
+			BooleanSupplier rightTrigger = operatorController.getButtonSupplier(Xbox.Button.kRightTrigger);
+			Trigger rightTriggerTrigger = new Trigger(rightTrigger);
+			//rightTriggerTrigger.toggleOnTrue(new ExtendArm));
 
-		//Dpad up button
-		BooleanSupplier dPadUp = operatorController.getDpadSupplier(Xbox.Dpad.kUp);
-		Trigger dPadUpTrigger = new Trigger(dPadUp);
-		//dPadUpTrigger.toggleOnTrue(new MoveArmUp));
-		
-		//Dpad down button
-		BooleanSupplier dPadDown = operatorController.getDpadSupplier(Xbox.Dpad.kDown);
-		Trigger dPadDownTrigger = new Trigger(dPadDown);
-		//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+			//Dpad up button
+			BooleanSupplier dPadUp = operatorController.getDpadSupplier(Xbox.Dpad.kUp);
+			Trigger dPadUpTrigger = new Trigger(dPadUp);
+			//dPadUpTrigger.toggleOnTrue(new MoveArmUp));
+			
+			//Dpad down button
+			BooleanSupplier dPadDown = operatorController.getDpadSupplier(Xbox.Dpad.kDown);
+			Trigger dPadDownTrigger = new Trigger(dPadDown);
+			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
 
-		//X button
-		BooleanSupplier xButton = operatorController.getButtonSupplier(Xbox.Button.kX);
-		Trigger xButtonTrigger = new Trigger(xButton);
-		//xButtonTrigger.toggleOnTrue(new SuctionControl));
+			//X button
+			BooleanSupplier xButton = operatorController.getButtonSupplier(Xbox.Button.kX);
+			Trigger xButtonTrigger = new Trigger(xButton);
+			//xButtonTrigger.toggleOnTrue(new SuctionControl));
 
-		//Y button 
-		BooleanSupplier yButton = operatorController.getButtonSupplier(Xbox.Button.kY);
-		Trigger yButtonTrigger = new Trigger(yButton);
-		//yButtonTrigger.toggleOnTrue( new MoveWrist());
-
+			//Y button 
+			BooleanSupplier yButton = operatorController.getButtonSupplier(Xbox.Button.kY);
+			Trigger yButtonTrigger = new Trigger(yButton);
+			//yButtonTrigger.toggleOnTrue( new MoveWrist());
+		}
 	}
 
 	/**

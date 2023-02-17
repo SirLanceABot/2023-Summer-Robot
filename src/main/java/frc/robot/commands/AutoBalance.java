@@ -39,13 +39,17 @@ public class AutoBalance extends CommandBase
     private BalanceState balanceState = BalanceState.kNotLevel;
 
     private double currentPitch;
+    private double currentRoll;
+    private double currentYaw;
     private double error;
     private double drivePower;
+    
 
     private final double CS_BALANCE_GOAL_DEGREES = 0.0;
-    private final double CS_BALANCE_DRIVE_KP = 0.0250;
+    private final double CS_BALANCE_DRIVE_KP = 0.020;
     private final double CS_BALANCE_TOLERANCE = 3.0;
     private final double CS_BALANCE_MIN_TIME_LEVEL = 1.0;
+    private final double CS_BALANCE_MAX_SPEED = 0.45;
 
 
     /**
@@ -76,37 +80,44 @@ public class AutoBalance extends CommandBase
     public void execute()
     {
         currentPitch = gyro.getPitch();
+        currentYaw = (int)Math.abs(gyro.getYaw()) % 360;
+        currentRoll = gyro.getRoll();
+
         SmartDashboard.putNumber("Current Pitch", currentPitch);
+        SmartDashboard.putNumber("Current Yaw", currentYaw);
 
-        error = CS_BALANCE_GOAL_DEGREES - currentPitch;
-        drivePower =  -Math.min(CS_BALANCE_DRIVE_KP * error, 1);
 
-        if(Math.abs(drivePower) > 0.5)
+        // error = CS_BALANCE_GOAL_DEGREES - currentPitch;
+        error = currentPitch;
+        // error = currentRoll;
+
+        // drivePower =  Math.min(CS_BALANCE_DRIVE_KP * error, 1);
+ 
+        drivePower =  -(CS_BALANCE_DRIVE_KP * error);
+
+        if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 14.0)
         {
-            drivePower = Math.copySign(0.5, drivePower);
+            drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
         }
+
+        if((currentYaw > 135 && currentYaw < 225))
+            drivePower = -drivePower;
 
         if(drivetrain != null)
         {
-            drivetrain.drive(-drivePower, 0.0, 0.0, true);
+            drivetrain.drive(drivePower, 0.0, 0.0, true);
         }
-        // System.out.println("Drive Power: " + drivePower);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
     {
-        System.out.println("End");
         if(drivetrain != null)
         {
-            System.out.println("Lock Wheels");
             drivetrain.drive(0.0, 0.0, 0.0, true);
-            // drivetrain.lockWheels();
-
             new LockWheels(drivetrain, () -> 0.0, () -> 0.0, () -> 0.0).schedule();
         }
-        System.out.println("End2");
     }
 
     // Returns true when the command should end.
@@ -116,22 +127,18 @@ public class AutoBalance extends CommandBase
         if(Math.abs(error) > CS_BALANCE_TOLERANCE)
         {
             balanceState = BalanceState.kNotLevel;
-            System.out.println("kNotLevel");
             return false;
         }
         else if(Math.abs(error) <= CS_BALANCE_TOLERANCE && balanceState == BalanceState.kNotLevel)
         {
             finishBalanceTimer.reset();
             finishBalanceTimer.start();
-            System.out.println("kLevel");
-            System.out.println("Timer Reset");
             balanceState = BalanceState.kLevel;
             return false;
         }
         else if(balanceState == BalanceState.kLevel)
         {
             balanceState = BalanceState.kBeenLevel;
-            System.out.println("kBeenLevel");
             return false;
         }
         else if(balanceState == BalanceState.kBeenLevel && finishBalanceTimer.get() < CS_BALANCE_MIN_TIME_LEVEL)
