@@ -36,7 +36,7 @@ public class CameraTab
     String compressorStateString = "No data";
 
     // *** CLASS CONSTRUCTOR ***
-    public CameraTab()
+    CameraTab()
     {
         System.out.println(fullClassName + " : Constructor Started");
 

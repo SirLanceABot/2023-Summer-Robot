@@ -9,6 +9,7 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoCommandList;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -89,15 +90,16 @@ public class Robot extends TimedRobot
     {
         if (robotContainer.mainShuffleboard != null)
         {
-            boolean isNewData = robotContainer.mainShuffleboard.wasSendDataButtonPressed();
+            boolean isNewData = robotContainer.mainShuffleboard.autonomousTab.isNewData();
 
-            if (isNewData && robotContainer.autonomousTabData != null && robotContainer.autoCommandList != null)
+            if (isNewData)
             {
-                robotContainer.autonomousTabData.updateData(robotContainer.mainShuffleboard.getAutonomousTabData());
-                System.out.println(robotContainer.autonomousTabData);
-
+                //TODO move to state machine
+                System.out.println(robotContainer.mainShuffleboard.autonomousTab.getAutonomousTabData());
+                //TODO call build from instructor in auto list
+                robotContainer.mainShuffleboard.autoCommandList = new AutoCommandList(robotContainer);
                 robotContainer.autoCommandList.build();
-                System.out.println(robotContainer.autoCommandList);
+                System.out.println(robotContainer.mainShuffleboard.autoCommandList);
             }
         }
     }

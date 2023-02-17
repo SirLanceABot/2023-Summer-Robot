@@ -14,9 +14,23 @@ public class AutonomousTabData
         System.out.println("Loading: " + fullClassName);
     }
 
+    public static enum AutonomousCommands
+    {
+        kNeither, kChargingStation, kTwoGamePieces
+    }
+
+    //-------------------------------------------------------------------//
+
     public static enum StartingLocation
     {
         kLeft, kMiddle, kRight;
+    }
+
+    //-------------------------------------------------------------------//
+
+    public static enum ContainingPreload
+    {
+        kYes, kNo;
     }
 
     //-------------------------------------------------------------------//
@@ -34,39 +48,11 @@ public class AutonomousTabData
         kNone, kBottom, kMiddle, kTop;
     }
 
-    //-------------------------------------------------------------------//
-
-    public static enum RowPlayedPiece2
-    {
-        kNone, kBottom, kMiddle, kTop;
-    }
-
-    //-------------------------------------------------------------------//  
+    //-------------------------------------------------------------------// 
 
     public static enum MoveOntoChargingStation
     {
         kYes, kNo;
-    }
-
-    //-------------------------------------------------------------------//
-
-    public static enum PickUpGamePieces
-    {
-        kYes, kNo;
-    }
-
-    //-------------------------------------------------------------------//
-
-    public static enum ContainingPreload
-    {
-        kYes, kNo;
-    }
-
-    //-------------------------------------------------------------------//
-
-    public static enum AutonomousCommands
-    {
-        kNeither, kChargingStation, kTwoGamePieces
     }
 
     //-------------------------------------------------------------------//
@@ -77,6 +63,13 @@ public class AutonomousTabData
     }
 
     //-------------------------------------------------------------------//
+
+    public static enum PickUpGamePieces
+    {
+        kYes, kNo;
+    }
+
+    //-------------------------------------------------------------------//
     
     public static enum ScoreSecondPiece
     {
@@ -84,6 +77,13 @@ public class AutonomousTabData
     }
 
     //-------------------------------------------------------------------//
+
+    public static enum RowPlayedPiece2
+    {
+        kNone, kBottom, kMiddle, kTop;
+    }
+
+    //-------------------------------------------------------------------// 
     public StartingLocation startingLocation = StartingLocation.kMiddle;
     public PlayPreload playPreload = PlayPreload.kYes;
     public MoveOntoChargingStation moveOntoChargingStation = MoveOntoChargingStation.kYes;
@@ -101,34 +101,33 @@ public class AutonomousTabData
         String str = "";
 
         str += "\n*****  AUTONOMOUS SELECTION  *****\n";
+        str += "Autonomous Commands         :" + autonomousCommands + "\n";
         str += "Starting Location           : "  + startingLocation   + "\n";
+        str += "Containing Preload          :" + containingPreload + "\n";
+        str += "Play Preload                :" + playPreload  + "\n";
+        str += "Row of First Game Piece     :" + rowPlayedPiece1  + "\n";
         str += "Move Onto Charging Station  : "  + moveOntoChargingStation   + "\n";
-        str += "Are Game Pieces Played     :" + playPreload  + "\n";
-        str += "Pick Up Game Pieces        :" + pickUpGamePieces  + "\n";
-        str += "Row of First Game Piece    :" + rowPlayedPiece1  + "\n";
-        str += "Row of Second Game Piece   :" + rowPlayedPiece2  + "\n";
-        str += "Containing Preload         :" + containingPreload + "\n";
-        str += "Autonomous Commands        :" + autonomousCommands + "\n";
         str += "Drive to Second Piece      :" + autonomousCommands + "\n";
+        str += "Pick Up Game Pieces         :" + pickUpGamePieces  + "\n";
         str += "Score Second Piece         :" + scoreSecondPiece  + "\n";
-
-
+        str += "Row of Second Game Piece    :" + rowPlayedPiece2  + "\n";
+        
         return str;
     }
 
-    public void updateData(AutonomousTabData atd)
-    {
-        startingLocation = atd.startingLocation;
-        playPreload = atd.playPreload;
-        moveOntoChargingStation = atd.moveOntoChargingStation;
-        pickUpGamePieces = atd.pickUpGamePieces;
-        rowPlayedPiece1 = atd.rowPlayedPiece1;
-        rowPlayedPiece2 = atd.rowPlayedPiece2;
-        containingPreload = atd.containingPreload;
-        autonomousCommands = atd.autonomousCommands;
-        driveToSecondPiece = atd.driveToSecondPiece;
-        scoreSecondPiece = atd.scoreSecondPiece;
-    }
+    // public void updateData(AutonomousTabData atd)
+    // {
+        // autonomousCommands = atd.autonomousCommands;
+        // startingLocation = atd.startingLocation;
+        // containingPreload = atd.containingPreload;
+        // playPreload = atd.playPreload;
+        // rowPlayedPiece1 = atd.rowPlayedPiece1;
+        // moveOntoChargingStation = atd.moveOntoChargingStation;
+        // driveToSecondPiece = atd.driveToSecondPiece;
+        // pickUpGamePieces = atd.pickUpGamePieces;
+        // scoreSecondPiece = atd.scoreSecondPiece;
+        // rowPlayedPiece2 = atd.rowPlayedPiece2;
+    // }
 
 
 }

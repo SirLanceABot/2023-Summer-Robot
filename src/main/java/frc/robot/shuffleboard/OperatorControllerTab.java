@@ -48,7 +48,7 @@ public class OperatorControllerTab
 
 
     // *** CLASS CONSTRUCTOR ***
-    public OperatorControllerTab(OperatorController operatorController)
+    OperatorControllerTab(OperatorController operatorController)
     {
         System.out.println(fullClassName + " : Constructor Started");
         this.operatorController = operatorController;
