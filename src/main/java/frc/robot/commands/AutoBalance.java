@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.subsystems.Drivetrain;
 
@@ -42,7 +43,7 @@ public class AutoBalance extends CommandBase
     private double drivePower;
 
     private final double CS_BALANCE_GOAL_DEGREES = 0.0;
-    private final double CS_BALANCE_DRIVE_KP = 0.015;
+    private final double CS_BALANCE_DRIVE_KP = 0.0250;
     private final double CS_BALANCE_TOLERANCE = 3.0;
     private final double CS_BALANCE_MIN_TIME_LEVEL = 1.0;
 
@@ -87,8 +88,7 @@ public class AutoBalance extends CommandBase
 
         if(drivetrain != null)
         {
-            drivetrain.drive(-Math.signum(currentPitch)*0.50, 0.0, 0.0, true);
-            
+            drivetrain.drive(-drivePower, 0.0, 0.0, true);
         }
         // System.out.println("Drive Power: " + drivePower);
     }
@@ -100,10 +100,13 @@ public class AutoBalance extends CommandBase
         System.out.println("End");
         if(drivetrain != null)
         {
+            System.out.println("Lock Wheels");
             drivetrain.drive(0.0, 0.0, 0.0, true);
-            drivetrain.lockWheels();
-            
+            // drivetrain.lockWheels();
+
+            new LockWheels(drivetrain, () -> 0.0, () -> 0.0, () -> 0.0).schedule();
         }
+        System.out.println("End2");
     }
 
     // Returns true when the command should end.
