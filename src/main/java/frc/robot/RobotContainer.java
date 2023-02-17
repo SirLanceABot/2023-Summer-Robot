@@ -31,10 +31,8 @@ import frc.robot.controls.OperatorController;
 import frc.robot.controls.Xbox;
 import frc.robot.sensors.Accelerometer4237;
 import frc.robot.sensors.Gyro4237;
-import frc.robot.shuffleboard.AutonomousTabData;
 import frc.robot.shuffleboard.MainShuffleboard;
 import frc.robot.sensors.Vision;
-import frc.robot.commands.AutoCommandList;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -68,13 +66,11 @@ public class RobotContainer
 	private boolean useCandle				= false;
 	private boolean useDriverController		= true;
 	private boolean useOperatorController 	= true;
-	private boolean useAutonomousTabData	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
 	private boolean useDataLog				= false;
-	private boolean useAutoCommandList		= true;
-
-
+	
+	public final boolean fullRobot;
 	public final ExampleSubsystem exampleSubsystem;
 	public final Drivetrain drivetrain;
 	public final Grabber grabber;
@@ -85,13 +81,11 @@ public class RobotContainer
 	public final DriverController driverController;
 	public final OperatorController operatorController;
 	public final Vision vision;
-	public final AutonomousTabData autonomousTabData;
 	public final MainShuffleboard mainShuffleboard;
 	public final Accelerometer4237 accelerometer;
 	public final Gyro4237 gyro;
 	public final DataLog log;
-	public final AutoCommandList autoCommandList;
-	
+
 	/** 
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 * Use the default modifier so that new objects can only be constructed in the same package.
@@ -103,7 +97,7 @@ public class RobotContainer
 			DataLogManager.start();
 			
 		log					= (useDataLog)								? DataLogManager.getLog()		: null;
-
+		fullRobot = useFullRobot;
 		exampleSubsystem 	= (useFullRobot || useExampleSubsystem)		? new ExampleSubsystem() 		: null;
 		accelerometer		= (useFullRobot || useAccelerometer)		? new Accelerometer4237()		: null;
 		gyro 				= (useFullRobot || useGyro)					? new Gyro4237()				: null;	
@@ -115,10 +109,8 @@ public class RobotContainer
 		candle 				= (useFullRobot || useCandle)				? new Candle4237() 				: null;
 		driverController 	= (useFullRobot || useDriverController) 	? new DriverController(Constants.Controller.DRIVER) 		: null;
 		operatorController 	= (useFullRobot || useOperatorController) 	? new OperatorController(Constants.Controller.OPERATOR)	 	: null;
-		autonomousTabData	= (useFullRobot || useAutonomousTabData ) 	? new AutonomousTabData()		: null;
 		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)		? new MainShuffleboard(this)	: null;
 		vision 				= (useFullRobot || useVision)				? new Vision()					: null;
-		autoCommandList 	= (useFullRobot || useAutoCommandList)	? new AutoCommandList(this)	: null;
 		
 
 

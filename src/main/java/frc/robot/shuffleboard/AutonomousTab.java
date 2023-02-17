@@ -64,7 +64,7 @@ public class AutonomousTab
     private String errorMessage = "No Errors";
 
     // *** CLASS CONSTRUCTOR ***
-    AutonomousTab(AutonomousTabData autonomousTabData)
+    AutonomousTab()
     {
         System.out.println(fullClassName + " : Constructor Started");
 

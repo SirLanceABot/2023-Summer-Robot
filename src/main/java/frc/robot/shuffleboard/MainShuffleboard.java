@@ -37,11 +37,10 @@ public class MainShuffleboard
     public MainShuffleboard(RobotContainer robotContainer)
     {
         System.out.println(fullClassName + " : Constructor Started");
-
-        boolean useFullRobot = false;
+        boolean useFullRobot = robotContainer.fullRobot; 
         driverControllerTab     = (useFullRobot || useDriverControllerTab)   ? new DriverControllerTab(robotContainer.driverController)                                : null;
         operatorControllerTab   = (useFullRobot || useOperatorControllerTab) ? new OperatorControllerTab(robotContainer.operatorController)                          : null;
-        autonomousTab           = (useFullRobot || useAutonomousTab) ? new AutonomousTab(robotContainer.autonomousTabData)                                                   : null;
+        autonomousTab           = (useFullRobot || useAutonomousTab) ? new AutonomousTab()                                                   : null;
         cameraTab               = (useFullRobot || useCameraTab) ? new CameraTab()                                                                                               : null;
         sensorTab               = (useFullRobot || useSensorTab) ? new SensorTab(robotContainer.shoulder, robotContainer.grabber, robotContainer.arm, robotContainer.drivetrain) : null;
 

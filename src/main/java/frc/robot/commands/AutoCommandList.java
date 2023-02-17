@@ -44,16 +44,17 @@ public class AutoCommandList extends SequentialCommandGroup
     }
 
     // *** CLASS & INSTANCE VARIABLES ***
-    private final AutonomousTabData autonomousTabData;
+    private AutonomousTabData autonomousTabData;
     // private final Autonomous1 autonomous1;
     private final Drivetrain drivetrain;
     private final Grabber grabber;
     private final Shoulder shoulder;
+    private String commandString = "\n***** AUTONOMOUS COMMAND LIST *****\n";
     // private final Command currentCommand;
     
     
 
-    private static final ArrayList<Command> commandList = new ArrayList<>();
+    // private static final ArrayList<Command> commandList = new ArrayList<>();
  
     // private  teamColor;
     // private static startingLocation;
@@ -61,21 +62,20 @@ public class AutoCommandList extends SequentialCommandGroup
     // *** CLASS CONSTRUCTOR ***
     public AutoCommandList(RobotContainer robotContainer)
     {
-        this.autonomousTabData = robotContainer.autonomousTabData;
+        this.autonomousTabData = robotContainer.mainShuffleboard.autonomousTab.getAutonomousTabData();
         // this.autonomous1 = autonomous1;
         this.drivetrain = robotContainer.drivetrain;
         this.grabber = robotContainer.grabber;
         this.shoulder = robotContainer.shoulder;
         
-        commandList.clear();
-        
+        // commandList.clear();
+        build();
     }
 
     // *** CLASS & INSTANCE METHODS ***
-    public void build()
+    private void build()
     {
-        commandList.clear();
-        DriverStation.Alliance alliance = DriverStation.getAlliance();
+        // commandList.clear();
         Shoulder.LevelAngle angle = LevelAngle.kGatherer;
         Shoulder.LevelAngle angle2 = LevelAngle.kGatherer;
         double distance = 0.0;
@@ -83,7 +83,63 @@ public class AutoCommandList extends SequentialCommandGroup
 
         add(new StopDrive(drivetrain));
 
-        switch(autonomousTabData.rowPlayedPiece1)
+        angle = getAngle1(autonomousTabData.rowPlayedPiece1);
+        angle2 = getAngle2(autonomousTabData.rowPlayedPiece2);
+        distance = getAllianceAndLocation();
+
+        switch(autonomousTabData.autonomousCommands)
+        {
+            case kNeither:
+                if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes)
+                {
+                    moveShoulder(angle);
+                    releasePiece();
+                }
+
+                if(autonomousTabData.driveToSecondPiece == DriveToSecondPiece.kYes)
+                {
+                    turnRobot180();
+                    driveOut(4.4);
+                }
+
+                if(autonomousTabData.pickUpGamePieces == PickUpGamePieces.kYes)
+                {
+                    add(new OpenGrabber(grabber));
+                }
+
+                if(autonomousTabData.scoreSecondPiece == ScoreSecondPiece.kYes)
+                {
+                    turnRobot180();
+                    driveOut(4.4);
+                    moveShoulder(angle2);
+                }
+
+                if(autonomousTabData.moveOntoChargingStation == MoveOntoChargingStation.kYes)
+                {
+                    goToChargingStation(0.5);
+                }
+                break;
+            case kChargingStation:
+                moveShoulder(angle);
+                releasePiece();
+                driveOut(4.26);
+                goToChargingStation(distance);
+                break;
+            case kTwoGamePieces:
+                moveShoulder(angle);
+                releasePiece();
+                driveOut(4.4);
+                turnRobot180();
+                pickUpPiece2();
+                break;
+        }
+    
+    }
+
+    private Shoulder.LevelAngle getAngle1(AutonomousTabData.RowPlayedPiece1 rpp1)
+    {
+        LevelAngle angle = LevelAngle.kGatherer;
+        switch(rpp1)
         {
             case kNone:
                 angle = LevelAngle.kGatherer;
@@ -99,88 +155,48 @@ public class AutoCommandList extends SequentialCommandGroup
                 break;
         }
 
-        switch(autonomousTabData.rowPlayedPiece2)
+        return angle;
+    }
+
+    private Shoulder.LevelAngle getAngle2(AutonomousTabData.RowPlayedPiece2 rpp2)
+    {
+        LevelAngle angle = LevelAngle.kGatherer;
+        switch(rpp2)
         {
             case kNone:
-                angle2 = LevelAngle.kGatherer;
+                angle = LevelAngle.kGatherer;
                 break;
             case kBottom:
-                angle2 = LevelAngle.kLow;
+                angle = LevelAngle.kLow;
                 break;
             case kMiddle:
-                angle2 = LevelAngle.kMiddle;
+                angle = LevelAngle.kMiddle;
                 break;
             case kTop:
-                angle2 = LevelAngle.kHigh;
+                angle = LevelAngle.kHigh;
                 break;
         }
 
-        if(alliance == DriverStation.Alliance.Red && autonomousTabData.startingLocation == StartingLocation.kLeft || alliance == DriverStation.Alliance.Blue && autonomousTabData.startingLocation == StartingLocation.kRight)
-        {
-            distance = 0.5;
-        }
-        
-        else
-        {
-            distance = -0.5;
-        }
-
-        if(autonomousTabData.autonomousCommands != AutonomousCommands.kNeither)
-        {
-            switch(autonomousTabData.autonomousCommands)
-            {
-            case kNeither:
-                break;
-            case kChargingStation:
-                moveShoulder(angle);
-                releasePiece();
-                driveOut(4.26);
-                goToChargingStation(distance);
-                break;
-            case kTwoGamePieces:
-                moveShoulder(angle);
-                releasePiece();
-                driveOut(4.4);
-                turnRobot180();
-                pickUpPiece2();
-                break;
-            }
-        }
-        else
-        {
-            if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes)
-            {
-                moveShoulder(angle);
-                releasePiece();
-            }
-
-            if(autonomousTabData.driveToSecondPiece == DriveToSecondPiece.kYes)
-            {
-                turnRobot180();
-                driveOut(4.4);
-            }
-
-            if(autonomousTabData.pickUpGamePieces == PickUpGamePieces.kYes)
-            {
-                add(new OpenGrabber(grabber));
-            }
-
-            if(autonomousTabData.scoreSecondPiece == ScoreSecondPiece.kYes)
-            {
-                turnRobot180();
-                driveOut(4.4);
-                moveShoulder(angle2);
-            }
-
-            if(autonomousTabData.moveOntoChargingStation == MoveOntoChargingStation.kYes)
-            {
-                goToChargingStation(0.5);
-            }
-
-           
-        }
-        
+        return angle;
     }
+
+    private double getAllianceAndLocation()
+    {
+        DriverStation.Alliance alliance = DriverStation.getAlliance();
+        boolean isRedLeft = (alliance == DriverStation.Alliance.Red && autonomousTabData.startingLocation == StartingLocation.kLeft);
+        boolean isBlueRight = (alliance == DriverStation.Alliance.Blue && autonomousTabData.startingLocation == StartingLocation.kRight);
+        if(isRedLeft || isBlueRight)
+        {
+            return 1.0;
+        }
+        
+        else
+        {
+            return -1.0;
+        }
+    }
+
+
 
     private void driveOut(double distance)
     {
@@ -246,22 +262,15 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void add(Command command)
     {
-        addCommands(command);
-        commandList.add(command);
 
+        addCommands(command);
+        // commandList.add(command);
+        commandString += command + "\n";
     }
 
     public String toString()
     {
-        String str = "";
-
-        str += "\n***** AUTONOMOUS COMMAND LIST *****\n";
-        for(Command command : commandList)
-        {
-            str += command + "\n";
-        }
-
-        return str;
+        return commandString;
     }
 
 
