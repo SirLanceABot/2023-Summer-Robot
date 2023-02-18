@@ -88,6 +88,12 @@ public class AutoDriveDistance extends CommandBase
         }
         return true;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "AutoDriveDistance(" + xSpeed + ", " + ySpeed + ", " + distanceToDriveMeters + ")";
+    }
 }
 
 
