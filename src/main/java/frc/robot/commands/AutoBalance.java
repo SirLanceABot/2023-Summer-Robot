@@ -46,10 +46,10 @@ public class AutoBalance extends CommandBase
     
 
     private final double CS_BALANCE_GOAL_DEGREES = 0.0;
-    private final double CS_BALANCE_DRIVE_KP = 0.020;
+    private final double CS_BALANCE_DRIVE_KP = 0.015;
     private final double CS_BALANCE_TOLERANCE = 3.0;
     private final double CS_BALANCE_MIN_TIME_LEVEL = 1.0;
-    private final double CS_BALANCE_MAX_SPEED = 0.45;
+    private final double CS_BALANCE_MAX_SPEED = 0.5;
 
 
     /**
@@ -95,6 +95,7 @@ public class AutoBalance extends CommandBase
  
         drivePower =  -(CS_BALANCE_DRIVE_KP * error);
 
+        // if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED)
         if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 14.0)
         {
             drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
@@ -149,6 +150,12 @@ public class AutoBalance extends CommandBase
         {
             return true;
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return "AutoBalance(drivetrain, gyro)";
     }
 
 }

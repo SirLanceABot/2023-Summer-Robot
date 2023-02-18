@@ -108,6 +108,12 @@ public class AutoAimToPost extends CommandBase
         {
             return false;
         }
-        
     }
+
+    @Override
+    public String toString()
+    {
+        return "AutoAimToPost(drivetrian, vision)";
+    }
+    
 }
