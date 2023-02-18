@@ -18,8 +18,8 @@ public class Autonomous1 extends SequentialCommandGroup
         {
             addCommands(
                 new StopDrive(drivetrain),
-                new DriveDistanceAuto(drivetrain, 0.5, 0.0, 2.0),
-                new DriveDistanceAuto (drivetrain, 0.0, 0.5, 1.0),
+                new AutoDriveDistance(drivetrain, 0.5, 0.0, 2.0),
+                new AutoDriveDistance (drivetrain, 0.0, 0.5, 1.0),
                 new StopDrive(drivetrain),
                 new PrintCommand("Autonomous 1 Done")
             );

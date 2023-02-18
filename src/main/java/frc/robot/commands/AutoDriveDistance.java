@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class DriveDistanceAuto extends CommandBase
+public class AutoDriveDistance extends CommandBase
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -25,7 +25,7 @@ public class DriveDistanceAuto extends CommandBase
     private Translation2d startingPosition;
 
 
-    public DriveDistanceAuto(Drivetrain drivetrain, double xSpeed, double ySpeed, double distanceToDriveMeters)
+    public AutoDriveDistance(Drivetrain drivetrain, double xSpeed, double ySpeed, double distanceToDriveMeters)
     {
         this.drivetrain = drivetrain;
         this.xSpeed = xSpeed;

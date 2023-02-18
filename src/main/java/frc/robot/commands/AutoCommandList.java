@@ -70,6 +70,10 @@ public class AutoCommandList extends SequentialCommandGroup
         
         // commandList.clear();
         build();
+
+        robotContainer.mainShuffleboard.autoCommandList = new AutoCommandList(robotContainer);
+        // robotContainer.mainShuffleboard.autoCommandList.build();
+        System.out.println(robotContainer.mainShuffleboard.autoCommandList);
     }
 
     // *** CLASS & INSTANCE METHODS ***
@@ -200,12 +204,12 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void driveOut(double distance)
     {
-        add(new DriveDistanceAuto(drivetrain, 0.5, 0.0, distance));
+        add(new AutoDriveDistance(drivetrain, 0.5, 0.0, distance));
     }
 
     private void strafeDrive(double distance)
     {
-        add(new DriveDistanceAuto(drivetrain, 0.0, 0.5, distance)); 
+        add(new AutoDriveDistance(drivetrain, 0.0, 0.5, distance)); 
     }
 
     private void releasePiece()
@@ -223,19 +227,19 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void turnRobot180()
     {
-        add(new DriveDistanceAuto(drivetrain, 0.5, -0.5, 2));
+        add(new AutoDriveDistance(drivetrain, 0.5, -0.5, 2));
     }
 
     private void goToSecondGamePiece()
     {
-        add(new DriveDistanceAuto(drivetrain, 0.75, 0.0, 4.5));
+        add(new AutoDriveDistance(drivetrain, 0.75, 0.0, 4.5));
     }
 
     private void goToChargingStation(double distance)
     {
-        add(new DriveDistanceAuto(drivetrain, 0.75, 0.0, 4.27));
-        add(new DriveDistanceAuto(drivetrain, 0.0, distance, 1.0));
-        add(new DriveDistanceAuto(drivetrain, -0.75, 0.0, 1.0));
+        add(new AutoDriveDistance(drivetrain, 0.75, 0.0, 4.27));
+        add(new AutoDriveDistance(drivetrain, 0.0, distance, 1.0));
+        add(new AutoDriveDistance(drivetrain, -0.75, 0.0, 1.0));
     }
 
     private void pickUpPiece2()

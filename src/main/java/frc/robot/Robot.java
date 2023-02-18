@@ -96,9 +96,7 @@ public class Robot extends TimedRobot
             {
                 //TODO move to state machine
                 System.out.println(robotContainer.mainShuffleboard.autonomousTab.getAutonomousTabData());
-                robotContainer.mainShuffleboard.autoCommandList = new AutoCommandList(robotContainer);
-                // robotContainer.mainShuffleboard.autoCommandList.build();
-                System.out.println(robotContainer.mainShuffleboard.autoCommandList);
+    
             }
         }
     }

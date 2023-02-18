@@ -138,10 +138,23 @@ public class RobotContainer
 	{
 		if(driverController != null && drivetrain != null)
         {
+			//Left Trigger
+			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
+			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
+			lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+
 			//Axis, driving and rotating
+
+			//Driving Forward with the Y axis, left joystick
 			DoubleSupplier leftYAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftY);
+
+			//Driving side to side with the X axis, left joystick
 			DoubleSupplier leftXAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftX);
+
+			//Rotating right joystick
 			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
+
+			//start button starts bot, and resets gyro so the front of the robot is moving front
 			//BooleanSupplier aButton = () -> {return driverController.getRawButton(Xbox.Button.kA); };
 			BooleanSupplier startButton = driverController.getButtonSupplier(Xbox.Button.kStart);
 			Trigger startButtonTrigger = new Trigger(startButton);
@@ -172,11 +185,7 @@ public class RobotContainer
 						  .andThen( () -> driverController.setRumble(0.0)));
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
-			//Left Trigger
-			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
-			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
-			lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
-
+			
 
 			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
