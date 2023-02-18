@@ -124,12 +124,10 @@ public final class Constants
         // public static final SwerveModuleData BACK_LEFT = new SwerveModuleData("Back Left", 4, true, 5, -348.75, 6);
         // public static final SwerveModuleData BACK_RIGHT = new SwerveModuleData("Back Right", 1, false, 2, -101.953125, 3);
 
-        // private static final double FRONT_LEFT_ENCODER_OFFSET   = -167.255859375; //old encoder value
-        private static final double FRONT_LEFT_ENCODER_OFFSET   = -338.730;
-        private static final double FRONT_RIGHT_ENCODER_OFFSET  = -287.578;
-        private static final double BACK_LEFT_ENCODER_OFFSET    = -348.75;
-        // private static final double BACK_RIGHT_ENCODER_OFFSET   = -101.953125;
-        private static final double BACK_RIGHT_ENCODER_OFFSET   = -103.271; //new swerve module
+        private static final double FRONT_LEFT_ENCODER_OFFSET   = -209.883; //-338.730;
+        private static final double FRONT_RIGHT_ENCODER_OFFSET  = -133.330; //-287.578;
+        private static final double BACK_LEFT_ENCODER_OFFSET    = -18.809;  //-348.75;
+        private static final double BACK_RIGHT_ENCODER_OFFSET   = -342.422; //-103.271;
 
         private static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2, DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
         private static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2, -DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2);

@@ -9,8 +9,12 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -24,6 +28,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.AutoBalance;
+import frc.robot.commands.AutoDriveDistance;
 import frc.robot.commands.LockWheels;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.controls.DriverController;
@@ -90,6 +95,7 @@ public class RobotContainer
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 * Use the default modifier so that new objects can only be constructed in the same package.
 	 */
+	
 	RobotContainer()
 	{
 		// Create the needed subsystems
@@ -117,6 +123,8 @@ public class RobotContainer
 		// Configure the trigger bindings
 		if(useFullRobot || useBindings)
 			configureBindings();
+
+		configureSchedulerLog();
 	}
 
 	/**
@@ -139,9 +147,9 @@ public class RobotContainer
 		if(driverController != null && drivetrain != null)
         {
 			//Left Trigger
-			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
-			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
-			lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+			// BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
+			// Trigger lefTriggerTrigger = new Trigger(leftTrigger);
+			// lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
 
 			//Axis, driving and rotating
 
@@ -155,34 +163,34 @@ public class RobotContainer
 			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
 
 			//start button starts bot, and resets gyro so the front of the robot is moving front
-			//BooleanSupplier aButton = () -> {return driverController.getRawButton(Xbox.Button.kA); };
-			BooleanSupplier startButton = driverController.getButtonSupplier(Xbox.Button.kStart);
-			Trigger startButtonTrigger = new Trigger(startButton);
-			startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
+			// BooleanSupplier startButton = driverController.getButtonSupplier(Xbox.Button.kStart);
+			// Trigger startButtonTrigger = new Trigger(startButton);
+			// startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
 
 			//A Button
-			BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
-			Trigger aButtonTrigger = new Trigger(aButton);
+			// BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
+			// Trigger aButtonTrigger = new Trigger(aButton);
 			//aButtonTrigger.toggleOnTrue(new AutoBalance));
 
 			//X Button-lockwheels
-			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
-			Trigger xButtonTrigger = new Trigger(xButton);
-			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
-			xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain, leftYAxis, leftXAxis, rightXAxis));
+			// BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
+			// Trigger xButtonTrigger = new Trigger(xButton);
+			// xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain, leftYAxis, leftXAxis, rightXAxis));
+
 			//JoystickButton drivetrainA = new JoystickButton(joystick,1);
 			//DoubleSupplier leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
 			//DoubleSupplier leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX) * 2.0; };
 			//DoubleSupplier rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX) * 2.0; };
 
 			//Y Button
-			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
-			Trigger yButtonTrigger = new Trigger(yButton);
-			yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
-						  .andThen( new PrintCommand("Y") )                        
-						  .andThen( () -> driverController.setRumble(0.5))
-						  .andThen( new WaitCommand(0.5))
-						  .andThen( () -> driverController.setRumble(0.0)));
+			// BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
+			// Trigger yButtonTrigger = new Trigger(yButton);
+			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
+			// 			  .andThen( new PrintCommand("Y") )                        
+			// 			  .andThen( () -> driverController.setRumble(0.5))
+			// 			  .andThen( new WaitCommand(0.5))
+			// 			  .andThen( () -> driverController.setRumble(0.0)));
+
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
 			
@@ -237,7 +245,86 @@ public class RobotContainer
 	 */
 	public Command getAutonomousCommand()
 	{
-		AutoBalance command = new AutoBalance(drivetrain, gyro);
+		// AutoBalance command = new AutoBalance(drivetrain, gyro);
+		AutoDriveDistance command = new AutoDriveDistance(drivetrain, -0.5, 0.0, 20.0);
 		return command;
 	}
+
+	
+	/////////////////////////////////////////
+	// Command Event Loggers
+	/////////////////////////////////////////
+	void configureSchedulerLog()
+	{
+		boolean useShuffleBoardLog = true;
+		StringLogEntry commandLogEntry = null;
+
+		if(useShuffleBoardLog || useDataLog)
+		{
+		// Set the scheduler to log events for command initialize, interrupt,
+		// finish, execute
+		// Log to the ShuffleBoard and the WPILib data log tool.
+		// If ShuffleBoard is recording these events are added to the recording. Convert
+		// recording to csv and they show nicely in Excel. 
+		// If using data log tool, the recording is automatic so run that tool to retrieve and convert the log.
+		//_________________________________________________________________________________
+
+		CommandScheduler.getInstance()
+			.onCommandInitialize(
+				command ->
+				{
+					if(useDataLog) commandLogEntry.append(command.getClass() + " " + command.getName() + " initialized");
+					if(useShuffleBoardLog)
+					{
+						Shuffleboard.addEventMarker("Command initialized", command.getName(), EventImportance.kNormal);
+						System.out.println("Command initialized " + command.getName());
+					}
+				}
+			);
+		//_________________________________________________________________________________
+
+		CommandScheduler.getInstance()
+			.onCommandInterrupt(
+				command ->
+				{
+					if(useDataLog) commandLogEntry.append(command.getClass() + " " + command.getName() + " interrupted");
+					if(useShuffleBoardLog)
+					{
+						Shuffleboard.addEventMarker("Command interrupted", command.getName(), EventImportance.kNormal);
+						System.out.println("Command interrupted " + command.getName());
+					}
+				}
+			);
+		//_________________________________________________________________________________
+
+		CommandScheduler.getInstance()
+			.onCommandFinish(
+				command ->
+				{
+					if(useDataLog) commandLogEntry.append(command.getClass() + " " + command.getName() + " finished");
+					if(useShuffleBoardLog)
+					{
+						Shuffleboard.addEventMarker("Command finished", command.getName(), EventImportance.kNormal);
+						System.out.println("Command finished " + command.getName());
+					}
+				}
+			);
+		//_________________________________________________________________________________
+
+		CommandScheduler.getInstance()
+			.onCommandExecute( // this can generate a lot of events
+				command ->
+				{
+					if(useDataLog) commandLogEntry.append(command.getClass() + " " + command.getName() + " executed");
+					if(useShuffleBoardLog)
+					{
+						Shuffleboard.addEventMarker("Command executed", command.getName(), EventImportance.kNormal);
+						// System.out.println("Command executed " + command.getName());
+					}
+				}
+			);
+		//_________________________________________________________________________________
+		}
+	}
+
 }
