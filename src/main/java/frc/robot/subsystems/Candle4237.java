@@ -40,7 +40,7 @@ public class Candle4237 extends Subsystem4237
 
     public enum LedStatus
     {
-        kPurple, kYellow, kWhite, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhoteBlink, kSectioned;
+        kPurple, kYellow, kRad, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhoteBlink, kSectioned;
     }
 
     // public enum LedAnimation
@@ -194,9 +194,9 @@ public class Candle4237 extends Subsystem4237
     public void signalReadyToDrop()
     {
         if (periodicIO.status == LedStatus.kSectioned)
-            sections.get(1).status = LedStatus.kWhite;
+            sections.get(1).status = LedStatus.kRad;
         else 
-            periodicIO.status = LedStatus.kWhite;
+            periodicIO.status = LedStatus.kRad;
 
         periodicIO.toAnimate = LedAnimation.kDisabled;
     }
@@ -289,8 +289,8 @@ public class Candle4237 extends Subsystem4237
             case kYellow: 
                 candle.setLEDs(255, 185, 0, 50, startLed, ledCount);
                 break; 
-            case kWhite: 
-                candle.setLEDs(255, 255, 200, 255, startLed, ledCount);
+            case kRad: 
+                candle.setLEDs(255, 0, 0, 255, startLed, ledCount);
                 break;
             case kOff: 
                 candle.setLEDs(0, 0, 0, 0, startLed, ledCount);
@@ -461,7 +461,7 @@ public class Candle4237 extends Subsystem4237
     {
         createSection(8, 20, LedStatus.kYellow);
         createSection(28, 20, LedStatus.kPurple);
-        createSection(48, 20, LedStatus.kWhite);
+        createSection(48, 20, LedStatus.kRad);
     }
 
     public void createSection(int startLed, int ledCount, LedStatus status)

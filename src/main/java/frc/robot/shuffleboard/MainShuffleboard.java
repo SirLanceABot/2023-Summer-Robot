@@ -17,17 +17,18 @@ public class MainShuffleboard
 
     // *** CLASS & INSTANCE VARIABLES ***
 
-    private boolean useDriverControllerTab      = true;
-    private boolean useOperatorControllerTab    = false;
     private boolean useAutonomousTab            = false;
     private boolean useCameraTab                = false;
     private boolean useSensorTab                = false;
-
-    public final DriverControllerTab driverControllerTab;
-    public final OperatorControllerTab operatorControllerTab;
+    private boolean useDriverControllerTab      = true;
+    private boolean useOperatorControllerTab    = false;
+    
     public final AutonomousTab autonomousTab;
     public final CameraTab cameraTab;
     public final SensorTab sensorTab;
+    public final DriverControllerTab driverControllerTab;
+    public final OperatorControllerTab operatorControllerTab;
+    
     public AutoCommandList autoCommandList;
     
 
@@ -38,12 +39,15 @@ public class MainShuffleboard
     {
         System.out.println(fullClassName + " : Constructor Started");
         boolean useFullRobot = robotContainer.fullRobot; 
-        driverControllerTab     = (useFullRobot || useDriverControllerTab)   ? new DriverControllerTab(robotContainer.driverController)                                : null;
-        operatorControllerTab   = (useFullRobot || useOperatorControllerTab) ? new OperatorControllerTab(robotContainer.operatorController)                          : null;
-        autonomousTab           = (useFullRobot || useAutonomousTab) ? new AutonomousTab()                                                   : null;
-        cameraTab               = (useFullRobot || useCameraTab) ? new CameraTab()                                                                                               : null;
-        sensorTab               = (useFullRobot || useSensorTab) ? new SensorTab(robotContainer.shoulder, robotContainer.grabber, robotContainer.arm, robotContainer.drivetrain) : null;
+        useDriverControllerTab = useDriverControllerTab && robotContainer.driverController != null;
+        useOperatorControllerTab = useOperatorControllerTab && robotContainer.operatorController != null;
 
+        autonomousTab           = (useFullRobot || useAutonomousTab)         ? new AutonomousTab()                                                                                           : null;
+        cameraTab               = (useFullRobot || useCameraTab)             ? new CameraTab()                                                                                               : null;
+        sensorTab               = (useFullRobot || useSensorTab)             ? new SensorTab(robotContainer.shoulder, robotContainer.grabber, robotContainer.arm, robotContainer.drivetrain) : null;
+        driverControllerTab     = (useFullRobot || useDriverControllerTab)   ? new DriverControllerTab(robotContainer.driverController)                                                      : null;
+        operatorControllerTab   = (useFullRobot || useOperatorControllerTab) ? new OperatorControllerTab(robotContainer.operatorController)                                                  : null;
+        
         // cameraTab = new CameraTab();
 
         System.out.println(fullClassName + ": Constructor Finished");

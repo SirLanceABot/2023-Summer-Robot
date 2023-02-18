@@ -51,6 +51,18 @@ public class Robot extends TimedRobot
     public void robotInit()
     {
         System.out.println("Robot Init");
+
+        if (robotContainer.mainShuffleboard != null)
+        {
+            if (robotContainer.driverController != null)
+            {
+                robotContainer.mainShuffleboard.setDriverControllerSettings();
+            }
+            if (robotContainer.operatorController != null)
+            {
+                robotContainer.mainShuffleboard.setOperatorControllerSettings();
+            }
+        }
     }
 
 
@@ -90,14 +102,20 @@ public class Robot extends TimedRobot
     {
         if (robotContainer.mainShuffleboard != null)
         {
-            boolean isNewData = robotContainer.mainShuffleboard.autonomousTab.isNewData();
-
-            if (isNewData)
+            if (robotContainer.mainShuffleboard.autonomousTab != null)
             {
-                //TODO move to state machine
-                System.out.println(robotContainer.mainShuffleboard.autonomousTab.getAutonomousTabData());
-    
+                boolean isNewData = robotContainer.mainShuffleboard.autonomousTab.isNewData();
+
+                if (isNewData)
+                {
+                    //TODO move to state machine
+                    System.out.println(robotContainer.mainShuffleboard.autonomousTab.getAutonomousTabData());
+                    robotContainer.mainShuffleboard.autoCommandList = new AutoCommandList(robotContainer);
+                    // robotContainer.mainShuffleboard.autoCommandList.build();
+                    System.out.println(robotContainer.mainShuffleboard.autoCommandList);
+                }
             }
+            
         }
     }
 
@@ -106,7 +124,19 @@ public class Robot extends TimedRobot
      */
     @Override
     public void disabledExit()
-    {}
+    {
+        if(robotContainer.mainShuffleboard != null)
+        {
+            if(robotContainer.driverController != null)
+            {
+                robotContainer.mainShuffleboard.setDriverControllerSettings();
+            }
+            if(robotContainer.operatorController != null)
+            {
+                robotContainer.mainShuffleboard.setOperatorControllerSettings();
+            }
+        }
+    }
 
     /**
      * This method runs one time when the robot enters autonomous mode.

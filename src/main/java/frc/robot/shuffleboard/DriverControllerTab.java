@@ -35,8 +35,8 @@ public class DriverControllerTab
 
 
     // *** CLASS & INSTANCE VARIABLES ***
-    private final AxisObjects moveXObjects = new AxisObjects();
-    private final AxisObjects moveYObjects = new AxisObjects();
+    private final AxisObjects leftXObjects = new AxisObjects();
+    private final AxisObjects leftYObjects = new AxisObjects();
     private final AxisObjects rightXObjects = new AxisObjects();
     private final AxisObjects rightYObjects = new AxisObjects();
     private final AxisObjects leftTriggerObjects = new AxisObjects();
@@ -64,9 +64,9 @@ public class DriverControllerTab
     // *** CLASS & INSTANCE METHODS ***
     private void initDriverControllerTab()
     {
-        createAxisWidgets(Xbox.Axis.kLeftX, "Move X", moveXObjects, 0);
-        createAxisWidgets(Xbox.Axis.kLeftY, "Move Y", moveYObjects, 5);
-        createAxisWidgets(Xbox.Axis.kRightX, "Rotate", rightXObjects, 10);
+        createAxisWidgets(Xbox.Axis.kLeftX, "Left X", leftXObjects, 0);
+        createAxisWidgets(Xbox.Axis.kLeftY, "Left Y", leftYObjects, 5);
+        createAxisWidgets(Xbox.Axis.kRightX, "Right X", rightXObjects, 10);
         createAxisWidgets(Xbox.Axis.kRightY, "Right Y", rightYObjects, 15);
         createAxisWidgets(Xbox.Axis.kLeftTrigger, "Left Trigger", leftTriggerObjects, 20);
         createAxisWidgets(Xbox.Axis.kRightTrigger, "Right Trigger", rightTriggerObjects, 25);
@@ -177,10 +177,10 @@ public class DriverControllerTab
     {
         DriverController.AxisSettings axisSettings = driverController.new AxisSettings();
 
-        axisSettings = getAxisSettingsFromShuffleboard(moveXObjects);
+        axisSettings = getAxisSettingsFromShuffleboard(leftXObjects);
         driverController.setAxisSettings(Xbox.Axis.kLeftX, axisSettings);
 
-        axisSettings = getAxisSettingsFromShuffleboard(moveYObjects);
+        axisSettings = getAxisSettingsFromShuffleboard(leftYObjects);
         driverController.setAxisSettings(Xbox.Axis.kLeftY, axisSettings);
 
         axisSettings = getAxisSettingsFromShuffleboard(rightXObjects);

@@ -19,6 +19,8 @@ import frc.robot.shuffleboard.AutonomousTabData.ScoreSecondPiece;
 import frc.robot.shuffleboard.AutonomousTabData.ContainingPreload;
 import frc.robot.shuffleboard.AutonomousTabData.DriveToSecondPiece;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
@@ -49,6 +51,7 @@ public class AutoCommandList extends SequentialCommandGroup
     private final Drivetrain drivetrain;
     private final Grabber grabber;
     private final Shoulder shoulder;
+    private final Arm arm;
     private String commandString = "\n***** AUTONOMOUS COMMAND LIST *****\n";
     // private final Command currentCommand;
     
@@ -67,6 +70,7 @@ public class AutoCommandList extends SequentialCommandGroup
         this.drivetrain = robotContainer.drivetrain;
         this.grabber = robotContainer.grabber;
         this.shoulder = robotContainer.shoulder;
+        this.arm = robotContainer.arm;
         
         // commandList.clear();
         build();
@@ -82,6 +86,8 @@ public class AutoCommandList extends SequentialCommandGroup
         // commandList.clear();
         Shoulder.LevelAngle angle = LevelAngle.kGatherer;
         Shoulder.LevelAngle angle2 = LevelAngle.kGatherer;
+        Arm.ArmPosition piece1 = ArmPosition.kIn;
+        Arm.ArmPosition piece2 = ArmPosition.kIn;
         double distance = 0.0;
         // RowPlayedPiece1 row1 = autonomousTabData.rowPlayedPiece1.getSelected();
 
@@ -125,12 +131,14 @@ public class AutoCommandList extends SequentialCommandGroup
                 break;
             case kChargingStation:
                 moveShoulder(angle);
+                moveArm(piece1);
                 releasePiece();
                 driveOut(4.26);
                 goToChargingStation(distance);
                 break;
             case kTwoGamePieces:
                 moveShoulder(angle);
+                moveArm(piece2);
                 releasePiece();
                 driveOut(4.4);
                 turnRobot180();
@@ -143,19 +151,24 @@ public class AutoCommandList extends SequentialCommandGroup
     private Shoulder.LevelAngle getAngle1(AutonomousTabData.RowPlayedPiece1 rpp1)
     {
         LevelAngle angle = LevelAngle.kGatherer;
+        ArmPosition piece1 = ArmPosition.kIn;
         switch(rpp1)
         {
             case kNone:
                 angle = LevelAngle.kGatherer;
+                piece1 = ArmPosition.kIn;
                 break;
             case kBottom:
                 angle = LevelAngle.kLow;
+                piece1 = ArmPosition.kHalfExtended;
                 break;
             case kMiddle:
                 angle = LevelAngle.kMiddle;
+                piece1 = ArmPosition.kThreeQuarterExtended;
                 break;
             case kTop:
                 angle = LevelAngle.kHigh;
+                piece1 = ArmPosition.kFullyExtended;
                 break;
         }
 
@@ -165,19 +178,24 @@ public class AutoCommandList extends SequentialCommandGroup
     private Shoulder.LevelAngle getAngle2(AutonomousTabData.RowPlayedPiece2 rpp2)
     {
         LevelAngle angle = LevelAngle.kGatherer;
+        ArmPosition piece2 = ArmPosition.kIn;
         switch(rpp2)
         {
             case kNone:
                 angle = LevelAngle.kGatherer;
+                piece2 = ArmPosition.kIn;
                 break;
             case kBottom:
                 angle = LevelAngle.kLow;
+                piece2 = ArmPosition.kHalfExtended;
                 break;
             case kMiddle:
                 angle = LevelAngle.kMiddle;
+                piece2 = ArmPosition.kThreeQuarterExtended;
                 break;
             case kTop:
                 angle = LevelAngle.kHigh;
+                piece2 = ArmPosition.kFullyExtended;
                 break;
         }
 
@@ -221,6 +239,11 @@ public class AutoCommandList extends SequentialCommandGroup
     private void moveShoulder(LevelAngle level)
     {
         add(new MoveShoulderToAngle(shoulder, level));
+    }
+
+    private void moveArm(ArmPosition position)
+    {
+        add(new MoveArm(arm, position));
     }
 
 
