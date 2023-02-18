@@ -75,9 +75,7 @@ public class AutoCommandList extends SequentialCommandGroup
         // commandList.clear();
         build();
 
-        robotContainer.mainShuffleboard.autoCommandList = new AutoCommandList(robotContainer);
-        // robotContainer.mainShuffleboard.autoCommandList.build();
-        System.out.println(robotContainer.mainShuffleboard.autoCommandList);
+        System.out.println(this);
     }
 
     // *** CLASS & INSTANCE METHODS ***
