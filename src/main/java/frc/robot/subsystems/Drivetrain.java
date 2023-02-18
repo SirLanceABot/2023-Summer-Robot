@@ -122,8 +122,7 @@ public class Drivetrain extends Subsystem4237
                 backLeft.getPosition(),
                 backRight.getPosition()
             });
-
-        resetOdometry();
+ 
         // setSafetyEnabled(true);
     }
 
@@ -151,6 +150,13 @@ public class Drivetrain extends Subsystem4237
     {
         driveMode = DriveMode.kDrive;
         // updateOdometry();
+
+        if(Math.abs(xSpeed) < 0.04)
+            xSpeed = 0.0;
+        if(Math.abs(ySpeed) < 0.04)
+            ySpeed = 0.0;
+        if(Math.abs(turn) < 0.04)
+            turn = 0.0;    
         periodicIO.xSpeed = xSpeed;
         periodicIO.ySpeed = ySpeed;
         periodicIO.turn = turn;

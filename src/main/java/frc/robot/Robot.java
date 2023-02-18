@@ -51,18 +51,6 @@ public class Robot extends TimedRobot
     public void robotInit()
     {
         System.out.println("Robot Init");
-
-        if (robotContainer.mainShuffleboard != null)
-        {
-            if (robotContainer.driverController != null)
-            {
-                robotContainer.mainShuffleboard.setDriverControllerSettings();
-            }
-            if (robotContainer.operatorController != null)
-            {
-                robotContainer.mainShuffleboard.setOperatorControllerSettings();
-            }
-        }
     }
 
 

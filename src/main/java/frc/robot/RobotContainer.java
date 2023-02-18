@@ -103,6 +103,7 @@ public class RobotContainer
 			DataLogManager.start();
 			
 		log					= (useDataLog)								? DataLogManager.getLog()		: null;
+
 		fullRobot = useFullRobot;
 		exampleSubsystem 	= (useFullRobot || useExampleSubsystem)		? new ExampleSubsystem() 		: null;
 		accelerometer		= (useFullRobot || useAccelerometer)		? new Accelerometer4237()		: null;
@@ -147,9 +148,9 @@ public class RobotContainer
 		if(driverController != null && drivetrain != null)
         {
 			//Left Trigger
-			// BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
-			// Trigger lefTriggerTrigger = new Trigger(leftTrigger);
-			// lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
+			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
+			lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
 
 			//Axis, driving and rotating
 
@@ -163,9 +164,9 @@ public class RobotContainer
 			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
 
 			//start button starts bot, and resets gyro so the front of the robot is moving front
-			// BooleanSupplier startButton = driverController.getButtonSupplier(Xbox.Button.kStart);
-			// Trigger startButtonTrigger = new Trigger(startButton);
-			// startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
+			BooleanSupplier startButton = driverController.getButtonSupplier(Xbox.Button.kStart);
+			Trigger startButtonTrigger = new Trigger(startButton);
+			startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
 
 			//A Button
 			// BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
@@ -173,9 +174,9 @@ public class RobotContainer
 			//aButtonTrigger.toggleOnTrue(new AutoBalance));
 
 			//X Button-lockwheels
-			// BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
-			// Trigger xButtonTrigger = new Trigger(xButton);
-			// xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain, leftYAxis, leftXAxis, rightXAxis));
+			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
+			Trigger xButtonTrigger = new Trigger(xButton);
+			xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain, leftYAxis, leftXAxis, rightXAxis));
 
 			//JoystickButton drivetrainA = new JoystickButton(joystick,1);
 			//DoubleSupplier leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
@@ -183,18 +184,17 @@ public class RobotContainer
 			//DoubleSupplier rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX) * 2.0; };
 
 			//Y Button
-			// BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
-			// Trigger yButtonTrigger = new Trigger(yButton);
-			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
-			// 			  .andThen( new PrintCommand("Y") )                        
-			// 			  .andThen( () -> driverController.setRumble(0.5))
-			// 			  .andThen( new WaitCommand(0.5))
-			// 			  .andThen( () -> driverController.setRumble(0.0)));
+			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
+			Trigger yButtonTrigger = new Trigger(yButton);
+			yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
+						  .andThen( new PrintCommand("Y") )                        
+						  .andThen( () -> driverController.setRumble(0.5))
+						  .andThen( new WaitCommand(0.5))
+						  .andThen( () -> driverController.setRumble(0.0)));
 
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
 			
-
 			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
 			
@@ -246,7 +246,7 @@ public class RobotContainer
 	public Command getAutonomousCommand()
 	{
 		// AutoBalance command = new AutoBalance(drivetrain, gyro);
-		AutoDriveDistance command = new AutoDriveDistance(drivetrain, -0.5, 0.0, 20.0);
+		AutoDriveDistance command = new AutoDriveDistance(drivetrain, 0.2, 0.0, 2.0);
 		return command;
 	}
 

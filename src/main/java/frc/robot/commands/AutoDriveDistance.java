@@ -54,7 +54,7 @@ public class AutoDriveDistance extends CommandBase
     {
         if(drivetrain != null)
         {
-            drivetrain.drive(xSpeed, ySpeed, 0.0, false);
+            drivetrain.drive(xSpeed, ySpeed, 0.0, true);
             // double distanceDrivenMeters = drivetrain.getDistanceDrivenMeters(startingPosition);
             // if(Math.abs(distanceDrivenMeters) < Math.abs(distanceToDriveMeters))
             // {
