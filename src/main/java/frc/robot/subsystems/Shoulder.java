@@ -63,6 +63,11 @@ public class Shoulder extends Subsystem4237
         kStart, kTry, kDone;
     }
 
+    private enum LimitSwitchState
+    {
+        kPressed, kStillPressed, kReleased, kStillReleased
+    }
+
     public class PeriodicIO
     {
         // INPUTS
@@ -101,8 +106,9 @@ public class Shoulder extends Subsystem4237
     private final int RESET_ATTEMPT_LIMIT = 5;
 
     private int resetAttemptCounter = 0;
-    private boolean previousLSPressed = false;
-    private boolean useLSReset = false;     // Enable or Disable reverse limit switch reseting encoder
+    private LimitSwitchState reverseLSState = LimitSwitchState.kStillReleased;
+    // private boolean previousLSPressed = false;
+    private boolean useLSReset = true;     // Enable or Disable reverse limit switch reseting encoder
     // private boolean useDataLog = true;      // Enable or Disable data logs
     private ResetState resetState = ResetState.kDone;
 
@@ -138,7 +144,7 @@ public class Shoulder extends Subsystem4237
         shoulderMotor.restoreFactoryDefaults();
 
         // Invert the direction of the motor
-        shoulderMotor.setInverted(true);
+        shoulderMotor.setInverted(false);
 
         // Brake or Coast mode
         shoulderMotor.setIdleMode(IdleMode.kBrake);
@@ -160,10 +166,10 @@ public class Shoulder extends Subsystem4237
 
         // Soft Limits
         //TODO: determine soft limit values
-        shoulderMotor.setSoftLimit(SoftLimitDirection.kForward, 103000);
-        shoulderMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-        shoulderMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        shoulderMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        shoulderMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT);
+        shoulderMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        shoulderMotor.setSoftLimit(SoftLimitDirection.kReverse, Constants.Shoulder.ENCODER_REVERSE_SOFT_LIMIT);
+        shoulderMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
         // Hard Limits
         forwardLimitSwitch = shoulderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
@@ -248,13 +254,13 @@ public class Shoulder extends Subsystem4237
     /** Moves the shoulder up */
     public void moveUp()
     {
-        periodicIO.motorSpeed = 0.1;
+        periodicIO.motorSpeed = 0.5;
     }
 
     /** Moves the shoulder down */
     public void moveDown()
     {
-        periodicIO.motorSpeed = -0.1;
+        periodicIO.motorSpeed = -0.5;
     }
 
     /** Turns the shoulder off */
@@ -279,16 +285,47 @@ public class Shoulder extends Subsystem4237
     {
         periodicIO.currentPosition = relativeEncoder.getPosition();
         periodicIO.currentVelocity = relativeEncoder.getVelocity();
+
         if(useLSReset)
         {
-            if(reverseLimitSwitch.isPressed() && !previousLSPressed)
+            boolean isReverseLimitSwitchPressed = reverseLimitSwitch.isPressed();
+
+            switch(reverseLSState)
             {
-                previousLSPressed = true;
-                resetState = ResetState.kStart;
-                
+                case kStillReleased:
+                    if(isReverseLimitSwitchPressed)
+                    {
+                        System.out.println("BUtton Pressed");
+                        resetState = ResetState.kStart;
+                        reverseLSState = LimitSwitchState.kPressed;
+                    }
+                    break;
+                case kPressed:
+                    if(isReverseLimitSwitchPressed)
+                        reverseLSState = LimitSwitchState.kStillPressed;
+                    else
+                        reverseLSState = LimitSwitchState.kReleased;
+                    break;
+                case kStillPressed:
+                    if(!isReverseLimitSwitchPressed)
+                        reverseLSState = LimitSwitchState.kReleased;
+                    break;
+                case kReleased:
+                    if(!isReverseLimitSwitchPressed)
+                        reverseLSState = LimitSwitchState.kStillReleased;
+                    else
+                        reverseLSState = LimitSwitchState.kPressed;
+                    break;
             }
-            else if(!reverseLimitSwitch.isPressed() && previousLSPressed)
-            previousLSPressed = false;
+
+           
+            // if(reverseLimitSwitch.isPressed() && !previousLSPressed)
+            // {
+            //     previousLSPressed = true;
+            //     resetState = ResetState.kStart;
+            // }
+            // else if(!reverseLimitSwitch.isPressed() && previousLSPressed)
+            // previousLSPressed = false;
         }
         // currentAngle = currentPosition / TICKS_PER_DEGREE;
 
@@ -299,44 +336,87 @@ public class Shoulder extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        if(resetState == ResetState.kStart)
+        switch(resetState)
         {
-            encoderResetTimer.reset();
-            encoderResetTimer.start();
-            shoulderMotor.set(0.0);
-            relativeEncoder.setPosition(0.0);
-            resetState = ResetState.kTry;
-            resetAttemptCounter++;
-        }
-        else if(resetState == ResetState.kTry && resetAttemptCounter < RESET_ATTEMPT_LIMIT)
-        {
-            if(Math.abs(periodicIO.currentPosition) < 0.5 )
-            {
-                resetState = ResetState.kDone;
-                resetAttemptCounter = 0;
-            }
-            else if(encoderResetTimer.hasElapsed(0.1))
-            {
-                System.out.println("Attempts: " + resetAttemptCounter);
-                // DataLogManager.log("Attempts: " + resetAttemptCounter);
-                resetAttemptCounter++;
-                relativeEncoder.setPosition(0.0);
+            case kDone:
+                shoulderMotor.set(periodicIO.motorSpeed);
+                break;
+
+            case kStart:
+                System.out.println("Resetting Encoder");
                 encoderResetTimer.reset();
                 encoderResetTimer.start();
-            }
+                shoulderMotor.set(0.0);
+                relativeEncoder.setPosition(0.0);
+                resetState = ResetState.kTry;
+                resetAttemptCounter++;
+                break;
+
+            case kTry:
+                if(resetAttemptCounter < RESET_ATTEMPT_LIMIT)
+                {
+                    if(Math.abs(periodicIO.currentPosition) < 0.5 )
+                    {
+                        System.out.println("Encoder Reset");
+                        resetState = ResetState.kDone;
+                        resetAttemptCounter = 0;
+                    }
+                    else if(encoderResetTimer.hasElapsed(0.1))
+                    {
+                        System.out.println("Attempts: " + resetAttemptCounter);
+                        // DataLogManager.log("Attempts: " + resetAttemptCounter);
+                        resetAttemptCounter++;
+                        relativeEncoder.setPosition(0.0);
+                        encoderResetTimer.reset();
+                        encoderResetTimer.start();
+                    }
+                }
+                else if(resetAttemptCounter >= RESET_ATTEMPT_LIMIT)
+                {
+                    resetState = ResetState.kDone;
+                    resetAttemptCounter = 0;
+                    System.out.println("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
+                    // DataLogManager.log("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
+                }
+                break;
         }
-        else if(resetAttemptCounter == RESET_ATTEMPT_LIMIT)
-        {
-            resetState = ResetState.kDone;
-            resetAttemptCounter = 0;
-            System.out.println("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
-            // DataLogManager.log("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
-        }
-        else
-        {
-            shoulderMotor.set(periodicIO.motorSpeed);
-        }
-        
+        // if(resetState == ResetState.kStart)
+        // {
+        //     encoderResetTimer.reset();
+        //     encoderResetTimer.start();
+        //     shoulderMotor.set(0.0);
+        //     relativeEncoder.setPosition(0.0);
+        //     resetState = ResetState.kTry;
+        //     resetAttemptCounter++;
+        // }
+        // else if(resetState == ResetState.kTry && resetAttemptCounter < RESET_ATTEMPT_LIMIT)
+        // {
+        //     if(Math.abs(periodicIO.currentPosition) < 0.5 )
+        //     {
+        //         resetState = ResetState.kDone;
+        //         resetAttemptCounter = 0;
+        //     }
+        //     else if(encoderResetTimer.hasElapsed(0.1))
+        //     {
+        //         System.out.println("Attempts: " + resetAttemptCounter);
+        //         // DataLogManager.log("Attempts: " + resetAttemptCounter);
+        //         resetAttemptCounter++;
+        //         relativeEncoder.setPosition(0.0);
+        //         encoderResetTimer.reset();
+        //         encoderResetTimer.start();
+        //     }
+        // }
+        // else if(resetAttemptCounter == RESET_ATTEMPT_LIMIT)
+        // {
+        //     resetState = ResetState.kDone;
+        //     resetAttemptCounter = 0;
+        //     System.out.println("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
+        //     // DataLogManager.log("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
+        // }
+        // else
+        // {
+        //     shoulderMotor.set(periodicIO.motorSpeed);
+        // }
         // oldShoulderMotor.set(ControlMode.PercentOutput, motorSpeed);     // TALON FX
     }
 
