@@ -47,6 +47,18 @@ public final class Constants
         public static final String CAN_BUS = ROBORIO;
     }
 
+    public static class Shoulder
+    {
+        public static final float ENCODER_FORWARD_SOFT_LIMIT = 339981.0f;
+        public static final float ENCODER_REVERSE_SOFT_LIMIT = 0.0f;
+    }
+
+    public static class Arm
+    {
+        public static final float ENCODER_FORWARD_SOFT_LIMIT = 955771.0f;
+        public static final float ENCODER_REVERSE_SOFT_LIMIT = 0.0f;
+    }
+
     public static class Drivetrain
     {
         private static final int FRONT_LEFT_DRIVE       = 7;
@@ -101,8 +113,8 @@ public final class Constants
     public static class DrivetrainConstants
     {
         public static final double INCHES_TO_METERS = 0.0254;
-        public static final double DRIVETRAIN_WHEELBASE_METERS = 23.5 * INCHES_TO_METERS;
-        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 23.5 * INCHES_TO_METERS;
+        public static final double DRIVETRAIN_WHEELBASE_METERS =  27.44 * INCHES_TO_METERS; // 23.5 Front to back
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 19.50 * INCHES_TO_METERS; // 23.5 // Side to side
         public static final double MAX_MODULE_TURN_SPEED = 1080.0; // degrees per second, this is 3.0 rev/sec, used to be 1980 and 5.5 rev/sec
         public static final double MAX_MODULE_TURN_ACCELERATION = 1728.0; // degrees per second per second, this is 4.8 rev/sec^2, used to be 17280 and 48 rev/sec^2
         public static final double MAX_BATTERY_VOLTAGE = 12.0;
