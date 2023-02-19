@@ -51,8 +51,8 @@ public class Arm extends Subsystem4237
     private PeriodicIO periodicIO = new PeriodicIO();
     private final int armMotorPort = Constants.Subsystem.ARM_MOTOR_PORT;
     private final CANSparkMax armMotor = new CANSparkMax (armMotorPort, MotorType.kBrushless);
-    private final SparkMaxLimitSwitch forwardLimitSwitch = armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-    private final SparkMaxLimitSwitch reverseLimitSwitch = armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    private SparkMaxLimitSwitch forwardLimitSwitch;
+    private SparkMaxLimitSwitch reverseLimitSwitch;
     private final Timer encoderResetTimer = new Timer();
     private RelativeEncoder armEncoder;
     private boolean resetEncoderNow = false;
@@ -68,24 +68,29 @@ public class Arm extends Subsystem4237
         // Factory Defaults
         armMotor.restoreFactoryDefaults();
         // Invert Motor Direction
-        armMotor.setInverted(false);
+        armMotor.setInverted(true);
         // Set Coast or Break Mode
         armMotor.setIdleMode(IdleMode.kBrake);
         // Set the Feedback Sensor
         // sparkMaxMotor.ser();
 
-        //Soft Limits
-        armMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
-        armMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-        armMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
-        
-        //Hard Limits
-        forwardLimitSwitch.enableLimitSwitch(true);
-        reverseLimitSwitch.enableLimitSwitch(true);
-
         // Encoder
         armEncoder = armMotor.getEncoder();
+        armEncoder.setPositionConversionFactor(4096);
+
+        //Soft Limits
+        armMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Arm.ENCODER_FORWARD_SOFT_LIMIT);
+        armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        armMotor.setSoftLimit(SoftLimitDirection.kReverse, Constants.Arm.ENCODER_REVERSE_SOFT_LIMIT);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        
+        //Hard Limits
+        forwardLimitSwitch = armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        forwardLimitSwitch.enableLimitSwitch(true);
+        reverseLimitSwitch = armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        reverseLimitSwitch.enableLimitSwitch(true);
+
+
     }
 
     /**
@@ -160,6 +165,7 @@ public class Arm extends Subsystem4237
     @Override
     public synchronized void readPeriodicInputs()
     {
+        // TODO see the Shoulder code for resetting encoder
         periodicIO.armPosition = armEncoder.getPosition();
     }
 
@@ -169,6 +175,7 @@ public class Arm extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
+        // TODO see the Shoulder code for resetting encoder
         if (resetEncoderNow)
         {
             armMotor.set(0.0);
