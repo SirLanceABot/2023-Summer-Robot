@@ -6,7 +6,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.Shoulder;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.CloseGrabber;
 import frc.robot.commands.OpenGrabber;
@@ -28,10 +30,12 @@ public class OwenTest implements Test
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
-    private final CANSparkMax grabberMotor = new CANSparkMax(3, MotorType.kBrushless);
+    // private final CANSparkMax grabberMotor = new CANSparkMax(3, MotorType.kBrushless);
     private final Joystick joystick = new Joystick(0);
     // private final Grabber grabber;// = RobotContainer.grabber;
-    private final MainShuffleboard mainShuffleboard;
+    private final Shoulder shoulder;
+    // private final Arm arm;
+    // private final MainShuffleboard mainShuffleboard;
     // private final CloseGrabber closeGrabber;
     // private final OpenGrabber openGrabber;
 
@@ -41,7 +45,9 @@ public class OwenTest implements Test
     {
         this.robotContainer = robotContainer;
         // this.grabber = robotContainer.grabber;
-        this.mainShuffleboard = robotContainer.mainShuffleboard;
+        // this.mainShuffleboard = robotContainer.mainShuffleboard;
+        this.shoulder = robotContainer.shoulder;
+        // this.arm = robotContainer.arm;
     }
 
     /**
@@ -59,15 +65,26 @@ public class OwenTest implements Test
     {
         // grabber.compressorEnable();
         // Joystick();
-        if(joystick.getRawButton(3))
-        {
-
-            grabberMotor.set(0.5);
-        }
-
         if(joystick.getRawButton(4))
         {
-            grabberMotor.set(0.0);
+            shoulder.moveUp();
+            // arm.extendArm();
+        }
+        else if(joystick.getRawButton(3))
+        {
+            shoulder.moveDown();
+            // arm.retractArm();
+        }
+        else
+        {
+            shoulder.off();
+            // arm.stopArm();
+        }
+
+        if(joystick.getRawButton(1))
+        {
+            shoulder.resetEncoder();
+            // arm.resetEncoder();
         }
     }
     
