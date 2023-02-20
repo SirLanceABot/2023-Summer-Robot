@@ -464,20 +464,21 @@ public class Xbox
         rumbleCounter = 0;
     }
 
-    public DoubleSupplier getAxisSupplier(Axis axis)
-    {
-        return () -> getRawAxis(axis);
-    }
+    // Moved these to DriverController and OperatorController
+    // public DoubleSupplier getAxisSupplier(Axis axis)
+    // {
+    //     return () -> getRawAxis(axis);
+    // }
 
-    public BooleanSupplier getButtonSupplier(Button button)
-    {
-        return () -> getRawButton(button);
-    }
+    // public BooleanSupplier getButtonSupplier(Button button)
+    // {
+    //     return () -> getRawButton(button);
+    // }
 
-    public BooleanSupplier getDpadSupplier(Dpad dpad)
-    {
-        return () -> getDpad() == dpad;
-    }
+    // public BooleanSupplier getDpadSupplier(Dpad dpad)
+    // {
+    //     return () -> getDpad() == dpad;
+    // }
     
     @Override
     public String toString()

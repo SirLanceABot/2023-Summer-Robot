@@ -1,6 +1,8 @@
 package frc.robot.controls;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.PeriodicIO;
@@ -24,9 +26,12 @@ public class DriverController extends Xbox implements PeriodicIO
     // *** INNER ENUMS and INNER CLASSES ***
     private class PeriodicIO
     {
-
+        private double[] axis = new double[6];
+        private boolean[] button = new boolean[14];  // skip 0 and 11
+        private Dpad dpad;
     }
-    private PeriodicIO periodicIO;
+
+    private PeriodicIO periodicIO = new PeriodicIO();
 
     // *** CLASS CONSTRUCTOR ***
     public DriverController(int port)
@@ -36,10 +41,8 @@ public class DriverController extends Xbox implements PeriodicIO
         System.out.println(fullClassName + ": Constructor Started");
 
         registerPeriodicIO();
-        periodicIO = new PeriodicIO();
         configureAxes();
         createRumbleEvents();
-        // checkForTriggerConflict();
 
         System.out.println(fullClassName + ": Constructor Finished");
     }
@@ -72,16 +75,50 @@ public class DriverController extends Xbox implements PeriodicIO
         setAxisSettings(Axis.kRightY, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
     }
 
+    public DoubleSupplier getAxisSupplier(Axis axis)
+    {
+        return () -> periodicIO.axis[axis.value];
+        // return () -> getRawAxis(axis);
+    }
+
+    public BooleanSupplier getButtonSupplier(Button button)
+    {
+        return () -> periodicIO.button[button.value];
+        // return () -> getRawButton(button);
+    }
+
+    public BooleanSupplier getDpadSupplier(Dpad dpad)
+    {
+        return () -> periodicIO.dpad == dpad;
+        // return () -> getDpad() == dpad;
+    }
+
+    public BooleanSupplier tryingToMoveRobot()
+    {
+        boolean leftMove = Math.abs(periodicIO.axis[Xbox.Axis.kLeftX.value]) > 0.0 || Math.abs(periodicIO.axis[Xbox.Axis.kLeftY.value]) > 0.0;
+        boolean rightMove = Math.abs(periodicIO.axis[Xbox.Axis.kRightX.value]) > 0.0 || Math.abs(periodicIO.axis[Xbox.Axis.kRightY.value]) > 0.0;
+        return () -> leftMove || rightMove;
+    }
+
     @Override
     public synchronized void readPeriodicInputs()
     {
-        // TODO Put in joystick values
+        for(int a = 0; a <= 5; a++)
+            periodicIO.axis[a] = getRawAxis(a);
+
+        for(int b = 1; b <= 13; b++)
+        {
+            if(b != 11)
+                periodicIO.button[b] = getRawButton(b);
+        }
+
+        periodicIO.dpad = getDpad();
     }
 
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        // checkRumbleEvent();
+        checkRumbleEvent();
     }
 
     @Override

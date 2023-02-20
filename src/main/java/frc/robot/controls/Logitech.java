@@ -318,15 +318,16 @@ public class Logitech
         setAxisSettings(axis, axisSettings.axisDeadzone, axisSettings.axisMinOutput, axisSettings.axisMaxOutput, axisSettings.axisIsFlipped, axisSettings.axisScale);
     }
 
-    public DoubleSupplier getAxisSupplier(Axis axis)
-    {
-        return () -> getRawAxis(axis);
-    }
+    // Moved these to DriverController and OperatorController
+    // public DoubleSupplier getAxisSupplier(Axis axis)
+    // {
+    //     return () -> getRawAxis(axis);
+    // }
 
-    public BooleanSupplier getButtonSupplier(Button button)
-    {
-        return () -> getRawButton(button);
-    }
+    // public BooleanSupplier getButtonSupplier(Button button)
+    // {
+    //     return () -> getRawButton(button);
+    // }
 
     public String toString()
     {

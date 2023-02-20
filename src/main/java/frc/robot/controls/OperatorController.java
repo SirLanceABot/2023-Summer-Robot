@@ -1,6 +1,8 @@
 package frc.robot.controls;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import frc.robot.PeriodicIO;
 
@@ -22,10 +24,12 @@ public class OperatorController extends Xbox implements PeriodicIO
 
     private class PeriodicIO
     {
-
+        private double[] axis = new double[6];
+        private boolean[] button = new boolean[14];  // skip 0 and 11
+        private Dpad dpad;
     }
 
-    private PeriodicIO periodicIO;
+    private PeriodicIO periodicIO = new PeriodicIO();
     
     // *** CLASS CONSTRUCTOR ***
     public OperatorController(int port)
@@ -35,10 +39,8 @@ public class OperatorController extends Xbox implements PeriodicIO
         System.out.println(fullClassName + ": Constructor Started");
 
         registerPeriodicIO();
-        periodicIO = new PeriodicIO();
         configureAxes();
         createRumbleEvents();
-        // checkForTriggerConflict();
 
         System.out.println(fullClassName + ": Constructor Finished");
     }
@@ -66,27 +68,37 @@ public class OperatorController extends Xbox implements PeriodicIO
         setAxisSettings(Axis.kRightY, 0.1, 0.0, 1.0, false, AxisScale.kLinear);
     }
 
-    // public void checkForTriggerConflict()
-    // {
-    //     for(DriverButtonAction dba : DriverButtonAction.values())
-    //     {
-    //         if(dba.button == Button.kLeftTrigger || dba.button == Button.kRightTrigger)
-    //         {
-    //             for(DriverAxisAction daa : DriverAxisAction.values())
-    //             {
-    //                 if(daa.axis == Axis.kLeftTrigger && dba.button == Button.kLeftTrigger)
-    //                     DriverStation.reportWarning("ERROR - Left Trigger is button and axis", false);
-    //                 if(daa.axis == Axis.kRightTrigger && dba.button == Button.kRightTrigger)
-    //                     DriverStation.reportWarning("ERROR - Right Trigger is button and axis", false);
-    //             }
-    //         }
-    //     }
-    // }
+    public DoubleSupplier getAxisSupplier(Axis axis)
+    {
+        return () -> periodicIO.axis[axis.value];
+        // return () -> getRawAxis(axis);
+    }
+
+    public BooleanSupplier getButtonSupplier(Button button)
+    {
+        return () -> periodicIO.button[button.value];
+        // return () -> getRawButton(button);
+    }
+
+    public BooleanSupplier getDpadSupplier(Dpad dpad)
+    {
+        return () -> periodicIO.dpad == dpad;
+        // return () -> getDpad() == dpad;
+    }
 
     @Override
     public synchronized void readPeriodicInputs()
     {
-        // TODO find joystick values
+        for(int a = 0; a <= 5; a++)
+            periodicIO.axis[a] = getRawAxis(a);
+
+        for(int b = 1; b <= 13; b++)
+        {
+            if(b != 11) // skip over subscripts 0 and 11
+                periodicIO.button[b] = getRawButton(b);
+        }
+
+        periodicIO.dpad = getDpad();
     }
 
     @Override
