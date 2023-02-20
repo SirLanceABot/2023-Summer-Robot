@@ -40,6 +40,12 @@ public class Drivetrain extends Subsystem4237
         private double ySpeed;
         private double turn;
         private boolean fieldRelative;
+        private SwerveModulePosition frontLeftPosition;
+        private SwerveModulePosition frontRightPosition;
+        private SwerveModulePosition backLeftPosition;
+        private SwerveModulePosition backRightPosition;
+
+
         DoubleLogEntry flsLogEntry;
         DoubleLogEntry frsLogEntry;
         DoubleLogEntry blsLogEntry;
@@ -122,7 +128,7 @@ public class Drivetrain extends Subsystem4237
                 backLeft.getPosition(),
                 backRight.getPosition()
             });
- 
+
         // setSafetyEnabled(true);
     }
 
@@ -287,35 +293,19 @@ public class Drivetrain extends Subsystem4237
     @Override
     public void readPeriodicInputs()
     {
-        if (DriverStation.isDisabled() && resetOdometry)
+        if(DriverStation.isAutonomousEnabled())
         {
-            periodicIO.odometry.resetPosition(
-                new Rotation2d(), /*zero*/
-                new SwerveModulePosition[]
-                {/*zeros distance, angle*/
-                    new SwerveModulePosition(),
-                    new SwerveModulePosition(),
-                    new SwerveModulePosition(),
-                    new SwerveModulePosition()
-                },
-                new Pose2d(/*zeros facing X*/));
-            resetOdometry = false;
+            periodicIO.frontLeftPosition = frontLeft.getPosition();
+            periodicIO.frontRightPosition =  frontRight.getPosition();
+            periodicIO.backLeftPosition = backLeft.getPosition();
+            periodicIO.backRightPosition = backRight.getPosition();
         }
-        else if (DriverStation.isAutonomousEnabled())
-        {
-            periodicIO.odometry.update(
-                gyro.getRotation2d(),
-                new SwerveModulePosition[] 
-                {
-                    frontLeft.getPosition(),
-                    frontRight.getPosition(),
-                    backLeft.getPosition(),
-                    backRight.getPosition()
-                });
 
-                // System.out.println(gyro.getYaw());
-        }
-        
+    }
+
+    @Override
+    public void periodic()
+    {
         switch (driveMode)
         {
             case kDrive:
@@ -345,18 +335,41 @@ public class Drivetrain extends Subsystem4237
                 //No calculations to do
                 break;
         }
-
-
-
-        //FIXME is this used at all?
-        //previousSwerveModuleStates = periodicIO.swerveModuleStates;
-
     }
 
 
     @Override
     public void writePeriodicOutputs()
     {
+        if (DriverStation.isDisabled() && resetOdometry)
+        {
+            periodicIO.odometry.resetPosition(
+                new Rotation2d(), /*zero*/
+                new SwerveModulePosition[]
+                {/*zeros distance, angle*/
+                    new SwerveModulePosition(),
+                    new SwerveModulePosition(),
+                    new SwerveModulePosition(),
+                    new SwerveModulePosition()
+                },
+                new Pose2d(/*zeros facing X*/));
+            resetOdometry = false;
+        }
+        else if (DriverStation.isAutonomousEnabled())
+        {
+            periodicIO.odometry.update(
+                gyro.getRotation2d(),
+                new SwerveModulePosition[] 
+                {
+                    periodicIO.frontLeftPosition,
+                    periodicIO.frontRightPosition,
+                    periodicIO.backLeftPosition,
+                    periodicIO.backRightPosition
+                });
+
+                // System.out.println(gyro.getYaw());
+        }
+
         if (resetEncoders)
         {   //FIXME do we need to add a time delay to reset the encoders?
             frontLeft.stopModule();

@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -95,7 +97,6 @@ public class RobotContainer
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 * Use the default modifier so that new objects can only be constructed in the same package.
 	 */
-	
 	RobotContainer()
 	{
 		// Create the needed subsystems
@@ -147,41 +148,25 @@ public class RobotContainer
 	{
 		if(driverController != null && drivetrain != null)
         {
-			//Left Trigger
-			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
-			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
-			lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
-
 			//Axis, driving and rotating
-
-			//Driving Forward with the Y axis, left joystick
 			DoubleSupplier leftYAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftY);
-
-			//Driving side to side with the X axis, left joystick
 			DoubleSupplier leftXAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftX);
-
-			//Rotating right joystick
 			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
-
-			//start button starts bot, and resets gyro so the front of the robot is moving front
+			//BooleanSupplier aButton = () -> {return driverController.getRawButton(Xbox.Button.kA); };
 			BooleanSupplier startButton = driverController.getButtonSupplier(Xbox.Button.kStart);
 			Trigger startButtonTrigger = new Trigger(startButton);
 			startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
 
 			//A Button
-			// BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
-			// Trigger aButtonTrigger = new Trigger(aButton);
+			BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
+			Trigger aButtonTrigger = new Trigger(aButton);
 			//aButtonTrigger.toggleOnTrue(new AutoBalance));
 
 			//X Button-lockwheels
 			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
 			Trigger xButtonTrigger = new Trigger(xButton);
-			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
-			xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain));
-			//JoystickButton drivetrainA = new JoystickButton(joystick,1);
-			//DoubleSupplier leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
-			//DoubleSupplier leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX) * 2.0; };
-			//DoubleSupplier rightXAxis = () -> {return driverController.getRawAxis(Xbox.Axis.kRightX) * 2.0; };
+			xButtonTrigger.onTrue( new RunCommand( () -> drivetrain.lockWheels(), drivetrain )
+									.until(driverController.tryingToMoveRobot()) );
 
 			//Y Button
 			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
@@ -191,10 +176,14 @@ public class RobotContainer
 						  .andThen( () -> driverController.setRumble(0.5))
 						  .andThen( new WaitCommand(0.5))
 						  .andThen( () -> driverController.setRumble(0.0)));
-
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
-			
+			//Left Trigger
+			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
+			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
+			lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+
+
 			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
 			
@@ -203,7 +192,6 @@ public class RobotContainer
 
 	private void configureOperatorBindings()
 	{
-
 		if(operatorController != null)
 		{
 			//Left trigger 
@@ -229,12 +217,17 @@ public class RobotContainer
 			//X button
 			BooleanSupplier xButton = operatorController.getButtonSupplier(Xbox.Button.kX);
 			Trigger xButtonTrigger = new Trigger(xButton);
+			// xButtonTrigger.toggleOnTrue(new StartEndCommand( () -> { shoulder.moveDown(); }, () -> { shoulder.off(); }, shoulder ) );
 			//xButtonTrigger.toggleOnTrue(new SuctionControl));
 
 			//Y button 
 			BooleanSupplier yButton = operatorController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
 			//yButtonTrigger.toggleOnTrue( new MoveWrist());
+
+			// DoubleSupplier leftYAxis = operatorController.getAxisSupplier(Xbox.Axis.kLeftY);
+			// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
+
 		}
 	}
 
@@ -328,3 +321,40 @@ public class RobotContainer
 	}
 
 }
+
+
+// ------------------------------------------------------------------------------------------
+// COMMAND EXAMPLES
+// ------------------------------------------------------------------------------------------
+// 
+// Here are other options ways to create "Suppliers"
+// DoubleSupplier leftYAxis =  () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
+// DoubleSupplier leftXAxis =  () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX) * 2.0; };
+// DoubleSupplier rightXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kRightX) * 2.0; };
+// BooleanSupplier aButton =   () -> { return driverController.getRawButton(Xbox.Button.kA); };
+//
+// ------------------------------------------------------------------------------------------
+//
+// Here are 4 ways to perform the "LockWheels" command
+// Press the X button to lock the wheels, unlock when the driver moves left or right axis
+// 
+// Option 1
+// xButtonTrigger.onTrue( new RunCommand( () -> drivetrain.lockWheels(), drivetrain )
+//						.until(driverController.tryingToMoveRobot()) );
+//
+// Option 2
+// xButtonTrigger.onTrue(new LockWheels(drivetrain)
+// 						.until(driverController.tryingToMoveRobot()));
+//
+// Option 3
+// xButtonTrigger.onTrue(new FunctionalCommand(
+// 		() -> {}, 								// onInit
+// 		() -> { drivetrain.lockWheels(); }, 	// onExec
+// 		(interrupted) -> {}, 					// onEnd
+// 		driverController.tryingToMoveRobot(),	// isFinished
+// 		drivetrain ) );							// requirements
+// 
+// Option 4
+// xButtonTrigger.onTrue( run( () -> drivetrain.lockWheels() )	//run(drivetrain::lockWheels)
+// 						.until(driverController.tryingToMoveRobot()) );
+//
