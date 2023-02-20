@@ -176,8 +176,8 @@ public class RobotContainer
 			//X Button-lockwheels
 			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
 			Trigger xButtonTrigger = new Trigger(xButton);
-			xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain, leftYAxis, leftXAxis, rightXAxis));
-
+			//aButtonTrigger.onTrue(new LockWheels(drivetrain));
+			xButtonTrigger.toggleOnTrue(new LockWheels(drivetrain));
 			//JoystickButton drivetrainA = new JoystickButton(joystick,1);
 			//DoubleSupplier leftYAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftY) * 2.0; };
 			//DoubleSupplier leftXAxis = () -> { return driverController.getRawAxis(Xbox.Axis.kLeftX) * 2.0; };

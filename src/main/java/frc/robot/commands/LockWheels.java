@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.DoubleSupplier;
+// import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
@@ -18,17 +18,17 @@ public class LockWheels extends CommandBase
     }
 
     private final Drivetrain drivetrain;
-    private DoubleSupplier xSpeed;
-    private DoubleSupplier ySpeed;
-    private DoubleSupplier turn;
+    // private DoubleSupplier xSpeed;
+    // private DoubleSupplier ySpeed;
+    // private DoubleSupplier turn;
 
     
-    public LockWheels(Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier turn)
+    public LockWheels(Drivetrain drivetrain)//, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier turn)
     {
         this.drivetrain = drivetrain;
-        this.xSpeed = xSpeed;
-        this.ySpeed = ySpeed;
-        this.turn = turn;
+        // this.xSpeed = xSpeed;
+        // this.ySpeed = ySpeed;
+        // this.turn = turn;
 
         if(this.drivetrain != null)
             addRequirements(drivetrain);
@@ -36,14 +36,14 @@ public class LockWheels extends CommandBase
 
     @Override 
     public void initialize()
+    {}
+
+    @Override
+    public void execute()
     {
         if(drivetrain != null)
             drivetrain.lockWheels();
     }
-
-    @Override
-    public void execute()
-    {}
 
     @Override
     public void end(boolean interrupted)
@@ -52,10 +52,15 @@ public class LockWheels extends CommandBase
     @Override
     public boolean isFinished()
     {   
-        if(Math.abs(xSpeed.getAsDouble()) > 0.01 || Math.abs(ySpeed.getAsDouble()) > 0.01 || Math.abs(turn.getAsDouble()) > 0.01)
-            return true;
-        else
+        // if(Math.abs(xSpeed.getAsDouble()) > 0.01 || Math.abs(ySpeed.getAsDouble()) > 0.01 || Math.abs(turn.getAsDouble()) > 0.01)
+        //     return true;
+        // else
+        //     return false;
+
+        if(drivetrain != null)
             return false;
+
+        return true;
     }
 
 }

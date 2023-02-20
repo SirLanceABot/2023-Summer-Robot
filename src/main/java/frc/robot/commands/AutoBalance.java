@@ -117,7 +117,9 @@ public class AutoBalance extends CommandBase
         if(drivetrain != null)
         {
             drivetrain.drive(0.0, 0.0, 0.0, true);
-            new LockWheels(drivetrain, () -> 0.0, () -> 0.0, () -> 0.0).schedule();
+            // drivetrain.lockWheels();
+
+            new LockWheels(drivetrain).schedule();
         }
     }
 
