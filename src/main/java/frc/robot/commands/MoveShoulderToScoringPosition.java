@@ -1,13 +1,13 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Shoulder;
-import frc.robot.subsystems.Shoulder.LevelAngle;
+import frc.robot.subsystems.Shoulder.ScoringPosition;
 
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class MoveShoulderToAngle extends CommandBase
+public class MoveShoulderToScoringPosition extends CommandBase
 {
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
@@ -20,7 +20,7 @@ public class MoveShoulderToAngle extends CommandBase
 
     private final Shoulder shoulder;
     private boolean isFinished;
-    private LevelAngle desiredAngle;
+    private ScoringPosition desiredPosition;
 
     
     // private final double LEVEL_0_ANGLE = 5;         // Gatherer Position
@@ -33,10 +33,10 @@ public class MoveShoulderToAngle extends CommandBase
      *
      * @param shoudler The subsystem used by this command.
      */
-    public MoveShoulderToAngle(Shoulder shoulder, LevelAngle desiredLevel) 
+    public MoveShoulderToScoringPosition(Shoulder shoulder, ScoringPosition desiredPosition) 
     {
         this.shoulder = shoulder;
-        this.desiredAngle = desiredLevel;
+        this.desiredPosition = desiredPosition;
         
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(this.shoulder);
@@ -54,11 +54,11 @@ public class MoveShoulderToAngle extends CommandBase
     public void execute()
     {
         //TODO: use angles or encoder ticks?
-        if(shoulder.getAngle() < desiredAngle.min)
+        if(shoulder.getPosition() < desiredPosition.min)
         {
             shoulder.moveUp();
         }
-        else if(shoulder.getAngle() > desiredAngle.max)
+        else if(shoulder.getPosition() > desiredPosition.max)
         {
             shoulder.moveDown();
         }

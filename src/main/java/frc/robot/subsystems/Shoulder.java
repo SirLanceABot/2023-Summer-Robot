@@ -45,13 +45,13 @@ public class Shoulder extends Subsystem4237
     }
     
     //TODO: determine real angles
-    public enum LevelAngle
+    public enum ScoringPosition
     {
         kGatherer(0.0, 10.0), kLow(25.0, 35.0), kMiddle(55.0, 65.0), kHigh(95.0, 105.0);
         public final double min;
         public final double max;
 
-        private LevelAngle(double min, double max)
+        private ScoringPosition(double min, double max)
         {
             this.min = min;
             this.max = max;
@@ -295,7 +295,6 @@ public class Shoulder extends Subsystem4237
                 case kStillReleased:
                     if(isReverseLimitSwitchPressed)
                     {
-                        System.out.println("BUtton Pressed");
                         resetState = ResetState.kStart;
                         reverseLSState = LimitSwitchState.kPressed;
                     }
@@ -343,7 +342,6 @@ public class Shoulder extends Subsystem4237
                 break;
 
             case kStart:
-                System.out.println("Resetting Encoder");
                 encoderResetTimer.reset();
                 encoderResetTimer.start();
                 shoulderMotor.set(0.0);
@@ -357,7 +355,6 @@ public class Shoulder extends Subsystem4237
                 {
                     if(Math.abs(periodicIO.currentPosition) < 0.5 )
                     {
-                        System.out.println("Encoder Reset");
                         resetState = ResetState.kDone;
                         resetAttemptCounter = 0;
                     }

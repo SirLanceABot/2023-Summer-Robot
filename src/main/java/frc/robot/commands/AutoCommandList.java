@@ -24,7 +24,7 @@ import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
-import frc.robot.subsystems.Shoulder.LevelAngle;
+import frc.robot.subsystems.Shoulder.ScoringPosition;
 
 public class AutoCommandList extends SequentialCommandGroup
 {
@@ -82,8 +82,8 @@ public class AutoCommandList extends SequentialCommandGroup
     private void build()
     {
         // commandList.clear();
-        Shoulder.LevelAngle angle = LevelAngle.kGatherer;
-        Shoulder.LevelAngle angle2 = LevelAngle.kGatherer;
+        Shoulder.ScoringPosition angle = ScoringPosition.kGatherer;
+        Shoulder.ScoringPosition angle2 = ScoringPosition.kGatherer;
         Arm.ArmPosition piece1 = ArmPosition.kIn;
         Arm.ArmPosition piece2 = ArmPosition.kIn;
         double distance = 0.0;
@@ -146,26 +146,26 @@ public class AutoCommandList extends SequentialCommandGroup
     
     }
 
-    private Shoulder.LevelAngle getAngle1(AutonomousTabData.RowPlayedPiece1 rpp1)
+    private Shoulder.ScoringPosition getAngle1(AutonomousTabData.RowPlayedPiece1 rpp1)
     {
-        LevelAngle angle = LevelAngle.kGatherer;
+        ScoringPosition angle = ScoringPosition.kGatherer;
         ArmPosition piece1 = ArmPosition.kIn;
         switch(rpp1)
         {
             case kNone:
-                angle = LevelAngle.kGatherer;
+                angle = ScoringPosition.kGatherer;
                 piece1 = ArmPosition.kIn;
                 break;
             case kBottom:
-                angle = LevelAngle.kLow;
+                angle = ScoringPosition.kLow;
                 piece1 = ArmPosition.kHalfExtended;
                 break;
             case kMiddle:
-                angle = LevelAngle.kMiddle;
+                angle = ScoringPosition.kMiddle;
                 piece1 = ArmPosition.kThreeQuarterExtended;
                 break;
             case kTop:
-                angle = LevelAngle.kHigh;
+                angle = ScoringPosition.kHigh;
                 piece1 = ArmPosition.kFullyExtended;
                 break;
         }
@@ -173,26 +173,26 @@ public class AutoCommandList extends SequentialCommandGroup
         return angle;
     }
 
-    private Shoulder.LevelAngle getAngle2(AutonomousTabData.RowPlayedPiece2 rpp2)
+    private Shoulder.ScoringPosition getAngle2(AutonomousTabData.RowPlayedPiece2 rpp2)
     {
-        LevelAngle angle = LevelAngle.kGatherer;
+        ScoringPosition angle = ScoringPosition.kGatherer;
         ArmPosition piece2 = ArmPosition.kIn;
         switch(rpp2)
         {
             case kNone:
-                angle = LevelAngle.kGatherer;
+                angle = ScoringPosition.kGatherer;
                 piece2 = ArmPosition.kIn;
                 break;
             case kBottom:
-                angle = LevelAngle.kLow;
+                angle = ScoringPosition.kLow;
                 piece2 = ArmPosition.kHalfExtended;
                 break;
             case kMiddle:
-                angle = LevelAngle.kMiddle;
+                angle = ScoringPosition.kMiddle;
                 piece2 = ArmPosition.kThreeQuarterExtended;
                 break;
             case kTop:
-                angle = LevelAngle.kHigh;
+                angle = ScoringPosition.kHigh;
                 piece2 = ArmPosition.kFullyExtended;
                 break;
         }
@@ -231,12 +231,12 @@ public class AutoCommandList extends SequentialCommandGroup
     private void releasePiece()
     {
         add(new OpenGrabber(grabber));
-        moveShoulder(LevelAngle.kGatherer);
+        moveShoulder(ScoringPosition.kGatherer);
     }
 
-    private void moveShoulder(LevelAngle level)
+    private void moveShoulder(ScoringPosition level)
     {
-        add(new MoveShoulderToAngle(shoulder, level));
+        add(new MoveShoulderToScoringPosition(shoulder, level));
     }
 
     private void moveArm(ArmPosition position)
