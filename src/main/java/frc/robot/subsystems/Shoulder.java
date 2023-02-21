@@ -103,6 +103,7 @@ public class Shoulder extends Subsystem4237
     private static final double kFF = 0.04;
     private static final double kMaxOutput = 1;
     private static final double kMinOutput = -1;
+
     private final int RESET_ATTEMPT_LIMIT = 5;
 
     private int resetAttemptCounter = 0;
@@ -114,14 +115,6 @@ public class Shoulder extends Subsystem4237
 
     private PeriodicIO periodicIO;
 
-    //TODO: change calculation for new gear ratio
-    // private final double TICKS_PER_DEGREE = 5.69;    // TALON FX
-    /**
-     *
-     */
-    private final double TICKS_PER_DEGREE = 11.38;
-  
-    
 
     /** Creates a new Shoulder */
     public Shoulder()

@@ -2,13 +2,9 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
-
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.subsystems.Drivetrain;
 
@@ -39,23 +35,24 @@ public class AutoBalance extends CommandBase
     private BalanceState balanceState = BalanceState.kNotLevel;
 
     private double currentPitch;
-    private double currentRoll;
     private double currentYaw;
     private double error;
     private double drivePower;
     
 
-    private final double CS_BALANCE_GOAL_DEGREES = 0.0;
-    private final double CS_BALANCE_DRIVE_KP = 0.015;
+    // private final double CS_BALANCE_GOAL_DEGREES = 0.0;
+    private final double CS_BALANCE_DRIVE_KP = 0.03;
     private final double CS_BALANCE_TOLERANCE = 3.0;
     private final double CS_BALANCE_MIN_TIME_LEVEL = 1.0;
     private final double CS_BALANCE_MAX_SPEED = 0.5;
 
 
     /**
-     * Creates a new ExampleCommand.
+    * Creates a new AutoBalance.
+    * Balances the robot on the charge station with no help from the driver.
     *
-    * @param subsystem The subsystem used by this command.
+    * @param drivetrain Drivetrain subsytem.
+    * @param gyro Gyro4237 sensor.
     */
     public AutoBalance(Drivetrain drivetrain, Gyro4237 gyro) 
     {
@@ -81,21 +78,16 @@ public class AutoBalance extends CommandBase
     {
         currentPitch = gyro.getPitch();
         currentYaw = (int)Math.abs(gyro.getYaw()) % 360;
-        currentRoll = gyro.getRoll();
 
-        SmartDashboard.putNumber("Current Pitch", currentPitch);
-        SmartDashboard.putNumber("Current Yaw", currentYaw);
+        // SmartDashboard.putNumber("Current Pitch", currentPitch);
+        // SmartDashboard.putNumber("Current Yaw", currentYaw);
 
-
-        // error = CS_BALANCE_GOAL_DEGREES - currentPitch;
         error = currentPitch;
-        // error = currentRoll;
 
         // drivePower =  Math.min(CS_BALANCE_DRIVE_KP * error, 1);
  
         drivePower =  -(CS_BALANCE_DRIVE_KP * error);
 
-        // if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED)
         if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 14.0)
         {
             drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);

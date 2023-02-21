@@ -61,4 +61,10 @@ public class TurnOffShoulder extends CommandBase
     {
         return isFinished;
     }
+
+    @Override
+    public String toString()
+    {
+        return "TurnOffShoulder(shoulder)";
+    }
 }

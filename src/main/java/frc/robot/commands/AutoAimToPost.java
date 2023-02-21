@@ -31,13 +31,19 @@ public class AutoAimToPost extends CommandBase
 
     NetworkTableEntry tx = table.getEntry("tx");
 
-    private final double alignmentTolerance = 0.5;  //Limelight angle measurement in degrees
+    private final double POST_ALIGNMENT_TOLERANCE = 0.5;  //Limelight angle measurement in degrees
+    private final double POST_ALIGNMENT_DRIVE_KP = 0.020;
 
+    private double xDistance;
+    private double error;
+    private double drivePower;
 
     /**
      * Creates a new AutoAimToPost
+     * 
      *
-     * @param subsystem The subsystem used by this command.
+     * @param drivetrain Drivetrain subsystem.
+     * @param vision Vision sensor.
      */
     public AutoAimToPost(Drivetrain drivetrain, Vision vision) 
     {
@@ -61,47 +67,37 @@ public class AutoAimToPost extends CommandBase
     @Override
     public void execute()
     {
-        double xDistanceNT = tx.getDouble(0.0);
-        double xDistance = vision.getX();
+        // double xDistance = vision.getx();
+        error = vision.getX();
+
+        drivePower = -(POST_ALIGNMENT_DRIVE_KP * error);
 
         if(drivetrain != null)
-            drivetrain.drive(0.0, -Math.signum(xDistance)*0.50, 0.0, true);
+            drivetrain.drive(0.0, drivePower, 0.0, true);
 
         // System.out.println("  X: " + xDistance);
-        // System.out.println("XNT: " + xDistanceNT);
-        // System.out.println(System.currentTimeMillis());
-        
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
     {
-        double xDistanceNT = tx.getDouble(0.0);
-        double xDistance = vision.getX();
+        // double xDistance = vision.getX();
 
         if(drivetrain != null)
             drivetrain.drive(0.0, 0.0, 0.0, true);
-
-        System.out.println("Stop");
         
         // System.out.println("End X: " + xDistance);
-        // System.out.println("End XNT: " + xDistanceNT);
-        // System.out.println(System.currentTimeMillis());
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() 
     {
-        double xDistanceNT = tx.getDouble(0.0);
-        double xDistance = vision.getX();
+        error = vision.getX();
 
-        if(Math.abs(xDistance) < alignmentTolerance)
+        if(Math.abs(error) < POST_ALIGNMENT_TOLERANCE)
         {
-            // System.out.println("Finished X: " + xDistance);
-            // System.out.println("Finished XNT: " + xDistanceNT);
-            // System.out.println(System.currentTimeMillis());
             return true;
         }
         else

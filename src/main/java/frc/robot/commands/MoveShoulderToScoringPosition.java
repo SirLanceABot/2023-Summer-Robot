@@ -29,9 +29,11 @@ public class MoveShoulderToScoringPosition extends CommandBase
     // private final double LEVEL_3_ANGLE = 100;       // High Scoring Position
     
     /**
-     * Creates a new RaiseShoulder.
+     * Creates a new MoveShoulderToScoringPosition.
+     * Moves the shoulder to one of the predetermined positions
      *
-     * @param shoudler The subsystem used by this command.
+     * @param shoudler Shoulder subsystem.
+     * @param desiredPosition Position that the shoulder needs to go to (ScoringPosition)
      */
     public MoveShoulderToScoringPosition(Shoulder shoulder, ScoringPosition desiredPosition) 
     {
@@ -53,18 +55,20 @@ public class MoveShoulderToScoringPosition extends CommandBase
     @Override
     public void execute()
     {
-        //TODO: use angles or encoder ticks?
-        if(shoulder.getPosition() < desiredPosition.min)
+        if(shoulder !=  null)
         {
-            shoulder.moveUp();
-        }
-        else if(shoulder.getPosition() > desiredPosition.max)
-        {
-            shoulder.moveDown();
-        }
-        else
-        { 
-            isFinished = true;
+            if(shoulder.getPosition() < desiredPosition.min)
+            {
+                shoulder.moveUp();
+            }
+            else if(shoulder.getPosition() > desiredPosition.max)
+            {
+                shoulder.moveDown();
+            }
+            else
+            { 
+                isFinished = true;
+            }
         }
     }
 
@@ -80,7 +84,16 @@ public class MoveShoulderToScoringPosition extends CommandBase
     @Override
     public void end(boolean interrupted)
     {
-        shoulder.hold();    // once shoulder is done moving, hold position
+        if(shoulder != null)
+        {
+            shoulder.hold();    // once shoulder is done moving, hold position
+        }
+        
     }
 
+    @Override
+    public String toString()
+    {
+        return "MoveShoulderToScoringPosition(shoulder, kHigh)";
+    }
 }
