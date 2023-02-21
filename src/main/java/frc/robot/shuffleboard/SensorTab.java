@@ -46,7 +46,7 @@ public class SensorTab
         this.shoulder = shoulder;
         this.grabber = grabber;
         this.arm = arm;
-        this.swerveModule = swerveModule;
+        // this.swerveModule = swerveModule;
         this.drivetrain = drivetrain;
 
         // initOperatorControllerTab();
@@ -77,15 +77,18 @@ public class SensorTab
     public void createSensorBox()
     {
         createTextBox("Shoulder Encoder", shoulder.getPosition(), 0, 0, 4, 4);
-        createTextBox("Grabber Enocder", grabber.getGrabberEncoder(), 5, 0, 4, 4);
-        createTextBox("Arm Encoder", arm.getArmPosition(), 10, 0, 4, 4);
-        createLogEntryTextBox("Front Left Spin", drivetrain.flsLog(), 0, 5, 4, 4);
-        createLogEntryTextBox("Front Left Drive", drivetrain.fldLog(), 0, 10, 4, 4);
-        createLogEntryTextBox("Front Right Spin", drivetrain.frsLog(), 5, 5, 4, 4);
-        createLogEntryTextBox("Front Right Drive", drivetrain.frdLog(), 5, 10, 4, 4);
-        createLogEntryTextBox("Back Left Spin", drivetrain.blsLog(), 10, 5, 4, 4);
-        createLogEntryTextBox("Back Left Drive", drivetrain.bldLog(), 10, 10, 4, 4);
-        createLogEntryTextBox("Back Right Spin", drivetrain.brsLog(), 15, 5, 4, 4);
-        createLogEntryTextBox("Back Right Drive", drivetrain.flsLog(), 15, 10, 4, 4);
+        System.out.println(shoulder.getPosition());
+        System.out.println("A");
+        SmartDashboard.putNumber("Shoulder Encoder", shoulder.getPosition());
+        // createTextBox("Grabber Enocder", grabber.getGrabberEncoder(), 5, 0, 4, 4);
+        // createTextBox("Arm Encoder", arm.getArmPosition(), 10, 0, 4, 4);
+        // createLogEntryTextBox("Front Left Spin", drivetrain.flsLog(), 0, 5, 4, 4);
+        // createLogEntryTextBox("Front Left Drive", drivetrain.fldLog(), 0, 10, 4, 4);
+        // createLogEntryTextBox("Front Right Spin", drivetrain.frsLog(), 5, 5, 4, 4);
+        // createLogEntryTextBox("Front Right Drive", drivetrain.frdLog(), 5, 10, 4, 4);
+        // createLogEntryTextBox("Back Left Spin", drivetrain.blsLog(), 10, 5, 4, 4);
+        // createLogEntryTextBox("Back Left Drive", drivetrain.bldLog(), 10, 10, 4, 4);
+        // createLogEntryTextBox("Back Right Spin", drivetrain.brsLog(), 15, 5, 4, 4);
+        // createLogEntryTextBox("Back Right Drive", drivetrain.flsLog(), 15, 10, 4, 4);
     }
 }

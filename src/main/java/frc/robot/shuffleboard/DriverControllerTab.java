@@ -69,7 +69,7 @@ public class DriverControllerTab
         createAxisWidgets(Xbox.Axis.kRightX, "Right X", rightXObjects, 10);
         createAxisWidgets(Xbox.Axis.kRightY, "Right Y", rightYObjects, 15);
         createAxisWidgets(Xbox.Axis.kLeftTrigger, "Left Trigger", leftTriggerObjects, 20);
-        createAxisWidgets(Xbox.Axis.kRightTrigger, "Right Trigger", rightTriggerObjects, 25);
+        createAxisWidgets(Xbox.Axis.kRightTrigger, "Right Trigger", rightTriggerObjects, 24);
         // createAxisWidgets(DriverController.DriverAxisAction.kRightY, "", rightYObjects, 15);
     }
 

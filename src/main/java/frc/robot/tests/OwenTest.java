@@ -2,6 +2,8 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -67,11 +69,13 @@ public class OwenTest implements Test
         // Joystick();
         if(joystick.getRawButton(4))
         {
+            System.out.println("Up");
             shoulder.moveUp();
             // arm.extendArm();
         }
         else if(joystick.getRawButton(3))
         {
+            System.out.println("Down");
             shoulder.moveDown();
             // arm.retractArm();
         }

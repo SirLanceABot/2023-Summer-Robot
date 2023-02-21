@@ -160,7 +160,17 @@ public class RobotContainer
 			//A Button
 			BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
 			Trigger aButtonTrigger = new Trigger(aButton);
-			//aButtonTrigger.toggleOnTrue(new AutoBalance));
+			aButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
+						  .andThen( () -> operatorController.setRumble(0.5))         
+						  .andThen( () -> driverController.setRumble(0.5))
+						  .andThen( new WaitCommand(0.5))
+						  .andThen( () -> operatorController.setRumble(0.0))
+						  .andThen( () -> driverController.setRumble(0.0)));
+
+			//B Button
+			BooleanSupplier bButton = driverController.getButtonSupplier(Xbox.Button.kB);
+			Trigger bButtonTrigger = new Trigger(bButton);
+			bButtonTrigger.onTrue( new AutoBalance(drivetrain, gyro));
 
 			//X Button-lockwheels
 			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
@@ -171,17 +181,16 @@ public class RobotContainer
 			//Y Button
 			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
-			yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
-						  .andThen( new PrintCommand("Y") )                        
-						  .andThen( () -> driverController.setRumble(0.5))
-						  .andThen( new WaitCommand(0.5))
-						  .andThen( () -> driverController.setRumble(0.0)));
+			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)         
+			// 			  .andThen( () -> driverController.setRumble(0.5))
+			// 			  .andThen( new WaitCommand(0.5))
+			// 			  .andThen( () -> driverController.setRumble(0.0)));
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
 			//Left Trigger
 			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
 			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
-			lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+			// lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
 
 
 			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));

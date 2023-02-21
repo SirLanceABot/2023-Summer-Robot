@@ -112,7 +112,7 @@ public class AutonomousTab
         autonomousTab.add(autonomousCommandsBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
             .withPosition(0, 0)
-            .withSize(6, 2);
+            .withSize(7, 2);
     }
 
     /**
@@ -133,7 +133,7 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(startingLocationBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(0, 3)
+            .withPosition(1, 3)
             .withSize(5, 2);
     }
 
@@ -153,8 +153,8 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(containingPreloadBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(7, 0)
-            .withSize(4, 2);
+            .withPosition(10, 0)
+            .withSize(4, 3);
     }
 
     /**
@@ -174,8 +174,8 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(playPreloadBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(11, 0)
-            .withSize(4, 2);
+            .withPosition(14, 0)
+            .withSize(4, 3);
     }
 
     /**
@@ -185,8 +185,8 @@ public class AutonomousTab
     private void createRowPlayedPiece1Box()
     {
         //create and name the Box
-        SendableRegistry.add(rowPlayedPiece1Box, "Row Played Preload");
-        SendableRegistry.setName(rowPlayedPiece1Box, "Row Played Preload");
+        SendableRegistry.add(rowPlayedPiece1Box, "Row To Play Preload");
+        SendableRegistry.setName(rowPlayedPiece1Box, "Row To Play Preload");
 
         //add options to Box
         rowPlayedPiece1Box.addOption("None", AutonomousTabData.RowPlayedPiece1.kNone);
@@ -197,7 +197,7 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(rowPlayedPiece1Box)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(8, 3)
+            .withPosition(11, 3)
             .withSize(6, 2);
     }
 
@@ -219,7 +219,7 @@ public class AutonomousTab
         autonomousTab.add(moveOntoChargingStationBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
             .withPosition(1, 6)
-            .withSize(4, 2);
+            .withSize(4, 3);
     }
 
     /**
@@ -229,8 +229,8 @@ public class AutonomousTab
     private void createDriveToSecondPieceBox()
     {
         //create and name the Box
-        SendableRegistry.add(driveToSecondPieceBox, "Drive To Second Piece");
-        SendableRegistry.setName(driveToSecondPieceBox, "Drive To Second Piece");
+        SendableRegistry.add(driveToSecondPieceBox, "Drive To Piece 2");
+        SendableRegistry.setName(driveToSecondPieceBox, "Drive To Piece 2");
 
         //add options to Box
         driveToSecondPieceBox.setDefaultOption("Yes", AutonomousTabData.DriveToSecondPiece.kYes);
@@ -238,8 +238,8 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(driveToSecondPieceBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(15, 5)
-            .withSize(4, 2);
+            .withPosition(4, 6)
+            .withSize(4, 3);
     }
 
     /**
@@ -249,8 +249,8 @@ public class AutonomousTab
     private void createPickUpGamePiecesBox()
     {
         //create and name the Box
-        SendableRegistry.add(pickUpGamePiecesBox, "Pick Up Game Piece");
-        SendableRegistry.setName(pickUpGamePiecesBox, "Pick Up Game Piece");
+        SendableRegistry.add(pickUpGamePiecesBox, "Pick Up Game Piece 2");
+        SendableRegistry.setName(pickUpGamePiecesBox, "Pick Up Game Piece 2");
 
         //add options to Box
         pickUpGamePiecesBox.setDefaultOption("Yes", AutonomousTabData.PickUpGamePieces.kYes);
@@ -259,8 +259,8 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(pickUpGamePiecesBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(16, 0)
-            .withSize(4, 2);
+            .withPosition(20, 0)
+            .withSize(4, 3);
     }
 
     /**
@@ -270,8 +270,8 @@ public class AutonomousTab
     private void createScoreSecondPieceBox()
     {
         //create and name the Box
-        SendableRegistry.add(scoreSecondPieceBox, "Score Second Piece");
-        SendableRegistry.setName(scoreSecondPieceBox, "Score Second Piece");
+        SendableRegistry.add(scoreSecondPieceBox, "Score Piece 2");
+        SendableRegistry.setName(scoreSecondPieceBox, "Score Piece 2");
 
         //add options to Box
         scoreSecondPieceBox.addOption("No", AutonomousTabData.ScoreSecondPiece.kNo);
@@ -280,8 +280,8 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(scoreSecondPieceBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(15, 8)
-            .withSize(6, 2);
+            .withPosition(24, 0)
+            .withSize(4, 3);
     }
 
     /**
@@ -291,8 +291,8 @@ public class AutonomousTab
     private void createRowPlayedPiece2Box()
     {
         //create and name the Box
-        SendableRegistry.add(rowPlayedPiece2Box, "Row Played Piece 2");
-        SendableRegistry.setName(rowPlayedPiece2Box, "Row Played Piece 2");
+        SendableRegistry.add(rowPlayedPiece2Box, "Row To Play Piece 2");
+        SendableRegistry.setName(rowPlayedPiece2Box, "Row To Play Piece 2");
 
         //add options to Box
         rowPlayedPiece2Box.setDefaultOption("None", AutonomousTabData.RowPlayedPiece2.kNone);
@@ -303,7 +303,7 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(rowPlayedPiece2Box)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(15, 12)
+            .withPosition(21, 3)
             .withSize(6, 2);
     }
 
@@ -327,8 +327,8 @@ public class AutonomousTab
 
         autonomousTab.add(sendDataButton)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(23, 1)
-            .withSize(4, 2);
+            .withPosition(20, 8)
+            .withSize(4, 4);
     }
 
     private void createSuccessfulDownloadBox()
@@ -340,7 +340,7 @@ public class AutonomousTab
         
         autonomousTab.add("Successful Download?", false)
              .withWidget(BuiltInWidgets.kBooleanBox)
-             .withPosition(23, 4)
+             .withPosition(24, 8)
              .withSize(4, 4)
              .withProperties(booleanBoxProperties)
              .getEntry();
@@ -350,8 +350,8 @@ public class AutonomousTab
     {
          autonomousTab.add("Error Messages", "No Errors")
              .withWidget(BuiltInWidgets.kTextView)
-             .withPosition(22, 10)
-             .withSize(6, 2)
+             .withPosition(0, 10)
+             .withSize(20, 2)
              .getEntry();
     }
 

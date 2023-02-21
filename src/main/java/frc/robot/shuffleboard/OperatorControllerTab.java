@@ -67,7 +67,7 @@ public class OperatorControllerTab
         createAxisWidgets(Xbox.Axis.kRightX, "Right X", rightXObjects, 10);
         createAxisWidgets(Xbox.Axis.kRightY, "Right Y", rightYObjects, 15);
         createAxisWidgets(Xbox.Axis.kLeftTrigger, "Left Trigger", leftTriggerObjects, 20);
-        createAxisWidgets(Xbox.Axis.kRightTrigger, "Right Trigger", rightTriggerObjects, 25);
+        createAxisWidgets(Xbox.Axis.kRightTrigger, "Right Trigger", rightTriggerObjects, 24);
     }
 
     private void createAxisWidgets(Xbox.Axis axis, String name, AxisObjects axisObjects, int column)
