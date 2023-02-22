@@ -441,45 +441,27 @@ public class Drivetrain extends Subsystem4237
     periodicIO.brdLogEntry.append(backRight.getDrivingEncoderRate());
   }
 
-  public DoubleLogEntry flsLog()
+  public double fls()
   {
-    return periodicIO.flsLogEntry;
+    return frontLeft.getTurningEncoderPosition();
   }
 
-  public DoubleLogEntry frsLog()
+  public double frs()
   {
-    return periodicIO.frsLogEntry;
+    return frontRight.getTurningEncoderPosition();
   }
 
-  public DoubleLogEntry blsLog()
+  public double bls()
   {
-    return periodicIO.blsLogEntry;
+    return backLeft.getTurningEncoderPosition();
   }
 
-  public DoubleLogEntry brsLog()
+  public double brs()
   {
-    return periodicIO.brsLogEntry;
+    return backRight.getTurningEncoderPosition();
   }
 
-  public DoubleLogEntry fldLog()
-  {
-    return periodicIO.fldLogEntry;
-  }
 
-  public DoubleLogEntry frdLog()
-  {
-    return periodicIO.frdLogEntry;
-  }
-
-  public DoubleLogEntry bldLog()
-  {
-    return periodicIO.bldLogEntry;
-  }
-
-  public DoubleLogEntry brdLog()
-  {
-    return periodicIO.flsLogEntry;
-  }
 
         /**
      * Drive a "straight" distance in meters

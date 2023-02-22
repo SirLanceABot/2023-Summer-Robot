@@ -9,6 +9,7 @@ import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import frc.robot.RobotContainer;
@@ -30,7 +31,14 @@ public class SensorTab
     private Drivetrain drivetrain;
     private SwerveModule swerveModule;
     private Translation2d startingPosition;
-
+    private Double encoderValue = 0.0;
+    private GenericEntry shoulderEncoderBox;
+    private GenericEntry grabberEncoderBox;
+    private GenericEntry armEncoderBox;
+    private GenericEntry flsEncoderBox;
+    private GenericEntry frsEncoderBox;
+    private GenericEntry blsEncoderBox;
+    private GenericEntry brsEncoderBox;
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
     static
@@ -42,53 +50,96 @@ public class SensorTab
     SensorTab(Shoulder shoulder, Grabber grabber, Arm arm, Drivetrain drivetrain)
     {
         System.out.println(fullClassName + " : Constructor Started");
-        // this.operatorController = operatorController;
+
         this.shoulder = shoulder;
-        this.grabber = grabber;
-        this.arm = arm;
-        // this.swerveModule = swerveModule;
-        this.drivetrain = drivetrain;
+        // this.grabber = grabber;
+        // this.arm = arm;
+        // this.drivetrain = drivetrain;
 
-        // initOperatorControllerTab();
-        createSensorBox();
+        shoulderEncoderBox = createShoulderEncoderBox();
+        grabberEncoderBox = createGrabberEncoderBox();
+        armEncoderBox = createArmEncoderBox();
+        flsEncoderBox = createFrontLeftTurnEncoderBox();
+        frsEncoderBox = createFrontRightTurnEncoderBox();
+        blsEncoderBox = createBackLeftTurnEncoderBox();
+        brsEncoderBox = createBackRightTurnEncoderBox();
 
+        
 
         System.out.println(fullClassName + ": Constructor Finished");
     }
 
-    private GenericEntry createTextBox(String title, double defaultValue, int column, int row, int width, int height)
+    private GenericEntry createShoulderEncoderBox()
     {
-        return sensorTab.add(title, defaultValue)
+        return sensorTab.add("Shoulder Encoder", shoulder.getPosition())
         .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
-        .withPosition(column, row)  // sets position of widget
-        .withSize(width, height)    // sets size of widget
+        .withPosition(0, 0)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
         .getEntry();
     }
 
-    private GenericEntry createLogEntryTextBox(String title, DoubleLogEntry defaultValue, int column, int row, int width, int height)
+    private GenericEntry createGrabberEncoderBox()
     {
-        return sensorTab.add(title, defaultValue)
+        return sensorTab.add("Grabber Encoder", grabber.getGrabberEncoder())
         .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
-        .withPosition(column, row)  // sets position of widget
-        .withSize(width, height)    // sets size of widget
+        .withPosition(0, 3)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
         .getEntry();
     }
 
-    public void createSensorBox()
+    private GenericEntry createArmEncoderBox()
     {
-        createTextBox("Shoulder Encoder", shoulder.getPosition(), 0, 0, 4, 4);
-        System.out.println(shoulder.getPosition());
-        System.out.println("A");
-        SmartDashboard.putNumber("Shoulder Encoder", shoulder.getPosition());
-        // createTextBox("Grabber Enocder", grabber.getGrabberEncoder(), 5, 0, 4, 4);
-        // createTextBox("Arm Encoder", arm.getArmPosition(), 10, 0, 4, 4);
-        // createLogEntryTextBox("Front Left Spin", drivetrain.flsLog(), 0, 5, 4, 4);
-        // createLogEntryTextBox("Front Left Drive", drivetrain.fldLog(), 0, 10, 4, 4);
-        // createLogEntryTextBox("Front Right Spin", drivetrain.frsLog(), 5, 5, 4, 4);
-        // createLogEntryTextBox("Front Right Drive", drivetrain.frdLog(), 5, 10, 4, 4);
-        // createLogEntryTextBox("Back Left Spin", drivetrain.blsLog(), 10, 5, 4, 4);
-        // createLogEntryTextBox("Back Left Drive", drivetrain.bldLog(), 10, 10, 4, 4);
-        // createLogEntryTextBox("Back Right Spin", drivetrain.brsLog(), 15, 5, 4, 4);
-        // createLogEntryTextBox("Back Right Drive", drivetrain.flsLog(), 15, 10, 4, 4);
+        return sensorTab.add("Arm Encoder", arm.getArmPosition())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(0, 6)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createFrontLeftTurnEncoderBox()
+    {
+        return sensorTab.add("Front Left Turn Encoder", drivetrain.fls())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(5, 0)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createFrontRightTurnEncoderBox()
+    {
+        return sensorTab.add("Front Right Turn Encoder", drivetrain.frs())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(5, 3)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createBackLeftTurnEncoderBox()
+    {
+        return sensorTab.add("Back Left Turn Encoder", drivetrain.bls())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(5, 6)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createBackRightTurnEncoderBox()
+    {
+        return sensorTab.add("Back Right Turn Encoder", drivetrain.brs())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(5, 9)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    public void updateEncoderData()
+    {
+        shoulderEncoderBox.setDouble(shoulder.getPosition());
+        grabberEncoderBox.setDouble(grabber.getGrabberEncoder());
+        armEncoderBox.setDouble(arm.getArmPosition());
+        flsEncoderBox.setDouble(drivetrain.fls());
+        frsEncoderBox.setDouble(drivetrain.frs());
+        blsEncoderBox.setDouble(drivetrain.bls());
+        brsEncoderBox.setDouble(drivetrain.brs());
     }
 }

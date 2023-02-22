@@ -17,11 +17,11 @@ public class MainShuffleboard
 
     // *** CLASS & INSTANCE VARIABLES ***
 
-    private boolean useAutonomousTab            = true;
-    private boolean useCameraTab                = true;
-    private boolean useSensorTab                = false;
-    private boolean useDriverControllerTab      = true;
-    private boolean useOperatorControllerTab    = true;
+    private boolean useAutonomousTab            = false;
+    private boolean useCameraTab                = false;
+    private boolean useSensorTab                = true;
+    private boolean useDriverControllerTab      = false;
+    private boolean useOperatorControllerTab    = false;
     
     public final AutonomousTab autonomousTab;
     public final CameraTab cameraTab;
@@ -84,6 +84,6 @@ public class MainShuffleboard
     public void setSensors()
     {
         if(sensorTab != null)
-            sensorTab.createSensorBox();
+            sensorTab.updateEncoderData();
     }
 }
