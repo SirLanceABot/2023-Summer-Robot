@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
+import frc.robot.sensors.Gyro4237;
 import frc.robot.shuffleboard.AutonomousTabData;
 import frc.robot.shuffleboard.AutonomousTabData.StartingLocation;
 // import frc.robot.shuffleboard.AutonomousTabData.TeamColor;
@@ -49,6 +50,7 @@ public class AutoCommandList extends SequentialCommandGroup
     private AutonomousTabData autonomousTabData;
     // private final Autonomous1 autonomous1;
     private final Drivetrain drivetrain;
+    private final Gyro4237 gyro;
     private final Grabber grabber;
     private final Shoulder shoulder;
     private final Arm arm;
@@ -68,6 +70,7 @@ public class AutoCommandList extends SequentialCommandGroup
         this.autonomousTabData = robotContainer.mainShuffleboard.autonomousTab.getAutonomousTabData();
         // this.autonomous1 = autonomous1;
         this.drivetrain = robotContainer.drivetrain;
+        this.gyro = robotContainer.gyro;
         this.grabber = robotContainer.grabber;
         this.shoulder = robotContainer.shoulder;
         this.arm = robotContainer.arm;
@@ -220,12 +223,12 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void driveOut(double distance)
     {
-        add(new AutoDriveDistance(drivetrain, 0.5, 0.0, distance));
+        add(new AutoDriveDistance(drivetrain, gyro, 0.5, 0.0, distance));
     }
 
     private void strafeDrive(double distance)
     {
-        add(new AutoDriveDistance(drivetrain, 0.0, 0.5, distance)); 
+        add(new AutoDriveDistance(drivetrain, gyro, 0.0, 0.5, distance)); 
     }
 
     private void releasePiece()
@@ -248,19 +251,19 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void turnRobot180()
     {
-        add(new AutoDriveDistance(drivetrain, 0.5, -0.5, 2));
+        add(new AutoDriveDistance(drivetrain, gyro, 0.5, -0.5, 2));
     }
 
     private void goToSecondGamePiece()
     {
-        add(new AutoDriveDistance(drivetrain, 0.75, 0.0, 4.5));
+        add(new AutoDriveDistance(drivetrain, gyro, 0.75, 0.0, 4.5));
     }
 
     private void goToChargingStation(double distance)
     {
-        add(new AutoDriveDistance(drivetrain, 0.75, 0.0, 4.27));
-        add(new AutoDriveDistance(drivetrain, 0.0, distance, 1.0));
-        add(new AutoDriveDistance(drivetrain, -0.75, 0.0, 1.0));
+        add(new AutoDriveDistance(drivetrain, gyro, 0.75, 0.0, 4.27));
+        add(new AutoDriveDistance(drivetrain, gyro, 0.0, distance, 1.0));
+        add(new AutoDriveDistance(drivetrain, gyro, -0.75, 0.0, 1.0));
     }
 
     private void pickUpPiece2()
