@@ -45,7 +45,6 @@ public class Gyro4237 extends Sensor4237
     public Gyro4237()
     {
         //reset();
-        // gyro.setYaw(180.0);
         initPigeon();
         // periodicIO.angle = gyro.getYaw();
         periodicIO.rotation2d = gyro.getRotation2d();
@@ -56,8 +55,9 @@ public class Gyro4237 extends Sensor4237
     {
         gyro.configFactoryDefault();
         gyro.configMountPose(Constants.Gyro.FORWARD_AXIS, Constants.Gyro.UP_AXIS); //forward axis and up axis
-        // gyro.setYaw(180.0);  // 2022 robot started with front facing away from the driver station, 2023 will not
         gyro.reset();
+        Timer.delay(0.5);
+        gyro.setYaw(180.0);  // 2022 robot started with front facing away from the driver station, 2023 will not
         Timer.delay(0.5);
     }
 
@@ -111,7 +111,7 @@ public class Gyro4237 extends Sensor4237
             gyro.reset();
             timer.reset();
             timer.start();
-            // gyro.setYaw(180.0);
+            gyro.setYaw(180.0);
             resetState = ResetState.kTry;
         }
         else if (resetState == ResetState.kTry && timer.hasElapsed(Constants.Gyro.RESET_GYRO_DELAY))
