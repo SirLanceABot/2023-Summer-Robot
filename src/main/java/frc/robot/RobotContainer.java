@@ -171,6 +171,8 @@ public class RobotContainer
 			BooleanSupplier bButton = driverController.getButtonSupplier(Xbox.Button.kB);
 			Trigger bButtonTrigger = new Trigger(bButton);
 			bButtonTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+			// bButtonTrigger.onTrue( new AutoDriveDistance(drivetrain, 0.5, 0.0, 1.0)
+			// 			  .andThen( new AutoBalance(drivetrain, gyro)));
 
 			//X Button-lockwheels
 			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
@@ -248,7 +250,13 @@ public class RobotContainer
 	public Command getAutonomousCommand()
 	{
 		// AutoBalance command = new AutoBalance(drivetrain, gyro);
-		AutoDriveDistance command = new AutoDriveDistance(drivetrain, 0.2, 0.0, 2.0);
+		// AutoDriveDistance command = new AutoDriveDistance(drivetrain, 0.2, 0.0, 2.0);
+		Command command = new AutoDriveDistance(drivetrain, gyro, -1.0, 0.0, 3.90)
+				// .andThen( new AutoBalance(drivetrain, gyro))
+				// .andThen( new AutoDriveDistance(drivetrain, -0.5, 0.0, 1.5))
+				.andThen( new AutoDriveDistance(drivetrain, gyro, 1.0, 0.0, 1.90))
+				.andThen( new AutoBalance(drivetrain, gyro))
+				.andThen( new LockWheels(drivetrain));
 		return command;
 	}
 

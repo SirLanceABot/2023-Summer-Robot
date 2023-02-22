@@ -32,18 +32,21 @@ public class AutoBalance extends CommandBase
     private final Drivetrain drivetrain;
     private final Gyro4237 gyro;
     private final Timer finishBalanceTimer = new Timer();
+    private final Timer driveForwardTimer = new Timer();
     private BalanceState balanceState = BalanceState.kNotLevel;
 
     private double currentPitch;
+    // private double previousPitch;
+    private double maxPitch = 0.0;
     private double currentYaw;
     private double error;
     private double drivePower;
     
 
     // private final double CS_BALANCE_GOAL_DEGREES = 0.0;
-    private final double CS_BALANCE_DRIVE_KP = 0.03;
+    private final double CS_BALANCE_DRIVE_KP = 0.010;
     private final double CS_BALANCE_TOLERANCE = 3.0;
-    private final double CS_BALANCE_MIN_TIME_LEVEL = 1.0;
+    private final double CS_BALANCE_MIN_TIME_LEVEL = 0.75;
     private final double CS_BALANCE_MAX_SPEED = 0.5;
 
 
@@ -70,35 +73,59 @@ public class AutoBalance extends CommandBase
     // Called when the command is initially scheduled.
     @Override
     public void initialize()
-    {}
+    {
+        // driveForwardTimer.reset();
+        // driveForwardTimer.start();
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute()
     {
+        // System.out.println(driveForwardTimer.get());
+        
+        // if(driveForwardTimer.get() < 1.0)
+        // {   
+        //     System.out.println("drive");
+        //     drivetrain.drive(-CS_BALANCE_MAX_SPEED, 0.0, 0.0, true);
+        // }
+
+        // previousPitch = currentPitch;
         currentPitch = gyro.getPitch();
+        if(Math.abs(currentPitch) > Math.abs(maxPitch))
+        {
+            maxPitch = currentPitch;
+        }
         currentYaw = (int)Math.abs(gyro.getYaw()) % 360;
 
-        // SmartDashboard.putNumber("Current Pitch", currentPitch);
-        // SmartDashboard.putNumber("Current Yaw", currentYaw);
+        SmartDashboard.putNumber("Current Pitch", currentPitch);
+        SmartDashboard.putNumber("Current Yaw", currentYaw);
 
         error = currentPitch;
 
         // drivePower =  Math.min(CS_BALANCE_DRIVE_KP * error, 1);
  
-        drivePower =  -(CS_BALANCE_DRIVE_KP * error);
+        drivePower = (CS_BALANCE_DRIVE_KP * error);
 
-        if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 14.0)
+        if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 12.0)
         {
             drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
         }
+        // else if(Math.abs(error) < 11.0)
+        // else if(Math.abs(currentPitch) < Math.abs(previousPitch))
+        else if(Math.abs(maxPitch) - Math.abs(currentPitch) > 1.5)
+        {
+            drivePower = 0.0;
+        }
 
         if((currentYaw > 135 && currentYaw < 225))
+        {
             drivePower = -drivePower;
+        }
 
         if(drivetrain != null)
         {
-            drivetrain.drive(drivePower, 0.0, 0.0, true);
+            drivetrain.drive(drivePower, 0.0, 0.0, false);
         }
     }
 
@@ -108,10 +135,9 @@ public class AutoBalance extends CommandBase
     {
         if(drivetrain != null)
         {
-            drivetrain.drive(0.0, 0.0, 0.0, true);
+            drivetrain.drive(0.0, 0.0, 0.0, false);
             // drivetrain.lockWheels();
-
-            new LockWheels(drivetrain).schedule();
+            // new LockWheels(drivetrain).schedule();
         }
     }
 
