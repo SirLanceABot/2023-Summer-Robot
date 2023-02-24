@@ -25,7 +25,7 @@ import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
-import frc.robot.subsystems.Shoulder.ScoringPosition;
+import frc.robot.subsystems.Shoulder.ShoulderPosition;
 
 public class AutoCommandList extends SequentialCommandGroup
 {
@@ -85,10 +85,10 @@ public class AutoCommandList extends SequentialCommandGroup
     private void build()
     {
         // commandList.clear();
-        Shoulder.ScoringPosition angle = ScoringPosition.kGatherer;
-        Shoulder.ScoringPosition angle2 = ScoringPosition.kGatherer;
-        Arm.ArmPosition piece1 = ArmPosition.kIn;
-        Arm.ArmPosition piece2 = ArmPosition.kIn;
+        Shoulder.ShoulderPosition angle = ShoulderPosition.kGather;
+        Shoulder.ShoulderPosition angle2 = ShoulderPosition.kGather;
+        Arm.ArmPosition piece1 = ArmPosition.kGather;
+        Arm.ArmPosition piece2 = ArmPosition.kGather;
         double distance = 0.0;
         // RowPlayedPiece1 row1 = autonomousTabData.rowPlayedPiece1.getSelected();
 
@@ -149,54 +149,54 @@ public class AutoCommandList extends SequentialCommandGroup
     
     }
 
-    private Shoulder.ScoringPosition getAngle1(AutonomousTabData.RowPlayedPiece1 rpp1)
+    private Shoulder.ShoulderPosition getAngle1(AutonomousTabData.RowPlayedPiece1 rpp1)
     {
-        ScoringPosition angle = ScoringPosition.kGatherer;
-        ArmPosition piece1 = ArmPosition.kIn;
+        ShoulderPosition angle = ShoulderPosition.kGather;
+        ArmPosition piece1 = ArmPosition.kGather;
         switch(rpp1)
         {
             case kNone:
-                angle = ScoringPosition.kGatherer;
-                piece1 = ArmPosition.kIn;
+                angle = ShoulderPosition.kGather;
+                piece1 = ArmPosition.kGather;
                 break;
             case kBottom:
-                angle = ScoringPosition.kLow;
-                piece1 = ArmPosition.kHalfExtended;
+                angle = ShoulderPosition.kLow;
+                piece1 = ArmPosition.kLow;
                 break;
             case kMiddle:
-                angle = ScoringPosition.kMiddle;
-                piece1 = ArmPosition.kThreeQuarterExtended;
+                angle = ShoulderPosition.kMiddle;
+                piece1 = ArmPosition.kMiddle;
                 break;
             case kTop:
-                angle = ScoringPosition.kHigh;
-                piece1 = ArmPosition.kFullyExtended;
+                angle = ShoulderPosition.kHigh;
+                piece1 = ArmPosition.kHigh;
                 break;
         }
 
         return angle;
     }
 
-    private Shoulder.ScoringPosition getAngle2(AutonomousTabData.RowPlayedPiece2 rpp2)
+    private Shoulder.ShoulderPosition getAngle2(AutonomousTabData.RowPlayedPiece2 rpp2)
     {
-        ScoringPosition angle = ScoringPosition.kGatherer;
-        ArmPosition piece2 = ArmPosition.kIn;
+        ShoulderPosition angle = ShoulderPosition.kGather;
+        ArmPosition piece2 = ArmPosition.kGather;
         switch(rpp2)
         {
             case kNone:
-                angle = ScoringPosition.kGatherer;
-                piece2 = ArmPosition.kIn;
+                angle = ShoulderPosition.kGather;
+                piece2 = ArmPosition.kGather;
                 break;
             case kBottom:
-                angle = ScoringPosition.kLow;
-                piece2 = ArmPosition.kHalfExtended;
+                angle = ShoulderPosition.kLow;
+                piece2 = ArmPosition.kLow;
                 break;
             case kMiddle:
-                angle = ScoringPosition.kMiddle;
-                piece2 = ArmPosition.kThreeQuarterExtended;
+                angle = ShoulderPosition.kMiddle;
+                piece2 = ArmPosition.kMiddle;
                 break;
             case kTop:
-                angle = ScoringPosition.kHigh;
-                piece2 = ArmPosition.kFullyExtended;
+                angle = ShoulderPosition.kHigh;
+                piece2 = ArmPosition.kHigh;
                 break;
         }
 
@@ -234,10 +234,10 @@ public class AutoCommandList extends SequentialCommandGroup
     private void releasePiece()
     {
         add(new ReleaseGamePiece(grabber));
-        moveShoulder(ScoringPosition.kGatherer);
+        moveShoulder(ShoulderPosition.kGather);
     }
 
-    private void moveShoulder(ScoringPosition level)
+    private void moveShoulder(ShoulderPosition level)
     {
         add(new MoveShoulderToScoringPosition(shoulder, level));
     }

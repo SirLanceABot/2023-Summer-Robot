@@ -45,13 +45,13 @@ public class Shoulder extends Subsystem4237
     }
     
     //TODO: determine real angles
-    public enum ScoringPosition
+    public enum ShoulderPosition
     {
-        kGatherer(0.0, 10.0), kLow(25.0, 35.0), kMiddle(55.0, 65.0), kHigh(95.0, 105.0);
+        kGather(0.0, 10.0), kLow(25.0, 35.0), kMiddle(55.0, 65.0), kHigh(95.0, 105.0);
         public final double min;
         public final double max;
 
-        private ScoringPosition(double min, double max)
+        private ShoulderPosition(double min, double max)
         {
             this.min = min;
             this.max = max;

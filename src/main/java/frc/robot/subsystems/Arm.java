@@ -29,7 +29,7 @@ public class Arm extends Subsystem4237
     public enum ArmPosition
     {
         // Placeholder values used; real values to be determined when we have the arm length
-        kFullyExtended(39.0,44.0), kThreeQuarterExtended(24.0,29.0), kHalfExtended(10.0,15.0), kIn(0.0,5.0);
+        kHigh(39.0,44.0), kMiddle(24.0,29.0), kLow(10.0,15.0), kGather(0.0,5.0);
         public final double min; 
         public final double max;
         private ArmPosition(double min, double max)

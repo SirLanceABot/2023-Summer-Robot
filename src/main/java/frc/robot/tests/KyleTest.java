@@ -38,7 +38,7 @@ public class KyleTest implements Test
     public void init()
     {
         arm.resetEncoder();
-        desiredPosition = Arm.ArmPosition.kIn;
+        desiredPosition = Arm.ArmPosition.kGather;
     }
 
     /**
@@ -49,22 +49,22 @@ public class KyleTest implements Test
     {
         if (joystick.getRawButtonPressed(5))
         {   // Leftmost button = all the way in
-            desiredPosition = Arm.ArmPosition.kIn;
+            desiredPosition = Arm.ArmPosition.kGather;
             System.out.println("In, desiredPosition.min = " + desiredPosition.min + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(3))
         {   // Second to leftmost buton = half
-            desiredPosition = Arm.ArmPosition.kHalfExtended;
+            desiredPosition = Arm.ArmPosition.kLow;
             System.out.println("Half, desiredPosition.min = " + desiredPosition.min + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(4))
         {   // Second to rightmost button = 3/4
-            desiredPosition = Arm.ArmPosition.kThreeQuarterExtended;
+            desiredPosition = Arm.ArmPosition.kMiddle;
             System.out.println("3/4, desiredPosition.min = " + desiredPosition.min + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(6))
         {   // Rightmost button = fully extenden
-            desiredPosition = Arm.ArmPosition.kFullyExtended;
+            desiredPosition = Arm.ArmPosition.kHigh;
             System.out.println("All Out, desiredPosition.min = " + desiredPosition.min + " armPosition = " + arm.getArmPosition());
         }
 

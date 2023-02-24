@@ -29,7 +29,7 @@ import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Arm.ArmPosition;
-import frc.robot.subsystems.Shoulder.ScoringPosition;
+import frc.robot.subsystems.Shoulder.ShoulderPosition;
 import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoDriveDistance;
@@ -238,29 +238,29 @@ public class RobotContainer
 			//Dpad up button
 			BooleanSupplier dPadUp = operatorController.getDpadSupplier(Xbox.Dpad.kUp);
 			Trigger dPadUpTrigger = new Trigger(dPadUp);
-			dPadUpTrigger.onTrue( new MoveArm(arm, ArmPosition.kFullyExtended)
-						   .andThen( new MoveShoulderToScoringPosition(shoulder, ScoringPosition.kHigh)));
+			dPadUpTrigger.onTrue( new MoveArm(arm, ArmPosition.kHigh)
+						   .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh)));
 			//dPadUpTrigger.toggleOnTrue(new MoveArmUp));
 			
 			//Dpad down button
 			BooleanSupplier dPadDown = operatorController.getDpadSupplier(Xbox.Dpad.kDown);
 			Trigger dPadDownTrigger = new Trigger(dPadDown);
-			dPadDownTrigger.onTrue( new MoveArm(arm, ArmPosition.kIn)
-						   .andThen( new MoveShoulderToScoringPosition(shoulder, ScoringPosition.kGatherer)));
+			dPadDownTrigger.onTrue( new MoveArm(arm, ArmPosition.kGather)
+						   .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather)));
 			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
 			
 			//Dpad left button
 			BooleanSupplier dPadLeft = operatorController.getDpadSupplier(Xbox.Dpad.kLeft);
 			Trigger dPadLeftTrigger = new Trigger(dPadLeft);
-			dPadLeftTrigger.onTrue( new MoveArm(arm, ArmPosition.kThreeQuarterExtended)
-						   .andThen( new MoveShoulderToScoringPosition(shoulder, ScoringPosition.kMiddle)));
+			dPadLeftTrigger.onTrue( new MoveArm(arm, ArmPosition.kMiddle)
+						   .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle)));
 			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
 
 			//Dpad right button
 			BooleanSupplier dPadRight = operatorController.getDpadSupplier(Xbox.Dpad.kRight);
 			Trigger dPadRightTrigger = new Trigger(dPadRight);
-			dPadRightTrigger.onTrue( new MoveArm(arm, ArmPosition.kHalfExtended)
-						   .andThen( new MoveShoulderToScoringPosition(shoulder, ScoringPosition.kLow)));
+			dPadRightTrigger.onTrue( new MoveArm(arm, ArmPosition.kLow)
+						   .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow)));
 			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
 
 			//X button
