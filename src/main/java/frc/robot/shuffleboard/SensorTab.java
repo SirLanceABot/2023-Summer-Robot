@@ -52,17 +52,23 @@ public class SensorTab
         System.out.println(fullClassName + " : Constructor Started");
 
         this.shoulder = shoulder;
-        // this.grabber = grabber;
-        // this.arm = arm;
-        // this.drivetrain = drivetrain;
-
-        shoulderEncoderBox = createShoulderEncoderBox();
-        grabberEncoderBox = createGrabberEncoderBox();
-        armEncoderBox = createArmEncoderBox();
-        flsEncoderBox = createFrontLeftTurnEncoderBox();
-        frsEncoderBox = createFrontRightTurnEncoderBox();
-        blsEncoderBox = createBackLeftTurnEncoderBox();
-        brsEncoderBox = createBackRightTurnEncoderBox();
+        this.grabber = grabber;
+        this.arm = arm;
+        this.drivetrain = drivetrain;
+        if(shoulder != null)
+            shoulderEncoderBox = createShoulderEncoderBox();
+        if(grabber != null)
+            grabberEncoderBox = createGrabberEncoderBox();
+        if(arm != null)
+            armEncoderBox = createArmEncoderBox();
+        if(drivetrain != null)
+        {
+            flsEncoderBox = createFrontLeftTurnEncoderBox();
+            frsEncoderBox = createFrontRightTurnEncoderBox();
+            blsEncoderBox = createBackLeftTurnEncoderBox();
+            brsEncoderBox = createBackRightTurnEncoderBox();
+        }
+        
 
         
 
@@ -134,12 +140,19 @@ public class SensorTab
 
     public void updateEncoderData()
     {
-        shoulderEncoderBox.setDouble(shoulder.getPosition());
-        grabberEncoderBox.setDouble(grabber.getGrabberEncoder());
-        armEncoderBox.setDouble(arm.getArmPosition());
-        flsEncoderBox.setDouble(drivetrain.fls());
-        frsEncoderBox.setDouble(drivetrain.frs());
-        blsEncoderBox.setDouble(drivetrain.bls());
-        brsEncoderBox.setDouble(drivetrain.brs());
+        if(shoulder != null)
+            shoulderEncoderBox.setDouble(shoulder.getPosition());
+        if(grabber != null)
+            grabberEncoderBox.setDouble(grabber.getGrabberEncoder());
+        if(arm != null)
+            armEncoderBox.setDouble(arm.getArmPosition());
+        if(drivetrain != null)
+        {
+            flsEncoderBox.setDouble(drivetrain.fls());
+            frsEncoderBox.setDouble(drivetrain.frs());
+            blsEncoderBox.setDouble(drivetrain.bls());
+            brsEncoderBox.setDouble(drivetrain.brs());
+        }
+        
     }
 }

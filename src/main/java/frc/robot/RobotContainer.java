@@ -28,10 +28,16 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Arm.ArmPosition;
+import frc.robot.subsystems.Shoulder.ScoringPosition;
 import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoDriveDistance;
+import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
+import frc.robot.commands.MoveArm;
+import frc.robot.commands.MoveShoulderToScoringPosition;
+import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
@@ -208,34 +214,77 @@ public class RobotContainer
 			//Left trigger 
 			BooleanSupplier leftTrigger = operatorController.getButtonSupplier(Xbox.Button.kLeftTrigger);
 			Trigger leftTriggerTrigger = new Trigger(leftTrigger);
+			leftTriggerTrigger.whileTrue( new InstantCommand (() -> shoulder.moveUp(), shoulder));
 			//leftTriggerTrigger.toggleOnTrue(new DetractArm));
 
 			//Right trigger 
 			BooleanSupplier rightTrigger = operatorController.getButtonSupplier(Xbox.Button.kRightTrigger);
 			Trigger rightTriggerTrigger = new Trigger(rightTrigger);
+			rightTriggerTrigger.whileTrue( new InstantCommand (() -> arm.extendArm(), arm));
 			//rightTriggerTrigger.toggleOnTrue(new ExtendArm));
+
+			//Left bumper
+			BooleanSupplier leftBumper = operatorController.getButtonSupplier(Xbox.Button.kLeftBumper);
+			Trigger leftBumperTrigger = new Trigger(leftBumper);
+			leftBumperTrigger.whileTrue( new InstantCommand (() -> shoulder.moveDown(), shoulder));
+			// leftBumperTrigger.onTrue( new GrabGamePiece(grabber));
+			
+			//Right bumper
+			BooleanSupplier rightBumper = operatorController.getButtonSupplier(Xbox.Button.kRightBumper);
+			Trigger rightBumperTrigger = new Trigger(rightBumper);
+			rightBumperTrigger.whileTrue( new InstantCommand (() -> arm.retractArm(), arm));
+			// rightBumperTrigger.onTrue( new ReleaseGamePiece(grabber));
 
 			//Dpad up button
 			BooleanSupplier dPadUp = operatorController.getDpadSupplier(Xbox.Dpad.kUp);
 			Trigger dPadUpTrigger = new Trigger(dPadUp);
+			dPadUpTrigger.onTrue( new MoveArm(arm, ArmPosition.kFullyExtended)
+						   .andThen( new MoveShoulderToScoringPosition(shoulder, ScoringPosition.kHigh)));
 			//dPadUpTrigger.toggleOnTrue(new MoveArmUp));
 			
 			//Dpad down button
 			BooleanSupplier dPadDown = operatorController.getDpadSupplier(Xbox.Dpad.kDown);
 			Trigger dPadDownTrigger = new Trigger(dPadDown);
+			dPadDownTrigger.onTrue( new MoveArm(arm, ArmPosition.kIn)
+						   .andThen( new MoveShoulderToScoringPosition(shoulder, ScoringPosition.kGatherer)));
+			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+			
+			//Dpad left button
+			BooleanSupplier dPadLeft = operatorController.getDpadSupplier(Xbox.Dpad.kLeft);
+			Trigger dPadLeftTrigger = new Trigger(dPadLeft);
+			dPadLeftTrigger.onTrue( new MoveArm(arm, ArmPosition.kThreeQuarterExtended)
+						   .andThen( new MoveShoulderToScoringPosition(shoulder, ScoringPosition.kMiddle)));
+			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+
+			//Dpad right button
+			BooleanSupplier dPadRight = operatorController.getDpadSupplier(Xbox.Dpad.kRight);
+			Trigger dPadRightTrigger = new Trigger(dPadRight);
+			dPadRightTrigger.onTrue( new MoveArm(arm, ArmPosition.kHalfExtended)
+						   .andThen( new MoveShoulderToScoringPosition(shoulder, ScoringPosition.kLow)));
 			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
 
 			//X button
 			BooleanSupplier xButton = operatorController.getButtonSupplier(Xbox.Button.kX);
 			Trigger xButtonTrigger = new Trigger(xButton);
+			xButtonTrigger.whileTrue( new InstantCommand (() -> candle.signalCube(), candle));
 			// xButtonTrigger.toggleOnTrue(new StartEndCommand( () -> { shoulder.moveDown(); }, () -> { shoulder.off(); }, shoulder ) );
 			//xButtonTrigger.toggleOnTrue(new SuctionControl));
 
 			//Y button 
 			BooleanSupplier yButton = operatorController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
+			yButtonTrigger.whileTrue( new InstantCommand (() -> candle.signalCone(), candle));
 			//yButtonTrigger.toggleOnTrue( new MoveWrist());
 
+			//B button 
+			BooleanSupplier bButton = operatorController.getButtonSupplier(Xbox.Button.kB);
+			Trigger bButtonTrigger = new Trigger(yButton);
+			bButtonTrigger.whileTrue( new InstantCommand (() -> candle.turnOffLight(), candle));
+
+			//A button 
+			BooleanSupplier aButton = operatorController.getButtonSupplier(Xbox.Button.kA);
+			Trigger aButtonTrigger = new Trigger(yButton);
+			aButtonTrigger.toggleOnTrue( new GrabGamePiece(grabber));
 			// DoubleSupplier leftYAxis = operatorController.getAxisSupplier(Xbox.Axis.kLeftY);
 			// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
 

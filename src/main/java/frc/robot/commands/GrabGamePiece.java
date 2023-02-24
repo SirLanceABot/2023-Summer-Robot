@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** 
  * An example command that uses an example subsystem. 
  */
-public class OpenGrabber extends CommandBase 
+public class GrabGamePiece extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -28,7 +28,6 @@ public class OpenGrabber extends CommandBase
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Grabber grabber;
     public boolean isFinished;
-    // private static final Grabber OPEN_GRABBER = Grabber.releaseGamePiece;
 
 
     /**
@@ -36,14 +35,17 @@ public class OpenGrabber extends CommandBase
      *
      * @param subsystem The subsystem used by this command.
      */
-    public OpenGrabber(Grabber grabber) 
+    public GrabGamePiece(Grabber grabber) 
     {
+        System.out.println(fullClassName + ": Constructor Started");
+        
         this.grabber = grabber;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(this.grabber);
-        isFinished = false;
+        if (this.grabber != null)
+            addRequirements(this.grabber);
 
+        System.out.println(fullClassName + ": Constructor Finished");
     }
 
     // Called when the command is initially scheduled.
@@ -59,25 +61,22 @@ public class OpenGrabber extends CommandBase
     @Override
     public void execute()
     {
-        grabber.releaseGamePiece();
-
-        if(grabber.isGrabberOpen())
-        {
-            isFinished = true;
-        }
-        else
-        {
-            isFinished = false;
-        }
+        grabber.grabGamePiece();
         
+        // if(grabber.isGrabberClosed())
+        // {
+        //     isFinished = true;
+        // }
+        // else
+        // {
+        //     isFinished = false;
+        // }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
-    {
-
-    }
+    {}
 
     // Returns true when the command should end.
     @Override
@@ -88,7 +87,6 @@ public class OpenGrabber extends CommandBase
 
     public String toString()
     {
-        return "OpenGrabber()";
+        return "Close Grabber()";
     }
 }
-
