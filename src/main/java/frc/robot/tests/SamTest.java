@@ -2,17 +2,26 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import javax.lang.model.util.ElementScanner14;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 // import javax.lang.model.util.ElementScanner14;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.networktables.NetworkTable;
 // import edu.wpi.first.networktables.NetworkTableEntry;
 // import edu.wpi.first.networktables.NetworkTableInstance;
-// import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotContainer;
-// import frc.robot.subsystems.Shoulder;
-import frc.robot.sensors.Vision;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.commands.AutoAimToPost;
+import frc.robot.subsystems.Shoulder;
+// import frc.robot.sensors.Vision;
+// import frc.robot.subsystems.Drivetrain;
+// import frc.robot.commands.AutoAimToPost;
 
 public class SamTest implements Test
 {
@@ -29,10 +38,12 @@ public class SamTest implements Test
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
-    // private final Shoulder shoulder;
-    // private final Joystick joystick;
-    private final Vision vision;
-    private final Drivetrain drivetrain;
+    private final Shoulder shoulder;
+    // private final CANSparkMax canSparkMax = new CANSparkMax(3, MotorType.kBrushless);
+    private final Joystick joystick;
+    // private final DoubleSolenoid testSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 0, 1);
+    // private final Vision vision;
+    // private final Drivetrain drivetrain;
   
 
     // *** CLASS CONSTRUCTOR ***
@@ -41,10 +52,12 @@ public class SamTest implements Test
         System.out.println(fullClassName + " : Constructor Started");
 
         this.robotContainer = robotContainer;
-        vision = this.robotContainer.vision;
-        drivetrain = this.robotContainer.drivetrain;
-        // shoulder = this.robotContainer.shoulder;
-        // joystick = new Joystick(0);
+        // vision = this.robotContainer.vision;
+        // drivetrain = this.robotContainer.drivetrain;
+        shoulder = this.robotContainer.shoulder;
+        // canSparkMax.restoreFactoryDefaults();
+        // canSparkMax.setIdleMode(IdleMode.kBrake);
+        joystick = new Joystick(0);
 
         System.out.println(fullClassName + " : Constructor Finished");
     }
@@ -56,9 +69,9 @@ public class SamTest implements Test
     {
         System.out.println("SamTest Init");
         // shoulder.resetEncoder();
-        AutoAimToPost command = new AutoAimToPost(drivetrain, vision);
-        command.schedule();
-        System.out.println(command.isScheduled());
+        // AutoAimToPost command = new AutoAimToPost(drivetrain, vision);
+        // command.schedule();
+        // System.out.println(command.isScheduled());
     }
 
     /**
@@ -66,21 +79,30 @@ public class SamTest implements Test
      */
     public void periodic()
     {
-        // if(joystick.getRawButton(1))    //A
+        if(joystick.getRawButton(1))    //A
+        {
+            shoulder.moveUp();
+        }
+        else if(joystick.getRawButton(2))   //B
+        {
+            shoulder.moveDown();
+        }
+        else
+        {
+            shoulder.off();
+        }
+    
+
+        // if(joystick.getRawButton(3))    //X
         // {
-        //     shoulder.moveUp();
+        //     testSolenoid.set(Value.kForward);
         // }
-        // else if(joystick.getRawButton(2))   //B
+        // else if(joystick.getRawButton(4))   //Y
         // {
-        //     shoulder.moveDown();
-        // }
-        // else
-        // {
-        //     shoulder.off();
+        //     testSolenoid.set(Value.kReverse);
         // }
 
-        // shoulder.moveDown();
-        
+
         // System.out.println(shoulder);
     }
     

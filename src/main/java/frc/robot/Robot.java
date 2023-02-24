@@ -222,8 +222,11 @@ public class Robot extends TimedRobot
     public void testPeriodic()
     {
         testMode.periodic();
-        if(robotContainer.mainShuffleboard != null)
-            robotContainer.mainShuffleboard.sensorTab.updateEncoderData();
+        if(robotContainer.mainShuffleboard != null && robotContainer.mainShuffleboard.sensorTab != null)
+        {
+            robotContainer.mainShuffleboard.sensorTab.updateEncoderData(); 
+        }
+        
     }
 
     /**

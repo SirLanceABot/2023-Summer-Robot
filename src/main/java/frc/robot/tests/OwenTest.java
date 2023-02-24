@@ -12,8 +12,8 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.commands.CloseGrabber;
-import frc.robot.commands.OpenGrabber;
+import frc.robot.commands.GrabGamePiece;
+import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.shuffleboard.AutonomousTab;
 import frc.robot.shuffleboard.MainShuffleboard;
 

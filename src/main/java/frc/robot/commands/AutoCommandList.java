@@ -115,7 +115,7 @@ public class AutoCommandList extends SequentialCommandGroup
 
                 if(autonomousTabData.pickUpGamePieces == PickUpGamePieces.kYes)
                 {
-                    add(new OpenGrabber(grabber));
+                    add(new ReleaseGamePiece(grabber));
                 }
 
                 if(autonomousTabData.scoreSecondPiece == ScoreSecondPiece.kYes)
@@ -233,7 +233,7 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void releasePiece()
     {
-        add(new OpenGrabber(grabber));
+        add(new ReleaseGamePiece(grabber));
         moveShoulder(ScoringPosition.kGatherer);
     }
 
