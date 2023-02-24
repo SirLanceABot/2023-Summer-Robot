@@ -130,6 +130,8 @@ public class SwerveModule extends RobotDriveBase
         driveMotor.configVoltageCompSaturation(Constants.DrivetrainConstants.MAX_BATTERY_VOLTAGE);
         driveMotor.enableVoltageCompensation(true);
 
+        System.out.println("DriveTalon");
+
         // Setup PID through TalonFX
         // Old values were 3.5, 0, 0.09
         // volts / (m/s) for P
@@ -179,6 +181,7 @@ public class SwerveModule extends RobotDriveBase
         turnMotor.configNeutralDeadband(0.001);
         turnMotor.configVoltageCompSaturation(Constants.DrivetrainConstants.MAX_BATTERY_VOLTAGE);
         turnMotor.enableVoltageCompensation(true);
+        System.out.println("configTurnTalon");
     }
 
     private void configCANCoder()

@@ -14,6 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 
 
 /** Represents a swerve drive style drivetrain. */
@@ -462,6 +464,25 @@ public class Drivetrain extends Subsystem4237
   }
 
 
+/**
+ * drive with wheels fixed aligned to chassis
+ * turning is accomplished by left and right wheels differing speeds
+ * @param xSpeed robot speed -1 to +1
+ * @param rotation angle of wheels and chassis -1 to +1
+ */
+// public void arcadeDrive(double xSpeed, double rotation)
+// {
+// WheelSpeeds speeds = DifferentialDrive.arcadeDriveIK(xSpeed, rotation, false);
+
+// periodicIO.swerveModuleStates = new SwerveModuleState[4];
+// double m_maxOutput = 2.;
+//    //  assuming fl, fr, bl, br
+// periodicIO.swerveModuleStates[0] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
+// periodicIO.swerveModuleStates[1] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
+// periodicIO.swerveModuleStates[2] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
+// periodicIO.swerveModuleStates[3] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
+
+// }
 
         /**
      * Drive a "straight" distance in meters
@@ -698,4 +719,6 @@ public class Drivetrain extends Subsystem4237
 
     //     return (Math.abs(angleToTurn) < angleThreshold);
     // }
+
+
 }

@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 
@@ -30,11 +33,65 @@ public final class Constants
     static
     {
         System.out.println("Loading: " + fullClassName);
+        //// start get roboRIO comment
+/*
+roboRIO dashboard reads:
+2023 Robot
+
+prints from here:
+The roboRIO comment is >PRETTY_HOSTNAME="2023 Robot"
+<
+Notice an extra free control character that made a new line
+*/
+    //   final Path commentPath = Path.of("/etc/machine-info");
+    //   String comment = "";
+    //   try {  
+    //     comment = Files.readString(commentPath);
+    //     System.out.println("The roboRIO comment is >" + comment + "<");
+    //   } catch (IOException e) {
+    //   // Couldn't read the file -- handle it how you want
+    //     System.out.println(e);
+    //   }
+      
+    //     // Use the comment variable to decide what to do
+    //     // something like:
+    //     if(comment.contains("2023 Robot"))
+    //     {
+    //     //    do this
+    //        //CANcoder.RFmagnet = 357.;
+    //         SwerveModuleSetup.FRONT_LEFT_ENCODER_OFFSET   = -209.883; 
+    //         SwerveModuleSetup.FRONT_RIGHT_ENCODER_OFFSET  = -133.330; 
+    //         SwerveModuleSetup.BACK_LEFT_ENCODER_OFFSET    = -18.809;  
+    //         SwerveModuleSetup.BACK_RIGHT_ENCODER_OFFSET   = -342.422; 
+
+    //         DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS =  27.44 * DrivetrainConstants.INCHES_TO_METERS; // 23.5 Front to back
+    //         DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS = 19.50 * DrivetrainConstants.INCHES_TO_METERS; // 23.5 // Side to side
+    //         //TODO save the robot (roborio) name somewhere
+    //     }
+    //     else if (comment.contains("2022 Robot"))
+    //     { 
+    //     //    do that
+    //     SwerveModuleSetup.FRONT_LEFT_ENCODER_OFFSET   = -338.730;
+    //     SwerveModuleSetup.FRONT_RIGHT_ENCODER_OFFSET  = -287.578;
+    //     SwerveModuleSetup.BACK_LEFT_ENCODER_OFFSET    = -348.75;
+    //     SwerveModuleSetup.BACK_RIGHT_ENCODER_OFFSET   = -103.271;
+
+    //     DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS =  23.5 * DrivetrainConstants.INCHES_TO_METERS; // Front to back
+    //     DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS = 23.5 * DrivetrainConstants.INCHES_TO_METERS; // Side to side
+    //     }
+    //   else 
+    //   {
+    //     System.out.println("Unknown Robot " + comment);
+    //   }
+//// end get roboRIO comment
+
+
     }
     
     private static final String CANIVORE = "CANivore";
     private static final String ROBORIO = "rio";
 
+    
     
 
     public static class Subsystem
@@ -127,6 +184,9 @@ public final class Constants
         ((1.0 / DRIVE_MOTOR_ENCODER_RESOLUTION) / DRIVE_MOTOR_GEAR_RATIO) * (2.0 * Math.PI * WHEEL_RADIUS_METERS);
         public static final double MAX_DRIVE_SPEED = 4.4; // meters per second
 
+       // public static double DRIVETRAIN_WHEELBASE_METERS  ; // 23.5 Front to back
+        // public static double DRIVETRAIN_TRACKWIDTH_METERS ; // 23.5 // Side to side
+
     }
 
     private static class SwerveModuleSetup
@@ -136,10 +196,15 @@ public final class Constants
         // public static final SwerveModuleData BACK_LEFT = new SwerveModuleData("Back Left", 4, true, 5, -348.75, 6);
         // public static final SwerveModuleData BACK_RIGHT = new SwerveModuleData("Back Right", 1, false, 2, -101.953125, 3);
 
-        private static final double FRONT_LEFT_ENCODER_OFFSET   = -209.883; //-338.730;
-        private static final double FRONT_RIGHT_ENCODER_OFFSET  = -133.330; //-287.578;
-        private static final double BACK_LEFT_ENCODER_OFFSET    = -18.809;  //-348.75;
-        private static final double BACK_RIGHT_ENCODER_OFFSET   = -342.422; //-103.271;
+         private static final double FRONT_LEFT_ENCODER_OFFSET   = -209.883; //-338.730;
+         private static final double FRONT_RIGHT_ENCODER_OFFSET  = -133.330; //-287.578;
+         private static final double BACK_LEFT_ENCODER_OFFSET    = -18.809;  //-348.75;
+         private static final double BACK_RIGHT_ENCODER_OFFSET   = -342.422; //-103.271;
+
+        // private static double FRONT_LEFT_ENCODER_OFFSET   ;
+        // private static double FRONT_RIGHT_ENCODER_OFFSET  ;
+        // private static double BACK_LEFT_ENCODER_OFFSET    ;
+        // private static double BACK_RIGHT_ENCODER_OFFSET   ;
 
         private static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2, DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
         private static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2, -DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
@@ -161,4 +226,7 @@ public final class Constants
         public static final DrivetrainConfig DRIVETRAIN_DATA = new DrivetrainConfig(
             SwerveModuleSetup.FRONT_LEFT, SwerveModuleSetup.FRONT_RIGHT, SwerveModuleSetup.BACK_LEFT, SwerveModuleSetup.BACK_RIGHT);
     }
+
+
+    
 }

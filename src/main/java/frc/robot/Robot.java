@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoCommandList;
+import frc.robot.shuffleboard.MainShuffleboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,6 +28,13 @@ public class Robot extends TimedRobot
     static
     {
         System.out.println("Loading: " + fullClassName);
+        // try {
+        //     Class.forName("frc.robot.Constants");
+        // } catch (ClassNotFoundException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // } // load and static initializers
+        
     }
 
     
@@ -51,6 +59,8 @@ public class Robot extends TimedRobot
     public void robotInit()
     {
         System.out.println("Robot Init");
+        
+        
     }
 
 
@@ -212,7 +222,8 @@ public class Robot extends TimedRobot
     public void testPeriodic()
     {
         testMode.periodic();
-        robotContainer.mainShuffleboard.sensorTab.updateEncoderData();
+        if(robotContainer.mainShuffleboard != null)
+            robotContainer.mainShuffleboard.sensorTab.updateEncoderData();
     }
 
     /**
