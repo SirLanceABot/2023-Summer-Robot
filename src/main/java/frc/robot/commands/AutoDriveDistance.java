@@ -63,7 +63,9 @@ public class AutoDriveDistance extends CommandBase
         correctionRotate = (initialYaw - currentYaw) * 0.2;
         if(drivetrain != null)
         {
-            drivetrain.drive(xSpeed, ySpeed, correctionRotate, false);
+            // drivetrain.drive(xSpeed, ySpeed, correctionRotate, false);
+            drivetrain.arcadeDrive(xSpeed, correctionRotate);
+
             // double distanceDrivenMeters = drivetrain.getDistanceDrivenMeters(startingPosition);
             // if(Math.abs(distanceDrivenMeters) < Math.abs(distanceToDriveMeters))
             // {
