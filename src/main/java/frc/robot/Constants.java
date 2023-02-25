@@ -29,11 +29,6 @@ public final class Constants
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
     private static String Robot4237 = "";
 
-    private static double FRONT_LEFT_ENCODER_OFFSET   ;
-    private static double FRONT_RIGHT_ENCODER_OFFSET  ;
-    private static double BACK_LEFT_ENCODER_OFFSET    ;
-    private static double BACK_RIGHT_ENCODER_OFFSET   ;
-
     public static double DRIVETRAIN_WHEELBASE_METERS  ; 
     public static double DRIVETRAIN_TRACKWIDTH_METERS ; 
 
@@ -70,11 +65,6 @@ public final class Constants
         if(comment.contains("2023 Robot"))
         {
             Robot4237 = "2023 Robot";
-            Constants.FRONT_LEFT_ENCODER_OFFSET   = -209.883; 
-            Constants.FRONT_RIGHT_ENCODER_OFFSET  = -133.330; 
-            Constants.BACK_LEFT_ENCODER_OFFSET    = -18.809;  
-            Constants.BACK_RIGHT_ENCODER_OFFSET   = -342.422; 
-
             Constants.DRIVETRAIN_WHEELBASE_METERS =  27.44 * DrivetrainConstants.INCHES_TO_METERS; // 23.5 Front to back
             Constants.DRIVETRAIN_TRACKWIDTH_METERS = 19.50 * DrivetrainConstants.INCHES_TO_METERS; // 23.5 // Side to side
             //TODO save the robot (roborio) name somewhere
@@ -82,11 +72,6 @@ public final class Constants
         else if (comment.contains("2022 Robot"))
         { 
             Robot4237 = "2022 Robot";
-            Constants.FRONT_LEFT_ENCODER_OFFSET   = -338.730;
-            Constants.FRONT_RIGHT_ENCODER_OFFSET  = -287.578;
-            Constants.BACK_LEFT_ENCODER_OFFSET    = -348.75;
-            Constants.BACK_RIGHT_ENCODER_OFFSET   = -103.271;
-
             Constants.DRIVETRAIN_WHEELBASE_METERS =  23.5 * DrivetrainConstants.INCHES_TO_METERS; // Front to back
             Constants.DRIVETRAIN_TRACKWIDTH_METERS = 23.5 * DrivetrainConstants.INCHES_TO_METERS; // Side to side
         }
@@ -98,16 +83,16 @@ public final class Constants
         System.out.println("Robot:" + Robot4237);
         // end get roboRIO comment
 
-
+        try {
+            Class.forName("frc.robot.Constants.SwerveModuleSetup"); // load and static initializers
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } 
     }
     
     private static final String CANIVORE = "CANivore";
     private static final String ROBORIO = "rio";
     
-
-    
-    
-
     public static class Subsystem
     {
         public static final int GATHERER_MOTOR_PORT     = 2;
@@ -207,12 +192,53 @@ public final class Constants
 
     }
 
-    private static class SwerveModuleSetup
+    public static class SwerveModuleSetup
     {
+        private static double FRONT_LEFT_ENCODER_OFFSET   ;
+        private static double FRONT_RIGHT_ENCODER_OFFSET  ;
+        private static double BACK_LEFT_ENCODER_OFFSET    ;
+        private static double BACK_RIGHT_ENCODER_OFFSET   ;
+
+        private static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(Constants.DRIVETRAIN_WHEELBASE_METERS / 2, Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
+        private static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(Constants.DRIVETRAIN_WHEELBASE_METERS / 2, -Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
+        private static final Translation2d BACK_LEFT_LOCATION = new Translation2d(-Constants.DRIVETRAIN_WHEELBASE_METERS / 2, Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
+        private static final Translation2d BACK_RIGHT_LOCATION = new Translation2d(-Constants.DRIVETRAIN_WHEELBASE_METERS / 2, -Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
+       
         static
         {
-        System.out.println("Loading: " + MethodHandles.lookup().lookupClass().getCanonicalName());
+            
+            System.out.println("Loading: " + MethodHandles.lookup().lookupClass().getCanonicalName());
+
+            if(Robot4237.equals("2023 Robot"))
+            {
+                FRONT_LEFT_ENCODER_OFFSET   = -209.883; 
+                FRONT_RIGHT_ENCODER_OFFSET  = -133.330; 
+                BACK_LEFT_ENCODER_OFFSET    = -18.809; 
+                BACK_RIGHT_ENCODER_OFFSET   = -342.422; 
+            }
+            else if (Robot4237.equals("2022 Robot"))
+            { 
+                FRONT_LEFT_ENCODER_OFFSET   = -338.730;
+                FRONT_RIGHT_ENCODER_OFFSET  = -287.578;
+                BACK_LEFT_ENCODER_OFFSET    = -348.75;
+                BACK_RIGHT_ENCODER_OFFSET   = -103.271;
+            }
+            else 
+            {
+                System.out.println("Unknown Robot " + Robot4237);
+            }
+       
+            
         }
+        
+            public static final SwerveModuleConfig FRONT_LEFT = new SwerveModuleConfig(
+                "Front Left", FRONT_LEFT_LOCATION, Drivetrain.FRONT_LEFT_DRIVE, true, Drivetrain.FRONT_LEFT_ENCODER, FRONT_LEFT_ENCODER_OFFSET, Drivetrain.FRONT_LEFT_TURN);
+            public static final SwerveModuleConfig FRONT_RIGHT = new SwerveModuleConfig(
+                "Front Right", FRONT_RIGHT_LOCATION, Drivetrain.FRONT_RIGHT_DRIVE, false, Drivetrain.FRONT_RIGHT_ENCODER, FRONT_RIGHT_ENCODER_OFFSET, Drivetrain.FRONT_RIGHT_TURN);
+            public static final SwerveModuleConfig BACK_LEFT = new SwerveModuleConfig(
+                "Back Left", BACK_LEFT_LOCATION, Drivetrain.BACK_LEFT_DRIVE, true, Drivetrain.BACK_LEFT_ENCODER, BACK_LEFT_ENCODER_OFFSET, Drivetrain.BACK_LEFT_TURN);
+            public static final SwerveModuleConfig BACK_RIGHT = new SwerveModuleConfig(
+                "Back Right", BACK_RIGHT_LOCATION, Drivetrain.BACK_RIGHT_DRIVE, false, Drivetrain.BACK_RIGHT_ENCODER, BACK_RIGHT_ENCODER_OFFSET, Drivetrain.BACK_RIGHT_TURN);
         // public static final SwerveModuleData FRONT_LEFT = new SwerveModuleData("Front Left", 7, true, 8, -167.255859375, 9);
         // public static final SwerveModuleData FRONT_RIGHT = new SwerveModuleData("Front Right", 10, false, 11, -305.947265625, 12);
         // public static final SwerveModuleData BACK_LEFT = new SwerveModuleData("Back Left", 4, true, 5, -348.75, 6);
@@ -223,24 +249,11 @@ public final class Constants
         //  private static final double BACK_LEFT_ENCODER_OFFSET    = -18.809;  //-348.75;
         //  private static final double BACK_RIGHT_ENCODER_OFFSET   = -342.422; //-103.271;
 
-        private static double FRONT_LEFT_ENCODER_OFFSET = Constants.FRONT_LEFT_ENCODER_OFFSET    ;
-        private static double FRONT_RIGHT_ENCODER_OFFSET = Constants.FRONT_RIGHT_ENCODER_OFFSET  ;
-        private static double BACK_LEFT_ENCODER_OFFSET = Constants.BACK_LEFT_ENCODER_OFFSET      ;
-        private static double BACK_RIGHT_ENCODER_OFFSET = Constants.BACK_RIGHT_ENCODER_OFFSET    ;
-
-        private static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(Constants.DRIVETRAIN_WHEELBASE_METERS / 2, Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
-        private static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(Constants.DRIVETRAIN_WHEELBASE_METERS / 2, -Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
-        private static final Translation2d BACK_LEFT_LOCATION = new Translation2d(-Constants.DRIVETRAIN_WHEELBASE_METERS / 2, Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
-        private static final Translation2d BACK_RIGHT_LOCATION = new Translation2d(-Constants.DRIVETRAIN_WHEELBASE_METERS / 2, -Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2);
-
-        private static final SwerveModuleConfig FRONT_LEFT = new SwerveModuleConfig(
-            "Front Left", FRONT_LEFT_LOCATION, Drivetrain.FRONT_LEFT_DRIVE, true, Drivetrain.FRONT_LEFT_ENCODER, FRONT_LEFT_ENCODER_OFFSET, Drivetrain.FRONT_LEFT_TURN);
-        private static final SwerveModuleConfig FRONT_RIGHT = new SwerveModuleConfig(
-            "Front Right", FRONT_RIGHT_LOCATION, Drivetrain.FRONT_RIGHT_DRIVE, false, Drivetrain.FRONT_RIGHT_ENCODER, FRONT_RIGHT_ENCODER_OFFSET, Drivetrain.FRONT_RIGHT_TURN);
-        private static final SwerveModuleConfig BACK_LEFT = new SwerveModuleConfig(
-            "Back Left", BACK_LEFT_LOCATION, Drivetrain.BACK_LEFT_DRIVE, true, Drivetrain.BACK_LEFT_ENCODER, BACK_LEFT_ENCODER_OFFSET, Drivetrain.BACK_LEFT_TURN);
-        private static final SwerveModuleConfig BACK_RIGHT = new SwerveModuleConfig(
-            "Back Right", BACK_RIGHT_LOCATION, Drivetrain.BACK_RIGHT_DRIVE, false, Drivetrain.BACK_RIGHT_ENCODER, BACK_RIGHT_ENCODER_OFFSET, Drivetrain.BACK_RIGHT_TURN);
+        // private static double FRONT_LEFT_ENCODER_OFFSET = Constants.FRONT_LEFT_ENCODER_OFFSET    ;
+        // private static double FRONT_RIGHT_ENCODER_OFFSET = Constants.FRONT_RIGHT_ENCODER_OFFSET  ;
+        // private static double BACK_LEFT_ENCODER_OFFSET = Constants.BACK_LEFT_ENCODER_OFFSET      ;
+        // private static double BACK_RIGHT_ENCODER_OFFSET = Constants.BACK_RIGHT_ENCODER_OFFSET    ;
+        
     }
 
     public static class DrivetrainSetup
@@ -252,7 +265,5 @@ public final class Constants
         public static final DrivetrainConfig DRIVETRAIN_DATA = new DrivetrainConfig(
             SwerveModuleSetup.FRONT_LEFT, SwerveModuleSetup.FRONT_RIGHT, SwerveModuleSetup.BACK_LEFT, SwerveModuleSetup.BACK_RIGHT);
     }
-
-
     
 }
