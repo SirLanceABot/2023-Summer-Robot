@@ -6,13 +6,14 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmPosition;
+import frc.robot.subsystems.Shoulder;
 import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Command that moves the arm to where the user tells it to go
  */
-public class MoveArm extends CommandBase 
+public class LowerAndRetract extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -26,16 +27,17 @@ public class MoveArm extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Arm arm;
-    private ArmPosition desiredPosition;
+    private final Shoulder shoulder;
+    // private ArmPosition desiredPosition;
     private boolean isFinished;
 
-    public MoveArm(Arm arm, ArmPosition desiredPosition) 
+    public LowerAndRetract(Arm arm, Shoulder shoulder) 
     {
         this.arm = arm;
-        this.desiredPosition = desiredPosition;
+        this.shoulder = shoulder;
 
         // Declares subsystem dependencies
-        if(arm != null)
+        if(arm != null && shoulder != null)
         {
             addRequirements(this.arm);
         }
@@ -59,18 +61,10 @@ public class MoveArm extends CommandBase
     @Override
     public void execute()
     {
-        if(arm != null)
+        if(shoulder != null && arm != null)
         {
-            if ((arm.getArmPosition() < desiredPosition.min || arm.getArmPosition() > desiredPosition.max))
-            {
-                arm.moveArmToDesired(desiredPosition);
-            }
-            else
-            {
-                isFinished = true;
-            }
+
         }
-        
     }
 
     /**
@@ -80,11 +74,7 @@ public class MoveArm extends CommandBase
     @Override
     public void end(boolean interrupted)
     {
-        if(arm != null)
-        {
-            arm.stopArm();
-        }
-        
+        arm.stopArm();
     }
 
     /**
@@ -99,6 +89,6 @@ public class MoveArm extends CommandBase
     @Override
     public String toString()
     {
-        return "MoveArm(arm, " + desiredPosition + ")";
+        return "MoveArm(arm, shoulder)";
     }
 }

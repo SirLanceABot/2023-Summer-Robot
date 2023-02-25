@@ -96,7 +96,7 @@ public class ReleaseGamePiece extends CommandBase
 
     public String toString()
     {
-        return "OpenGrabber()";
+        return "ReleaseGamePiece()";
     }
 }
 

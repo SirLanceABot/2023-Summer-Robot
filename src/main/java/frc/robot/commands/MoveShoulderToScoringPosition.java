@@ -98,6 +98,6 @@ public class MoveShoulderToScoringPosition extends CommandBase
     @Override
     public String toString()
     {
-        return "MoveShoulderToScoringPosition(shoulder, kHigh)";
+        return "MoveShoulderToScoringPosition(shoulder, " + desiredPosition + ")";
     }
 }

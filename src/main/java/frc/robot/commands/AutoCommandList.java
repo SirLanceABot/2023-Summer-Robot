@@ -94,8 +94,10 @@ public class AutoCommandList extends SequentialCommandGroup
 
         add(new StopDrive(drivetrain));
 
-        angle = getAngle1(autonomousTabData.rowPlayedPiece1);
-        angle2 = getAngle2(autonomousTabData.rowPlayedPiece2);
+        angle = getAngle1Shoulder(autonomousTabData.rowPlayedPiece1);
+        angle2 = getAngle2Shoulder(autonomousTabData.rowPlayedPiece2);
+        piece1 = getAngle1Arm(autonomousTabData.rowPlayedPiece1);
+        piece2 = getAngle2Arm(autonomousTabData.rowPlayedPiece2);
         distance = getAllianceAndLocation();
 
         switch(autonomousTabData.autonomousCommands)
@@ -104,6 +106,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes)
                 {
                     moveShoulder(angle);
+                    moveArm(piece1);
                     releasePiece();
                 }
 
@@ -123,6 +126,7 @@ public class AutoCommandList extends SequentialCommandGroup
                     turnRobot180();
                     driveOut(4.4);
                     moveShoulder(angle2);
+                    moveArm(piece2);
                 }
 
                 if(autonomousTabData.moveOntoChargingStation == MoveOntoChargingStation.kYes)
@@ -138,7 +142,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 goToChargingStation(distance);
                 break;
             case kTwoGamePieces:
-                moveShoulder(angle);
+                moveShoulder(angle2);
                 moveArm(piece2);
                 releasePiece();
                 driveOut(4.4);
@@ -149,58 +153,92 @@ public class AutoCommandList extends SequentialCommandGroup
     
     }
 
-    private Shoulder.ShoulderPosition getAngle1(AutonomousTabData.RowPlayedPiece1 rpp1)
+    private Shoulder.ShoulderPosition getAngle1Shoulder(AutonomousTabData.RowPlayedPiece1 rpp1)
     {
         ShoulderPosition angle = ShoulderPosition.kGather;
-        ArmPosition piece1 = ArmPosition.kGather;
         switch(rpp1)
         {
             case kNone:
                 angle = ShoulderPosition.kGather;
-                piece1 = ArmPosition.kGather;
                 break;
             case kBottom:
                 angle = ShoulderPosition.kLow;
-                piece1 = ArmPosition.kLow;
                 break;
             case kMiddle:
                 angle = ShoulderPosition.kMiddle;
-                piece1 = ArmPosition.kMiddle;
                 break;
             case kTop:
                 angle = ShoulderPosition.kHigh;
-                piece1 = ArmPosition.kHigh;
                 break;
         }
 
         return angle;
     }
 
-    private Shoulder.ShoulderPosition getAngle2(AutonomousTabData.RowPlayedPiece2 rpp2)
+    private Arm.ArmPosition getAngle1Arm(AutonomousTabData.RowPlayedPiece1 rpp1)
+    {
+        ArmPosition piece1 = ArmPosition.kGather;
+        switch(rpp1)
+        {
+            case kNone:
+                piece1 = ArmPosition.kGather;
+                break;
+            case kBottom:
+                piece1 = ArmPosition.kLow;
+                break;
+            case kMiddle:
+                piece1 = ArmPosition.kMiddle;
+                break;
+            case kTop:
+                piece1 = ArmPosition.kHigh;
+                break;
+        }
+
+        return piece1;
+    }
+
+    private Shoulder.ShoulderPosition getAngle2Shoulder(AutonomousTabData.RowPlayedPiece2 rpp2)
     {
         ShoulderPosition angle = ShoulderPosition.kGather;
-        ArmPosition piece2 = ArmPosition.kGather;
         switch(rpp2)
         {
             case kNone:
                 angle = ShoulderPosition.kGather;
-                piece2 = ArmPosition.kGather;
                 break;
             case kBottom:
                 angle = ShoulderPosition.kLow;
-                piece2 = ArmPosition.kLow;
                 break;
             case kMiddle:
                 angle = ShoulderPosition.kMiddle;
-                piece2 = ArmPosition.kMiddle;
                 break;
             case kTop:
                 angle = ShoulderPosition.kHigh;
-                piece2 = ArmPosition.kHigh;
                 break;
         }
 
         return angle;
+    }
+
+    private Arm.ArmPosition getAngle2Arm(AutonomousTabData.RowPlayedPiece2 rpp2)
+    {
+        ArmPosition piece2 = ArmPosition.kGather;
+        switch(rpp2)
+        {
+            case kNone:
+                piece2 = ArmPosition.kGather;
+                break;
+            case kBottom:
+                piece2 = ArmPosition.kLow;
+                break;
+            case kMiddle:
+                piece2 = ArmPosition.kMiddle;
+                break;
+            case kTop:
+                piece2 = ArmPosition.kHigh;
+                break;
+        }
+
+        return piece2;
     }
 
     private double getAllianceAndLocation()
@@ -212,10 +250,13 @@ public class AutoCommandList extends SequentialCommandGroup
         {
             return 1.0;
         }
-        
-        else
+        else if(!isRedLeft || !isBlueRight)
         {
             return -1.0;
+        }
+        else
+        {
+            return 0.0;
         }
     }
 
@@ -226,15 +267,17 @@ public class AutoCommandList extends SequentialCommandGroup
         add(new AutoDriveDistance(drivetrain, gyro, 0.5, 0.0, distance));
     }
 
-    private void strafeDrive(double distance)
-    {
-        add(new AutoDriveDistance(drivetrain, gyro, 0.0, 0.5, distance)); 
-    }
+    // private void strafeDrive(double distance)
+    // {
+    //     add(new AutoDriveDistance(drivetrain, gyro, 0.0, 0.5, distance)); 
+    // }
 
     private void releasePiece()
     {
         add(new ReleaseGamePiece(grabber));
+        moveArm(ArmPosition.kGather);
         moveShoulder(ShoulderPosition.kGather);
+    
     }
 
     private void moveShoulder(ShoulderPosition level)
@@ -261,9 +304,20 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void goToChargingStation(double distance)
     {
-        add(new AutoDriveDistance(drivetrain, gyro, 0.75, 0.0, 4.27));
-        add(new AutoDriveDistance(drivetrain, gyro, 0.0, distance, 1.0));
-        add(new AutoDriveDistance(drivetrain, gyro, -0.75, 0.0, 1.0));
+        if(distance == 0.0)
+        {
+            add( new AutoDriveDistance(drivetrain, gyro, -1.0, 0.0, 3.90));
+			add( new AutoDriveDistance(drivetrain, gyro, 1.0, 0.0, 1.90));
+			add( new AutoBalance(drivetrain, gyro));
+			add( new LockWheels(drivetrain));
+        }
+        else
+        {
+            add(new AutoDriveDistance(drivetrain, gyro, 0.75, 0.0, 4.27));
+            add(new AutoDriveDistance(drivetrain, gyro, 0.0, distance, 1.0));
+            add(new AutoDriveDistance(drivetrain, gyro, -0.75, 0.0, 1.0));
+        }
+        
     }
 
     private void pickUpPiece2()

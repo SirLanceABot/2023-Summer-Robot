@@ -82,51 +82,54 @@ public class AutoBalance extends CommandBase
     @Override
     public void execute()
     {
-        // System.out.println(driveForwardTimer.get());
-        
-        // if(driveForwardTimer.get() < 1.0)
-        // {   
-        //     System.out.println("drive");
-        //     drivetrain.drive(-CS_BALANCE_MAX_SPEED, 0.0, 0.0, true);
-        // }
-
-        // previousPitch = currentPitch;
-        currentPitch = gyro.getPitch();
-        if(Math.abs(currentPitch) > Math.abs(maxPitch))
-        {
-            maxPitch = currentPitch;
-        }
-        currentYaw = (int)Math.abs(gyro.getYaw()) % 360;
-
-        SmartDashboard.putNumber("Current Pitch", currentPitch);
-        SmartDashboard.putNumber("Current Yaw", currentYaw);
-
-        error = currentPitch;
-
-        // drivePower =  Math.min(CS_BALANCE_DRIVE_KP * error, 1);
- 
-        drivePower = (CS_BALANCE_DRIVE_KP * error);
-
-        if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 12.0)
-        {
-            drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
-        }
-        // else if(Math.abs(error) < 11.0)
-        // else if(Math.abs(currentPitch) < Math.abs(previousPitch))
-        else if(Math.abs(maxPitch) - Math.abs(currentPitch) > 1.5)
-        {
-            drivePower = 0.0;
-        }
-
-        if((currentYaw > 135 && currentYaw < 225))
-        {
-            drivePower = -drivePower;
-        }
-
         if(drivetrain != null)
         {
-            drivetrain.drive(drivePower, 0.0, 0.0, false);
-        }
+            // System.out.println(driveForwardTimer.get());
+        
+            // if(driveForwardTimer.get() < 1.0)
+            // {   
+            //     System.out.println("drive");
+            //     drivetrain.drive(-CS_BALANCE_MAX_SPEED, 0.0, 0.0, true);
+            // }
+
+            // previousPitch = currentPitch;
+            currentPitch = gyro.getPitch();
+            if(Math.abs(currentPitch) > Math.abs(maxPitch))
+            {
+                maxPitch = currentPitch;
+            }
+            currentYaw = (int)Math.abs(gyro.getYaw()) % 360;
+
+            SmartDashboard.putNumber("Current Pitch", currentPitch);
+            SmartDashboard.putNumber("Current Yaw", currentYaw);
+
+            error = currentPitch;
+
+            // drivePower =  Math.min(CS_BALANCE_DRIVE_KP * error, 1);
+    
+            drivePower = (CS_BALANCE_DRIVE_KP * error);
+
+            if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 12.0)
+            {
+                drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
+            }
+            // else if(Math.abs(error) < 11.0)
+            // else if(Math.abs(currentPitch) < Math.abs(previousPitch))
+            else if(Math.abs(maxPitch) - Math.abs(currentPitch) > 1.5)
+            {
+                drivePower = 0.0;
+            }
+
+            if((currentYaw > 135 && currentYaw < 225))
+            {
+                drivePower = -drivePower;
+            }
+
+            if(drivetrain != null)
+            {
+                drivetrain.drive(drivePower, 0.0, 0.0, false);
+            }
+        }     
     }
 
     // Called once the command ends or is interrupted.

@@ -91,6 +91,6 @@ public class GrabGamePiece extends CommandBase
 
     public String toString()
     {
-        return "Close Grabber()";
+        return "GrabGamePiece()";
     }
 }
