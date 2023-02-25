@@ -73,11 +73,9 @@ public class RobotContainer
 	private boolean useAccelerometer		= false;
 	private boolean useGyro					= false;
 	private boolean useDrivetrain   		= false;
-	private boolean useGyro					= false;
-	private boolean useDrivetrain   		= false;
 	private boolean useGrabber 				= false;
-	private boolean useArm 					= true;
-	private boolean useShoulder				= true;
+	private boolean useArm 					= false;
+	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
 	private boolean useDriverController		= false;
