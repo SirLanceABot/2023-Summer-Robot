@@ -28,13 +28,11 @@ public class Robot extends TimedRobot
     static
     {
         System.out.println("Loading: " + fullClassName);
-        // try {
-        //     Class.forName("frc.robot.Constants");
-        // } catch (ClassNotFoundException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // } // load and static initializers
-        
+        try {
+            Class.forName("frc.robot.Constants"); // load and static initializers
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } 
     }
 
     

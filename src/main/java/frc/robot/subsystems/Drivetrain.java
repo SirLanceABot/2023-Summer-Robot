@@ -470,19 +470,19 @@ public class Drivetrain extends Subsystem4237
  * @param xSpeed robot speed -1 to +1
  * @param rotation angle of wheels and chassis -1 to +1
  */
-// public void arcadeDrive(double xSpeed, double rotation)
-// {
-// WheelSpeeds speeds = DifferentialDrive.arcadeDriveIK(xSpeed, rotation, false);
+    public void arcadeDrive(double xSpeed, double rotation)
+    {
+        WheelSpeeds speeds = DifferentialDrive.arcadeDriveIK(xSpeed, rotation, false);
 
-// periodicIO.swerveModuleStates = new SwerveModuleState[4];
-// double m_maxOutput = 2.;
-//    //  assuming fl, fr, bl, br
-// periodicIO.swerveModuleStates[0] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
-// periodicIO.swerveModuleStates[1] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
-// periodicIO.swerveModuleStates[2] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
-// periodicIO.swerveModuleStates[3] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
+        periodicIO.swerveModuleStates = new SwerveModuleState[4];
+        double m_maxOutput = 2.;
+        //  assuming fl, fr, bl, br
+        periodicIO.swerveModuleStates[0] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
+        periodicIO.swerveModuleStates[1] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
+        periodicIO.swerveModuleStates[2] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
+        periodicIO.swerveModuleStates[3] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
 
-// }
+    }
 
         /**
      * Drive a "straight" distance in meters
