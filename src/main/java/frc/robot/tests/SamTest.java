@@ -2,27 +2,31 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.lang.model.util.ElementScanner14;
+// import javax.lang.model.util.ElementScanner14;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+// import edu.wpi.first.wpilibj.DoubleSolenoid;
 // import javax.lang.model.util.ElementScanner14;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.networktables.NetworkTable;
 // import edu.wpi.first.networktables.NetworkTableEntry;
 // import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+// import edu.wpi.first.wpilibj.PneumaticsModuleType;
+// import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Arm;
+import frc.robot.commands.MoveShoulderToScoringPosition;
+// import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 // import frc.robot.sensors.Vision;
 // import frc.robot.subsystems.Drivetrain;
 // import frc.robot.commands.AutoAimToPost;
+import frc.robot.subsystems.Shoulder.ShoulderPosition;
 
 public class SamTest implements Test
 {
@@ -36,6 +40,11 @@ public class SamTest implements Test
         System.out.println("Loading: " + fullClassName);
     }
 
+    public enum CommandState
+    {
+        kWaiting, kRan;
+    }
+
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
@@ -46,6 +55,7 @@ public class SamTest implements Test
     // private final DoubleSolenoid testSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 0, 1);
     // private final Vision vision;
     // private final Drivetrain drivetrain;
+    private CommandState commandState = CommandState.kWaiting;
   
 
     // *** CLASS CONSTRUCTOR ***
@@ -72,6 +82,7 @@ public class SamTest implements Test
     {
         System.out.println("SamTest Init");
         // shoulder.resetEncoder();
+        // 
         // AutoAimToPost command = new AutoAimToPost(drivetrain, vision);
         // command.schedule();
         // System.out.println(command.isScheduled());
@@ -82,23 +93,38 @@ public class SamTest implements Test
      */
     public void periodic()
     {
-        if(joystick.getRawButton(1))    //A
+        SmartDashboard.putNumber("Encoder Value", shoulder.getPosition());
+        SmartDashboard.putNumber("Encoder Velocity", shoulder.getVelocity());
+
+        if(joystick.getRawButton(1))
         {
-            // arm.extendArm();
-            shoulder.moveUp();
+            System.out.println("Pressed A");
+            if(commandState == CommandState.kWaiting)
+            {
+                // Command command = new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh);
+                // command.schedule();
+
+                shoulder.moveToLow();
+                commandState = CommandState.kRan;
+            }
         }
-        else if(joystick.getRawButton(2))   //B
-        {
-            // arm.retractArm();
-            shoulder.moveDown();
-        }
-        else
-        {
-            // arm.stopArm();
-            shoulder.off();
-        }
+        // if(joystick.getRawButton(1))    //A
+        // {
+        //     // arm.extendArm();
+        //     shoulder.moveUp();
+        // }
+        // else if(joystick.getRawButton(2))   //B
+        // {
+        //     // arm.retractArm();
+        //     shoulder.moveDown();
+        // }
+        // else
+        // {
+        //     // arm.stopArm();
+        //     shoulder.off();
+        // }
     
-        System.out.println(shoulder);
+        // System.out.println(shoulder);
 
         // if(joystick.getRawButton(3))    //X
         // {
@@ -109,6 +135,14 @@ public class SamTest implements Test
         //     testSolenoid.set(Value.kReverse);
         // }
 
+        // if(joystick.getRawButton(1))    //A
+        // {
+        //     canSparkMax.set(0.75);
+        // }
+        // else
+        // {
+        //     canSparkMax.set(0.0);
+        // }
 
         // System.out.println(shoulder);
     }

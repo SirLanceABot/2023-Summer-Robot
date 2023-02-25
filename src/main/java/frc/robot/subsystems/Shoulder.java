@@ -12,18 +12,21 @@ import java.lang.invoke.MethodHandles;
 // import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAnalogSensor;
-import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.SparkMaxPIDController;
 // import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
+import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxPIDController;
+
+
 // import edu.wpi.first.util.datalog.DataLog;
 // import edu.wpi.first.util.datalog.StringLogEntry;
 // import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 
@@ -47,15 +50,23 @@ public class Shoulder extends Subsystem4237
     //TODO: determine real values
     public enum ShoulderPosition
     {
-        kGather(0.0, 10.0), kLow(25.0, 35.0), kMiddle(55.0, 65.0), kHigh(95.0, 105.0);
-        public final double min;
-        public final double max;
+        kGather(0), kLow(20.0), kMiddle(200000.0), kHigh(Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT), kOverride(-4237);
+        public final double value;
 
-        private ShoulderPosition(double min, double max)
+        private ShoulderPosition(double value)
         {
-            this.min = min;
-            this.max = max;
+            this.value = value;
         }
+
+        // kGather(0.0, 10.0), kLow(25.0, 35.0), kMiddle(55.0, 65.0), kHigh(95.0, 105.0);
+        // public final double min;
+        // public final double max;
+
+        // private ShoulderPosition(double min, double max)
+        // {
+        //     this.min = min;
+        //     this.max = max;
+        // }
     }
 
     public enum ResetState
@@ -84,8 +95,8 @@ public class Shoulder extends Subsystem4237
     
     // private final TalonFX oldShoulderMotor = new TalonFX(shoulderMotorPort);
     
-    private final CANSparkMax shoulderMotor = new CANSparkMax(shoulderMotorPort,  MotorType.kBrushless);
-    // private final CANSparkMax shoulderMotor = new CANSparkMax(3,  MotorType.kBrushless); //test
+    // private final CANSparkMax shoulderMotor = new CANSparkMax(shoulderMotorPort,  MotorType.kBrushless);
+    private final CANSparkMax shoulderMotor = new CANSparkMax(3,  MotorType.kBrushless); //test
 
     private final Timer encoderResetTimer = new Timer();
 
@@ -97,11 +108,11 @@ public class Shoulder extends Subsystem4237
     private SparkMaxPIDController pidController;
 
     //TODO: Tune PID values
-    private static final double kP = 0.018;
-    private static final double kI = 0.0002;
-    private static final double kD = 0.000;
+    private static final double kP = 0.00003;
+    private static final double kI = 0.0; //0.0001;
+    private static final double kD = 0.0; //1.0;
     private static final double kIz = 0.0;
-    private static final double kFF = 0.04;
+    private static final double kFF = 0.0;
     private static final double kMaxOutput = 1;
     private static final double kMinOutput = -1;
 
@@ -113,6 +124,7 @@ public class Shoulder extends Subsystem4237
     private boolean useLSReset = true;     // Enable or Disable reverse limit switch reseting encoder
     // private boolean useDataLog = true;      // Enable or Disable data logs
     private ResetState resetState = ResetState.kDone;
+    private ShoulderPosition scoringPosition = ShoulderPosition.kOverride;
 
     private PeriodicIO periodicIO;
 
@@ -142,21 +154,31 @@ public class Shoulder extends Subsystem4237
 
         // Brake or Coast mode
         shoulderMotor.setIdleMode(IdleMode.kBrake);
+        
+        // analogSensor = shoulderMotor.getAnalog(SparkMaxAnalogSensor.Mode.kRelative);
+        pidController = shoulderMotor.getPIDController();
 
         // Set the Feedback Sensor and PID Controller
         relativeEncoder = shoulderMotor.getEncoder();
         relativeEncoder.setPositionConversionFactor(4096);  // get position will now return raw encoder ticks
-        
-        // analogSensor = shoulderMotor.getAnalog(SparkMaxAnalogSensor.Mode.kRelative);
-        // pidController = shoulderMotor.getPIDController();   //TODO: what goes inside ()?
 
         // Configure PID controller
-        // pidController.setP(kP);
-        // pidController.setI(kI);
-        // pidController.setD(kD);
-        // pidController.setIZone(kIz);
-        // pidController.setFF(kFF);
-        // pidController.setOutputRange(kMinOutput, kMaxOutput);
+        pidController.setP(kP);
+        pidController.setI(kI);
+        pidController.setD(kD);
+        pidController.setIZone(kIz);
+        pidController.setFF(kFF);
+        pidController.setOutputRange(kMinOutput, kMaxOutput);
+
+        // display PID coefficients on SmartDashboard
+        SmartDashboard.putNumber("P Gain", kP);
+        SmartDashboard.putNumber("I Gain", kI);
+        SmartDashboard.putNumber("D Gain", kD);
+        SmartDashboard.putNumber("I Zone", kIz);
+        SmartDashboard.putNumber("Feed Forward", kFF);
+        SmartDashboard.putNumber("Max Output", kMaxOutput);
+        SmartDashboard.putNumber("Min Output", kMinOutput);
+        SmartDashboard.putNumber("Set Rotations", 0);
 
         // Soft Limits
         shoulderMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT);
@@ -247,21 +269,51 @@ public class Shoulder extends Subsystem4237
     /** Moves the shoulder up */
     public void moveUp()
     {
+        scoringPosition = ShoulderPosition.kOverride;
         periodicIO.motorSpeed = 0.5;
     }
 
     /** Moves the shoulder down */
     public void moveDown()
     {
+        scoringPosition = ShoulderPosition.kOverride;
         periodicIO.motorSpeed = -0.5;
+    }
+
+    /** Moves the shoulder to high position */
+    public void moveToHigh()
+    {
+        scoringPosition = ShoulderPosition.kHigh;
+    }
+
+    /** Moves the shoulder to middle position */
+    public void moveToMiddle()
+    {
+        scoringPosition = ShoulderPosition.kMiddle;
+    }
+ 
+    /** Moves the shoulder to low position */
+    public void moveToLow()
+    {
+        scoringPosition = ShoulderPosition.kLow;
+    }
+
+    /** Moves the shoulderto gather position */
+    public void moveToGather()
+    {
+        scoringPosition = ShoulderPosition.kGather;
     }
 
     /** Turns the shoulder off */
     public void off()
     {
+        scoringPosition = ShoulderPosition.kOverride;
         periodicIO.motorSpeed = 0.0;
     }
 
+    /** 
+     * Turns the motor on 
+     * @param speed (double)*/
     public void on(double speed)
     {
         periodicIO.motorSpeed = speed;
@@ -270,6 +322,7 @@ public class Shoulder extends Subsystem4237
     /** Holds the motor still */
     public void hold()
     {
+        scoringPosition = ShoulderPosition.kOverride;
         periodicIO.motorSpeed = 0.01;
     }
 
@@ -331,7 +384,15 @@ public class Shoulder extends Subsystem4237
         switch(resetState)
         {
             case kDone:
-                shoulderMotor.set(periodicIO.motorSpeed);
+                if(scoringPosition == ShoulderPosition.kOverride)
+                {
+                    shoulderMotor.set(periodicIO.motorSpeed);
+                }
+                else
+                {
+                    // SmartDashboard.putNumber("Target Position", scoringPosition.value);
+                    pidController.setReference(scoringPosition.value, CANSparkMax.ControlType.kPosition);
+                }
                 break;
 
             case kStart:

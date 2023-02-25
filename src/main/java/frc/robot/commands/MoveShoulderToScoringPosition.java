@@ -37,6 +37,7 @@ public class MoveShoulderToScoringPosition extends CommandBase
      */
     public MoveShoulderToScoringPosition(Shoulder shoulder, ShoulderPosition desiredPosition) 
     {
+        System.out.println("Command Contructor Started");
         this.shoulder = shoulder;
         this.desiredPosition = desiredPosition;
         
@@ -45,13 +46,15 @@ public class MoveShoulderToScoringPosition extends CommandBase
         {
             addRequirements(this.shoulder);
         }
-        
+        System.out.println("Command Contructor Ended");
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize()
     {
+        System.out.println("Initialize");
+
         isFinished = false;
     }
 
@@ -59,21 +62,49 @@ public class MoveShoulderToScoringPosition extends CommandBase
     @Override
     public void execute()
     {
-        if(shoulder !=  null)
+        if(shoulder != null)
         {
-            if(shoulder.getPosition() < desiredPosition.min)
+            System.out.println("Execute");
+
+            switch(desiredPosition)
             {
-                shoulder.moveUp();
-            }
-            else if(shoulder.getPosition() > desiredPosition.max)
-            {
-                shoulder.moveDown();
-            }
-            else
-            { 
-                isFinished = true;
+                case kHigh:
+                    System.out.println("High");
+                    shoulder.moveToHigh();
+                    break;
+                
+                case kMiddle:
+                    shoulder.moveToMiddle();
+                    break;
+                
+                case kLow:
+                    shoulder.moveToLow();
+                    break;
+                
+                case kGather:
+                    shoulder.moveToGather();
+                    break;
+                
+                case kOverride:
+                    break;
             }
         }
+
+        // if(shoulder !=  null)
+        // {
+        //     if(shoulder.getPosition() < desiredPosition.min)
+        //     {
+        //         shoulder.moveUp();
+        //     }
+        //     else if(shoulder.getPosition() > desiredPosition.max)
+        //     {
+        //         shoulder.moveDown();
+        //     }
+        //     else
+        //     { 
+        //         isFinished = true;
+        //     }
+        // }
     }
 
 
