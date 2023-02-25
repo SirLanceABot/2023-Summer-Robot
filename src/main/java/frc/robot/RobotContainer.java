@@ -71,15 +71,15 @@ public class RobotContainer
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= true;
-	private boolean useDrivetrain   		= true;
+	private boolean useGyro					= false;
+	private boolean useDrivetrain   		= false;
 	private boolean useGrabber 				= false;
-	private boolean useArm 					= false;
-	private boolean useShoulder				= false;
+	private boolean useArm 					= true;
+	private boolean useShoulder				= true;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= true;
-	private boolean useOperatorController 	= false;
+	private boolean useDriverController		= false;
+	private boolean useOperatorController 	= true;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
 	private boolean useDataLog				= false;
@@ -282,13 +282,16 @@ public class RobotContainer
 
 			//B button 
 			BooleanSupplier bButton = operatorController.getButtonSupplier(Xbox.Button.kB);
-			Trigger bButtonTrigger = new Trigger(yButton);
+			Trigger bButtonTrigger = new Trigger(bButton);
 			bButtonTrigger.whileTrue( new InstantCommand (() -> candle.turnOffLight(), candle));
 
 			//A button 
 			BooleanSupplier aButton = operatorController.getButtonSupplier(Xbox.Button.kA);
-			Trigger aButtonTrigger = new Trigger(yButton);
-			aButtonTrigger.toggleOnTrue( new GrabGamePiece(grabber));
+			Trigger aButtonTrigger = new Trigger(aButton);
+			aButtonTrigger.onTrue( new ReleaseGamePiece(grabber));
+
+			aButtonTrigger.whileTrue( new InstantCommand (() -> shoulder.moveDown(), shoulder)
+						  .alongWith( new InstantCommand (() -> arm.retractArm(), arm)));
 			// DoubleSupplier leftYAxis = operatorController.getAxisSupplier(Xbox.Axis.kLeftY);
 			// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
 
