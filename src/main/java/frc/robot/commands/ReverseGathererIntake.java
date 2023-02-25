@@ -29,7 +29,11 @@ public class ReverseGathererIntake extends CommandBase
     {
         this.gatherer = gatherer;
 
-        addRequirements(this.gatherer);
+        if(gatherer != null)
+        {
+            addRequirements(this.gatherer);
+        }
+        
     }
 
     /**
@@ -47,7 +51,11 @@ public class ReverseGathererIntake extends CommandBase
     @Override
     public void execute()
     {
-        gatherer.freeGamePiece();
+        if(gatherer != null)
+        {
+            gatherer.freeGamePiece();
+        }
+        
         isFinished = true;
     }
 

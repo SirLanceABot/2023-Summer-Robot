@@ -17,9 +17,9 @@ public class MainShuffleboard
 
     // *** CLASS & INSTANCE VARIABLES ***
 
-    private boolean useAutonomousTab            = false;
+    private boolean useAutonomousTab            = true;
     private boolean useCameraTab                = false;
-    private boolean useSensorTab                = true;
+    private boolean useSensorTab                = false;
     private boolean useDriverControllerTab      = false;
     private boolean useOperatorControllerTab    = false;
     
@@ -44,9 +44,9 @@ public class MainShuffleboard
 
         autonomousTab           = (useFullRobot || useAutonomousTab)         ? new AutonomousTab()                                                                                           : null;
         cameraTab               = (useFullRobot || useCameraTab)             ? new CameraTab()                                                                                               : null;
-        sensorTab               = (useFullRobot || useSensorTab)             ? new SensorTab(robotContainer.shoulder, robotContainer.grabber, robotContainer.arm, robotContainer.drivetrain) : null;
-        driverControllerTab     = (useFullRobot || useDriverControllerTab)   ? new DriverControllerTab(robotContainer.driverController)                                                      : null;
-        operatorControllerTab   = (useFullRobot || useOperatorControllerTab) ? new OperatorControllerTab(robotContainer.operatorController)                                                  : null;
+        sensorTab               = (useSensorTab)             ? new SensorTab(robotContainer.shoulder, robotContainer.grabber, robotContainer.arm, robotContainer.drivetrain) : null;
+        driverControllerTab     = (useDriverControllerTab)   ? new DriverControllerTab(robotContainer.driverController)                                                      : null;
+        operatorControllerTab   = (useOperatorControllerTab) ? new OperatorControllerTab(robotContainer.operatorController)                                                  : null;
         
         // cameraTab = new CameraTab();
 

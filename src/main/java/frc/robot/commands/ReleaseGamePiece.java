@@ -41,7 +41,11 @@ public class ReleaseGamePiece extends CommandBase
         this.grabber = grabber;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(this.grabber);
+        if(grabber != null)
+        {
+            addRequirements(this.grabber);
+        }
+        
         isFinished = false;
 
     }
@@ -59,16 +63,20 @@ public class ReleaseGamePiece extends CommandBase
     @Override
     public void execute()
     {
-        grabber.releaseGamePiece();
+        if(grabber != null)
+        {
+            grabber.releaseGamePiece();
 
-        if(grabber.isGrabberOpen())
-        {
-            isFinished = true;
+            if(grabber.isGrabberOpen())
+            {
+                isFinished = true;
+            }
+            else
+            {
+                isFinished = false;
+            }
         }
-        else
-        {
-            isFinished = false;
-        }
+        
         
     }
 

@@ -35,7 +35,11 @@ public class MoveArm extends CommandBase
         this.desiredPosition = desiredPosition;
 
         // Declares subsystem dependencies
-        addRequirements(this.arm);
+        if(arm != null)
+        {
+            addRequirements(this.arm);
+        }
+        
     }
 
     /**
@@ -55,7 +59,7 @@ public class MoveArm extends CommandBase
     @Override
     public void execute()
     {
-        if (arm.getArmPosition() < desiredPosition.min || arm.getArmPosition() > desiredPosition.max)
+        if ((arm.getArmPosition() < desiredPosition.min || arm.getArmPosition() > desiredPosition.max) && arm != null)
         {
             arm.moveArmToDesired(desiredPosition);
         }

@@ -80,13 +80,10 @@ public class AutonomousTab
         createRowPlayedPiece2Box();
         
         createSendDataButton();
-        createSuccessfulDownloadBox();
-        // successfulDownload.setBoolean(false);
+        successfulDownload = createSuccessfulDownloadBox();
+        successfulDownload.setBoolean(false);
 
-        // createMessageBox();
-
-        createErrorMessageBox();
-        // errorMessageBox.setString("No Errors");
+        errorMessageBox = createErrorMessageBox();
 
         System.out.println(fullClassName + ": Constructor Finished");
     }
@@ -233,8 +230,8 @@ public class AutonomousTab
         SendableRegistry.setName(driveToSecondPieceBox, "Drive To Piece 2");
 
         //add options to Box
-        driveToSecondPieceBox.setDefaultOption("Yes", AutonomousTabData.DriveToSecondPiece.kYes);
-        driveToSecondPieceBox.addOption("No", AutonomousTabData.DriveToSecondPiece.kNo);
+        driveToSecondPieceBox.setDefaultOption("No", AutonomousTabData.DriveToSecondPiece.kNo);
+        driveToSecondPieceBox.addOption("Yes", AutonomousTabData.DriveToSecondPiece.kYes);
         //put the widget on the shuffleboard
         autonomousTab.add(driveToSecondPieceBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
@@ -253,8 +250,8 @@ public class AutonomousTab
         SendableRegistry.setName(pickUpGamePiecesBox, "Pick Up Game Piece 2");
 
         //add options to Box
-        pickUpGamePiecesBox.setDefaultOption("Yes", AutonomousTabData.PickUpGamePieces.kYes);
-        pickUpGamePiecesBox.addOption("No", AutonomousTabData.PickUpGamePieces.kNo);
+        pickUpGamePiecesBox.setDefaultOption("No", AutonomousTabData.PickUpGamePieces.kNo);
+        pickUpGamePiecesBox.addOption("Yes", AutonomousTabData.PickUpGamePieces.kYes);
 
         //put the widget on the shuffleboard
         autonomousTab.add(pickUpGamePiecesBox)
@@ -274,8 +271,8 @@ public class AutonomousTab
         SendableRegistry.setName(scoreSecondPieceBox, "Score Piece 2");
 
         //add options to Box
-        scoreSecondPieceBox.addOption("No", AutonomousTabData.ScoreSecondPiece.kNo);
-        scoreSecondPieceBox.setDefaultOption("Yes", AutonomousTabData.ScoreSecondPiece.kYes);
+        scoreSecondPieceBox.setDefaultOption("No", AutonomousTabData.ScoreSecondPiece.kNo);
+        scoreSecondPieceBox.addOption("Yes", AutonomousTabData.ScoreSecondPiece.kYes);
 
         //put the widget on the shuffleboard
         autonomousTab.add(scoreSecondPieceBox)
@@ -331,14 +328,14 @@ public class AutonomousTab
             .withSize(4, 4);
     }
 
-    private void createSuccessfulDownloadBox()
+    private GenericEntry createSuccessfulDownloadBox()
     {
         Map<String, Object> booleanBoxProperties = new HashMap<>();
     
         booleanBoxProperties.put("Color when true", "Lime");
         booleanBoxProperties.put("Color when false", "Red");
         
-        autonomousTab.add("Successful Download?", false)
+        return autonomousTab.add("Successful Download?", false)
              .withWidget(BuiltInWidgets.kBooleanBox)
              .withPosition(24, 8)
              .withSize(4, 4)
@@ -346,9 +343,9 @@ public class AutonomousTab
              .getEntry();
     }
 
-    private void createErrorMessageBox()
+    private GenericEntry createErrorMessageBox()
     {
-         autonomousTab.add("Error Messages", "No Errors")
+         return autonomousTab.add("Error Messages", "No Errors")
              .withWidget(BuiltInWidgets.kTextView)
              .withPosition(0, 10)
              .withSize(20, 2)
@@ -450,12 +447,14 @@ public class AutonomousTab
         boolean isMiddle = (startingLocationBox.getSelected() == AutonomousTabData.StartingLocation.kMiddle);
         boolean isPiecesPlayed = (playPreloadBox.getSelected() == AutonomousTabData.PlayPreload.kYes);
         boolean isPiecesPlayedFalse = (playPreloadBox.getSelected() == AutonomousTabData.PlayPreload.kNo);
-        boolean isRow1 = (rowPlayedPiece1Box.getSelected() == AutonomousTabData.RowPlayedPiece1.kBottom);
+        boolean isRow1 = (rowPlayedPiece1Box.getSelected() == AutonomousTabData.RowPlayedPiece1.kNone);
         boolean isMoveOntoStation = (moveOntoChargingStationBox.getSelected() == AutonomousTabData.MoveOntoChargingStation.kYes);
-        boolean isPiecesPickedUp = (pickUpGamePiecesBox.getSelected() == AutonomousTabData.PickUpGamePieces.kNo);
+        boolean isPickUpPiece = (pickUpGamePiecesBox.getSelected() == AutonomousTabData.PickUpGamePieces.kYes);
         boolean isRow2False = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.kNone);
         boolean isRow2True = (rowPlayedPiece2Box.getSelected() == AutonomousTabData.RowPlayedPiece2.kBottom);
         boolean isPiecesContained = (containingPreloadBox.getSelected() == AutonomousTabData.ContainingPreload.kYes);
+        boolean isDrivetoSecondPiece = (driveToSecondPieceBox.getSelected() == AutonomousTabData.DriveToSecondPiece.kYes);
+        
         
         if(!isMiddle && isMoveOntoStation)
         {
@@ -464,33 +463,33 @@ public class AutonomousTab
             msg += "[ Not Possible ]  \n";
         }
         
-        // if(isRow2True && isMoveOntoStation || isColumn2True && isMoveOntoStation)
-        // {
-        //     isValid = false;
+        if(isRow2True && isMoveOntoStation || isPickUpPiece && isMoveOntoStation || isDrivetoSecondPiece && isMoveOntoStation)
+        {
+            isValid = false;
             
-        //     msg += "[ Not Possible ]  \n";
-        // }
+            msg += "[ Not Possible ]  \n";
+        }
 
-        // if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
-        // {
-        //     isValid = false;
+        if(!isPiecesContained && isRow1 || isPiecesPlayed && isRow1)
+        {
+            isValid = false;
             
-        //     msg += "[ Not Possible ]  \n";
-        // }
+            msg += "[ Not Possible ]  \n";
+        }
 
-        // if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
-        // {
-        //     isValid = false;
+        if(!isDrivetoSecondPiece && isPickUpPiece)
+        {
+            isValid = false;
             
-        //     msg += "[ Not Possible ]  \n";
-        // }
+            msg += "[ Not Possible ]  \n";
+        }
 
-        // if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
-        // {
-        //     isValid = false;
+        if(!isPickUpPiece && isRow2True || !isDrivetoSecondPiece && isRow2True)
+        {
+            isValid = false;
             
-        //     msg += "[ Not Possible ]  \n";
-        // }
+            msg += "[ Not Possible ]  \n";
+        }
 
         // if(!isPiecesContained && isRow1 || !isPiecesContained && isColumn1)
         // {

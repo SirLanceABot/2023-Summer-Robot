@@ -61,7 +61,11 @@ public class GrabGamePiece extends CommandBase
     @Override
     public void execute()
     {
-        grabber.grabGamePiece();
+        if(grabber != null)
+        {
+            grabber.grabGamePiece();
+        }
+        
         
         // if(grabber.isGrabberClosed())
         // {

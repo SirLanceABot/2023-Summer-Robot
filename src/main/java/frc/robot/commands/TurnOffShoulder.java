@@ -30,7 +30,11 @@ public class TurnOffShoulder extends CommandBase
         this.shoulder = shoulder;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(this.shoulder);
+        if(shoulder != null)
+        {
+            addRequirements(this.shoulder);
+        }
+        
     }
 
     // Called when the command is initially scheduled.
@@ -44,7 +48,11 @@ public class TurnOffShoulder extends CommandBase
     @Override
     public void execute()
     {
-        shoulder.off();
+        if(shoulder != null)
+        {
+            shoulder.off();
+        }
+        
         isFinished = true;
     }
 

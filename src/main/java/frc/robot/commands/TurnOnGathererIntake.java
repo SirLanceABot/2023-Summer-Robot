@@ -37,7 +37,11 @@ public class TurnOnGathererIntake extends CommandBase
         this.gatherer = gatherer;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(this.gatherer);
+        if(gatherer != null)
+        {
+            addRequirements(this.gatherer);
+        }
+        
     }
 
     /**
@@ -55,7 +59,11 @@ public class TurnOnGathererIntake extends CommandBase
     @Override
     public void execute()
     {
-        gatherer.gatherGamePiece();
+        if(gatherer != null)
+        {
+            gatherer.gatherGamePiece();
+        }
+        
         isFinished = true;
     }
 

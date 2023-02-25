@@ -41,7 +41,11 @@ public class MoveShoulderToScoringPosition extends CommandBase
         this.desiredPosition = desiredPosition;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(this.shoulder);
+        if(shoulder != null)
+        {
+            addRequirements(this.shoulder);
+        }
+        
     }
 
     // Called when the command is initially scheduled.
