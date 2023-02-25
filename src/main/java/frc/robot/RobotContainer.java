@@ -272,8 +272,12 @@ public class RobotContainer
 			{
 				dPadUpTrigger.onTrue( new MoveArm(arm, ArmPosition.kHigh)
 							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh)));
-				//dPadUpTrigger.toggleOnTrue(new MoveArmUp));
 			}
+			// if(shoulder != null)
+			// {
+			// 	dPadUpTrigger.onTrue(( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh))
+			// 				 .andThen( new PrintCommand("DPad UP")));
+			// }
 			
 			//Dpad down button
 			BooleanSupplier dPadDown = operatorController.getDpadSupplier(Xbox.Dpad.kDown);
@@ -281,9 +285,13 @@ public class RobotContainer
 			if(arm != null && shoulder != null)
 			{
 				dPadDownTrigger.onTrue( new MoveArm(arm, ArmPosition.kGather)
-							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather)));
-				//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+							  .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather)));
 			}
+			// if(shoulder != null)
+			// {
+			// 	dPadDownTrigger.onTrue(( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather))
+			// 				 .andThen( new PrintCommand("DPad DOWN")));
+			// }
 			
 			//Dpad left button
 			BooleanSupplier dPadLeft = operatorController.getDpadSupplier(Xbox.Dpad.kLeft);
@@ -291,9 +299,13 @@ public class RobotContainer
 			if(arm != null && shoulder != null)
 			{
 				dPadLeftTrigger.onTrue( new MoveArm(arm, ArmPosition.kMiddle)
-							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle)));
-				//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+							  .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle)));
 			}
+			// if(shoulder != null)
+			// {
+			// 	dPadLeftTrigger.onTrue(( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle))
+			// 				   .andThen( new PrintCommand("DPad LEFT")));
+			// }
 
 			//Dpad right button
 			BooleanSupplier dPadRight = operatorController.getDpadSupplier(Xbox.Dpad.kRight);
@@ -301,9 +313,13 @@ public class RobotContainer
 			if(arm != null && shoulder != null)
 			{
 				dPadRightTrigger.onTrue( new MoveArm(arm, ArmPosition.kLow)
-							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow)));
-				//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+							   .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow)));
 			}
+			// if(shoulder != null)
+			// {
+			// 	dPadRightTrigger.onTrue(( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow))
+			// 				 	.andThen( new PrintCommand("DPad RIGHT")));
+			// }
 
 			//X button
 			BooleanSupplier xButton = operatorController.getButtonSupplier(Xbox.Button.kX);
@@ -335,7 +351,7 @@ public class RobotContainer
 			//A button 
 			BooleanSupplier aButton = operatorController.getButtonSupplier(Xbox.Button.kA);
 			Trigger aButtonTrigger = new Trigger(aButton);
-			if(grabber != null)
+			if(arm != null && shoulder != null)
 			{
 				// aButtonTrigger.onTrue( new ReleaseGamePiece(grabber));
 	

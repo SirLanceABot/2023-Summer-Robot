@@ -50,7 +50,7 @@ public class Shoulder extends Subsystem4237
     //TODO: determine real values
     public enum ShoulderPosition
     {
-        kGather(0), kLow(20.0), kMiddle(200000.0), kHigh(Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT), kOverride(-4237);
+        kGather(0), kLow(100000.0), kMiddle(200000.0), kHigh(Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT), kOverride(-4237);
         public final double value;
 
         private ShoulderPosition(double value)
@@ -104,7 +104,6 @@ public class Shoulder extends Subsystem4237
     private SparkMaxLimitSwitch reverseLimitSwitch;
 
     private RelativeEncoder relativeEncoder;
-    private SparkMaxAnalogSensor analogSensor;
     private SparkMaxPIDController pidController;
 
     //TODO: Tune PID values
@@ -170,15 +169,15 @@ public class Shoulder extends Subsystem4237
         pidController.setFF(kFF);
         pidController.setOutputRange(kMinOutput, kMaxOutput);
 
-        // display PID coefficients on SmartDashboard
-        SmartDashboard.putNumber("P Gain", kP);
-        SmartDashboard.putNumber("I Gain", kI);
-        SmartDashboard.putNumber("D Gain", kD);
-        SmartDashboard.putNumber("I Zone", kIz);
-        SmartDashboard.putNumber("Feed Forward", kFF);
-        SmartDashboard.putNumber("Max Output", kMaxOutput);
-        SmartDashboard.putNumber("Min Output", kMinOutput);
-        SmartDashboard.putNumber("Set Rotations", 0);
+        // // display PID coefficients on SmartDashboard
+        // SmartDashboard.putNumber("P Gain", kP);
+        // SmartDashboard.putNumber("I Gain", kI);
+        // SmartDashboard.putNumber("D Gain", kD);
+        // SmartDashboard.putNumber("I Zone", kIz);
+        // SmartDashboard.putNumber("Feed Forward", kFF);
+        // SmartDashboard.putNumber("Max Output", kMaxOutput);
+        // SmartDashboard.putNumber("Min Output", kMinOutput);
+        // SmartDashboard.putNumber("Set Rotations", 0);
 
         // Soft Limits
         shoulderMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT);

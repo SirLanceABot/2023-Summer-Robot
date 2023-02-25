@@ -37,7 +37,6 @@ public class MoveShoulderToScoringPosition extends CommandBase
      */
     public MoveShoulderToScoringPosition(Shoulder shoulder, ShoulderPosition desiredPosition) 
     {
-        System.out.println("Command Contructor Started");
         this.shoulder = shoulder;
         this.desiredPosition = desiredPosition;
         
@@ -46,15 +45,12 @@ public class MoveShoulderToScoringPosition extends CommandBase
         {
             addRequirements(this.shoulder);
         }
-        System.out.println("Command Contructor Ended");
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize()
     {
-        System.out.println("Initialize");
-
         isFinished = false;
     }
 
@@ -64,28 +60,30 @@ public class MoveShoulderToScoringPosition extends CommandBase
     {
         if(shoulder != null)
         {
-            System.out.println("Execute");
-
             switch(desiredPosition)
             {
                 case kHigh:
-                    System.out.println("High");
                     shoulder.moveToHigh();
+                    isFinished = true;
                     break;
                 
                 case kMiddle:
                     shoulder.moveToMiddle();
+                    isFinished = true;
                     break;
                 
                 case kLow:
                     shoulder.moveToLow();
+                    isFinished = true;
                     break;
                 
                 case kGather:
                     shoulder.moveToGather();
+                    isFinished = true;
                     break;
                 
                 case kOverride:
+                    isFinished = true;
                     break;
             }
         }
@@ -119,10 +117,10 @@ public class MoveShoulderToScoringPosition extends CommandBase
     @Override
     public void end(boolean interrupted)
     {
-        if(shoulder != null)
-        {
-            shoulder.hold();    // once shoulder is done moving, hold position
-        }
+        // if(shoulder != null)
+        // {
+        //     shoulder.off();    // once shoulder is done moving, hold position
+        // }
         
     }
 
