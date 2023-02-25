@@ -67,10 +67,12 @@ public class RobotContainer
     }
 	
 	private boolean useFullRobot			= false;
-	private boolean useBindings				= true;
+	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
+	private boolean useGyro					= false;
+	private boolean useDrivetrain   		= false;
 	private boolean useGyro					= false;
 	private boolean useDrivetrain   		= false;
 	private boolean useGrabber 				= false;
@@ -79,7 +81,7 @@ public class RobotContainer
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
 	private boolean useDriverController		= false;
-	private boolean useOperatorController 	= true;
+	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
 	private boolean useDataLog				= false;
@@ -153,46 +155,60 @@ public class RobotContainer
 
 	private void configureDriverBindings()
 	{
-		if(driverController != null && drivetrain != null)
+		if(driverController != null)
         {
 			//Axis, driving and rotating
 			DoubleSupplier leftYAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftY);
 			DoubleSupplier leftXAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftX);
 			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
-			//BooleanSupplier aButton = () -> {return driverController.getRawButton(Xbox.Button.kA); };
+
+			// Start Button
 			BooleanSupplier startButton = driverController.getButtonSupplier(Xbox.Button.kStart);
 			Trigger startButtonTrigger = new Trigger(startButton);
-			startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
+			if(gyro != null)
+			{
+				startButtonTrigger.toggleOnTrue(new InstantCommand( () -> { gyro.reset(); } ) );
+			}
 
 			//A Button
 			BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
 			Trigger aButtonTrigger = new Trigger(aButton);
-			aButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
-						  .andThen( () -> operatorController.setRumble(0.5))         
-						  .andThen( () -> driverController.setRumble(0.5))
-						  .andThen( new WaitCommand(0.5))
-						  .andThen( () -> operatorController.setRumble(0.0))
-						  .andThen( () -> driverController.setRumble(0.0)));
+			if(drivetrain != null && vision != null && operatorController != null)
+			{
+				aButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
+							.andThen( () -> operatorController.setRumble(0.5, 0.5, 0.5))         
+							.andThen( () -> driverController.setRumble(0.5, 0.5, 0.5)) );							// .andThen( () -> operatorController.setRumble(0.5))         
+							// .andThen( () -> driverController.setRumble(0.5))
+							// .andThen( new WaitCommand(0.5))
+							// .andThen( () -> operatorController.setRumble(0.0))
+							// .andThen( () -> driverController.setRumble(0.0)));
+			}
 
 			//B Button
 			BooleanSupplier bButton = driverController.getButtonSupplier(Xbox.Button.kB);
 			Trigger bButtonTrigger = new Trigger(bButton);
-			bButtonTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+			if(drivetrain != null)
+			{
+				bButtonTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+			}
 			// bButtonTrigger.onTrue( new AutoDriveDistance(drivetrain, 0.5, 0.0, 1.0)
 			// 			  .andThen( new AutoBalance(drivetrain, gyro)));
 
 			//X Button-lockwheels
 			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
 			Trigger xButtonTrigger = new Trigger(xButton);
-			// xButtonTrigger.onTrue( new RunCommand( () -> drivetrain.lockWheels(), drivetrain )
-			// 						.until(driverController.tryingToMoveRobot()) );
-			xButtonTrigger.onTrue( Commands.run( () -> drivetrain.lockWheels(), drivetrain )
-									.until(driverController.tryingToMoveRobot()) );
+			if(drivetrain != null)
+			{
+				xButtonTrigger.onTrue( new RunCommand( () -> drivetrain.lockWheels(), drivetrain )
+										.until(driverController.tryingToMoveRobot()) );
+				// xButtonTrigger.onTrue( Commands.run( () -> drivetrain.lockWheels(), drivetrain )
+				// 					.until(driverController.tryingToMoveRobot()) );
+			}
 			
-
 			//Y Button
 			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
+			yButtonTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.0, 0.5)) );
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)         
 			// 			  .andThen( () -> driverController.setRumble(0.5))
 			// 			  .andThen( new WaitCommand(0.5))
@@ -204,8 +220,8 @@ public class RobotContainer
 			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
 			// lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
 
-
-			drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+			if(drivetrain != null)
+				drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
 			
         }
@@ -218,83 +234,118 @@ public class RobotContainer
 			//Left trigger 
 			BooleanSupplier leftTrigger = operatorController.getButtonSupplier(Xbox.Button.kLeftTrigger);
 			Trigger leftTriggerTrigger = new Trigger(leftTrigger);
-			leftTriggerTrigger.whileTrue( new InstantCommand (() -> shoulder.moveUp(), shoulder));
-			//leftTriggerTrigger.toggleOnTrue(new DetractArm));
+			if(shoulder != null)
+			{
+				leftTriggerTrigger.whileTrue( new InstantCommand (() -> shoulder.moveUp(), shoulder));
+				//leftTriggerTrigger.toggleOnTrue(new DetractArm));
+			}
 
 			//Right trigger 
 			BooleanSupplier rightTrigger = operatorController.getButtonSupplier(Xbox.Button.kRightTrigger);
 			Trigger rightTriggerTrigger = new Trigger(rightTrigger);
-			rightTriggerTrigger.whileTrue( new InstantCommand (() -> arm.extendArm(), arm));
-			//rightTriggerTrigger.toggleOnTrue(new ExtendArm));
+			if(arm != null)
+			{
+				rightTriggerTrigger.whileTrue( new InstantCommand (() -> arm.extendArm(), arm));
+				//rightTriggerTrigger.toggleOnTrue(new ExtendArm));
+			}
 
 			//Left bumper
 			BooleanSupplier leftBumper = operatorController.getButtonSupplier(Xbox.Button.kLeftBumper);
 			Trigger leftBumperTrigger = new Trigger(leftBumper);
-			leftBumperTrigger.whileTrue( new InstantCommand (() -> shoulder.moveDown(), shoulder));
-			// leftBumperTrigger.onTrue( new GrabGamePiece(grabber));
+			if(shoulder != null)
+			{
+				leftBumperTrigger.whileTrue( new InstantCommand (() -> shoulder.moveDown(), shoulder));
+				// leftBumperTrigger.onTrue( new GrabGamePiece(grabber));
+			}
 			
 			//Right bumper
 			BooleanSupplier rightBumper = operatorController.getButtonSupplier(Xbox.Button.kRightBumper);
 			Trigger rightBumperTrigger = new Trigger(rightBumper);
-			rightBumperTrigger.whileTrue( new InstantCommand (() -> arm.retractArm(), arm));
-			// rightBumperTrigger.onTrue( new ReleaseGamePiece(grabber));
+			if(arm != null)
+			{
+				rightBumperTrigger.whileTrue( new InstantCommand (() -> arm.retractArm(), arm));
+				// rightBumperTrigger.onTrue( new ReleaseGamePiece(grabber));
+			}
 
 			//Dpad up button
 			BooleanSupplier dPadUp = operatorController.getDpadSupplier(Xbox.Dpad.kUp);
 			Trigger dPadUpTrigger = new Trigger(dPadUp);
-			dPadUpTrigger.onTrue( new MoveArm(arm, ArmPosition.kHigh)
-						   .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh)));
-			//dPadUpTrigger.toggleOnTrue(new MoveArmUp));
+			if(arm != null && shoulder != null)
+			{
+				dPadUpTrigger.onTrue( new MoveArm(arm, ArmPosition.kHigh)
+							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh)));
+				//dPadUpTrigger.toggleOnTrue(new MoveArmUp));
+			}
 			
 			//Dpad down button
 			BooleanSupplier dPadDown = operatorController.getDpadSupplier(Xbox.Dpad.kDown);
 			Trigger dPadDownTrigger = new Trigger(dPadDown);
-			dPadDownTrigger.onTrue( new MoveArm(arm, ArmPosition.kGather)
-						   .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather)));
-			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+			if(arm != null && shoulder != null)
+			{
+				dPadDownTrigger.onTrue( new MoveArm(arm, ArmPosition.kGather)
+							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather)));
+				//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+			}
 			
 			//Dpad left button
 			BooleanSupplier dPadLeft = operatorController.getDpadSupplier(Xbox.Dpad.kLeft);
 			Trigger dPadLeftTrigger = new Trigger(dPadLeft);
-			dPadLeftTrigger.onTrue( new MoveArm(arm, ArmPosition.kMiddle)
-						   .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle)));
-			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+			if(arm != null && shoulder != null)
+			{
+				dPadLeftTrigger.onTrue( new MoveArm(arm, ArmPosition.kMiddle)
+							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle)));
+				//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+			}
 
 			//Dpad right button
 			BooleanSupplier dPadRight = operatorController.getDpadSupplier(Xbox.Dpad.kRight);
 			Trigger dPadRightTrigger = new Trigger(dPadRight);
-			dPadRightTrigger.onTrue( new MoveArm(arm, ArmPosition.kLow)
-						   .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow)));
-			//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+			if(arm != null && shoulder != null)
+			{
+				dPadRightTrigger.onTrue( new MoveArm(arm, ArmPosition.kLow)
+							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow)));
+				//dPadDownTrigger.toggleOnTrue(new MoveArmDown));
+			}
 
 			//X button
 			BooleanSupplier xButton = operatorController.getButtonSupplier(Xbox.Button.kX);
 			Trigger xButtonTrigger = new Trigger(xButton);
-			xButtonTrigger.whileTrue( new InstantCommand (() -> candle.signalCube(), candle));
-			// xButtonTrigger.toggleOnTrue(new StartEndCommand( () -> { shoulder.moveDown(); }, () -> { shoulder.off(); }, shoulder ) );
-			//xButtonTrigger.toggleOnTrue(new SuctionControl));
+			if(candle != null)
+			{
+				xButtonTrigger.whileTrue( new InstantCommand (() -> candle.signalCube(), candle));
+				// xButtonTrigger.toggleOnTrue(new StartEndCommand( () -> { shoulder.moveDown(); }, () -> { shoulder.off(); }, shoulder ) );
+				//xButtonTrigger.toggleOnTrue(new SuctionControl));
+			}	
 
 			//Y button 
 			BooleanSupplier yButton = operatorController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
-			yButtonTrigger.whileTrue( new InstantCommand (() -> candle.signalCone(), candle));
-			//yButtonTrigger.toggleOnTrue( new MoveWrist());
+			if(candle != null)
+			{
+				yButtonTrigger.whileTrue( new InstantCommand (() -> candle.signalCone(), candle));
+				//yButtonTrigger.toggleOnTrue( new MoveWrist());
+			}
 
 			//B button 
 			BooleanSupplier bButton = operatorController.getButtonSupplier(Xbox.Button.kB);
-			Trigger bButtonTrigger = new Trigger(bButton);
-			bButtonTrigger.whileTrue( new InstantCommand (() -> candle.turnOffLight(), candle));
+			Trigger bButtonTrigger = new Trigger(yButton);
+			if(candle != null)
+			{
+				bButtonTrigger.whileTrue( new InstantCommand (() -> candle.turnOffLight(), candle));
+			}
 
 			//A button 
 			BooleanSupplier aButton = operatorController.getButtonSupplier(Xbox.Button.kA);
 			Trigger aButtonTrigger = new Trigger(aButton);
-			aButtonTrigger.onTrue( new ReleaseGamePiece(grabber));
-
-			aButtonTrigger.whileTrue( new InstantCommand (() -> shoulder.moveDown(), shoulder)
-						  .alongWith( new InstantCommand (() -> arm.retractArm(), arm)));
+			if(grabber != null)
+			{
+				// aButtonTrigger.onTrue( new ReleaseGamePiece(grabber));
+	
+				aButtonTrigger.whileTrue( new InstantCommand (() -> shoulder.moveDown(), shoulder)
+							.alongWith( new InstantCommand (() -> arm.retractArm(), arm)));
 			// DoubleSupplier leftYAxis = operatorController.getAxisSupplier(Xbox.Axis.kLeftY);
-			// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
-
+				// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
+			}
 		}
 	}
 
@@ -307,13 +358,14 @@ public class RobotContainer
 	{
 		// AutoBalance command = new AutoBalance(drivetrain, gyro);
 		// AutoDriveDistance command = new AutoDriveDistance(drivetrain, 0.2, 0.0, 2.0);
-		Command command = new AutoDriveDistance(drivetrain, gyro, -1.0, 0.0, 3.90)
-				// .andThen( new AutoBalance(drivetrain, gyro))
-				// .andThen( new AutoDriveDistance(drivetrain, -0.5, 0.0, 1.5))
-				.andThen( new AutoDriveDistance(drivetrain, gyro, 1.0, 0.0, 1.90))
-				.andThen( new AutoBalance(drivetrain, gyro))
-				.andThen( new LockWheels(drivetrain));
-		return command;
+		// Command command = new AutoDriveDistance(drivetrain, gyro, -1.0, 0.0, 3.90)
+		// 		// .andThen( new AutoBalance(drivetrain, gyro))
+		// 		// .andThen( new AutoDriveDistance(drivetrain, -0.5, 0.0, 1.5))
+		// 		.andThen( new AutoDriveDistance(drivetrain, gyro, 1.0, 0.0, 1.90))
+		// 		.andThen( new AutoBalance(drivetrain, gyro))
+		// 		.andThen( new LockWheels(drivetrain));
+		// return command;
+		return null;
 	}
 
 	
