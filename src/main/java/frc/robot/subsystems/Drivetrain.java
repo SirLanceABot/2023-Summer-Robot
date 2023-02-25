@@ -200,6 +200,7 @@ public class Drivetrain extends Subsystem4237
     public void lockWheels()
     {
         driveMode = DriveMode.kLockwheels;
+       
         //updateOdometry();
         
         // SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
@@ -331,6 +332,7 @@ public class Drivetrain extends Subsystem4237
                 periodicIO.swerveModuleStates[1] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(135));
                 periodicIO.swerveModuleStates[2] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(135));
                 periodicIO.swerveModuleStates[3] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(45));
+                //System.out.println("drivetrain.Lockwheels");
                 break;
 
             case kStop:

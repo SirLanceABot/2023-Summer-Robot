@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -183,8 +184,11 @@ public class RobotContainer
 			//X Button-lockwheels
 			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
 			Trigger xButtonTrigger = new Trigger(xButton);
-			xButtonTrigger.onTrue( new RunCommand( () -> drivetrain.lockWheels(), drivetrain )
+			// xButtonTrigger.onTrue( new RunCommand( () -> drivetrain.lockWheels(), drivetrain )
+			// 						.until(driverController.tryingToMoveRobot()) );
+			xButtonTrigger.onTrue( Commands.run( () -> drivetrain.lockWheels(), drivetrain )
 									.until(driverController.tryingToMoveRobot()) );
+			
 
 			//Y Button
 			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);

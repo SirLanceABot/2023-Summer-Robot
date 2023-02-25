@@ -95,9 +95,12 @@ public class DriverController extends Xbox implements PeriodicIO
 
     public BooleanSupplier tryingToMoveRobot()
     {
-        boolean leftMove = Math.abs(periodicIO.axis[Xbox.Axis.kLeftX.value]) > 0.0 || Math.abs(periodicIO.axis[Xbox.Axis.kLeftY.value]) > 0.0;
-        boolean rightMove = Math.abs(periodicIO.axis[Xbox.Axis.kRightX.value]) > 0.0 || Math.abs(periodicIO.axis[Xbox.Axis.kRightY.value]) > 0.0;
-        return () -> leftMove || rightMove;
+        return () -> {
+            boolean leftMove = Math.abs(periodicIO.axis[Xbox.Axis.kLeftX.value]) > 0.0 
+                || Math.abs(periodicIO.axis[Xbox.Axis.kLeftY.value]) > 0.0;
+            boolean rightMove = Math.abs(periodicIO.axis[Xbox.Axis.kRightX.value]) > 0.0 
+                || Math.abs(periodicIO.axis[Xbox.Axis.kRightY.value]) > 0.0;
+            return leftMove || rightMove;};
     }
 
     @Override
