@@ -44,7 +44,7 @@ public class Shoulder extends Subsystem4237
         // DataLogManager.log("Loading: " + fullClassName);
     }
     
-    //TODO: determine real angles
+    //TODO: determine real values
     public enum ShoulderPosition
     {
         kGather(0.0, 10.0), kLow(25.0, 35.0), kMiddle(55.0, 65.0), kHigh(95.0, 105.0);
@@ -85,7 +85,8 @@ public class Shoulder extends Subsystem4237
     // private final TalonFX oldShoulderMotor = new TalonFX(shoulderMotorPort);
     
     private final CANSparkMax shoulderMotor = new CANSparkMax(shoulderMotorPort,  MotorType.kBrushless);
-    //private final CANSparkMax shoulderMotor = new CANSparkMax(7,  MotorType.kBrushless);    //test
+    // private final CANSparkMax shoulderMotor = new CANSparkMax(3,  MotorType.kBrushless); //test
+
     private final Timer encoderResetTimer = new Timer();
 
     private SparkMaxLimitSwitch forwardLimitSwitch;
@@ -158,7 +159,6 @@ public class Shoulder extends Subsystem4237
         // pidController.setOutputRange(kMinOutput, kMaxOutput);
 
         // Soft Limits
-        //TODO: determine soft limit values
         shoulderMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT);
         shoulderMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         shoulderMotor.setSoftLimit(SoftLimitDirection.kReverse, Constants.Shoulder.ENCODER_REVERSE_SOFT_LIMIT);

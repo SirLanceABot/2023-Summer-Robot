@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 // import frc.robot.sensors.Vision;
 // import frc.robot.subsystems.Drivetrain;
@@ -39,6 +40,7 @@ public class SamTest implements Test
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
     private final Shoulder shoulder;
+    // private final Arm arm;
     // private final CANSparkMax canSparkMax = new CANSparkMax(3, MotorType.kBrushless);
     private final Joystick joystick;
     // private final DoubleSolenoid testSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 0, 1);
@@ -55,6 +57,7 @@ public class SamTest implements Test
         // vision = this.robotContainer.vision;
         // drivetrain = this.robotContainer.drivetrain;
         shoulder = this.robotContainer.shoulder;
+        // arm = this.robotContainer.arm;
         // canSparkMax.restoreFactoryDefaults();
         // canSparkMax.setIdleMode(IdleMode.kBrake);
         joystick = new Joystick(0);
@@ -81,17 +84,21 @@ public class SamTest implements Test
     {
         if(joystick.getRawButton(1))    //A
         {
+            // arm.extendArm();
             shoulder.moveUp();
         }
         else if(joystick.getRawButton(2))   //B
         {
+            // arm.retractArm();
             shoulder.moveDown();
         }
         else
         {
+            // arm.stopArm();
             shoulder.off();
         }
     
+        System.out.println(shoulder);
 
         // if(joystick.getRawButton(3))    //X
         // {

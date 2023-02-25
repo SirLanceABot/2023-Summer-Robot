@@ -39,6 +39,16 @@ public class Arm extends Subsystem4237
         }
     }
 
+    public enum ResetState
+    {
+        kStart, kTry, kDone;
+    }
+
+    private enum LimitSwitchState
+    {
+        kPressed, kStillPressed, kReleased, kStillReleased
+    }
+
     private class PeriodicIO
     {
         // Inputs
@@ -51,12 +61,20 @@ public class Arm extends Subsystem4237
     private PeriodicIO periodicIO = new PeriodicIO();
     private final int armMotorPort = Constants.Subsystem.ARM_MOTOR_PORT;
     private final CANSparkMax armMotor = new CANSparkMax (armMotorPort, MotorType.kBrushless);
+    // private final CANSparkMax armMotor = new CANSparkMax (3, MotorType.kBrushless);  //test
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
     private final Timer encoderResetTimer = new Timer();
     private RelativeEncoder armEncoder;
     private boolean resetEncoderNow = false;
-    private boolean hasEncoderReset = true;    
+    private boolean hasEncoderReset = true;
+    
+    private boolean useLSReset = true;
+    private LimitSwitchState reverseLSState = LimitSwitchState.kStillReleased;
+    private ResetState resetState = ResetState.kDone;
+    private int resetAttemptCounter = 0;
+    private final int RESET_ATTEMPT_LIMIT = 5;
+
     
     public Arm()
     {
@@ -98,8 +116,10 @@ public class Arm extends Subsystem4237
      */
     public void resetEncoder()
     {
-        resetEncoderNow = true;
-        hasEncoderReset = false;
+        resetState = resetState.kStart;
+
+        // resetEncoderNow = true;
+        // hasEncoderReset = false;
     }
    
     /**
@@ -165,8 +185,42 @@ public class Arm extends Subsystem4237
     @Override
     public synchronized void readPeriodicInputs()
     {
-        // TODO see the Shoulder code for resetting encoder
         periodicIO.armPosition = armEncoder.getPosition();
+
+        if(useLSReset)
+        {
+            boolean isReverseLimitSwitchPressed = reverseLimitSwitch.isPressed();
+
+            switch(reverseLSState)
+            {
+                case kStillReleased:
+                    if(isReverseLimitSwitchPressed)
+                    {
+                        resetState = ResetState.kStart;
+                        reverseLSState = LimitSwitchState.kPressed;
+                    }
+                    break;
+                case kPressed:
+                    if(isReverseLimitSwitchPressed)
+                        reverseLSState = LimitSwitchState.kStillPressed;
+                    else
+                        reverseLSState = LimitSwitchState.kReleased;
+                    break;
+                case kStillPressed:
+                    if(!isReverseLimitSwitchPressed)
+                        reverseLSState = LimitSwitchState.kReleased;
+                    break;
+                case kReleased:
+                    if(!isReverseLimitSwitchPressed)
+                        reverseLSState = LimitSwitchState.kStillReleased;
+                    else
+                        reverseLSState = LimitSwitchState.kPressed;
+                    break;
+            }
+        }
+
+        // // TODO see the Shoulder code for resetting encoder
+        // periodicIO.armPosition = armEncoder.getPosition();
     }
 
     /**
@@ -175,33 +229,75 @@ public class Arm extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        // TODO see the Shoulder code for resetting encoder
-        if (resetEncoderNow)
+        switch(resetState)
         {
-            armMotor.set(0.0);
-            armEncoder.setPosition(0.0);
-            resetEncoderNow = false;
-            hasEncoderReset = true;
-            encoderResetTimer.reset();
-            encoderResetTimer.start();
-        }
-        else if (!hasEncoderReset)
-        {
-            if(Math.abs(periodicIO.armPosition) < 0.5)
-            {
-                hasEncoderReset = true;
-            }
-            else if (encoderResetTimer.hasElapsed(0.1))
-            {
-                armEncoder.setPosition(0.0);
+            case kDone:
+                armMotor.set(periodicIO.armSpeed);
+                break;
+
+            case kStart:
                 encoderResetTimer.reset();
                 encoderResetTimer.start();
-            }
+                armMotor.set(0.0);
+                armEncoder.setPosition(0.0);
+                resetState = ResetState.kTry;
+                resetAttemptCounter++;
+                break;
+
+            case kTry:
+                if(resetAttemptCounter < RESET_ATTEMPT_LIMIT)
+                {
+                    if(Math.abs(periodicIO.armPosition) < 0.5 )
+                    {
+                        resetState = ResetState.kDone;
+                        resetAttemptCounter = 0;
+                    }
+                    else if(encoderResetTimer.hasElapsed(0.1))
+                    {
+                        System.out.println("Attempts: " + resetAttemptCounter);
+                        // DataLogManager.log("Attempts: " + resetAttemptCounter);
+                        resetAttemptCounter++;
+                        armEncoder.setPosition(0.0);
+                        encoderResetTimer.reset();
+                        encoderResetTimer.start();
+                    }
+                }
+                else if(resetAttemptCounter >= RESET_ATTEMPT_LIMIT)
+                {
+                    resetState = ResetState.kDone;
+                    resetAttemptCounter = 0;
+                    System.out.println("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
+                    // DataLogManager.log("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
+                }
+                break;
         }
-        else 
-        {
-            armMotor.set(periodicIO.armSpeed);
-        }
+        // // TODO see the Shoulder code for resetting encoder
+        // if (resetEncoderNow)
+        // {
+        //     armMotor.set(0.0);
+        //     armEncoder.setPosition(0.0);
+        //     resetEncoderNow = false;
+        //     hasEncoderReset = true;
+        //     encoderResetTimer.reset();
+        //     encoderResetTimer.start();
+        // }
+        // else if (!hasEncoderReset)
+        // {
+        //     if(Math.abs(periodicIO.armPosition) < 0.5)
+        //     {
+        //         hasEncoderReset = true;
+        //     }
+        //     else if (encoderResetTimer.hasElapsed(0.1))
+        //     {
+        //         armEncoder.setPosition(0.0);
+        //         encoderResetTimer.reset();
+        //         encoderResetTimer.start();
+        //     }
+        // }
+        // else 
+        // {
+        //     armMotor.set(periodicIO.armSpeed);
+        // }
     }
 
     @Override
