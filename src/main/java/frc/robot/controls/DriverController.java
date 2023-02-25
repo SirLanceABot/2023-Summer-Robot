@@ -4,12 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.PeriodicIO;
-
-//import frc.constants.Port;
-
-//import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriverController extends Xbox implements PeriodicIO
 {
@@ -60,10 +55,10 @@ public class DriverController extends Xbox implements PeriodicIO
         createRumbleEvent(1.0, 0.25, 1.0, 1.0);
     }
 
-    public void rumbleNow()
-    {
-        super.createRumbleEvent(DriverStation.getMatchTime(), 1.0, 1.0, 1.0);
-    }
+    // public void rumbleNow()
+    // {
+    //     super.createRumbleEvent(DriverStation.getMatchTime(), 1.0, 1.0, 1.0);
+    // }
 
     public void configureAxes()
     {

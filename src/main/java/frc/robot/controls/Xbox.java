@@ -3,12 +3,10 @@ package frc.robot.controls;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 // import edu.wpi.first.wpilibj.GenericHID.getRawAxis;
 public class Xbox
@@ -151,9 +149,19 @@ public class Xbox
         }
     }
 
+    public static enum RumbleState
+    {
+        kScheduledEvent, kManualEvent;
+    }
+
 
     // *** CLASS & INSTANCE VARIABLES ***
     private final ArrayList<RumbleEvent> rumbleEvents = new ArrayList<RumbleEvent>();
+    private RumbleState rumbleState = RumbleState.kScheduledEvent;
+    private double rumbleDuration = 0.0;
+    private double rumbleLeftPower = 0.0;
+    private double rumbleRightPower = 0.0;
+    private final Timer rumbleTimer = new Timer();
     private int rumbleCounter = 0;
     private final Joystick joystick;
 
@@ -380,12 +388,21 @@ public class Xbox
     public void setAxisSettings(Axis axis, AxisSettings axisSettings)
     {
         setAxisSettings(axis, axisSettings.axisDeadzone, axisSettings.axisMinOutput, axisSettings.axisMaxOutput, axisSettings.axisIsFlipped, axisSettings.axisScale);
-        
     }
     
-    public void setRumble(double intensity)
+    // public void setRumble(double intensity)
+    // {
+    //     joystick.setRumble(GenericHID.RumbleType.kBothRumble, intensity);
+    // }
+
+    public void setRumble(double duration, double leftPower, double rightPower)
     {
-        joystick.setRumble(GenericHID.RumbleType.kBothRumble, intensity);
+        rumbleState = RumbleState.kManualEvent;
+        rumbleDuration = duration;
+        rumbleLeftPower = leftPower;
+        rumbleRightPower = rightPower;
+        rumbleTimer.start();
+        rumbleTimer.reset();
     }
 
     void createRumbleEvent(double startTime, double duration, double leftPower, double rightPower)
@@ -435,27 +452,45 @@ public class Xbox
 
     void checkRumbleEvent()
     {
-        if (DriverStation.isEnabled() && rumbleEvents.size() > rumbleCounter)
+        switch(rumbleState)
         {
-            double matchTime = DriverStation.getMatchTime();
-            double startTime = rumbleEvents.get(rumbleCounter).startTime;
-            double duration = rumbleEvents.get(rumbleCounter).duration;
+            case kScheduledEvent:
+                if (DriverStation.isTeleopEnabled() && rumbleEvents.size() > rumbleCounter)
+                {
+                    double matchTime = DriverStation.getMatchTime();
+                    double startTime = rumbleEvents.get(rumbleCounter).startTime;
+                    double duration = rumbleEvents.get(rumbleCounter).duration;
 
-            if (startTime >= matchTime && matchTime > startTime - duration)
-            {
-                joystick.setRumble(RumbleType.kLeftRumble, rumbleEvents.get(rumbleCounter).leftPower);
-                joystick.setRumble(RumbleType.kRightRumble, rumbleEvents.get(rumbleCounter).rightPower);
-            }
-            else if (matchTime <= startTime - duration)
-            {
-                rumbleCounter++;
-                joystick.setRumble(RumbleType.kLeftRumble, 0.0);
-                joystick.setRumble(RumbleType.kRightRumble, 0.0); 
-            }
-        }
-        else if(DriverStation.isDisabled() && rumbleCounter > 0)
-        {
-            resetRumbleCounter();
+                    if (startTime >= matchTime && matchTime > startTime - duration)
+                    {
+                        joystick.setRumble(RumbleType.kLeftRumble, rumbleEvents.get(rumbleCounter).leftPower);
+                        joystick.setRumble(RumbleType.kRightRumble, rumbleEvents.get(rumbleCounter).rightPower);
+                    }
+                    else if (matchTime <= startTime - duration)
+                    {
+                        rumbleCounter++;
+                        joystick.setRumble(RumbleType.kLeftRumble, 0.0);
+                        joystick.setRumble(RumbleType.kRightRumble, 0.0); 
+                    }
+                }
+                else if(DriverStation.isDisabled() && rumbleCounter > 0)
+                {
+                    resetRumbleCounter();
+                }
+                break;
+            
+            case kManualEvent:
+                if(rumbleTimer.hasElapsed(rumbleDuration))
+                {
+                    rumbleState = RumbleState.kScheduledEvent;
+                    rumbleDuration = 0.0;
+                    rumbleLeftPower = 0.0;
+                    rumbleRightPower = 0.0;
+                }
+
+                joystick.setRumble(RumbleType.kLeftRumble, rumbleLeftPower);
+                joystick.setRumble(RumbleType.kRightRumble, rumbleRightPower);
+                break;
         }
     }
 
