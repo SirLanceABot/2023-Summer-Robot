@@ -134,7 +134,7 @@ public class Arm extends Subsystem4237
      */
     public void retractArm()
     {
-        periodicIO.armSpeed = -0.3;
+        periodicIO.armSpeed = -0.50;
     }
 
     /**
@@ -142,7 +142,7 @@ public class Arm extends Subsystem4237
      */
     public void extendArm()
     {
-        periodicIO.armSpeed = 0.3;
+        periodicIO.armSpeed = 0.50;
     }
     
     /**

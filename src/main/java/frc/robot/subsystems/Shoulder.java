@@ -95,7 +95,7 @@ public class Shoulder extends Subsystem4237
     // private final TalonFX oldShoulderMotor = new TalonFX(shoulderMotorPort);
     
     private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.Subsystem.SHOULDER_MOTOR_PORT,  MotorType.kBrushless);
-    // private final CANSparkMax shoulderMotor = new CANSparkMax(3,  MotorType.kBrushless); //test
+    // private final CANSparkMax shoulderMotor = new CANSparkMax(4,  MotorType.kBrushless); //test
 
     private final Timer encoderResetTimer = new Timer();
 
@@ -268,14 +268,14 @@ public class Shoulder extends Subsystem4237
     public void moveUp()
     {
         scoringPosition = ShoulderPosition.kOverride;
-        periodicIO.motorSpeed = 0.5;
+        periodicIO.motorSpeed = 0.15;//0.5;
     }
 
     /** Moves the shoulder down */
     public void moveDown()
     {
         scoringPosition = ShoulderPosition.kOverride;
-        periodicIO.motorSpeed = -0.5;
+        periodicIO.motorSpeed = -0.15;//0.5;
     }
 
     /** Moves the shoulder to high position */

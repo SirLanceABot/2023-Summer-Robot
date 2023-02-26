@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 // import edu.wpi.first.wpilibj.PneumaticsModuleType;
 // import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Arm;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 // import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
@@ -49,13 +50,13 @@ public class SamTest implements Test
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
     private final Shoulder shoulder;
-    // private final Arm arm;
+    private final Arm arm;
     // private final CANSparkMax canSparkMax = new CANSparkMax(3, MotorType.kBrushless);
     private final Joystick joystick;
     // private final DoubleSolenoid testSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 0, 1);
     // private final Vision vision;
     // private final Drivetrain drivetrain;
-    private CommandState commandState = CommandState.kWaiting;
+    // private CommandState commandState = CommandState.kWaiting;
   
 
     // *** CLASS CONSTRUCTOR ***
@@ -67,7 +68,7 @@ public class SamTest implements Test
         // vision = this.robotContainer.vision;
         // drivetrain = this.robotContainer.drivetrain;
         shoulder = this.robotContainer.shoulder;
-        // arm = this.robotContainer.arm;
+        arm = this.robotContainer.arm;
         // canSparkMax.restoreFactoryDefaults();
         // canSparkMax.setIdleMode(IdleMode.kBrake);
         joystick = new Joystick(0);
@@ -93,36 +94,47 @@ public class SamTest implements Test
      */
     public void periodic()
     {
-        SmartDashboard.putNumber("Encoder Value", shoulder.getPosition());
-        SmartDashboard.putNumber("Encoder Velocity", shoulder.getVelocity());
+    //     SmartDashboard.putNumber("Encoder Value", shoulder.getPosition());
+    //     SmartDashboard.putNumber("Encoder Velocity", shoulder.getVelocity());
 
-        if(joystick.getRawButton(1))
+        // if(joystick.getRawButton(1))
+        // {
+        //     System.out.println("Pressed A");
+        //     if(commandState == CommandState.kWaiting)
+        //     {
+        //         // Command command = new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh);
+        //         // command.schedule();
+
+        //         shoulder.moveToLow();
+        //         commandState = CommandState.kRan;
+        //     }
+        // }
+        if(joystick.getRawButton(1))    //A
         {
-            System.out.println("Pressed A");
-            if(commandState == CommandState.kWaiting)
-            {
-                // Command command = new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh);
-                // command.schedule();
-
-                shoulder.moveToLow();
-                commandState = CommandState.kRan;
-            }
+            shoulder.moveUp();
         }
-        // if(joystick.getRawButton(1))    //A
-        // {
-        //     // arm.extendArm();
-        //     shoulder.moveUp();
-        // }
-        // else if(joystick.getRawButton(2))   //B
-        // {
-        //     // arm.retractArm();
-        //     shoulder.moveDown();
-        // }
-        // else
-        // {
-        //     // arm.stopArm();
-        //     shoulder.off();
-        // }
+        else if(joystick.getRawButton(2))   //B
+        {
+            shoulder.moveDown();
+        }
+        else
+        {
+            shoulder.off();
+        }
+
+        if(joystick.getRawButton(3))   //X
+        {
+            arm.extendArm();
+        }
+        else if(joystick.getRawButton(4))   //Y
+        {
+            arm.retractArm();
+        }
+        else
+        {
+            arm.stopArm();
+            
+        }
     
         // System.out.println(shoulder);
 

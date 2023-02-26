@@ -105,13 +105,13 @@ public final class Constants
 
     public static class Shoulder
     {
-        public static final float ENCODER_FORWARD_SOFT_LIMIT = 339981.0f;
+        public static final float ENCODER_FORWARD_SOFT_LIMIT = 345000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = 0.0f;
     }
 
     public static class Arm
     {
-        public static final float ENCODER_FORWARD_SOFT_LIMIT = 955771.0f;
+        public static final float ENCODER_FORWARD_SOFT_LIMIT = 995000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = 0.0f;
     }
 
