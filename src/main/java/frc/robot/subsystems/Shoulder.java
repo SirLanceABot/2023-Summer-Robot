@@ -90,13 +90,12 @@ public class Shoulder extends Subsystem4237
         private double motorSpeed;
     }
 
-    private final int shoulderMotorPort = Constants.Subsystem.SHOULDER_MOTOR_PORT;
     private final int TIMEOUT_MS = 30;
     
     // private final TalonFX oldShoulderMotor = new TalonFX(shoulderMotorPort);
     
-    // private final CANSparkMax shoulderMotor = new CANSparkMax(shoulderMotorPort,  MotorType.kBrushless);
-    private final CANSparkMax shoulderMotor = new CANSparkMax(3,  MotorType.kBrushless); //test
+    private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.Subsystem.SHOULDER_MOTOR_PORT,  MotorType.kBrushless);
+    // private final CANSparkMax shoulderMotor = new CANSparkMax(3,  MotorType.kBrushless); //test
 
     private final Timer encoderResetTimer = new Timer();
 

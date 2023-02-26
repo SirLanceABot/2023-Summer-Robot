@@ -57,6 +57,7 @@ public class Grabber extends Subsystem4237
     private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
     private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 6);
     private final Compressor compressor = new Compressor(moduleType);
+    private final CANSparkMax grabberMotor = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_PORT, MotorType.kBrushless);
 
     GamePiece currentGamePiece = GamePiece.kNone;
     // double speed = 0;
@@ -64,8 +65,6 @@ public class Grabber extends Subsystem4237
     private PeriodicIO periodicIO;
     
     private RelativeEncoder grabberMotorEncoder;
-    private final int grabberMotorPort = Constants.Subsystem.GRABBER_MOTOR_PORT;
-    private final CANSparkMax grabberMotor = new CANSparkMax(grabberMotorPort, MotorType.kBrushless);
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
 

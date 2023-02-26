@@ -59,8 +59,7 @@ public class Arm extends Subsystem4237
     }
     
     private PeriodicIO periodicIO = new PeriodicIO();
-    private final int armMotorPort = Constants.Subsystem.ARM_MOTOR_PORT;
-    private final CANSparkMax armMotor = new CANSparkMax (armMotorPort, MotorType.kBrushless);
+    private final CANSparkMax armMotor = new CANSparkMax (Constants.Subsystem.ARM_MOTOR_PORT, MotorType.kBrushless);
     // private final CANSparkMax armMotor = new CANSparkMax (3, MotorType.kBrushless);  //test
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
