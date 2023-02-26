@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * Command that moves the arm to where the user tells it to go
  */
-public class MoveArm extends CommandBase 
+public class MoveArmToScoringPosition extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -27,9 +27,8 @@ public class MoveArm extends CommandBase
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Arm arm;
     private ArmPosition desiredPosition;
-    private boolean isFinished;
 
-    public MoveArm(Arm arm, ArmPosition desiredPosition) 
+    public MoveArmToScoringPosition(Arm arm, ArmPosition desiredPosition) 
     {
         this.arm = arm;
         this.desiredPosition = desiredPosition;
@@ -49,7 +48,7 @@ public class MoveArm extends CommandBase
     @Override
     public void initialize()
     {
-        isFinished = false;        
+          
     }
     
     /**
@@ -61,28 +60,27 @@ public class MoveArm extends CommandBase
     {
         if(arm != null)
         {
-            if ((arm.getArmPosition() < desiredPosition.min || arm.getArmPosition() > desiredPosition.max))
+            switch(desiredPosition)
             {
-                arm.moveArmToDesired(desiredPosition);
+                case kHigh:
+                    arm.moveToHigh();
+                    break;
+                
+                case kMiddle:
+                    arm.moveToMiddle();
+                    break;
+                
+                case kLow:
+                    arm.moveToLow();
+                    break;
+                
+                case kGather:
+                    arm.moveToGather();
+                    break;
+                
+                case kOverride:
+                    break;
             }
-            else
-            {
-                isFinished = true;
-            }
-        }
-        
-    }
-
-    /**
-     * Called once the command ends or is interrupted.
-     * Stops the motor, preventing the arm from moving.
-     */
-    @Override
-    public void end(boolean interrupted)
-    {
-        if(arm != null)
-        {
-            arm.stopArm();
         }
         
     }
@@ -93,8 +91,26 @@ public class MoveArm extends CommandBase
     @Override
     public boolean isFinished()
     {
-        return isFinished;
+        if(arm != null && desiredPosition != ArmPosition.kOverride)
+        {
+            return arm.atSetPoint();
+        }
+        return true;
     } 
+
+    /**
+     * Called once the command ends or is interrupted.
+     * Stops the motor, preventing the arm from moving.
+     */
+    @Override
+    public void end(boolean interrupted)
+    {
+        // if(arm != null)
+        // {
+        //     arm.off();
+        // }
+        
+    }
 
     @Override
     public String toString()

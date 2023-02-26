@@ -50,7 +50,12 @@ public class Shoulder extends Subsystem4237
     //TODO: determine real values
     public enum ShoulderPosition
     {
-        kGather(0), kLow(100000.0), kMiddle(200000.0), kHigh(Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT), kOverride(-4237);
+        kGather(Constants.Shoulder.GATHERER),
+        kLow(Constants.Shoulder.LOW),
+        kMiddle(Constants.Shoulder.MIDDLE),
+        kHigh(Constants.Shoulder.HIGH),
+        kOverride(-4237);
+        
         public final double value;
 
         private ShoulderPosition(double value)
@@ -90,6 +95,7 @@ public class Shoulder extends Subsystem4237
         private double motorSpeed;
     }
 
+    private PeriodicIO periodicIO = new PeriodicIO();
     private final int TIMEOUT_MS = 30;
     
     // private final TalonFX oldShoulderMotor = new TalonFX(shoulderMotorPort);
@@ -105,14 +111,16 @@ public class Shoulder extends Subsystem4237
     private RelativeEncoder relativeEncoder;
     private SparkMaxPIDController pidController;
 
+    private final double threshold = 2500.0;
+
     //TODO: Tune PID values
-    private static final double kP = 0.00003;
-    private static final double kI = 0.0; //0.0001;
-    private static final double kD = 0.0; //1.0;
-    private static final double kIz = 0.0;
-    private static final double kFF = 0.0;
-    private static final double kMaxOutput = 1;
-    private static final double kMinOutput = -1;
+    private final double kP = 0.00003;
+    private final double kI = 0.0; //0.0001;
+    private final double kD = 0.0; //1.0;
+    private final double kIz = 0.0;
+    private final double kFF = 0.0;
+    private final double kMaxOutput = 0.3;
+    private final double kMinOutput = -0.3;
 
     private final int RESET_ATTEMPT_LIMIT = 5;
 
@@ -123,8 +131,9 @@ public class Shoulder extends Subsystem4237
     // private boolean useDataLog = true;      // Enable or Disable data logs
     private ResetState resetState = ResetState.kDone;
     private ShoulderPosition scoringPosition = ShoulderPosition.kOverride;
+    
 
-    private PeriodicIO periodicIO;
+    
 
 
     /** Creates a new Shoulder */
@@ -133,7 +142,6 @@ public class Shoulder extends Subsystem4237
         System.out.println(fullClassName + " : Constructor Started");
 
         configShoulderMotor();
-        periodicIO = new PeriodicIO();
 
         System.out.println(fullClassName + " : Constructor Finished");
     }
@@ -244,6 +252,11 @@ public class Shoulder extends Subsystem4237
     {
         resetState = ResetState.kStart;
         // DataLogManager.log("Reset Encoder");       
+    }
+
+    public boolean atSetPoint()
+    {
+        return Math.abs(scoringPosition.value - periodicIO.currentPosition) <= threshold;
     }
 
     /** @return encoder ticks (double) */

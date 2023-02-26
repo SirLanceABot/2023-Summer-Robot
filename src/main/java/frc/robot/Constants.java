@@ -107,12 +107,22 @@ public final class Constants
     {
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 345000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = 0.0f;
+
+        public static final double HIGH = 328000.0;
+        public static final double MIDDLE = 297000.0;
+        public static final double LOW = 155000.0;
+        public static final double GATHERER = 0.0;
     }
 
     public static class Arm
     {
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 995000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = 0.0f;
+
+        public static final double HIGH = 958000.0;
+        public static final double MIDDLE = 323000.0;
+        public static final double LOW = 161000.0;
+        public static final double GATHERER = 0.0;
     }
 
     public static class Drivetrain

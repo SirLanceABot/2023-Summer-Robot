@@ -132,7 +132,7 @@ public class SamTest implements Test
         }
         else
         {
-            arm.stopArm();
+            arm.off();
             
         }
     

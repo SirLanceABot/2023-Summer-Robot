@@ -19,7 +19,7 @@ public class MoveShoulderToScoringPosition extends CommandBase
     }
 
     private final Shoulder shoulder;
-    private boolean isFinished;
+
     private ShoulderPosition desiredPosition;
 
     
@@ -51,7 +51,7 @@ public class MoveShoulderToScoringPosition extends CommandBase
     @Override
     public void initialize()
     {
-        isFinished = false;
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -64,26 +64,21 @@ public class MoveShoulderToScoringPosition extends CommandBase
             {
                 case kHigh:
                     shoulder.moveToHigh();
-                    isFinished = true;
                     break;
                 
                 case kMiddle:
                     shoulder.moveToMiddle();
-                    isFinished = true;
                     break;
                 
                 case kLow:
                     shoulder.moveToLow();
-                    isFinished = true;
                     break;
                 
                 case kGather:
                     shoulder.moveToGather();
-                    isFinished = true;
                     break;
                 
                 case kOverride:
-                    isFinished = true;
                     break;
             }
         }
@@ -110,7 +105,12 @@ public class MoveShoulderToScoringPosition extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        return isFinished;
+        if(shoulder != null && desiredPosition != ShoulderPosition.kOverride)
+        {
+            return shoulder.atSetPoint();
+        
+        }
+        return true;
     }
 
     // Called once the command ends or is interrupted.

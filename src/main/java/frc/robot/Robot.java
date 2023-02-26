@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -187,7 +188,16 @@ public class Robot extends TimedRobot
      */
     @Override
     public void teleopPeriodic()
-    {}
+    {
+        if(!DriverStation.isFMSAttached())
+        {
+            //TODO test this on the practice field
+            if(robotContainer.mainShuffleboard != null && robotContainer.mainShuffleboard.sensorTab != null)
+            {
+                robotContainer.mainShuffleboard.sensorTab.updateEncoderData(); 
+            }
+        }       
+    }
 
     /**
      * This method runs one time when the robot exits teleop mode.
@@ -220,10 +230,10 @@ public class Robot extends TimedRobot
     public void testPeriodic()
     {
         testMode.periodic();
-        if(robotContainer.mainShuffleboard != null && robotContainer.mainShuffleboard.sensorTab != null)
-        {
-            robotContainer.mainShuffleboard.sensorTab.updateEncoderData(); 
-        }
+        // if(robotContainer.mainShuffleboard != null && robotContainer.mainShuffleboard.sensorTab != null)
+        // {
+        //     robotContainer.mainShuffleboard.sensorTab.updateEncoderData(); 
+        // }
         
     }
 

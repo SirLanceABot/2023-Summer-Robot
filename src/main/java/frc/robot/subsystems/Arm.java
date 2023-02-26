@@ -8,8 +8,10 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Timer;
+import com.revrobotics.SparkMaxPIDController;
 
 import java.lang.invoke.MethodHandles;
+import frc.robot.Constants;
 
 /**
  * Class containing one NEO 550 motor and two limit switches
@@ -29,13 +31,16 @@ public class Arm extends Subsystem4237
     public enum ArmPosition
     {
         // Placeholder values used; real values to be determined when we have the arm length
-        kHigh(39.0,44.0), kMiddle(24.0,29.0), kLow(10.0,15.0), kGather(0.0,5.0);
-        public final double min; 
-        public final double max;
-        private ArmPosition(double min, double max)
+        kGather(Constants.Arm.GATHERER),
+        kLow(Constants.Arm.LOW),
+        kMiddle(Constants.Arm.MIDDLE),
+        kHigh(Constants.Arm.HIGH),
+        kOverride(-4237);
+
+        public final double value;
+        private ArmPosition(double value)
         {
-            this.min = min;
-            this.max = max;
+            this.value = value;
         }
     }
 
@@ -53,9 +58,10 @@ public class Arm extends Subsystem4237
     {
         // Inputs
         private double armPosition = 0.0;
-        private double armSpeed = 0.0;
+        
 
         // Outputs
+        private double armSpeed = 0.0;
     }
     
     private PeriodicIO periodicIO = new PeriodicIO();
@@ -67,17 +73,35 @@ public class Arm extends Subsystem4237
     private RelativeEncoder armEncoder;
     private boolean resetEncoderNow = false;
     private boolean hasEncoderReset = true;
+    private double threshold = 2500.0;
     
-    private boolean useLSReset = true;
-    private LimitSwitchState reverseLSState = LimitSwitchState.kStillReleased;
-    private ResetState resetState = ResetState.kDone;
+    //TODO: Tune PID values
+    private final double kP = 0.00003;
+    private final double kI = 0.0; //0.0001;
+    private final double kD = 0.0; //1.0;
+    private final double kIz = 0.0;
+    private final double kFF = 0.0;
+    private final double kMaxOutput = 0.3;
+    private final double kMinOutput = -0.3;
+    private SparkMaxPIDController pidController;
+
     private int resetAttemptCounter = 0;
+    private LimitSwitchState reverseLSState = LimitSwitchState.kStillReleased;
+    private boolean useLSReset = true;
+    private ResetState resetState = ResetState.kDone;
+    private ArmPosition scoringPosition = ArmPosition.kOverride;
     private final int RESET_ATTEMPT_LIMIT = 5;
+
+    
 
     
     public Arm()
     {
+        System.out.println(fullClassName + " : Constructor Started");
+
         configCANSparkMax();
+
+        System.out.println(fullClassName + " : Constructor Finished");
     }
 
     private void configCANSparkMax()
@@ -91,9 +115,19 @@ public class Arm extends Subsystem4237
         // Set the Feedback Sensor
         // sparkMaxMotor.ser();
 
+        pidController = armMotor.getPIDController();
+
         // Encoder
         armEncoder = armMotor.getEncoder();
         armEncoder.setPositionConversionFactor(4096);
+
+        // Configure PID controller
+        pidController.setP(kP);
+        pidController.setI(kI);
+        pidController.setD(kD);
+        pidController.setIZone(kIz);
+        pidController.setFF(kFF);
+        pidController.setOutputRange(kMinOutput, kMaxOutput);
 
         //Soft Limits
         armMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Arm.ENCODER_FORWARD_SOFT_LIMIT);
@@ -107,6 +141,10 @@ public class Arm extends Subsystem4237
         reverseLimitSwitch = armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
         reverseLimitSwitch.enableLimitSwitch(true);
 
+        
+
+        
+
 
     }
 
@@ -119,6 +157,11 @@ public class Arm extends Subsystem4237
 
         // resetEncoderNow = true;
         // hasEncoderReset = false;
+    }
+
+    public boolean atSetPoint()
+    {
+        return Math.abs(scoringPosition.value - periodicIO.armPosition) <= threshold;
     }
    
     /**
@@ -134,7 +177,8 @@ public class Arm extends Subsystem4237
      */
     public void retractArm()
     {
-        periodicIO.armSpeed = -0.50;
+        scoringPosition = ArmPosition.kOverride;
+        periodicIO.armSpeed = -0.15;
     }
 
     /**
@@ -142,42 +186,78 @@ public class Arm extends Subsystem4237
      */
     public void extendArm()
     {
-        periodicIO.armSpeed = 0.50;
+        scoringPosition = ArmPosition.kOverride;
+        periodicIO.armSpeed = 0.15;
     }
-    
-    /**
-     * Hold the motor in place by setting it to move very slowly
-     */
-    public void holdArm()
+
+    /** Moves the arm to high position */
+    public void moveToHigh()
     {
-        periodicIO.armSpeed = 0.05;
+        scoringPosition = ArmPosition.kHigh;
+    }
+
+    /** Moves the arm to middle position */
+    public void moveToMiddle()
+    {
+        scoringPosition = ArmPosition.kMiddle;
+    }
+ 
+    /** Moves the arm to low position */
+    public void moveToLow()
+    {
+        scoringPosition = ArmPosition.kLow;
+    }
+
+    /** Moves the arm to gather position */
+    public void moveToGather()
+    {
+        scoringPosition = ArmPosition.kGather;
     }
 
     /**
      * Stops the motor
      */
-    public void stopArm()
+    public void off()
     {
+        scoringPosition = ArmPosition.kOverride;
         periodicIO.armSpeed = 0.0;
+    }
+
+    /** 
+     * Turns the motor on 
+     * @param speed (double)*/
+    public void on(double speed)
+    {
+        periodicIO.armSpeed = speed;
+    }
+    
+    /**
+     * Hold the motor in place by setting it to move very slowly
+     */
+    public void hold()
+    {
+        scoringPosition = ArmPosition.kOverride;
+        periodicIO.armSpeed = 0.05;
     }
 
     /**
      * Moves the arm forward if the desired position is farther extended than the current position,
      * and moves it backwards if the desired position is farther inwards
      */
+    @Deprecated
     public void moveArmToDesired(ArmPosition desiredPosition)
     {
-        if (getArmPosition() < desiredPosition.min) 
+        if (getArmPosition() < desiredPosition.value - threshold) 
         {
             extendArm();
         }
-        else if (getArmPosition() > desiredPosition.max)
+        else if (getArmPosition() > desiredPosition.value + threshold)
         {
             retractArm();
         }
         else 
         {
-            stopArm();
+            off();
         }
     }
 
@@ -231,7 +311,15 @@ public class Arm extends Subsystem4237
         switch(resetState)
         {
             case kDone:
-                armMotor.set(periodicIO.armSpeed);
+                if(scoringPosition == ArmPosition.kOverride)
+                {
+                    armMotor.set(periodicIO.armSpeed);
+                }
+                else
+                {
+                    // SmartDashboard.putNumber("Target Position", scoringPosition.value);
+                    pidController.setReference(scoringPosition.value, CANSparkMax.ControlType.kPosition);
+                }
                 break;
 
             case kStart:

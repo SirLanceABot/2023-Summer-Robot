@@ -287,7 +287,7 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void moveArm(ArmPosition position)
     {
-        add(new MoveArm(arm, position));
+        add(new MoveArmToScoringPosition(arm, position));
     }
 
 
