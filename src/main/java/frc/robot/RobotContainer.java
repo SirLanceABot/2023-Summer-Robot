@@ -36,7 +36,7 @@ import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoDriveDistance;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
-import frc.robot.commands.MoveArmAndShoulder;
+import frc.robot.commands.ScoreGamePiece;
 import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 import frc.robot.commands.ReleaseGamePiece;
@@ -68,20 +68,20 @@ public class RobotContainer
     }
 	
 	private boolean useFullRobot			= false;
-	private boolean useBindings				= true;
+	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
 	private boolean useGyro					= false;
 	private boolean useDrivetrain   		= false;
 	private boolean useGrabber 				= false;
-	private boolean useArm 					= true;
-	private boolean useShoulder				= true;
+	private boolean useArm 					= false;
+	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
 	private boolean useDriverController		= false;
-	private boolean useOperatorController 	= true;
-	private boolean useMainShuffleboard		= true;
+	private boolean useOperatorController 	= false;
+	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
 	private boolean useDataLog				= false;
 	
@@ -283,7 +283,7 @@ public class RobotContainer
 			Trigger dPadUpTrigger = new Trigger(dPadUp);
 			if(arm != null && shoulder != null)
 			{
-				dPadUpTrigger.onTrue( new MoveArmAndShoulder(arm, shoulder, ArmPosition.kHigh, ShoulderPosition.kHigh));
+				dPadUpTrigger.onTrue( new ScoreGamePiece(arm, shoulder, ArmPosition.kHigh, ShoulderPosition.kHigh));
 				// dPadUpTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh)
 				// 			// .andThen( new PrintCommand("Shoulder done moving"))
 				// 			// .andThen( new WaitCommand(2))
@@ -302,7 +302,7 @@ public class RobotContainer
 			Trigger dPadDownTrigger = new Trigger(dPadDown);
 			if(arm != null && shoulder != null)
 			{
-				dPadDownTrigger.onTrue( new MoveArmAndShoulder(arm, shoulder, ArmPosition.kGather, ShoulderPosition.kGather));
+				dPadDownTrigger.onTrue( new ScoreGamePiece(arm, shoulder, ArmPosition.kGather, ShoulderPosition.kGather));
 				// dPadDownTrigger.onTrue( new MoveArmToScoringPosition(arm, ArmPosition.kGather)
 				// 			  .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather)));
 				// // dPadDownTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather));
@@ -319,7 +319,7 @@ public class RobotContainer
 			Trigger dPadLeftTrigger = new Trigger(dPadLeft);
 			if(arm != null && shoulder != null)
 			{
-				dPadLeftTrigger.onTrue( new MoveArmAndShoulder(arm, shoulder, ArmPosition.kMiddle, ShoulderPosition.kMiddle));
+				dPadLeftTrigger.onTrue( new ScoreGamePiece(arm, shoulder, ArmPosition.kMiddle, ShoulderPosition.kMiddle));
 				// dPadLeftTrigger.onTrue(  new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle)
 				// 			   .andThen( new MoveArmToScoringPosition(arm, ArmPosition.kMiddle)));
 				// dPadLeftTrigger.onTrue( new MoveArmToScoringPosition(arm, ArmPosition.kMiddle));
@@ -335,7 +335,7 @@ public class RobotContainer
 			Trigger dPadRightTrigger = new Trigger(dPadRight);
 			if(arm != null && shoulder != null)
 			{
-				dPadRightTrigger.onTrue( new MoveArmAndShoulder(arm, shoulder, ArmPosition.kLow, ShoulderPosition.kLow));
+				dPadRightTrigger.onTrue( new ScoreGamePiece(arm, shoulder, ArmPosition.kLow, ShoulderPosition.kLow));
 				// dPadRightTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow)
 				// 			    .andThen( new MoveArmToScoringPosition(arm, ArmPosition.kLow)));
 					// dPadRightTrigger.onTrue( new MoveArmToScoringPosition(arm, ArmPosition.kLow));

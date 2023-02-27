@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** 
  * Move arm and shoulder to a scoring position. Uses arm and shoulder subsytems. 
  */
-public class MoveArmAndShoulder extends CommandBase 
+public class ScoreGamePiece extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -43,7 +43,7 @@ public class MoveArmAndShoulder extends CommandBase
      * @param targetArmPosition Target position for the arm (Type: ArmPosition)
      * @param targetShoulderPosition Target position for the shoulder (Type: ShoulderPosition)
      */
-    public MoveArmAndShoulder(Arm arm, Shoulder shoulder, ArmPosition targetArmPosition, ShoulderPosition targetShoulderPosition) 
+    public ScoreGamePiece(Arm arm, Shoulder shoulder, ArmPosition targetArmPosition, ShoulderPosition targetShoulderPosition) 
     {
         this.arm = arm;
         this.shoulder = shoulder;
@@ -65,7 +65,6 @@ public class MoveArmAndShoulder extends CommandBase
         isFinished = false;
         movementStep = 0;
 
-        System.out.println("\nTarget Arm Position = " + targetArmPosition + "\nTarget Shoulder Position = " + targetShoulderPosition);
         if(shoulder != null && arm != null)
         {
             if(shoulder.getPosition() > targetShoulderPosition.value)
@@ -98,22 +97,18 @@ public class MoveArmAndShoulder extends CommandBase
                 if(isArmFirst)  // if arm needs to move first
                 {
                     moveArmToScoringPosition(arm, targetArmPosition);
-                    System.out.println("Arm Moved First To " + targetArmPosition);
-
+            
                     if(arm.atSetPoint())    // if arm is done moving, go to the next step
                     {
-                        System.out.println("Arm Completed Move");
                         movementStep++; 
                     }
                 }
                 else  // if shoulder needs to move first
                 {
                     moveShoulderToScoringPosition(shoulder, targetShoulderPosition);
-                    System.out.println("Shoulder Moved First To " + targetShoulderPosition);
 
                     if(shoulder.atSetPoint())    // if shoulder is done moving, go to the next step
                     {
-                        System.out.println("Shoulder Completed Move");
                         movementStep++;
                     }
                 }
@@ -123,22 +118,18 @@ public class MoveArmAndShoulder extends CommandBase
                 if(isArmFirst)  // if arm needs to move first
                 {
                     moveShoulderToScoringPosition(shoulder, targetShoulderPosition);
-                    System.out.println("Shoulder Moved Second To " + targetShoulderPosition);
 
                     if(shoulder.atSetPoint())    // if shoulder is done moving, go to the next step
                     {
-                        System.out.println("Shoulder Completed  Move");
                         movementStep++; 
                     }
                 }
                 else    // if shoulder needs to move first
                 {
                     moveArmToScoringPosition(arm, targetArmPosition);
-                    System.out.println("Arm Moved Second To " + targetArmPosition);
 
                     if(arm.atSetPoint())    // if arm is done moving, go to the next step
                     {
-                        System.out.println("Arm Completed Move");
                         movementStep++; 
                     }
                 }
@@ -212,10 +203,7 @@ public class MoveArmAndShoulder extends CommandBase
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
-    {
-        System.out.println("Command Over    Interrupted: " + interrupted);
-    
-    }
+    {}
 
     // Returns true when the command should end.
     @Override
