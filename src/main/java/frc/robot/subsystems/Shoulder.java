@@ -50,7 +50,7 @@ public class Shoulder extends Subsystem4237
     //TODO: determine real values
     public enum ShoulderPosition
     {
-        kGather(Constants.Shoulder.GATHERER),
+        kGather(Constants.Shoulder.GATHER),
         kLow(Constants.Shoulder.LOW),
         kMiddle(Constants.Shoulder.MIDDLE),
         kHigh(Constants.Shoulder.HIGH),

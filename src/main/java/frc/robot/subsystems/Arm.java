@@ -31,7 +31,7 @@ public class Arm extends Subsystem4237
     public enum ArmPosition
     {
         // Placeholder values used; real values to be determined when we have the arm length
-        kGather(Constants.Arm.GATHERER),
+        kGather(Constants.Arm.GATHER),
         kLow(Constants.Arm.LOW),
         kMiddle(Constants.Arm.MIDDLE),
         kHigh(Constants.Arm.HIGH),
