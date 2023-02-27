@@ -61,13 +61,12 @@ public final class Constants
         }
       
         // Use the comment variable to decide what to do
-        // something like:
         if(comment.contains("2023 Robot"))
         {
             Robot4237 = "2023 Robot";
             Constants.DRIVETRAIN_WHEELBASE_METERS =  27.44 * DrivetrainConstants.INCHES_TO_METERS; // 23.5 Front to back
             Constants.DRIVETRAIN_TRACKWIDTH_METERS = 19.50 * DrivetrainConstants.INCHES_TO_METERS; // 23.5 // Side to side
-            //TODO save the robot (roborio) name somewhere
+            
         }
         else if (comment.contains("2022 Robot"))
         { 
@@ -83,11 +82,6 @@ public final class Constants
         System.out.println("Robot:" + Robot4237);
         // end get roboRIO comment
 
-        try {
-            Class.forName("frc.robot.Constants.SwerveModuleSetup"); // load and static initializers
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } 
     }
     
     private static final String CANIVORE = "CANivore";
