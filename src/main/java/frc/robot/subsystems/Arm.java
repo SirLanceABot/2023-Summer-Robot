@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Timer;
 import com.revrobotics.SparkMaxPIDController;
 
 import java.lang.invoke.MethodHandles;
-import frc.robot.Constants;
 
 /**
  * Class containing one NEO 550 motor and two limit switches
@@ -71,8 +70,8 @@ public class Arm extends Subsystem4237
     private SparkMaxLimitSwitch reverseLimitSwitch;
     private final Timer encoderResetTimer = new Timer();
     private RelativeEncoder armEncoder;
-    private boolean resetEncoderNow = false;
-    private boolean hasEncoderReset = true;
+    // private boolean resetEncoderNow = false;
+    // private boolean hasEncoderReset = true;
     private double threshold = 2500.0;
     
     //TODO: Tune PID values
@@ -129,6 +128,12 @@ public class Arm extends Subsystem4237
         pidController.setFF(kFF);
         pidController.setOutputRange(kMinOutput, kMaxOutput);
 
+        // Ramp Rate
+        armMotor.setClosedLoopRampRate(0.1);
+
+        // Current Limit
+        // armMotor.setSmartCurrentLimit(PUT NUMBER HERE);
+
         //Soft Limits
         armMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Arm.ENCODER_FORWARD_SOFT_LIMIT);
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
@@ -153,7 +158,7 @@ public class Arm extends Subsystem4237
      */
     public void resetEncoder()
     {
-        resetState = resetState.kStart;
+        resetState = ResetState.kStart;
 
         // resetEncoderNow = true;
         // hasEncoderReset = false;

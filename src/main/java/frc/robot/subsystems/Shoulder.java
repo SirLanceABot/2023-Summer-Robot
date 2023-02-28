@@ -17,7 +17,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAnalogSensor;
+// import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 
@@ -26,7 +26,7 @@ import com.revrobotics.SparkMaxPIDController;
 // import edu.wpi.first.util.datalog.StringLogEntry;
 // import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 
@@ -96,7 +96,7 @@ public class Shoulder extends Subsystem4237
     }
 
     private PeriodicIO periodicIO = new PeriodicIO();
-    private final int TIMEOUT_MS = 30;
+    // private final int TIMEOUT_MS = 30;
     
     // private final TalonFX oldShoulderMotor = new TalonFX(shoulderMotorPort);
     
@@ -185,6 +185,12 @@ public class Shoulder extends Subsystem4237
         // SmartDashboard.putNumber("Max Output", kMaxOutput);
         // SmartDashboard.putNumber("Min Output", kMinOutput);
         // SmartDashboard.putNumber("Set Rotations", 0);
+
+        // Ramp Rate
+        shoulderMotor.setClosedLoopRampRate(0.1);
+
+        // Current Limit
+        // shoulderMotor.setSmartCurrentLimit(PUT NUMBER HERE);
 
         // Soft Limits
         shoulderMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT);

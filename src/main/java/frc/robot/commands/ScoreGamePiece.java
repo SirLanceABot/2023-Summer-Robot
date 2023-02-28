@@ -4,10 +4,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Shoulder.ShoulderPosition;
-import frc.robot.subsystems.ExampleSubsystem;
 import java.lang.invoke.MethodHandles;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** 
@@ -86,7 +83,6 @@ public class ScoreGamePiece extends CommandBase
     @Override
     public void execute()
     {
-        System.out.println(movementStep);
         switch(movementStep)
         {
             case 0:

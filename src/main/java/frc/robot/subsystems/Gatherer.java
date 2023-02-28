@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import java.lang.invoke.MethodHandles;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
+// import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -42,7 +42,7 @@ public class Gatherer extends Subsystem4237
     /**
      *
      */
-    private RelativeEncoder gathererEncoder;
+    // private RelativeEncoder gathererEncoder;
     // private static double motorSpeed;
 
     private final PeriodicIO periodicIO = new PeriodicIO();

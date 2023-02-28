@@ -34,7 +34,6 @@ public class AutoAimToPost extends CommandBase
     private final double POST_ALIGNMENT_TOLERANCE = 0.5;  //Limelight angle measurement in degrees
     private final double POST_ALIGNMENT_DRIVE_KP = 0.020;
 
-    private double xDistance;
     private double error;
     private double drivePower;
 
@@ -73,8 +72,9 @@ public class AutoAimToPost extends CommandBase
         drivePower = -(POST_ALIGNMENT_DRIVE_KP * error);
 
         if(drivetrain != null)
+        {
             drivetrain.drive(0.0, drivePower, 0.0, true);
-
+        }
         // System.out.println("  X: " + xDistance);
     }
 
@@ -85,8 +85,9 @@ public class AutoAimToPost extends CommandBase
         // double xDistance = vision.getX();
 
         if(drivetrain != null)
+        {
             drivetrain.drive(0.0, 0.0, 0.0, true);
-        
+        }
         // System.out.println("End X: " + xDistance);
     }
 

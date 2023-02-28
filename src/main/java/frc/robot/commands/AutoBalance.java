@@ -32,7 +32,6 @@ public class AutoBalance extends CommandBase
     private final Drivetrain drivetrain;
     private final Gyro4237 gyro;
     private final Timer finishBalanceTimer = new Timer();
-    private final Timer driveForwardTimer = new Timer();
     private BalanceState balanceState = BalanceState.kNotLevel;
 
     private double currentPitch;
