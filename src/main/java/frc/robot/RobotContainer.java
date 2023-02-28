@@ -82,16 +82,16 @@ public class RobotContainer
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= false;
-	private boolean useDrivetrain   		= false;
-	private boolean useGrabber 				= false;
-	private boolean useWrist				= false;
-	private boolean useArm 					= false;
-	private boolean useShoulder				= false;
+	private boolean useGyro					= true;
+	private boolean useDrivetrain   		= true;
+	private boolean useGrabber 				= true;
+	private boolean useWrist				= true;
+	private boolean useArm 					= true;
+	private boolean useShoulder				= true;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= false;
-	private boolean useOperatorController 	= false;
+	private boolean useDriverController		= true;
+	private boolean useOperatorController 	= true;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
 	private boolean useDataLog				= false;
@@ -432,16 +432,36 @@ public class RobotContainer
 	 */
 	public Command getAutonomousCommand()
 	{
+		// Command command = new GrabGamePiece(grabber)
+		Command command = new InstantCommand(() -> grabber.grabGamePiece())
+							.andThen( new WaitCommand(0.5))
+							// .andThen( new ScoreGamePiece(arm, shoulder, ArmPosition.kMiddle, ShoulderPosition.kMiddle))
+							// .andThen( new MoveWristUp(wrist))
+							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle))
+							.andThen( new InstantCommand(() -> wrist.wristUp()))
+							.andThen( new WaitCommand(0.5))
+							.andThen( new MoveArmToScoringPosition(arm, ArmPosition.kMiddle))
+							// .andThen( new ReleaseGamePiece(grabber))
+							.andThen( new InstantCommand(() -> grabber.releaseGamePiece()))
+							// .andThen( new ScoreGamePiece( arm, shoulder, ArmPosition.kGather, ShoulderPosition.kGather))
+							// .andThen( new MoveWristDown(wrist))
+							.andThen( new MoveArmToScoringPosition(arm, ArmPosition.kGather))
+							.andThen( new InstantCommand(() -> wrist.wristDown()))
+							.andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather))
+							.andThen( new AutoDriveDistance(drivetrain, gyro, -2.0, 0.0, 3.90))
+							// .andThen( new WaitCommand(1.0))
+							.andThen( new AutoDriveDistance(drivetrain, gyro, 1.7, 0.0, 1.50))
+							.andThen( new AutoBalance(drivetrain, gyro))
+							.andThen( new LockWheels(drivetrain));
+
 		// AutoBalance command = new AutoBalance(drivetrain, gyro);
 		// AutoDriveDistance command = new AutoDriveDistance(drivetrain, 0.2, 0.0, 2.0);
 		// Command command = new AutoDriveDistance(drivetrain, gyro, -1.0, 0.0, 3.90)
 		// 		// .andThen( new AutoBalance(drivetrain, gyro))
 		// 		// .andThen( new AutoDriveDistance(drivetrain, -0.5, 0.0, 1.5))
-		// 		.andThen( new AutoDriveDistance(drivetrain, gyro, 1.0, 0.0, 1.90))
-		// 		.andThen( new AutoBalance(drivetrain, gyro))
-		// 		.andThen( new LockWheels(drivetrain));
+				
 		// return command;
-		return null;
+		return command;
 	}
 
 	

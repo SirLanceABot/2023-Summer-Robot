@@ -46,7 +46,7 @@ public class AutoBalance extends CommandBase
     private final double CS_BALANCE_DRIVE_KP = 0.010;
     private final double CS_BALANCE_TOLERANCE = 3.0;
     private final double CS_BALANCE_MIN_TIME_LEVEL = 0.75;
-    private final double CS_BALANCE_MAX_SPEED = 0.5;
+    private final double CS_BALANCE_MAX_SPEED = 0.4;
 
 
     /**

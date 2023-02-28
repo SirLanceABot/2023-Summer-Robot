@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.Wrist;
 
 import java.lang.invoke.MethodHandles;
 
@@ -26,7 +26,7 @@ public class MoveWristUp extends CommandBase
     }
 
     // *** CLASS AND INSTANCE VARIABLES ***
-    private final Grabber grabber;
+    private final Wrist wrist;
     public boolean isFinished;
 
 
@@ -35,15 +35,15 @@ public class MoveWristUp extends CommandBase
      *
      * @param subsystem The subsystem used by this command.
      */
-    public MoveWristUp(Grabber grabber) 
+    public MoveWristUp(Wrist wrist) 
     {
         System.out.println(fullClassName + ": Constructor Started");
         
-        this.grabber = grabber;
+        this.wrist = wrist;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        if (this.grabber != null)
-            addRequirements(this.grabber);
+        if (this.wrist != null)
+            addRequirements(this.wrist);
 
         System.out.println(fullClassName + ": Constructor Finished");
     }
@@ -61,9 +61,9 @@ public class MoveWristUp extends CommandBase
     @Override
     public void execute()
     {
-        if(grabber != null)
+        if(wrist != null)
         {
-            // grabber.wristUp();
+            wrist.wristUp();
         }
         
         
