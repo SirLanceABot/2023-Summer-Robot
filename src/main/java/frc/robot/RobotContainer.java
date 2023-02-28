@@ -11,6 +11,9 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,6 +42,8 @@ import frc.robot.commands.LockWheels;
 import frc.robot.commands.ScoreGamePiece;
 import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
+import frc.robot.commands.MoveWristDown;
+import frc.robot.commands.MoveWristUp;
 import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.controls.DriverController;
@@ -74,13 +79,13 @@ public class RobotContainer
 	private boolean useAccelerometer		= false;
 	private boolean useGyro					= false;
 	private boolean useDrivetrain   		= false;
-	private boolean useGrabber 				= false;
-	private boolean useArm 					= false;
-	private boolean useShoulder				= false;
+	private boolean useGrabber 				= true;
+	private boolean useArm 					= true;
+	private boolean useShoulder				= true;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
 	private boolean useDriverController		= false;
-	private boolean useOperatorController 	= false;
+	private boolean useOperatorController 	= true;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
 	private boolean useDataLog				= false;
@@ -99,6 +104,7 @@ public class RobotContainer
 	public final MainShuffleboard mainShuffleboard;
 	public final Accelerometer4237 accelerometer;
 	public final Gyro4237 gyro;
+	// public final PowerDistribution pdh;
 	public final DataLog log;
 
 	/** 
@@ -128,6 +134,7 @@ public class RobotContainer
 		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)		? new MainShuffleboard(this)	: null;
 		vision 				= (useFullRobot || useVision)				? new Vision()					: null;
 		
+		// pdh = new PowerDistribution(1, ModuleType.kRev);
 
 
 		// Configure the trigger bindings
@@ -367,21 +374,31 @@ public class RobotContainer
 
 			//B button 
 			BooleanSupplier bButton = operatorController.getButtonSupplier(Xbox.Button.kB);
-			Trigger bButtonTrigger = new Trigger(yButton);
-			if(candle != null)
+			Trigger bButtonTrigger = new Trigger(bButton);
+			if(grabber != null)
 			{
-				bButtonTrigger.whileTrue( new InstantCommand (() -> candle.turnOffLight(), candle));
+				// wrist
+				bButtonTrigger.toggleOnTrue( new StartEndCommand( () -> grabber.wristUp(), () -> grabber.wristDown(), grabber));
+				// bButtonTrigger.toggleOnFalse( new MoveWristDown(grabber));
+
 			}
 
 			//A button 
 			BooleanSupplier aButton = operatorController.getButtonSupplier(Xbox.Button.kA);
 			Trigger aButtonTrigger = new Trigger(aButton);
-			if(arm != null && shoulder != null)
+			if(grabber != null)
 			{
+				// suction
+				aButtonTrigger.toggleOnTrue( new StartEndCommand(
+					() -> grabber.grabGamePiece(),
+					() -> grabber.releaseGamePiece(),
+					grabber));
 				// aButtonTrigger.onTrue( new ReleaseGamePiece(grabber));
 	
-				aButtonTrigger.whileTrue( new InstantCommand (() -> shoulder.moveDown(), shoulder)
-							.alongWith( new InstantCommand (() -> arm.retractArm(), arm)));
+				// aButtonTrigger.toggleOnTrue(new MoveWristUp(grabber)
+				// 			  .andThen(new ReleaseGamePiece(grabber)));
+				
+				// aButtonTrigger.toggleOnFalse(new MoveWristDown(grabber));
 			// DoubleSupplier leftYAxis = operatorController.getAxisSupplier(Xbox.Axis.kLeftY);
 				// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
 			}

@@ -11,9 +11,11 @@ import com.revrobotics.SparkMaxRelativeEncoder;
 import frc.robot.Constants;
 // import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 // import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Compressor;
 
 
@@ -38,33 +40,62 @@ public class Grabber extends Subsystem4237
 
     }
 
-    public enum State
+    // public enum State
+    // {
+    //     kOpen, kClosed;
+    // }
+
+    public enum WristPosition
     {
-        kOpen, kClosed;
+        kUp(Value.kForward), kDown(Value.kReverse);
+
+        public final Value value;
+
+        private WristPosition(Value value)
+        {
+            this.value = value;
+        }
+    }
+
+    public enum VacuumState
+    {
+        kOpen(true), kClosed(false);
+
+        public final boolean value;
+
+        private VacuumState(boolean value)
+        {
+            this.value = value;
+        }
     }
 
     public class PeriodicIO
     {
         //INPUTS
+        private double vacuumEncoder = 0.0;
 
         //OUTPUTS
-        Value state = Value.kOff;
-        Value angle = Value.kOff;
-        double grabberMotorControl;
+        private WristPosition wristPosition = WristPosition.kDown;
+        private double vacuumMotorSpeed = 0.0;
+        private VacuumState vacuumState = VacuumState.kClosed;
     }
 
     private final PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
-    private final DoubleSolenoid grabberControlSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
-    private final DoubleSolenoid grabberAngleControlSolenoid = new DoubleSolenoid(0, moduleType, 4, 6);
-    private final Compressor compressor = new Compressor(moduleType);
-    private final CANSparkMax grabberMotor = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_PORT, MotorType.kBrushless);
+    // private final DoubleSolenoid grabberVaccumSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
+    private final DoubleSolenoid wristSolenoid = 
+            new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 
+            Constants.Grabber.WRIST_UP, Constants.Grabber.WRIST_DOWN);
+    // private final Compressor compressor = new Compressor(moduleType);
+    private final CANSparkMax vacuumMotor = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_PORT, MotorType.kBrushless);
+    private final PowerDistribution vacuumSolenoid = new PowerDistribution(Constants.Grabber.VACCUM_CAN_ID, ModuleType.kRev);
+    private PeriodicIO periodicIO = new PeriodicIO();
 
-    GamePiece currentGamePiece = GamePiece.kNone;
+    private GamePiece currentGamePiece = GamePiece.kNone;
     // double speed = 0;
-    double encoderDistance = 3;
-    private PeriodicIO periodicIO;
+    // private double encoderDistance = 3;
+ 
     
-    private RelativeEncoder grabberMotorEncoder;
+    private RelativeEncoder vacuumMotorEncoder;
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
 
@@ -75,12 +106,9 @@ public class Grabber extends Subsystem4237
     {
         System.out.println(fullClassName + " : Constructor Started");
 
-        // configCANSparkMax();
-        // readPeriodicInputs();
-        // writePeriodicOutputs();
-        // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
-        periodicIO = new PeriodicIO();
         configCANSparkMax();
+        vacuumSolenoid.setSwitchableChannel(false);
+        // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
 
         System.out.println(fullClassName + ": Constructor Finished");
     }
@@ -90,47 +118,41 @@ public class Grabber extends Subsystem4237
      */
     private void configCANSparkMax()
     {   
-        grabberMotorEncoder = grabberMotor.getEncoder();
         // Factory Defaults
-        grabberMotor.restoreFactoryDefaults();
-
+        vacuumMotor.restoreFactoryDefaults();
+        
         // Invert the direction of the motor
-        grabberMotor.setInverted(false);
+        vacuumMotor.setInverted(false);
 
         // Brake or Coast mode
-        grabberMotor.setIdleMode(IdleMode.kBrake);
+        vacuumMotor.setIdleMode(IdleMode.kBrake);
 
         // Set the Feedback Sensor
-        // grabberMotor.setSensorPhase(false);
-        grabberMotorEncoder = grabberMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-        // analogSensor = grabberMotor.getAnalog(SparkMaxAnalogSensor.Mode.kRelative);
+        // vacuumMotor.setSensorPhase(false);
+        vacuumMotorEncoder = vacuumMotor.getEncoder();
+        // grabberMotorEncoder.setPositionConversionFactor(4096);
 
         // Soft Limits
-        grabberMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
-        grabberMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-        grabberMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        grabberMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        vacuumMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+        vacuumMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+        vacuumMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        vacuumMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
         // Hard Limits
-        forwardLimitSwitch = grabberMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        forwardLimitSwitch = vacuumMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
         forwardLimitSwitch.enableLimitSwitch(false);
-        reverseLimitSwitch = grabberMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        reverseLimitSwitch = vacuumMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
         reverseLimitSwitch.enableLimitSwitch(false);
-
-
-
     }
 
-    
-    
     /**
      * Releases the air on the pneumatics allowing the grabber to close
      */
     public void grabGamePiece()
     {
-        // periodicIO.state = Value.kForward;
-        periodicIO.grabberMotorControl = 0.5;
-
+        periodicIO.vacuumMotorSpeed = 0.5;
+        periodicIO.vacuumState = VacuumState.kClosed;
+        // periodicIO.wristPosition = WristPosition.kDown;
     }
 
     /**
@@ -138,8 +160,19 @@ public class Grabber extends Subsystem4237
      */
     public void releaseGamePiece()
     {
-        // periodicIO.state = Value.kReverse;
-        periodicIO.grabberMotorControl = 0.0;
+        periodicIO.vacuumMotorSpeed = 0.0;
+        periodicIO.vacuumState = VacuumState.kOpen;
+        // periodicIO.wristPosition = WristPosition.kUp;
+    }
+
+    public void wristUp()
+    {
+        periodicIO.wristPosition = WristPosition.kUp;
+    }
+
+    public void wristDown()
+    {
+        periodicIO.wristPosition = WristPosition.kDown;
     }
 
     // public boolean isGrabberClosed()
@@ -154,42 +187,26 @@ public class Grabber extends Subsystem4237
     //     }
     // }
 
-    /**
-     * @return true if the grabber is open
-     */
-    public boolean isGrabberOpen()
-    {
-        return true;
-    }
-
-    /**
-     * using pnuematics it controls the angle at which the grabber is pointed
-     */
-    public void aimGrabberDown()
-    {
-        periodicIO.angle = Value.kForward;
-    }
-
     // //compressor controls
     // /**
     //  * Disables the compressor automatic control loop
     //  */
-    public void compressorDisable()
-    {
-        compressor.disable();
-    }
+    // public void compressorDisable()
+    // {
+    //     compressor.disable();
+    // }
 
-    // /**
-    //  * Enables the compressor automatic control loop
-    //  */
-    public void compressorEnable()
-    {
-        compressor.enableDigital();
-    }
+    // // /**
+    // //  * Enables the compressor automatic control loop
+    // //  */
+    // public void compressorEnable()
+    // {
+    //     compressor.enableDigital();
+    // }
 
-    public double getGrabberEncoder()
+    public double getVacuumEncoder()
     {
-        return encoderDistance;
+        return periodicIO.vacuumEncoder;
     }
 
 
@@ -200,7 +217,7 @@ public class Grabber extends Subsystem4237
     @Override
     public synchronized void readPeriodicInputs()
     {
-        encoderDistance = grabberMotorEncoder.getPosition();
+        periodicIO.vacuumEncoder = vacuumMotorEncoder.getPosition();
 
     }
 
@@ -211,9 +228,9 @@ public class Grabber extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        grabberControlSolenoid.set(periodicIO.state);
-        grabberAngleControlSolenoid.set(periodicIO.state);
-        grabberMotor.set(periodicIO.grabberMotorControl);
+        wristSolenoid.set(periodicIO.wristPosition.value);
+        vacuumMotor.set(periodicIO.vacuumMotorSpeed);
+        vacuumSolenoid.setSwitchableChannel(periodicIO.vacuumState.value);
     }
 
     @Override
@@ -231,7 +248,7 @@ public class Grabber extends Subsystem4237
     @Override
     public String toString()
     {
-        return "Encoder Distance: " + String.format("%.4f", encoderDistance);
+        return "Encoder Distance: " + String.format("%.4f", periodicIO.vacuumEncoder);
     }
 }
 

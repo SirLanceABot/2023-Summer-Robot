@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** 
  * An example command that uses an example subsystem. 
  */
-public class ReleaseGamePiece extends CommandBase 
+public class MoveWristDown extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -28,7 +28,6 @@ public class ReleaseGamePiece extends CommandBase
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Grabber grabber;
     public boolean isFinished;
-    // private static final Grabber OPEN_GRABBER = Grabber.releaseGamePiece;
 
 
     /**
@@ -36,18 +35,17 @@ public class ReleaseGamePiece extends CommandBase
      *
      * @param subsystem The subsystem used by this command.
      */
-    public ReleaseGamePiece(Grabber grabber) 
+    public MoveWristDown(Grabber grabber) 
     {
+        System.out.println(fullClassName + ": Constructor Started");
+        
         this.grabber = grabber;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        if(grabber != null)
-        {
+        if (this.grabber != null)
             addRequirements(this.grabber);
-        }
-        
-        isFinished = false;
 
+        System.out.println(fullClassName + ": Constructor Finished");
     }
 
     // Called when the command is initially scheduled.
@@ -65,19 +63,24 @@ public class ReleaseGamePiece extends CommandBase
     {
         if(grabber != null)
         {
-            grabber.releaseGamePiece();
-            
+            grabber.wristDown();
         }
         
         
+        // if(grabber.isGrabberClosed())
+        // {
+        //     isFinished = true;
+        // }
+        // else
+        // {
+        //     isFinished = false;
+        // }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
-    {
-
-    }
+    {}
 
     // Returns true when the command should end.
     @Override
@@ -88,7 +91,7 @@ public class ReleaseGamePiece extends CommandBase
 
     public String toString()
     {
-        return "ReleaseGamePiece()";
+        return "GrabGamePiece()";
     }
 }
 

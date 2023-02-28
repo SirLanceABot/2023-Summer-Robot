@@ -86,7 +86,7 @@ public class SensorTab
 
     private GenericEntry createGrabberEncoderBox()
     {
-        return sensorTab.add("Grabber Encoder", grabber.getGrabberEncoder())
+        return sensorTab.add("Grabber Encoder", grabber.getVacuumEncoder())
         .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
         .withPosition(0, 3)  // sets position of widget
         .withSize(4, 2)    // sets size of widget
@@ -143,7 +143,7 @@ public class SensorTab
         if(shoulder != null)
             shoulderEncoderBox.setDouble(shoulder.getPosition());
         if(grabber != null)
-            grabberEncoderBox.setDouble(grabber.getGrabberEncoder());
+            grabberEncoderBox.setDouble(grabber.getVacuumEncoder());
         if(arm != null)
             armEncoderBox.setDouble(arm.getArmPosition());
         if(drivetrain != null)

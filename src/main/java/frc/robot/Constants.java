@@ -119,6 +119,14 @@ public final class Constants
         public static final double GATHER = 0.0;
     }
 
+    public static class Grabber
+    {
+        public static final int WRIST_UP = 1;
+        public static final int WRIST_DOWN = 0;
+        public static final int VACCUM_CAN_ID = 1;
+
+    }
+
     public static class Drivetrain
     {
         private static final int FRONT_LEFT_DRIVE       = 7;
