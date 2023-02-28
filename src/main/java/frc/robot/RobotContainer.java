@@ -41,6 +41,7 @@ import frc.robot.commands.AutoDriveDistance;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
 import frc.robot.commands.ScoreGamePiece;
+import frc.robot.commands.SlowSwerveDrive;
 import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 import frc.robot.commands.MoveWristDown;
@@ -75,19 +76,19 @@ public class RobotContainer
     }
 	
 	private boolean useFullRobot			= false;
-	private boolean useBindings				= true;
+	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
 	private boolean useGyro					= false;
 	private boolean useDrivetrain   		= false;
-	private boolean useGrabber 				= true;
-	private boolean useArm 					= true;
-	private boolean useShoulder				= true;
+	private boolean useGrabber 				= false;
+	private boolean useArm 					= false;
+	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
-	private boolean useCandle				= true;
+	private boolean useCandle				= false;
 	private boolean useDriverController		= false;
-	private boolean useOperatorController 	= true;
+	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
 	private boolean useDataLog				= false;
@@ -216,7 +217,8 @@ public class RobotContainer
 			//Y Button
 			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
-			yButtonTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.0, 0.5)) );
+			yButtonTrigger.toggleOnTrue(new SlowSwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+			// yButtonTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.0, 0.5)) );
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)         
 			// 			  .andThen( () -> driverController.setRumble(0.5))
 			// 			  .andThen( new WaitCommand(0.5))
