@@ -40,7 +40,7 @@ public class Candle4237 extends Subsystem4237
 
     public enum LedStatus
     {
-        kPurple, kYellow, kRad, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhoteBlink, kSectioned;
+        kPurple, kYellow, kRed, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhiteBlink, kSectioned;
     }
 
     // public enum LedAnimation
@@ -189,14 +189,14 @@ public class Candle4237 extends Subsystem4237
     }
 
     /**
-     * Sets the LEDs to Bright Blinding White
+     * Sets the LEDs to Red
      */
-    public void signalReadyToDrop()
+    public void signalRed()
     {
         if (periodicIO.status == LedStatus.kSectioned)
-            sections.get(1).status = LedStatus.kRad;
+            sections.get(1).status = LedStatus.kRed;
         else 
-            periodicIO.status = LedStatus.kRad;
+            periodicIO.status = LedStatus.kRed;
 
         periodicIO.toAnimate = LedAnimation.kDisabled;
     }
@@ -289,7 +289,7 @@ public class Candle4237 extends Subsystem4237
             case kYellow: 
                 candle.setLEDs(255, 185, 0, 50, startLed, ledCount);
                 break; 
-            case kRad: 
+            case kRed: 
                 candle.setLEDs(255, 0, 0, 255, startLed, ledCount);
                 break;
             case kOff: 
@@ -304,7 +304,7 @@ public class Candle4237 extends Subsystem4237
             case kGreenBlink: 
                 candle.setLEDs(0, 255, 0, 50, startLed, ledCount);
                 break;
-            case kWhoteBlink:
+            case kWhiteBlink:
                 candle.setLEDs(255, 255, 200, 50, startLed, ledCount);
                 break;
             default:
@@ -377,7 +377,7 @@ public class Candle4237 extends Subsystem4237
     
     public void createBlinkEvents()
     {
-        createBlinkEvent(15.0, 2.0, LedStatus.kBlueBlink);
+        createBlinkEvent(35.0, 2.0, LedStatus.kBlueBlink);
     }
 
     public void createBlinkEvent(double startBlinkTime, double blinkDuration, LedStatus blinkColor)
@@ -461,7 +461,7 @@ public class Candle4237 extends Subsystem4237
     {
         createSection(8, 20, LedStatus.kYellow);
         createSection(28, 20, LedStatus.kPurple);
-        createSection(48, 20, LedStatus.kRad);
+        createSection(48, 20, LedStatus.kRed);
     }
 
     public void createSection(int startLed, int ledCount, LedStatus status)

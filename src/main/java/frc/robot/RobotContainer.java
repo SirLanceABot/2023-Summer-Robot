@@ -33,6 +33,7 @@ import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Arm.ArmPosition;
+import frc.robot.subsystems.Candle4237.LedStatus;
 import frc.robot.subsystems.Shoulder.ShoulderPosition;
 import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.AutoBalance;
@@ -46,6 +47,7 @@ import frc.robot.commands.MoveWristDown;
 import frc.robot.commands.MoveWristUp;
 import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.commands.TurnOffShoulder;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
 import frc.robot.controls.Xbox;
@@ -73,7 +75,7 @@ public class RobotContainer
     }
 	
 	private boolean useFullRobot			= false;
-	private boolean useBindings				= false;
+	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
@@ -83,7 +85,7 @@ public class RobotContainer
 	private boolean useArm 					= true;
 	private boolean useShoulder				= true;
 	private boolean useGatherer 			= false;
-	private boolean useCandle				= false;
+	private boolean useCandle				= true;
 	private boolean useDriverController		= false;
 	private boolean useOperatorController 	= true;
 	private boolean useMainShuffleboard		= false;
@@ -358,7 +360,9 @@ public class RobotContainer
 			Trigger xButtonTrigger = new Trigger(xButton);
 			if(candle != null)
 			{
-				xButtonTrigger.whileTrue( new InstantCommand (() -> candle.signalCube(), candle));
+				xButtonTrigger.whileTrue( new StartEndCommand(() -> candle.signalCube(), () ->  candle.turnOffLight(), candle));
+				// xButtonTrigger.onTrue( new InstantCommand (() -> candle.signalCube(), candle))
+				// 			  .onFalse( new InstantCommand (() -> candle.turnOffLight(), candle));
 				// xButtonTrigger.toggleOnTrue(new StartEndCommand( () -> { shoulder.moveDown(); }, () -> { shoulder.off(); }, shoulder ) );
 				//xButtonTrigger.toggleOnTrue(new SuctionControl));
 			}	
@@ -368,7 +372,9 @@ public class RobotContainer
 			Trigger yButtonTrigger = new Trigger(yButton);
 			if(candle != null)
 			{
-				yButtonTrigger.whileTrue( new InstantCommand (() -> candle.signalCone(), candle));
+				yButtonTrigger.whileTrue( new StartEndCommand(() -> candle.signalCone(), () ->  candle.turnOffLight(), candle));
+			// 	yButtonTrigger.onTrue( new InstantCommand (() -> candle.signalCone(), candle))
+			// 				  .onFalse( new InstantCommand (() -> candle.turnOffLight(), candle));
 				//yButtonTrigger.toggleOnTrue( new MoveWrist());
 			}
 
@@ -402,6 +408,9 @@ public class RobotContainer
 			// DoubleSupplier leftYAxis = operatorController.getAxisSupplier(Xbox.Axis.kLeftY);
 				// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
 			}
+
+			if(candle != null)
+				candle.setDefaultCommand(new RunCommand (() -> candle.signalRed(), candle));
 		}
 	}
 
