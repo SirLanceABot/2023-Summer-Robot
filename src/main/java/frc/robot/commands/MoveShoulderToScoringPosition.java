@@ -29,6 +29,9 @@ public class MoveShoulderToScoringPosition extends CommandBase
     // private final double LEVEL_3_ANGLE = 100;       // High Scoring Position
     
     /**
+     * @deprecated
+     * DO NOT USE THIS COMMAND 
+     * INSTEAD USE SCOREGAMEPIECE
      * Creates a new MoveShoulderToScoringPosition.
      * Moves the shoulder to one of the predetermined positions
      *

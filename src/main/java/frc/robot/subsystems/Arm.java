@@ -82,13 +82,15 @@ public class Arm extends Subsystem4237
     private final double kFF = 0.0;
     private final double kMaxOutput = 0.3;
     private final double kMinOutput = -0.3;
+    private final double kGatherMaxOutput = 0.5;
+    private final double kGatherMinOutput = -0.5;
     private SparkMaxPIDController pidController;
 
     private int resetAttemptCounter = 0;
     private LimitSwitchState reverseLSState = LimitSwitchState.kStillReleased;
     private boolean useLSReset = true;
     private ResetState resetState = ResetState.kDone;
-    private ArmPosition scoringPosition = ArmPosition.kOverride;
+    private ArmPosition targetPosition = ArmPosition.kOverride;
     private final int RESET_ATTEMPT_LIMIT = 5;
 
     
@@ -145,12 +147,6 @@ public class Arm extends Subsystem4237
         forwardLimitSwitch.enableLimitSwitch(true);
         reverseLimitSwitch = armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
         reverseLimitSwitch.enableLimitSwitch(true);
-
-        
-
-        
-
-
     }
 
     /**
@@ -166,7 +162,7 @@ public class Arm extends Subsystem4237
 
     public boolean atSetPoint()
     {
-        return Math.abs(scoringPosition.value - periodicIO.armPosition) <= threshold;
+        return Math.abs(targetPosition.value - periodicIO.armPosition) <= threshold;
     }
    
     /**
@@ -182,7 +178,7 @@ public class Arm extends Subsystem4237
      */
     public void retractArm()
     {
-        scoringPosition = ArmPosition.kOverride;
+        targetPosition = ArmPosition.kOverride;
         periodicIO.armSpeed = -0.15;
     }
 
@@ -191,32 +187,32 @@ public class Arm extends Subsystem4237
      */
     public void extendArm()
     {
-        scoringPosition = ArmPosition.kOverride;
+        targetPosition = ArmPosition.kOverride;
         periodicIO.armSpeed = 0.15;
     }
 
     /** Moves the arm to high position */
     public void moveToHigh()
     {
-        scoringPosition = ArmPosition.kHigh;
+        targetPosition = ArmPosition.kHigh;
     }
 
     /** Moves the arm to middle position */
     public void moveToMiddle()
     {
-        scoringPosition = ArmPosition.kMiddle;
+        targetPosition = ArmPosition.kMiddle;
     }
  
     /** Moves the arm to low position */
     public void moveToLow()
     {
-        scoringPosition = ArmPosition.kLow;
+        targetPosition = ArmPosition.kLow;
     }
 
     /** Moves the arm to gather position */
     public void moveToGather()
     {
-        scoringPosition = ArmPosition.kGather;
+        targetPosition = ArmPosition.kGather;
     }
 
     /**
@@ -224,7 +220,7 @@ public class Arm extends Subsystem4237
      */
     public void off()
     {
-        scoringPosition = ArmPosition.kOverride;
+        targetPosition = ArmPosition.kOverride;
         periodicIO.armSpeed = 0.0;
     }
 
@@ -241,7 +237,7 @@ public class Arm extends Subsystem4237
      */
     public void hold()
     {
-        scoringPosition = ArmPosition.kOverride;
+        targetPosition = ArmPosition.kOverride;
         periodicIO.armSpeed = 0.05;
     }
 
@@ -316,14 +312,19 @@ public class Arm extends Subsystem4237
         switch(resetState)
         {
             case kDone:
-                if(scoringPosition == ArmPosition.kOverride)
+                if(targetPosition == ArmPosition.kOverride)
                 {
                     armMotor.set(periodicIO.armSpeed);
                 }
+                else if(targetPosition == ArmPosition.kGather)
+                {
+                    pidController.setOutputRange(kGatherMinOutput, kGatherMaxOutput);
+                    pidController.setReference(targetPosition.value, CANSparkMax.ControlType.kPosition);
+                    pidController.setOutputRange(kMinOutput, kMaxOutput);
+                }
                 else
                 {
-                    // SmartDashboard.putNumber("Target Position", scoringPosition.value);
-                    pidController.setReference(scoringPosition.value, CANSparkMax.ControlType.kPosition);
+                    pidController.setReference(targetPosition.value, CANSparkMax.ControlType.kPosition);
                 }
                 break;
 

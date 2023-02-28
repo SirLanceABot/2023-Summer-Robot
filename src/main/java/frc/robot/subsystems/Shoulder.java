@@ -121,6 +121,8 @@ public class Shoulder extends Subsystem4237
     private final double kFF = 0.0;
     private final double kMaxOutput = 0.3;
     private final double kMinOutput = -0.3;
+    private final double kGatherMaxOutput = 0.5;
+    private final double kGatherMinOutput = -0.5;
 
     private final int RESET_ATTEMPT_LIMIT = 5;
 
@@ -130,7 +132,7 @@ public class Shoulder extends Subsystem4237
     private boolean useLSReset = true;     // Enable or Disable reverse limit switch reseting encoder
     // private boolean useDataLog = true;      // Enable or Disable data logs
     private ResetState resetState = ResetState.kDone;
-    private ShoulderPosition scoringPosition = ShoulderPosition.kOverride;
+    private ShoulderPosition targetPosition = ShoulderPosition.kOverride;
     
 
     
@@ -262,7 +264,7 @@ public class Shoulder extends Subsystem4237
 
     public boolean atSetPoint()
     {
-        return Math.abs(scoringPosition.value - periodicIO.currentPosition) <= threshold;
+        return Math.abs(targetPosition.value - periodicIO.currentPosition) <= threshold;
     }
 
     /** @return encoder ticks (double) */
@@ -286,45 +288,45 @@ public class Shoulder extends Subsystem4237
     /** Moves the shoulder up */
     public void moveUp()
     {
-        scoringPosition = ShoulderPosition.kOverride;
+        targetPosition = ShoulderPosition.kOverride;
         periodicIO.motorSpeed = 0.15;//0.5;
     }
 
     /** Moves the shoulder down */
     public void moveDown()
     {
-        scoringPosition = ShoulderPosition.kOverride;
+        targetPosition = ShoulderPosition.kOverride;
         periodicIO.motorSpeed = -0.15;//0.5;
     }
 
     /** Moves the shoulder to high position */
     public void moveToHigh()
     {
-        scoringPosition = ShoulderPosition.kHigh;
+        targetPosition = ShoulderPosition.kHigh;
     }
 
     /** Moves the shoulder to middle position */
     public void moveToMiddle()
     {
-        scoringPosition = ShoulderPosition.kMiddle;
+        targetPosition = ShoulderPosition.kMiddle;
     }
  
     /** Moves the shoulder to low position */
     public void moveToLow()
     {
-        scoringPosition = ShoulderPosition.kLow;
+        targetPosition = ShoulderPosition.kLow;
     }
 
     /** Moves the shoulderto gather position */
     public void moveToGather()
     {
-        scoringPosition = ShoulderPosition.kGather;
+        targetPosition = ShoulderPosition.kGather;
     }
 
     /** Turns the shoulder off */
     public void off()
     {
-        scoringPosition = ShoulderPosition.kOverride;
+        targetPosition = ShoulderPosition.kOverride;
         periodicIO.motorSpeed = 0.0;
     }
 
@@ -339,7 +341,7 @@ public class Shoulder extends Subsystem4237
     /** Holds the motor still */
     public void hold()
     {
-        scoringPosition = ShoulderPosition.kOverride;
+        targetPosition = ShoulderPosition.kOverride;
         periodicIO.motorSpeed = 0.01;
     }
 
@@ -401,14 +403,19 @@ public class Shoulder extends Subsystem4237
         switch(resetState)
         {
             case kDone:
-                if(scoringPosition == ShoulderPosition.kOverride)
+                if(targetPosition == ShoulderPosition.kOverride)
                 {
                     shoulderMotor.set(periodicIO.motorSpeed);
                 }
+                else if(targetPosition == ShoulderPosition.kGather)
+                {
+                    pidController.setOutputRange(kGatherMinOutput, kGatherMaxOutput);
+                    pidController.setReference(targetPosition.value, CANSparkMax.ControlType.kPosition);
+                    pidController.setOutputRange(kMinOutput, kMaxOutput);
+                }
                 else
                 {
-                    // SmartDashboard.putNumber("Target Position", scoringPosition.value);
-                    pidController.setReference(scoringPosition.value, CANSparkMax.ControlType.kPosition);
+                    pidController.setReference(targetPosition.value, CANSparkMax.ControlType.kPosition);
                 }
                 break;
 

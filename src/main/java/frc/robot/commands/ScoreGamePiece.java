@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Shoulder.ShoulderPosition;
 import java.lang.invoke.MethodHandles;
@@ -25,6 +27,8 @@ public class ScoreGamePiece extends CommandBase
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Arm arm;
     private final Shoulder shoulder;
+    private final Grabber grabber;
+    private final Wrist wrist;
     private ArmPosition targetArmPosition;
     private ShoulderPosition targetShoulderPosition;
     private Boolean isArmFirst;
@@ -37,21 +41,27 @@ public class ScoreGamePiece extends CommandBase
      *
      * @param arm The arm subystem.
      * @param shoulder The shoulder subsystem.
+     * @param grabber The grabber subsystem.
+     * @param wrist The wrist subsystem.
      * @param targetArmPosition Target position for the arm (Type: ArmPosition)
      * @param targetShoulderPosition Target position for the shoulder (Type: ShoulderPosition)
      */
-    public ScoreGamePiece(Arm arm, Shoulder shoulder, ArmPosition targetArmPosition, ShoulderPosition targetShoulderPosition) 
+    public ScoreGamePiece(Arm arm, Shoulder shoulder, Grabber grabber, Wrist wrist, ArmPosition targetArmPosition, ShoulderPosition targetShoulderPosition) 
     {
         this.arm = arm;
         this.shoulder = shoulder;
+        this.grabber = grabber;
+        this.wrist = wrist;
         this.targetArmPosition = targetArmPosition;
         this.targetShoulderPosition = targetShoulderPosition;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        if(arm != null && shoulder != null)
+        if(arm != null && shoulder != null && grabber != null && wrist != null)
         {
             addRequirements(this.arm);
             addRequirements(this.shoulder);
+            addRequirements(this.grabber);
+            addRequirements(this.wrist);
         }
     }
 
@@ -111,6 +121,23 @@ public class ScoreGamePiece extends CommandBase
                 break;
             
             case 2:
+                if(isArmFirst)
+                {
+                    if(wrist != null)
+                    {
+                        wrist.wristDown();
+                    }
+                    
+                }
+                else
+                {
+                    if(wrist != null)
+                    {
+                        wrist.wristUp();
+                    }
+                }
+            
+            case 3:
                 if(isArmFirst)  // if arm needs to move first
                 {
                     moveShoulderToScoringPosition(shoulder, targetShoulderPosition);
@@ -131,7 +158,15 @@ public class ScoreGamePiece extends CommandBase
                 }
                 break;
             
-            case 3:
+            case 4:
+                if(grabber != null)
+                {
+                    grabber.releaseGamePiece();
+                }
+                
+                movementStep++;
+                
+            case 5:
                 isFinished = true;
                 break;
         }

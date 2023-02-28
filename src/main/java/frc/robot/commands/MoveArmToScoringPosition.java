@@ -28,6 +28,16 @@ public class MoveArmToScoringPosition extends CommandBase
     private final Arm arm;
     private ArmPosition desiredPosition;
 
+    /**
+     * @deprecated
+     * DO NOT USE THIS COMMAND 
+     * INSTEAD USE SCOREGAMEPIECE
+     * Creates a new MoveArmToScoringPosition.
+     * Moves the arm to one of the predetermined positions
+     *
+     * @param arm Shoulder subsystem.
+     * @param desiredPosition Position that the arm needs to go to (ScoringPosition)
+     */
     public MoveArmToScoringPosition(Arm arm, ArmPosition desiredPosition) 
     {
         this.arm = arm;
