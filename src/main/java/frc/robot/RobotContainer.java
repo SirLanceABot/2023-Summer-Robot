@@ -32,6 +32,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Candle4237.LedStatus;
 import frc.robot.subsystems.Shoulder.ShoulderPosition;
@@ -76,15 +77,16 @@ public class RobotContainer
     }
 	
 	private boolean useFullRobot			= false;
-	private boolean useBindings				= false;
+	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
 	private boolean useGyro					= false;
 	private boolean useDrivetrain   		= false;
-	private boolean useGrabber 				= false;
-	private boolean useArm 					= false;
-	private boolean useShoulder				= false;
+	private boolean useGrabber 				= true;
+	private boolean useWrist				= true;
+	private boolean useArm 					= true;
+	private boolean useShoulder				= true;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
 	private boolean useDriverController		= false;
@@ -97,6 +99,7 @@ public class RobotContainer
 	public final ExampleSubsystem exampleSubsystem;
 	public final Drivetrain drivetrain;
 	public final Grabber grabber;
+	public final Wrist wrist;
 	public final Arm arm;
 	public final Shoulder shoulder;
 	public final Gatherer gatherer;
@@ -128,6 +131,7 @@ public class RobotContainer
 		gyro 				= (useFullRobot || useGyro)					? new Gyro4237()				: null;	
 		drivetrain 			= (useFullRobot || useDrivetrain) 			? new Drivetrain(gyro, log) 	: null;
 		grabber 			= (useFullRobot || useGrabber) 				? new Grabber() 				: null;
+		wrist				= (useFullRobot || useWrist)				? new Wrist()					: null;
 		arm 				= (useFullRobot || useArm) 					? new Arm() 					: null;
 		shoulder 			= (useFullRobot || useShoulder) 			? new Shoulder() 				: null;
 		gatherer 			= (useFullRobot || useGatherer) 			? new Gatherer() 				: null;
@@ -383,10 +387,13 @@ public class RobotContainer
 			//B button 
 			BooleanSupplier bButton = operatorController.getButtonSupplier(Xbox.Button.kB);
 			Trigger bButtonTrigger = new Trigger(bButton);
-			if(grabber != null)
+			if(wrist != null)
 			{
 				// wrist
-				bButtonTrigger.toggleOnTrue( new StartEndCommand( () -> grabber.wristUp(), () -> grabber.wristDown(), grabber));
+				bButtonTrigger.toggleOnTrue( new StartEndCommand( 
+					() -> wrist.wristUp(), 
+					() -> wrist.wristDown(),
+					wrist));
 				// bButtonTrigger.toggleOnFalse( new MoveWristDown(grabber));
 
 			}

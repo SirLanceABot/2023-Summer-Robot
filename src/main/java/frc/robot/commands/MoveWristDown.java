@@ -63,7 +63,7 @@ public class MoveWristDown extends CommandBase
     {
         if(grabber != null)
         {
-            grabber.wristDown();
+            // grabber.wristDown();
         }
         
         

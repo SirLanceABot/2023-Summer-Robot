@@ -7,16 +7,12 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxRelativeEncoder;
 import frc.robot.Constants;
-// import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-// import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.Compressor;
 
 
 public class Grabber extends Subsystem4237
@@ -34,28 +30,28 @@ public class Grabber extends Subsystem4237
     }
 
     
-    public static enum GamePiece
-    {
-        kCone, kCube, kNone;
+    // public static enum GamePiece
+    // {
+    //     kCone, kCube, kNone;
 
-    }
+    // }
 
     // public enum State
     // {
     //     kOpen, kClosed;
     // }
 
-    public enum WristPosition
-    {
-        kUp(Value.kForward), kDown(Value.kReverse);
+    // public enum WristPosition
+    // {
+    //     kUp(Value.kForward), kDown(Value.kReverse), kOff(Value.kOff);
 
-        public final Value value;
+    //     public final Value value;
 
-        private WristPosition(Value value)
-        {
-            this.value = value;
-        }
-    }
+    //     private WristPosition(Value value)
+    //     {
+    //         this.value = value;
+    //     }
+    // }
 
     public enum VacuumState
     {
@@ -75,26 +71,19 @@ public class Grabber extends Subsystem4237
         private double vacuumEncoder = 0.0;
 
         //OUTPUTS
-        private WristPosition wristPosition = WristPosition.kDown;
+        // private WristPosition wristPosition = WristPosition.kOff;
         private double vacuumMotorSpeed = 0.0;
         private VacuumState vacuumState = VacuumState.kClosed;
     }
 
-    private final PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
-    // private final DoubleSolenoid grabberVaccumSolenoid = new DoubleSolenoid(0, moduleType, 5, 7);
-    private final DoubleSolenoid wristSolenoid = 
-            new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 
-            Constants.Grabber.WRIST_UP, Constants.Grabber.WRIST_DOWN);
-    // private final Compressor compressor = new Compressor(moduleType);
+    // private final PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
+    // private final DoubleSolenoid wristSolenoid = 
+    //         new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 
+    //         Constants.Grabber.WRIST_UP, Constants.Grabber.WRIST_DOWN);
     private final CANSparkMax vacuumMotor = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_PORT, MotorType.kBrushless);
     private final PowerDistribution vacuumSolenoid = new PowerDistribution(Constants.Grabber.VACCUM_CAN_ID, ModuleType.kRev);
     private PeriodicIO periodicIO = new PeriodicIO();
 
-    private GamePiece currentGamePiece = GamePiece.kNone;
-    // double speed = 0;
-    // private double encoderDistance = 3;
- 
-    
     private RelativeEncoder vacuumMotorEncoder;
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
@@ -152,7 +141,6 @@ public class Grabber extends Subsystem4237
     {
         periodicIO.vacuumMotorSpeed = 0.5;
         periodicIO.vacuumState = VacuumState.kClosed;
-        // periodicIO.wristPosition = WristPosition.kDown;
     }
 
     /**
@@ -162,46 +150,16 @@ public class Grabber extends Subsystem4237
     {
         periodicIO.vacuumMotorSpeed = 0.0;
         periodicIO.vacuumState = VacuumState.kOpen;
-        // periodicIO.wristPosition = WristPosition.kUp;
     }
 
-    public void wristUp()
-    {
-        periodicIO.wristPosition = WristPosition.kUp;
-    }
-
-    public void wristDown()
-    {
-        periodicIO.wristPosition = WristPosition.kDown;
-    }
-
-    // public boolean isGrabberClosed()
+    // public void wristUp()
     // {
-    //     if(encoderDistance == 3 && currentGamePiece == GamePiece.kCone || encoderDistance == 1 && currentGamePiece == GamePiece.kCube)
-    //     {
-    //         return true;
-    //     }
-    //     else 
-    //     {
-    //         return false;
-    //     }
+    //     periodicIO.wristPosition = WristPosition.kUp;
     // }
 
-    // //compressor controls
-    // /**
-    //  * Disables the compressor automatic control loop
-    //  */
-    // public void compressorDisable()
+    // public void wristDown()
     // {
-    //     compressor.disable();
-    // }
-
-    // // /**
-    // //  * Enables the compressor automatic control loop
-    // //  */
-    // public void compressorEnable()
-    // {
-    //     compressor.enableDigital();
+    //     periodicIO.wristPosition = WristPosition.kDown;
     // }
 
     public double getVacuumEncoder()
@@ -228,7 +186,7 @@ public class Grabber extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
-        wristSolenoid.set(periodicIO.wristPosition.value);
+        // wristSolenoid.set(periodicIO.wristPosition.value);
         vacuumMotor.set(periodicIO.vacuumMotorSpeed);
         vacuumSolenoid.setSwitchableChannel(periodicIO.vacuumState.value);
     }

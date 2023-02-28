@@ -68,7 +68,7 @@ public class KyleTest implements Test
             System.out.println("All Out, desiredPosition.min = " + desiredPosition.value + " armPosition = " + arm.getArmPosition());
         }
 
-        arm.moveArmToDesired(desiredPosition);
+        // arm.moveArmToDesired(desiredPosition);
     }
 
 
