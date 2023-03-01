@@ -141,7 +141,7 @@ public class Arm extends Subsystem4237
         armMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Arm.ENCODER_FORWARD_SOFT_LIMIT);
         armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         armMotor.setSoftLimit(SoftLimitDirection.kReverse, Constants.Arm.ENCODER_REVERSE_SOFT_LIMIT);
-        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        armMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
         
         //Hard Limits
         forwardLimitSwitch = armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
@@ -214,6 +214,11 @@ public class Arm extends Subsystem4237
     public void moveToGather()
     {
         targetPosition = TargetPosition.kGather;
+    }
+
+    public void moveToClamp()
+    {
+        targetPosition = TargetPosition.kClamp;
     }
 
     /**

@@ -198,7 +198,7 @@ public class Shoulder extends Subsystem4237
         shoulderMotor.setSoftLimit(SoftLimitDirection.kForward, Constants.Shoulder.ENCODER_FORWARD_SOFT_LIMIT);
         shoulderMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         shoulderMotor.setSoftLimit(SoftLimitDirection.kReverse, Constants.Shoulder.ENCODER_REVERSE_SOFT_LIMIT);
-        shoulderMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        shoulderMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
         // Hard Limits
         forwardLimitSwitch = shoulderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
@@ -325,6 +325,11 @@ public class Shoulder extends Subsystem4237
     {
         // System.out.println("Shoulder Moving to Gather");
         targetPosition = TargetPosition.kGather;
+    }
+
+    public void moveToClamp()
+    {
+        targetPosition = TargetPosition.kClamp;
     }
 
     /** Turns the shoulder off */

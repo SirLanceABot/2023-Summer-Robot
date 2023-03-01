@@ -87,6 +87,10 @@ public class MoveArmToScoringPosition extends CommandBase
                 case kGather:
                     arm.moveToGather();
                     break;
+
+                case kClamp:
+                    arm.moveToClamp();
+                    break;
                 
                 case kOverride:
                     break;

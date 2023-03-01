@@ -80,6 +80,10 @@ public class MoveShoulderToScoringPosition extends CommandBase
                 case kGather:
                     shoulder.moveToGather();
                     break;
+
+                case kClamp:
+                    shoulder.moveToClamp();
+                    break;
                 
                 case kOverride:
                     break;

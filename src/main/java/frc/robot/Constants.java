@@ -100,23 +100,25 @@ public final class Constants
     public static class Shoulder
     {
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 345000.0f;
-        public static final float ENCODER_REVERSE_SOFT_LIMIT = 0.0f;
+        public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
         public static final double HIGH = 328000.0;
         public static final double MIDDLE = 297000.0;
         public static final double LOW = 155000.0;
         public static final double GATHER = 0.0;
+        public static final double CLAMP = 682.0;
     }
 
     public static class Arm
     {
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 995000.0f;
-        public static final float ENCODER_REVERSE_SOFT_LIMIT = 0.0f;
+        public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
         public static final double HIGH = 958000.0;
         public static final double MIDDLE = 323000.0;
         public static final double LOW = 161000.0;
         public static final double GATHER = 0.0;
+        public static final double CLAMP = 292.6;
     }
 
     public static class Grabber
@@ -284,6 +286,7 @@ public final class Constants
         kLow(Constants.Shoulder.LOW, Constants.Arm.LOW),
         kMiddle(Constants.Shoulder.MIDDLE, Constants.Arm.MIDDLE),
         kHigh(Constants.Shoulder.HIGH, Constants.Arm.HIGH),
+        kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),
         kOverride(-4237, -4237);
         
      

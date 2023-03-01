@@ -85,15 +85,15 @@ public class RobotContainer
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= true;
-	private boolean useDrivetrain   		= true;
+	private boolean useGyro					= false;
+	private boolean useDrivetrain   		= false;
 	private boolean useGrabber 				= true;
 	private boolean useWrist				= true;
 	private boolean useArm 					= true;
 	private boolean useShoulder				= true;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= true;
+	private boolean useDriverController		= false;
 	private boolean useOperatorController 	= true;
 	private boolean useMainShuffleboard		= true;
 	private boolean useVision				= false;
@@ -243,6 +243,15 @@ public class RobotContainer
 				drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
 			
+			BooleanSupplier rightBumper = driverController.getButtonSupplier(Xbox.Button.kRightBumper);
+			Trigger rightBumperTrigger = new Trigger(rightBumper);
+			rightBumperTrigger.onTrue( new MoveArmToScoringPosition(arm, TargetPosition.kClamp)
+							  .andThen( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp)));
+			// rightBumperTrigger.whileTrue( new StartEndCommand(() -> candle.signalCone(), () ->  candle.turnOffLight(), candle));
+
+			BooleanSupplier leftBumper = driverController.getButtonSupplier(Xbox.Button.kLeftBumper);
+			Trigger leftBumperTrigger = new Trigger(leftBumper);
+			// leftBumperTrigger.whileTrue( new StartEndCommand(() -> candle.signalCube(), () ->  candle.turnOffLight(), candle));
         }
 	}
 
@@ -372,6 +381,7 @@ public class RobotContainer
 			Trigger xButtonTrigger = new Trigger(xButton);
 			if(candle != null)
 			{
+				
 				xButtonTrigger.whileTrue( new StartEndCommand(() -> candle.signalCube(), () ->  candle.turnOffLight(), candle));
 				// xButtonTrigger.onTrue( new InstantCommand (() -> candle.signalCube(), candle))
 				// 			  .onFalse( new InstantCommand (() -> candle.turnOffLight(), candle));
@@ -385,7 +395,9 @@ public class RobotContainer
 			if(candle != null)
 			{
 				yButtonTrigger.whileTrue( new StartEndCommand(() -> candle.signalCone(), () ->  candle.turnOffLight(), candle));
-			// 	yButtonTrigger.onTrue( new InstantCommand (() -> candle.signalCone(), candle))
+				// yButtonTrigger.onTrue( new MoveArmToScoringPosition(arm, TargetPosition.kClamp)
+				// 			  .andThen( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp)));
+
 			// 				  .onFalse( new InstantCommand (() -> candle.turnOffLight(), candle));
 				//yButtonTrigger.toggleOnTrue( new MoveWrist());
 			}
