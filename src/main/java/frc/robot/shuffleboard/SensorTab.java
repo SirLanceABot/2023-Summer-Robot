@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.sendable.SendableRegistry;
+// import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.sensors.Gyro4237;
 // import frc.robot.RobotContainer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SwerveModule;
@@ -28,12 +30,14 @@ public class SensorTab
     private Shoulder shoulder;
     private Grabber grabber;
     private Arm arm;
+    private Gyro4237 gyro;
     private Drivetrain drivetrain;
     private SwerveModule swerveModule;
     private Translation2d startingPosition;
     private Double encoderValue = 0.0;
     private GenericEntry shoulderEncoderBox;
     private GenericEntry grabberEncoderBox;
+    private GenericEntry gyroBox;
     private GenericEntry armEncoderBox;
     private GenericEntry flsEncoderBox;
     private GenericEntry frsEncoderBox;
@@ -47,7 +51,7 @@ public class SensorTab
     }
 
     // *** CLASS CONSTRUCTOR ***
-    SensorTab(Shoulder shoulder, Grabber grabber, Arm arm, Drivetrain drivetrain)
+    SensorTab(Shoulder shoulder, Grabber grabber, Arm arm, Drivetrain drivetrain, Gyro4237 gyro)
     {
         System.out.println(fullClassName + " : Constructor Started");
 
@@ -55,6 +59,7 @@ public class SensorTab
         this.grabber = grabber;
         this.arm = arm;
         this.drivetrain = drivetrain;
+        this.gyro = gyro;
         if(shoulder != null)
             shoulderEncoderBox = createShoulderEncoderBox();
         if(grabber != null)
@@ -67,6 +72,10 @@ public class SensorTab
             frsEncoderBox = createFrontRightTurnEncoderBox();
             blsEncoderBox = createBackLeftTurnEncoderBox();
             brsEncoderBox = createBackRightTurnEncoderBox();
+        }
+        if(gyro != null)
+        {
+            gyroBox = createGyroBox();
         }
         
 
@@ -138,6 +147,15 @@ public class SensorTab
         .getEntry();
     }
 
+    private GenericEntry createGyroBox()
+    {
+        return sensorTab.add("Gyro", gyro.getPitch())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(1, 9)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
     public void updateEncoderData()
     {
         if(shoulder != null)
@@ -152,6 +170,10 @@ public class SensorTab
             frsEncoderBox.setDouble(drivetrain.frs());
             blsEncoderBox.setDouble(drivetrain.bls());
             brsEncoderBox.setDouble(drivetrain.brs());
+        }
+        if(gyro != null)
+        {
+            gyroBox.setDouble(gyro.getPitch());
         }
         
     }

@@ -43,10 +43,10 @@ public class AutoBalance extends CommandBase
     
 
     // private final double CS_BALANCE_GOAL_DEGREES = 0.0;
-    private final double CS_BALANCE_DRIVE_KP = 0.010;
+    private final double CS_BALANCE_DRIVE_KP = 0.030;
     private final double CS_BALANCE_TOLERANCE = 3.0;
     private final double CS_BALANCE_MIN_TIME_LEVEL = 0.75;
-    private final double CS_BALANCE_MAX_SPEED = 0.4;
+    private final double CS_BALANCE_MAX_SPEED = 0.5;
 
 
     /**
@@ -114,7 +114,7 @@ public class AutoBalance extends CommandBase
             }
             // else if(Math.abs(error) < 11.0)
             // else if(Math.abs(currentPitch) < Math.abs(previousPitch))
-            else if(Math.abs(maxPitch) - Math.abs(currentPitch) > 1.5)
+            else if(Math.abs(maxPitch) - Math.abs(currentPitch) > 1.0)
             {
                 drivePower = 0.0;
             }

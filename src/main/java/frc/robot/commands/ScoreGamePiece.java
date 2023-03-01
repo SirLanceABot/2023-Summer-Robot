@@ -8,7 +8,10 @@ import frc.robot.subsystems.Wrist;
 // import frc.robot.subsystems.Arm.TargetPosition;
 // import frc.robot.subsystems.Shoulder.TargetPosition;
 import java.lang.invoke.MethodHandles;
+
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /** 
  * Move arm and shoulder to a scoring position. Uses arm and shoulder subsytems. 
@@ -36,6 +39,7 @@ public class ScoreGamePiece extends CommandBase
     private Boolean isArmFirst;
     private Boolean isFinished = false;
     private int movementStep = 0;
+    private final Timer timer = new Timer();
 
 
     /**
@@ -137,8 +141,20 @@ public class ScoreGamePiece extends CommandBase
                         wrist.wristUp();
                     }
                 }
+
+                timer.reset();
+                timer.start();
+                movementStep++;
+                break;
             
             case 3:
+                if(timer.hasElapsed(0.2))
+                {
+                    movementStep++;
+                }
+                break;
+            
+            case 4:
                 if(isArmFirst)  // if arm needs to move first
                 {
                     moveShoulderToScoringPosition(shoulder, targetPosition);
@@ -159,7 +175,7 @@ public class ScoreGamePiece extends CommandBase
                 }
                 break;
             
-            case 4:
+            case 5:
                 if(grabber != null)
                 {
                     grabber.releaseGamePiece();
@@ -167,7 +183,7 @@ public class ScoreGamePiece extends CommandBase
 
                 movementStep++;
                 
-            case 5:
+            case 6:
                 System.out.println("DONE");
                 isFinished = true;
                 break;

@@ -302,28 +302,28 @@ public class Shoulder extends Subsystem4237
     /** Moves the shoulder to high position */
     public void moveToHigh()
     {
-        System.out.println("Shoulder Moving to High");
+        // System.out.println("Shoulder Moving to High");
         targetPosition = TargetPosition.kHigh;
     }
 
     /** Moves the shoulder to middle position */
     public void moveToMiddle()
     {
-        System.out.println("Shoulder Moving to Middle");
+        // System.out.println("Shoulder Moving to Middle");
         targetPosition = TargetPosition.kMiddle;
     }
  
     /** Moves the shoulder to low position */
     public void moveToLow()
     {
-        System.out.println("Shoulder Moving to Low");
+        // System.out.println("Shoulder Moving to Low");
         targetPosition = TargetPosition.kLow;
     }
 
     /** Moves the shoulderto gather position */
     public void moveToGather()
     {
-        System.out.println("Shoulder Moving to Gather");
+        // System.out.println("Shoulder Moving to Gather");
         targetPosition = TargetPosition.kGather;
     }
 

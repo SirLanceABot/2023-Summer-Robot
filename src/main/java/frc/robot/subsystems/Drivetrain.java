@@ -65,7 +65,7 @@ public class Drivetrain extends Subsystem4237
 
     private enum DriveMode
     {
-        kDrive, kLockwheels, kStop;
+        kDrive, kLockwheels, kStop, kArcadeDrive;
     }
 
     // *** CLASS & INSTANCE VARIABLES ***
@@ -335,9 +335,14 @@ public class Drivetrain extends Subsystem4237
                 //System.out.println("drivetrain.Lockwheels");
                 break;
 
+            case kArcadeDrive:
+                break;
+
             case kStop:
                 //No calculations to do
                 break;
+
+            
         }
     }
 
@@ -474,8 +479,7 @@ public class Drivetrain extends Subsystem4237
  */
     public void arcadeDrive(double xSpeed, double rotation)
     {
-        //Has to be -1 <= x <=1, for arcadeDriveIK parameters xspeed and z rotation
-        //ArcadedriveIK clamps the values to -1 or 1
+        driveMode = DriveMode.kArcadeDrive;
 
         WheelSpeeds speeds = DifferentialDrive.arcadeDriveIK(xSpeed, rotation, false);
 
