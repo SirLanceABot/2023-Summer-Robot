@@ -81,8 +81,8 @@ public class Arm extends Subsystem4237
     private final double kD = 0.0; //1.0;
     private final double kIz = 0.0;
     private final double kFF = 0.0;
-    private final double kMaxOutput = 0.3;
-    private final double kMinOutput = -0.3;
+    private final double kMaxOutput = 0.5;
+    private final double kMinOutput = -0.5;
     private final double kGatherMaxOutput = 0.5;
     private final double kGatherMinOutput = -0.5;
     private SparkMaxPIDController pidController;

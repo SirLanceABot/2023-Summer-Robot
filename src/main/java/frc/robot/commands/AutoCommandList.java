@@ -26,6 +26,7 @@ import frc.robot.subsystems.Arm;
 // import frc.robot.subsystems.Arm.TargetPosition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Shoulder;
 // import frc.robot.subsystems.Shoulder.TargetPosition;
 
@@ -56,6 +57,7 @@ public class AutoCommandList extends SequentialCommandGroup
     private final Grabber grabber;
     private final Shoulder shoulder;
     private final Arm arm;
+    private final Wrist wrist;
     private String commandString = "\n***** AUTONOMOUS COMMAND LIST *****\n";
     // private final Command currentCommand;
     
@@ -76,6 +78,7 @@ public class AutoCommandList extends SequentialCommandGroup
         this.grabber = robotContainer.grabber;
         this.shoulder = robotContainer.shoulder;
         this.arm = robotContainer.arm;
+        this.wrist = robotContainer.wrist;
         
         // commandList.clear();
         build();
@@ -87,7 +90,7 @@ public class AutoCommandList extends SequentialCommandGroup
     private void build()
     {
         // commandList.clear();
-        Constants.TargetPosition angle = TargetPosition.kGather;
+        Constants.TargetPosition angle1 = TargetPosition.kGather;
         Constants.TargetPosition angle2 = TargetPosition.kGather;
         Constants.TargetPosition piece1 = TargetPosition.kGather;
         Constants.TargetPosition piece2 = TargetPosition.kGather;
@@ -96,7 +99,7 @@ public class AutoCommandList extends SequentialCommandGroup
 
         add(new StopDrive(drivetrain));
 
-        angle = getAngle1Shoulder(autonomousTabData.rowPlayedPiece1);
+        angle1 = getAngle1Shoulder(autonomousTabData.rowPlayedPiece1);
         angle2 = getAngle2Shoulder(autonomousTabData.rowPlayedPiece2);
         piece1 = getAngle1Arm(autonomousTabData.rowPlayedPiece1);
         piece2 = getAngle2Arm(autonomousTabData.rowPlayedPiece2);
@@ -107,49 +110,46 @@ public class AutoCommandList extends SequentialCommandGroup
             case kNeither:
                 if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes)
                 {
-                    moveShoulder(angle);
-                    moveArm(piece1);
-                    releasePiece();
+                    add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
+                    add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
                 }
 
                 if(autonomousTabData.driveToSecondPiece == DriveToSecondPiece.kYes)
                 {
                     turnRobot180();
-                    driveOut(4.4);
+                    goToSecondGamePiece();
                 }
 
                 if(autonomousTabData.pickUpGamePieces == PickUpGamePieces.kYes)
                 {
-                    add(new ReleaseGamePiece(grabber));
+                    add( new GrabGamePiece(grabber));
                 }
 
                 if(autonomousTabData.scoreSecondPiece == ScoreSecondPiece.kYes)
                 {
                     turnRobot180();
                     driveOut(4.4);
-                    moveShoulder(angle2);
-                    moveArm(piece2);
+                    add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle2));
+                    add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
                 }
 
                 if(autonomousTabData.moveOntoChargingStation == MoveOntoChargingStation.kYes)
                 {
-                    goToChargingStation(0.5);
+                    goToChargingStation(distance);
                 }
                 break;
             case kChargingStation:
-                moveShoulder(angle);
-                moveArm(piece1);
-                releasePiece();
+                add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
+                add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
                 driveOut(4.26);
                 goToChargingStation(distance);
                 break;
             case kTwoGamePieces:
-                moveShoulder(angle2);
-                moveArm(piece2);
-                releasePiece();
-                driveOut(4.4);
+                add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
+                add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+                goToSecondGamePiece();
                 turnRobot180();
-                pickUpPiece2();
+                add( new GrabGamePiece(grabber));
                 break;
         }
     
@@ -274,23 +274,23 @@ public class AutoCommandList extends SequentialCommandGroup
     //     add(new AutoDriveDistance(drivetrain, gyro, 0.0, 0.5, distance)); 
     // }
 
-    private void releasePiece()
-    {
-        add(new ReleaseGamePiece(grabber));
-        moveArm(TargetPosition.kGather);
-        moveShoulder(TargetPosition.kGather);
+    // private void releasePiece()
+    // {
+    //     add(new ReleaseGamePiece(grabber));
+    //     moveArm(ArmPosition.kGather);
+    //     moveShoulder(ShoulderPosition.kGather);
     
-    }
+    // }
 
-    private void moveShoulder(TargetPosition level)
-    {
-        add(new MoveShoulderToScoringPosition(shoulder, level));
-    }
+    // private void moveShoulder(ShoulderPosition level)
+    // {
+    //     add(new MoveShoulderToScoringPosition(shoulder, level));
+    // }
 
-    private void moveArm(TargetPosition position)
-    {
-        add(new MoveArmToScoringPosition(arm, position));
-    }
+    // private void moveArm(ArmPosition position)
+    // {
+    //     add(new MoveArmToScoringPosition(arm, position));
+    // }
 
 
 
@@ -318,13 +318,10 @@ public class AutoCommandList extends SequentialCommandGroup
             add(new AutoDriveDistance(drivetrain, gyro, 0.75, 0.0, 4.27));
             add(new AutoDriveDistance(drivetrain, gyro, 0.0, distance, 1.0));
             add(new AutoDriveDistance(drivetrain, gyro, -0.75, 0.0, 1.0));
+            add( new AutoBalance(drivetrain, gyro));
+			add( new LockWheels(drivetrain));
         }
         
-    }
-
-    private void pickUpPiece2()
-    {
-
     }
 
 
