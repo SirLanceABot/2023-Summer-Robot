@@ -474,6 +474,9 @@ public class Drivetrain extends Subsystem4237
  */
     public void arcadeDrive(double xSpeed, double rotation)
     {
+        //Has to be -1 <= x <=1, for arcadeDriveIK parameters xspeed and z rotation
+        //ArcadedriveIK clamps the values to -1 or 1
+
         WheelSpeeds speeds = DifferentialDrive.arcadeDriveIK(xSpeed, rotation, false);
 
         periodicIO.swerveModuleStates = new SwerveModuleState[4];
@@ -483,7 +486,7 @@ public class Drivetrain extends Subsystem4237
         periodicIO.swerveModuleStates[1] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
         periodicIO.swerveModuleStates[2] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
         periodicIO.swerveModuleStates[3] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
-
+        
     }
 
         /**
