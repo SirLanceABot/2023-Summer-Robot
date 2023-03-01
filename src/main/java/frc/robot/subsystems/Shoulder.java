@@ -28,6 +28,7 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.Timer;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Constants.TargetPosition;
 
 
 
@@ -47,32 +48,31 @@ public class Shoulder extends Subsystem4237
         // DataLogManager.log("Loading: " + fullClassName);
     }
     
-    //TODO: determine real values
-    public enum ShoulderPosition
-    {
-        kGather(Constants.Shoulder.GATHER),
-        kLow(Constants.Shoulder.LOW),
-        kMiddle(Constants.Shoulder.MIDDLE),
-        kHigh(Constants.Shoulder.HIGH),
-        kOverride(-4237);
+    // public enum TargetPosition
+    // {
+    //     kGather(Constants.Shoulder.GATHER),
+    //     kLow(Constants.Shoulder.LOW),
+    //     kMiddle(Constants.Shoulder.MIDDLE),
+    //     kHigh(Constants.Shoulder.HIGH),
+    //     kOverride(-4237);
         
-        public final double value;
+    //     public final double value;
 
-        private ShoulderPosition(double value)
-        {
-            this.value = value;
-        }
+    //     private TargetPosition(double value)
+    //     {
+    //         this.value = value;
+    //     }
 
-        // kGather(0.0, 10.0), kLow(25.0, 35.0), kMiddle(55.0, 65.0), kHigh(95.0, 105.0);
-        // public final double min;
-        // public final double max;
+    //     // kGather(0.0, 10.0), kLow(25.0, 35.0), kMiddle(55.0, 65.0), kHigh(95.0, 105.0);
+    //     // public final double min;
+    //     // public final double max;
 
-        // private ShoulderPosition(double min, double max)
-        // {
-        //     this.min = min;
-        //     this.max = max;
-        // }
-    }
+    //     // private ShoulderPosition(double min, double max)
+    //     // {
+    //     //     this.min = min;
+    //     //     this.max = max;
+    //     // }
+    // }
 
     public enum ResetState
     {
@@ -132,7 +132,7 @@ public class Shoulder extends Subsystem4237
     private boolean useLSReset = true;     // Enable or Disable reverse limit switch reseting encoder
     // private boolean useDataLog = true;      // Enable or Disable data logs
     private ResetState resetState = ResetState.kDone;
-    private ShoulderPosition targetPosition = ShoulderPosition.kOverride;
+    private TargetPosition targetPosition = TargetPosition.kOverride;
     
 
     
@@ -264,7 +264,7 @@ public class Shoulder extends Subsystem4237
 
     public boolean atSetPoint()
     {
-        return Math.abs(targetPosition.value - periodicIO.currentPosition) <= threshold;
+        return Math.abs(targetPosition.shoulder - periodicIO.currentPosition) <= threshold;
     }
 
     /** @return encoder ticks (double) */
@@ -288,45 +288,49 @@ public class Shoulder extends Subsystem4237
     /** Moves the shoulder up */
     public void moveUp()
     {
-        targetPosition = ShoulderPosition.kOverride;
+        targetPosition = TargetPosition.kOverride;
         periodicIO.motorSpeed = 0.15;//0.5;
     }
 
     /** Moves the shoulder down */
     public void moveDown()
     {
-        targetPosition = ShoulderPosition.kOverride;
+        targetPosition = TargetPosition.kOverride;
         periodicIO.motorSpeed = -0.15;//0.5;
     }
 
     /** Moves the shoulder to high position */
     public void moveToHigh()
     {
-        targetPosition = ShoulderPosition.kHigh;
+        System.out.println("Shoulder Moving to High");
+        targetPosition = TargetPosition.kHigh;
     }
 
     /** Moves the shoulder to middle position */
     public void moveToMiddle()
     {
-        targetPosition = ShoulderPosition.kMiddle;
+        System.out.println("Shoulder Moving to Middle");
+        targetPosition = TargetPosition.kMiddle;
     }
  
     /** Moves the shoulder to low position */
     public void moveToLow()
     {
-        targetPosition = ShoulderPosition.kLow;
+        System.out.println("Shoulder Moving to Low");
+        targetPosition = TargetPosition.kLow;
     }
 
     /** Moves the shoulderto gather position */
     public void moveToGather()
     {
-        targetPosition = ShoulderPosition.kGather;
+        System.out.println("Shoulder Moving to Gather");
+        targetPosition = TargetPosition.kGather;
     }
 
     /** Turns the shoulder off */
     public void off()
     {
-        targetPosition = ShoulderPosition.kOverride;
+        targetPosition = TargetPosition.kOverride;
         periodicIO.motorSpeed = 0.0;
     }
 
@@ -341,7 +345,7 @@ public class Shoulder extends Subsystem4237
     /** Holds the motor still */
     public void hold()
     {
-        targetPosition = ShoulderPosition.kOverride;
+        targetPosition = TargetPosition.kOverride;
         periodicIO.motorSpeed = 0.01;
     }
 
@@ -403,19 +407,19 @@ public class Shoulder extends Subsystem4237
         switch(resetState)
         {
             case kDone:
-                if(targetPosition == ShoulderPosition.kOverride)
+                if(targetPosition == TargetPosition.kOverride)
                 {
                     shoulderMotor.set(periodicIO.motorSpeed);
                 }
-                else if(targetPosition == ShoulderPosition.kGather)
+                else if(targetPosition == TargetPosition.kGather)
                 {
                     pidController.setOutputRange(kGatherMinOutput, kGatherMaxOutput);
-                    pidController.setReference(targetPosition.value, CANSparkMax.ControlType.kPosition);
+                    pidController.setReference(targetPosition.shoulder, CANSparkMax.ControlType.kPosition);
                     pidController.setOutputRange(kMinOutput, kMaxOutput);
                 }
                 else
                 {
-                    pidController.setReference(targetPosition.value, CANSparkMax.ControlType.kPosition);
+                    pidController.setReference(targetPosition.shoulder, CANSparkMax.ControlType.kPosition);
                 }
                 break;
 

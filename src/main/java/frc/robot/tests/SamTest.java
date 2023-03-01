@@ -27,7 +27,7 @@ import frc.robot.subsystems.Shoulder;
 // import frc.robot.sensors.Vision;
 // import frc.robot.subsystems.Drivetrain;
 // import frc.robot.commands.AutoAimToPost;
-import frc.robot.subsystems.Shoulder.ShoulderPosition;
+// import frc.robot.subsystems.Shoulder.TargetPosition;
 
 public class SamTest implements Test
 {

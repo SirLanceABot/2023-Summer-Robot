@@ -1,11 +1,12 @@
 package frc.robot.commands;
 
+import frc.robot.Constants.TargetPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
-import frc.robot.subsystems.Arm.ArmPosition;
-import frc.robot.subsystems.Shoulder.ShoulderPosition;
+// import frc.robot.subsystems.Arm.TargetPosition;
+// import frc.robot.subsystems.Shoulder.TargetPosition;
 import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -25,12 +26,13 @@ public class ScoreGamePiece extends CommandBase
     }
 
     // *** CLASS AND INSTANCE VARIABLES ***
-    private final Arm arm;
     private final Shoulder shoulder;
+    private final Arm arm;
     private final Grabber grabber;
     private final Wrist wrist;
-    private ArmPosition targetArmPosition;
-    private ShoulderPosition targetShoulderPosition;
+    // private TargetPosition targetArmPosition;
+    // private TargetPosition targetShoulderPosition;
+    private TargetPosition targetPosition;
     private Boolean isArmFirst;
     private Boolean isFinished = false;
     private int movementStep = 0;
@@ -39,27 +41,26 @@ public class ScoreGamePiece extends CommandBase
     /**
      * Creates a new MoveArmAndShoulder.
      *
-     * @param arm The arm subystem.
      * @param shoulder The shoulder subsystem.
+     * @param arm The arm subystem.
      * @param grabber The grabber subsystem.
      * @param wrist The wrist subsystem.
      * @param targetArmPosition Target position for the arm (Type: ArmPosition)
      * @param targetShoulderPosition Target position for the shoulder (Type: ShoulderPosition)
      */
-    public ScoreGamePiece(Arm arm, Shoulder shoulder, Grabber grabber, Wrist wrist, ArmPosition targetArmPosition, ShoulderPosition targetShoulderPosition) 
+    public ScoreGamePiece(Shoulder shoulder, Arm arm, Grabber grabber, Wrist wrist, TargetPosition targetPosition) 
     {
-        this.arm = arm;
         this.shoulder = shoulder;
+        this.arm = arm;
         this.grabber = grabber;
         this.wrist = wrist;
-        this.targetArmPosition = targetArmPosition;
-        this.targetShoulderPosition = targetShoulderPosition;
+        this.targetPosition = targetPosition;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        if(arm != null && shoulder != null && grabber != null && wrist != null)
+        if(shoulder != null && arm != null &&  grabber != null && wrist != null)
         {
-            addRequirements(this.arm);
             addRequirements(this.shoulder);
+            addRequirements(this.arm);
             addRequirements(this.grabber);
             addRequirements(this.wrist);
         }
@@ -74,7 +75,7 @@ public class ScoreGamePiece extends CommandBase
 
         if(shoulder != null && arm != null)
         {
-            if(shoulder.getPosition() > targetShoulderPosition.value)
+            if(shoulder.getPosition() > targetPosition.shoulder)
             {
                 isArmFirst = true;
             }
@@ -102,7 +103,7 @@ public class ScoreGamePiece extends CommandBase
             case 1:
                 if(isArmFirst)  // if arm needs to move first
                 {
-                    moveArmToScoringPosition(arm, targetArmPosition);
+                    moveArmToScoringPosition(arm, targetPosition);
             
                     if(arm.atSetPoint())    // if arm is done moving, go to the next step
                     {
@@ -111,7 +112,7 @@ public class ScoreGamePiece extends CommandBase
                 }
                 else  // if shoulder needs to move first
                 {
-                    moveShoulderToScoringPosition(shoulder, targetShoulderPosition);
+                    moveShoulderToScoringPosition(shoulder, targetPosition);
 
                     if(shoulder.atSetPoint())    // if shoulder is done moving, go to the next step
                     {
@@ -140,7 +141,7 @@ public class ScoreGamePiece extends CommandBase
             case 3:
                 if(isArmFirst)  // if arm needs to move first
                 {
-                    moveShoulderToScoringPosition(shoulder, targetShoulderPosition);
+                    moveShoulderToScoringPosition(shoulder, targetPosition);
 
                     if(shoulder.atSetPoint())    // if shoulder is done moving, go to the next step
                     {
@@ -149,7 +150,7 @@ public class ScoreGamePiece extends CommandBase
                 }
                 else    // if shoulder needs to move first
                 {
-                    moveArmToScoringPosition(arm, targetArmPosition);
+                    moveArmToScoringPosition(arm, targetPosition);
 
                     if(arm.atSetPoint())    // if arm is done moving, go to the next step
                     {
@@ -163,47 +164,19 @@ public class ScoreGamePiece extends CommandBase
                 {
                     grabber.releaseGamePiece();
                 }
-                
+
                 movementStep++;
                 
             case 5:
+                System.out.println("DONE");
                 isFinished = true;
                 break;
         }
 
     }
 
-    // Moves the arm to the correct position
-    public void moveArmToScoringPosition(Arm arm, ArmPosition targetPosition)
-    {
-        if(arm != null)
-        {
-            switch(targetPosition)
-            {
-                case kHigh:
-                    arm.moveToHigh();
-                    break;
-                
-                case kMiddle:
-                    arm.moveToMiddle();
-                    break;
-                
-                case kLow:
-                    arm.moveToLow();
-                    break;
-                
-                case kGather:
-                    arm.moveToGather();
-                    break;
-                
-                case kOverride:
-                    break;
-            }
-        }
-    }
-
     // Moves shoulder to the correct position
-    public void moveShoulderToScoringPosition(Shoulder shoulder, ShoulderPosition targetPosition)
+    public void moveShoulderToScoringPosition(Shoulder shoulder, TargetPosition targetPosition)
     {
         if(shoulder != null)
         {
@@ -223,6 +196,35 @@ public class ScoreGamePiece extends CommandBase
                 
                 case kGather:
                     shoulder.moveToGather();
+                    break;
+                
+                case kOverride:
+                    break;
+            }
+        }
+    }
+
+    // Moves the arm to the correct position
+    public void moveArmToScoringPosition(Arm arm, TargetPosition targetPosition)
+    {
+        if(arm != null)
+        {
+            switch(targetPosition)
+            {
+                case kHigh:
+                    arm.moveToHigh();
+                    break;
+                
+                case kMiddle:
+                    arm.moveToMiddle();
+                    break;
+                
+                case kLow:
+                    arm.moveToLow();
+                    break;
+                
+                case kGather:
+                    arm.moveToGather();
                     break;
                 
                 case kOverride:

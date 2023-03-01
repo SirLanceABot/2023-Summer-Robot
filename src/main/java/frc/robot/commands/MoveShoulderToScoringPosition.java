@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Shoulder;
-import frc.robot.subsystems.Shoulder.ShoulderPosition;
+import frc.robot.Constants.TargetPosition;
 
 import java.lang.invoke.MethodHandles;
 
@@ -20,7 +20,7 @@ public class MoveShoulderToScoringPosition extends CommandBase
 
     private final Shoulder shoulder;
 
-    private ShoulderPosition desiredPosition;
+    private TargetPosition desiredPosition;
 
     
     // private final double LEVEL_0_ANGLE = 5;         // Gatherer Position
@@ -38,7 +38,7 @@ public class MoveShoulderToScoringPosition extends CommandBase
      * @param shoudler Shoulder subsystem.
      * @param desiredPosition Position that the shoulder needs to go to (ScoringPosition)
      */
-    public MoveShoulderToScoringPosition(Shoulder shoulder, ShoulderPosition desiredPosition) 
+    public MoveShoulderToScoringPosition(Shoulder shoulder, TargetPosition desiredPosition) 
     {
         this.shoulder = shoulder;
         this.desiredPosition = desiredPosition;
@@ -108,7 +108,7 @@ public class MoveShoulderToScoringPosition extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        if(shoulder != null && desiredPosition != ShoulderPosition.kOverride)
+        if(shoulder != null && desiredPosition != TargetPosition.kOverride)
         {
             return shoulder.atSetPoint();
         

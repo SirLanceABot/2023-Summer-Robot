@@ -2,9 +2,10 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
-import frc.robot.subsystems.Wrist;
-import frc.robot.subsystems.Arm.ArmPosition;
-import frc.robot.subsystems.Shoulder.ShoulderPosition;
+
+// import frc.robot.subsystems.Arm.TargetPosition;
+// import frc.robot.subsystems.Shoulder.TargetPosition;
+import frc.robot.Constants.TargetPosition;
 import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -26,9 +27,9 @@ public class ReturnToGather extends CommandBase
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Arm arm;
     private final Shoulder shoulder;
-    private final Wrist wrist;
-    private ArmPosition targetArmPosition;
-    private ShoulderPosition targetShoulderPosition;
+
+    private TargetPosition targetArmPosition;
+    private TargetPosition targetShoulderPosition;
     private Boolean isArmFirst;
     private Boolean isFinished = false;
     private int movementStep = 0;
@@ -41,18 +42,17 @@ public class ReturnToGather extends CommandBase
      * @param shoulder The shoulder subsystem.
      * @param wrist The wrist subsystem.
      */
-    public ReturnToGather(Arm arm, Shoulder shoulder, Wrist wrist) 
+    public ReturnToGather(Arm arm, Shoulder shoulder) 
     {
         this.arm = arm;
         this.shoulder = shoulder;
-        this.wrist = wrist;
+
         
         // Use addRequirements() here to declare subsystem dependencies.
-        if(arm != null && shoulder != null && wrist != null)
+        if(arm != null && shoulder != null)
         {
             addRequirements(this.arm);
             addRequirements(this.shoulder);
-            addRequirements(this.wrist);
         }
     }
 
@@ -68,13 +68,13 @@ public class ReturnToGather extends CommandBase
     @Override
     public void execute()
     {
-        if(arm != null && wrist != null && shoulder != null)
+        if(arm != null && shoulder != null)
         {
             arm.moveToGather();
-            wrist.wristDown();
+            
             shoulder.moveToGather();
         }
-        
+
         // switch(movementStep)
         // {
         //     case 0:

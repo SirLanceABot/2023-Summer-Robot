@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Timer;
 import com.revrobotics.SparkMaxPIDController;
+import frc.robot.Constants.TargetPosition;
 
 import java.lang.invoke.MethodHandles;
 
@@ -27,21 +28,21 @@ public class Arm extends Subsystem4237
         System.out.println("Loading: " + fullClassName);
     }
 
-    public enum ArmPosition
-    {
-        // Placeholder values used; real values to be determined when we have the arm length
-        kGather(Constants.Arm.GATHER),
-        kLow(Constants.Arm.LOW),
-        kMiddle(Constants.Arm.MIDDLE),
-        kHigh(Constants.Arm.HIGH),
-        kOverride(-4237);
+    // public enum TargetPosition
+    // {
+    //     // Placeholder values used; real values to be determined when we have the arm length
+    //     kGather(Constants.Arm.GATHER),
+    //     kLow(Constants.Arm.LOW),
+    //     kMiddle(Constants.Arm.MIDDLE),
+    //     kHigh(Constants.Arm.HIGH),
+    //     kOverride(-4237);
 
-        public final double value;
-        private ArmPosition(double value)
-        {
-            this.value = value;
-        }
-    }
+    //     public final double value;
+    //     private TargetPosition(double value)
+    //     {
+    //         this.value = value;
+    //     }
+    // }
 
     public enum ResetState
     {
@@ -90,7 +91,7 @@ public class Arm extends Subsystem4237
     private LimitSwitchState reverseLSState = LimitSwitchState.kStillReleased;
     private boolean useLSReset = true;
     private ResetState resetState = ResetState.kDone;
-    private ArmPosition targetPosition = ArmPosition.kOverride;
+    private TargetPosition targetPosition = TargetPosition.kOverride;
     private final int RESET_ATTEMPT_LIMIT = 5;
 
     
@@ -162,7 +163,7 @@ public class Arm extends Subsystem4237
 
     public boolean atSetPoint()
     {
-        return Math.abs(targetPosition.value - periodicIO.armPosition) <= threshold;
+        return Math.abs(targetPosition.arm - periodicIO.armPosition) <= threshold;
     }
    
     /**
@@ -178,7 +179,7 @@ public class Arm extends Subsystem4237
      */
     public void retractArm()
     {
-        targetPosition = ArmPosition.kOverride;
+        targetPosition = TargetPosition.kOverride;
         periodicIO.armSpeed = -0.15;
     }
 
@@ -187,32 +188,32 @@ public class Arm extends Subsystem4237
      */
     public void extendArm()
     {
-        targetPosition = ArmPosition.kOverride;
+        targetPosition = TargetPosition.kOverride;
         periodicIO.armSpeed = 0.15;
     }
 
     /** Moves the arm to high position */
     public void moveToHigh()
     {
-        targetPosition = ArmPosition.kHigh;
+        targetPosition = TargetPosition.kHigh;
     }
 
     /** Moves the arm to middle position */
     public void moveToMiddle()
     {
-        targetPosition = ArmPosition.kMiddle;
+        targetPosition = TargetPosition.kMiddle;
     }
  
     /** Moves the arm to low position */
     public void moveToLow()
     {
-        targetPosition = ArmPosition.kLow;
+        targetPosition = TargetPosition.kLow;
     }
 
     /** Moves the arm to gather position */
     public void moveToGather()
     {
-        targetPosition = ArmPosition.kGather;
+        targetPosition = TargetPosition.kGather;
     }
 
     /**
@@ -220,7 +221,7 @@ public class Arm extends Subsystem4237
      */
     public void off()
     {
-        targetPosition = ArmPosition.kOverride;
+        targetPosition = TargetPosition.kOverride;
         periodicIO.armSpeed = 0.0;
     }
 
@@ -237,7 +238,7 @@ public class Arm extends Subsystem4237
      */
     public void hold()
     {
-        targetPosition = ArmPosition.kOverride;
+        targetPosition = TargetPosition.kOverride;
         periodicIO.armSpeed = 0.05;
     }
 
@@ -246,13 +247,13 @@ public class Arm extends Subsystem4237
      * and moves it backwards if the desired position is farther inwards
      */
     @Deprecated
-    public void moveArmToDesired(ArmPosition desiredPosition)
+    public void moveArmToDesired(TargetPosition desiredPosition)
     {
-        if (getArmPosition() < desiredPosition.value - threshold) 
+        if (getArmPosition() < desiredPosition.arm - threshold) 
         {
             extendArm();
         }
-        else if (getArmPosition() > desiredPosition.value + threshold)
+        else if (getArmPosition() > desiredPosition.arm + threshold)
         {
             retractArm();
         }
@@ -312,19 +313,19 @@ public class Arm extends Subsystem4237
         switch(resetState)
         {
             case kDone:
-                if(targetPosition == ArmPosition.kOverride)
+                if(targetPosition == TargetPosition.kOverride)
                 {
                     armMotor.set(periodicIO.armSpeed);
                 }
-                else if(targetPosition == ArmPosition.kGather)
+                else if(targetPosition == TargetPosition.kGather)
                 {
                     pidController.setOutputRange(kGatherMinOutput, kGatherMaxOutput);
-                    pidController.setReference(targetPosition.value, CANSparkMax.ControlType.kPosition);
+                    pidController.setReference(targetPosition.arm, CANSparkMax.ControlType.kPosition);
                     pidController.setOutputRange(kMinOutput, kMaxOutput);
                 }
                 else
                 {
-                    pidController.setReference(targetPosition.value, CANSparkMax.ControlType.kPosition);
+                    pidController.setReference(targetPosition.arm, CANSparkMax.ControlType.kPosition);
                 }
                 break;
 

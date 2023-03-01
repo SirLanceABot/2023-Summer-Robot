@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Arm.ArmPosition;
+import frc.robot.Constants.TargetPosition;
 import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -26,7 +26,7 @@ public class MoveArmToScoringPosition extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Arm arm;
-    private ArmPosition desiredPosition;
+    private TargetPosition desiredPosition;
 
     /**
      * @deprecated
@@ -38,7 +38,7 @@ public class MoveArmToScoringPosition extends CommandBase
      * @param arm Shoulder subsystem.
      * @param desiredPosition Position that the arm needs to go to (ScoringPosition)
      */
-    public MoveArmToScoringPosition(Arm arm, ArmPosition desiredPosition) 
+    public MoveArmToScoringPosition(Arm arm, TargetPosition desiredPosition) 
     {
         this.arm = arm;
         this.desiredPosition = desiredPosition;
@@ -101,7 +101,7 @@ public class MoveArmToScoringPosition extends CommandBase
     @Override
     public boolean isFinished()
     {
-        if(arm != null && desiredPosition != ArmPosition.kOverride)
+        if(arm != null && desiredPosition != TargetPosition.kOverride)
         {
             return arm.atSetPoint();
         }

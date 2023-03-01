@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.Arm;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.TargetPosition;
 
 public class KyleTest implements Test
 {
@@ -23,7 +24,7 @@ public class KyleTest implements Test
     private final RobotContainer robotContainer;
     private final Arm arm;
     private Joystick joystick = new Joystick(2);
-    private Arm.ArmPosition desiredPosition;
+    private TargetPosition desiredPosition;
 
     // *** CLASS CONSTRUCTOR ***
     public KyleTest(RobotContainer robotContainer)
@@ -38,7 +39,7 @@ public class KyleTest implements Test
     public void init()
     {
         arm.resetEncoder();
-        desiredPosition = Arm.ArmPosition.kGather;
+        desiredPosition = TargetPosition.kGather;
     }
 
     /**
@@ -49,23 +50,23 @@ public class KyleTest implements Test
     {
         if (joystick.getRawButtonPressed(5))
         {   // Leftmost button = all the way in
-            desiredPosition = Arm.ArmPosition.kGather;
-            System.out.println("In, desiredPosition.min = " + desiredPosition.value + " armPosition = " + arm.getArmPosition());
+            desiredPosition = TargetPosition.kGather;
+            System.out.println("In, desiredPosition.min = " + desiredPosition.arm + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(3))
         {   // Second to leftmost buton = half
-            desiredPosition = Arm.ArmPosition.kLow;
-            System.out.println("Half, desiredPosition.min = " + desiredPosition.value + " armPosition = " + arm.getArmPosition());
+            desiredPosition = TargetPosition.kLow;
+            System.out.println("Half, desiredPosition.min = " + desiredPosition.arm + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(4))
         {   // Second to rightmost button = 3/4
-            desiredPosition = Arm.ArmPosition.kMiddle;
-            System.out.println("3/4, desiredPosition.min = " + desiredPosition.value + " armPosition = " + arm.getArmPosition());
+            desiredPosition = TargetPosition.kMiddle;
+            System.out.println("3/4, desiredPosition.min = " + desiredPosition.arm + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(6))
         {   // Rightmost button = fully extenden
-            desiredPosition = Arm.ArmPosition.kHigh;
-            System.out.println("All Out, desiredPosition.min = " + desiredPosition.value + " armPosition = " + arm.getArmPosition());
+            desiredPosition = TargetPosition.kHigh;
+            System.out.println("All Out, desiredPosition.min = " + desiredPosition.arm + " armPosition = " + arm.getArmPosition());
         }
 
         // arm.moveArmToDesired(desiredPosition);

@@ -277,5 +277,24 @@ public final class Constants
         public static final DrivetrainConfig DRIVETRAIN_DATA = new DrivetrainConfig(
             SwerveModuleSetup.FRONT_LEFT, SwerveModuleSetup.FRONT_RIGHT, SwerveModuleSetup.BACK_LEFT, SwerveModuleSetup.BACK_RIGHT);
     }
+
+    public enum TargetPosition
+    {
+        kGather(Constants.Shoulder.GATHER, Constants.Arm.GATHER),
+        kLow(Constants.Shoulder.LOW, Constants.Arm.LOW),
+        kMiddle(Constants.Shoulder.MIDDLE, Constants.Arm.MIDDLE),
+        kHigh(Constants.Shoulder.HIGH, Constants.Arm.HIGH),
+        kOverride(-4237, -4237);
+        
+     
+        public final double shoulder;
+        public final double arm;
+
+        private TargetPosition(double shoulder, double arm)
+        {
+            this.shoulder = shoulder;
+            this.arm = arm;
+        }
+    }
     
 }
