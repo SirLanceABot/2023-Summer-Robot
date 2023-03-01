@@ -141,21 +141,21 @@ public class Robot extends TimedRobot
     {
         System.out.println("Autonomous Mode");
 
-        // autonomousCommand = robotContainer.getAutonomousCommand();
+        autonomousCommand = robotContainer.getAutonomousCommand();
 
         // Schedule the autonomous command
         if (autonomousCommand != null)
         {
-            // autonomousCommand.schedule();
+            autonomousCommand.schedule();
         }
 
-        if(robotContainer.mainShuffleboard != null)
-        {
-            if(robotContainer.mainShuffleboard.autoCommandList != null)
-            {
-                robotContainer.mainShuffleboard.autoCommandList.schedule();
-            }
-        }
+        // if(robotContainer.mainShuffleboard != null)
+        // {
+        //     if(robotContainer.mainShuffleboard.autoCommandList != null)
+        //     {
+        //         robotContainer.mainShuffleboard.autoCommandList.schedule();
+        //     }
+        // }
         
     }
 

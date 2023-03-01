@@ -120,7 +120,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 {
                     // turnRobot180();
                     goToSecondGamePiece();
-                    add( new AutoDriveDistance(drivetrain, gyro, 0.75, 0, 0.5));
+                    // add( new AutoDriveDistance(drivetrain, gyro, 0.75, 0, 0.5));
                 }
 
                 if(autonomousTabData.pickUpGamePieces == PickUpGamePieces.kYes)
