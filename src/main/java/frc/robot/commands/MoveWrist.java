@@ -4,17 +4,19 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Wrist.WristPosition;
 
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.SynchronousInterrupt.WaitResult;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** 
  * An example command that uses an example subsystem. 
  */
-public class GrabGamePiece extends CommandBase 
+public class MoveWrist extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -27,25 +29,27 @@ public class GrabGamePiece extends CommandBase
     }
 
     // *** CLASS AND INSTANCE VARIABLES ***
-    private final Grabber grabber;
+    private final Wrist wrist;
+    private WristPosition wristPosition;
     private Timer timer = new Timer();
-
 
     /**
      * Creates a new ExampleCommand.
      *
      * @param subsystem The subsystem used by this command.
      */
-    public GrabGamePiece(Grabber grabber) 
+    public MoveWrist(Wrist wrist, WristPosition wristPosition) 
     {
         // System.out.println(fullClassName + ": Constructor Started");
         
-        this.grabber = grabber;
+        this.wrist = wrist;
+        this.wristPosition = wristPosition;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        if (this.grabber != null)
-            addRequirements(this.grabber);
-
+        if (this.wrist != null)
+        {
+            addRequirements(this.wrist);
+        }
         // System.out.println(fullClassName + ": Constructor Finished");
     }
 
@@ -53,7 +57,6 @@ public class GrabGamePiece extends CommandBase
     @Override
     public void initialize()
     {
-        // System.out.println(this);
         timer.reset();
         timer.start();
     }
@@ -62,20 +65,17 @@ public class GrabGamePiece extends CommandBase
     @Override
     public void execute()
     {
-        if(grabber != null)
+        if(wrist != null)
         {
-            grabber.grabGamePiece();
+            if(wristPosition == WristPosition.kDown)
+            {
+                wrist.wristDown();
+            }
+            else if(wristPosition == WristPosition.kUp)
+            {
+                wrist.wristUp();
+            }
         }
-        
-        
-        // if(grabber.isGrabberClosed())
-        // {
-        //     isFinished = true;
-        // }
-        // else
-        // {
-        //     isFinished = false;
-        // }
     }
 
     // Called once the command ends or is interrupted.
@@ -87,7 +87,7 @@ public class GrabGamePiece extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        if(timer.hasElapsed(0.5))
+        if(timer.hasElapsed(0.2))
         {
             return true;
         }
@@ -99,6 +99,7 @@ public class GrabGamePiece extends CommandBase
 
     public String toString()
     {
-        return "GrabGamePiece()";
+        return "MoveWrist(" + wristPosition + ")";
     }
 }
+

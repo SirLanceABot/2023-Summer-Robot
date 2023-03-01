@@ -29,7 +29,7 @@ public class MoveArmToScoringPosition extends CommandBase
     private TargetPosition desiredPosition;
 
     /**
-     * @deprecated
+     * 
      * DO NOT USE THIS COMMAND 
      * INSTEAD USE SCOREGAMEPIECE
      * Creates a new MoveArmToScoringPosition.
@@ -125,6 +125,6 @@ public class MoveArmToScoringPosition extends CommandBase
     @Override
     public String toString()
     {
-        return "MoveArm(arm, " + desiredPosition + ")";
+        return "MoveArm(" + desiredPosition + ")";
     }
 }

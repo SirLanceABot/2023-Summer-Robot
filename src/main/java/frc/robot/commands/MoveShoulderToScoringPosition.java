@@ -29,7 +29,7 @@ public class MoveShoulderToScoringPosition extends CommandBase
     // private final double LEVEL_3_ANGLE = 100;       // High Scoring Position
     
     /**
-     * @deprecated
+     * 
      * DO NOT USE THIS COMMAND 
      * INSTEAD USE SCOREGAMEPIECE
      * Creates a new MoveShoulderToScoringPosition.
@@ -130,6 +130,6 @@ public class MoveShoulderToScoringPosition extends CommandBase
     @Override
     public String toString()
     {
-        return "MoveShoulderToScoringPosition(shoulder, " + desiredPosition + ")";
+        return "MoveShoulderToScoringPosition(" + desiredPosition + ")";
     }
 }
