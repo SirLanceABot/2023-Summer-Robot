@@ -145,8 +145,9 @@ public class AutonomousTab
         SendableRegistry.setName(containingPreloadBox, "Containing Preload?");
 
         //add options to Box
-        containingPreloadBox.setDefaultOption("Yes", AutonomousTabData.ContainingPreload.kYes);
         containingPreloadBox.addOption("No", AutonomousTabData.ContainingPreload.kNo);
+        containingPreloadBox.setDefaultOption("Yes", AutonomousTabData.ContainingPreload.kYes);
+        
         //put the widget on the shuffleboard
         autonomousTab.add(containingPreloadBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
@@ -165,8 +166,9 @@ public class AutonomousTab
         SendableRegistry.setName(playPreloadBox, "Play Preload?");
         
         //add options to  Box
-        playPreloadBox.setDefaultOption("Yes", AutonomousTabData.PlayPreload.kYes);
         playPreloadBox.addOption("No", AutonomousTabData.PlayPreload.kNo);
+        playPreloadBox.setDefaultOption("Yes", AutonomousTabData.PlayPreload.kYes);
+        
 
         //put the widget on the shuffleboard
         autonomousTab.add(playPreloadBox)
@@ -187,9 +189,9 @@ public class AutonomousTab
 
         //add options to Box
         rowPlayedPiece1Box.addOption("None", AutonomousTabData.RowPlayedPiece1.kNone);
-        rowPlayedPiece1Box.setDefaultOption("Bottom", AutonomousTabData.RowPlayedPiece1.kBottom);
+        rowPlayedPiece1Box.addOption("Bottom", AutonomousTabData.RowPlayedPiece1.kBottom);
         rowPlayedPiece1Box.addOption("Middle", AutonomousTabData.RowPlayedPiece1.kMiddle);
-        rowPlayedPiece1Box.addOption("Top", AutonomousTabData.RowPlayedPiece1.kTop);
+        rowPlayedPiece1Box.setDefaultOption("Top", AutonomousTabData.RowPlayedPiece1.kTop);
 
         //put the widget on the shuffleboard
         autonomousTab.add(rowPlayedPiece1Box)
@@ -209,8 +211,8 @@ public class AutonomousTab
         SendableRegistry.setName(moveOntoChargingStationBox, "Charge Station");
 
         //add options to Box
-        moveOntoChargingStationBox.setDefaultOption("Yes", AutonomousTabData.MoveOntoChargingStation.kYes);
-        moveOntoChargingStationBox.addOption("No", AutonomousTabData.MoveOntoChargingStation.kNo);
+        moveOntoChargingStationBox.setDefaultOption("No", AutonomousTabData.MoveOntoChargingStation.kNo);
+        moveOntoChargingStationBox.addOption("Yes", AutonomousTabData.MoveOntoChargingStation.kYes);
 
         //put the widget on the shuffleboard
         autonomousTab.add(moveOntoChargingStationBox)
@@ -235,7 +237,7 @@ public class AutonomousTab
         //put the widget on the shuffleboard
         autonomousTab.add(driveToSecondPieceBox)
             .withWidget(BuiltInWidgets.kSplitButtonChooser)
-            .withPosition(4, 6)
+            .withPosition(5, 6)
             .withSize(4, 3);
     }
 

@@ -484,7 +484,9 @@ public class Drivetrain extends Subsystem4237
         WheelSpeeds speeds = DifferentialDrive.arcadeDriveIK(xSpeed, rotation, false);
 
         periodicIO.swerveModuleStates = new SwerveModuleState[4];
-        double m_maxOutput = 2.;
+        // double m_maxOutput = 2.;
+        double m_maxOutput = xSpeed;
+        
         //  assuming fl, fr, bl, br
         periodicIO.swerveModuleStates[0] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
         periodicIO.swerveModuleStates[1] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
