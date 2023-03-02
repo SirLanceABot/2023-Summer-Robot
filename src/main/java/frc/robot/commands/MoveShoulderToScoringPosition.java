@@ -89,6 +89,14 @@ public class MoveShoulderToScoringPosition extends CommandBase
                     shoulder.moveToReadyToPickUp();
                     break;
                 
+                case kShoulderReadyToClamp:
+                    shoulder.moveToShoulderReadyToClamp();
+                    break;
+
+                case kSuctionCone:
+                    shoulder.moveToSuctionCone();
+                    break;
+                
                 case kOverride:
                     break;
             }

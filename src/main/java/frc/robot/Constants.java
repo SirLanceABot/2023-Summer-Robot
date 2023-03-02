@@ -108,7 +108,7 @@ public final class Constants
         public static final double GATHER = 0.0;
         // public static final double SHOULDER_READY_TO_GRAB = 
         public static final double SUCTION_CONE = 38912.2;
-        public static final double SHOULDER_READY_TO_CLAMP = 112639.2;
+        public static final double SHOULDER_READY_TO_CLAMP = 168639.2;
         public static final double CLAMP = 682.0;
         public static final double READY_TO_PICK_UP = 104740.0;
     }

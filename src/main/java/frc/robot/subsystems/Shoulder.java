@@ -119,10 +119,10 @@ public class Shoulder extends Subsystem4237
     private final double kD = 0.0; //1.0;
     private final double kIz = 0.0;
     private final double kFF = 0.0;
-    private final double kMaxOutput = 0.5;
-    private final double kMinOutput = -0.5;
-    private final double kGatherMaxOutput = 0.5;
-    private final double kGatherMinOutput = -0.5;
+    private final double kMaxOutput = 0.6;
+    private final double kMinOutput = -0.6;
+    private final double kGatherMaxOutput = 0.6;
+    private final double kGatherMinOutput = -0.6;
 
     private final int RESET_ATTEMPT_LIMIT = 5;
 
@@ -289,14 +289,14 @@ public class Shoulder extends Subsystem4237
     public void moveUp()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.motorSpeed = 0.35;//0.5;
+        periodicIO.motorSpeed = 0.45;//0.5;
     }
 
     /** Moves the shoulder down */
     public void moveDown()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.motorSpeed = -0.35;//0.5;
+        periodicIO.motorSpeed = -0.45;//0.5;
     }
 
     /** Moves the shoulder to high position */

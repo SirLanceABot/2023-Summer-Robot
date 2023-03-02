@@ -8,6 +8,8 @@ import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import javax.swing.plaf.TreeUI;
+
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.Compressor;
@@ -86,7 +88,7 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= false;
+	private boolean useFullRobot			= true;
 	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
@@ -98,7 +100,7 @@ public class RobotContainer
 	private boolean useArm 					= true;
 	private boolean useShoulder				= true;
 	private boolean useGatherer 			= false;
-	private boolean useCandle				= false;
+	private boolean useCandle				= true;
 	private boolean useDriverController		= true;
 	private boolean useOperatorController 	= true;
 	private boolean useMainShuffleboard		= true;
@@ -137,15 +139,15 @@ public class RobotContainer
 		log					= (useDataLog)								? DataLogManager.getLog()		: null;
 
 		fullRobot = useFullRobot;
-		exampleSubsystem 	= (useFullRobot || useExampleSubsystem)		? new ExampleSubsystem() 		: null;
-		accelerometer		= (useFullRobot || useAccelerometer)		? new Accelerometer4237()		: null;
+		exampleSubsystem 	= (useExampleSubsystem)						? new ExampleSubsystem() 		: null;
+		accelerometer		= (useAccelerometer)						? new Accelerometer4237()		: null;
 		gyro 				= (useFullRobot || useGyro)					? new Gyro4237()				: null;	
 		drivetrain 			= (useFullRobot || useDrivetrain) 			? new Drivetrain(gyro, log) 	: null;
 		grabber 			= (useFullRobot || useGrabber) 				? new Grabber() 				: null;
 		wrist				= (useFullRobot || useWrist)				? new Wrist()					: null;
 		arm 				= (useFullRobot || useArm) 					? new Arm() 					: null;
 		shoulder 			= (useFullRobot || useShoulder) 			? new Shoulder() 				: null;
-		gatherer 			= (useFullRobot || useGatherer) 			? new Gatherer() 				: null;
+		gatherer 			= (useGatherer) 							? new Gatherer() 				: null;
 		candle 				= (useFullRobot || useCandle)				? new Candle4237() 				: null;
 		driverController 	= (useFullRobot || useDriverController) 	? new DriverController(Constants.Controller.DRIVER) 		: null;
 		operatorController 	= (useFullRobot || useOperatorController) 	? new OperatorController(Constants.Controller.OPERATOR)	 	: null;

@@ -81,10 +81,10 @@ public class Arm extends Subsystem4237
     private final double kD = 0.0; //1.0;
     private final double kIz = 0.0;
     private final double kFF = 0.0;
-    private final double kMaxOutput = 0.5;
-    private final double kMinOutput = -0.5;
-    private final double kGatherMaxOutput = 0.5;
-    private final double kGatherMinOutput = -0.5;
+    private final double kMaxOutput = 0.7;
+    private final double kMinOutput = -0.7;
+    private final double kGatherMaxOutput = 0.7;
+    private final double kGatherMinOutput = -0.7;
     private SparkMaxPIDController pidController;
 
     private int resetAttemptCounter = 0;
@@ -180,7 +180,7 @@ public class Arm extends Subsystem4237
     public void retractArm()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.armSpeed = -0.35;
+        periodicIO.armSpeed = -0.6;
     }
 
     /**
@@ -189,7 +189,7 @@ public class Arm extends Subsystem4237
     public void extendArm()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.armSpeed = 0.35;
+        periodicIO.armSpeed = 0.6;
     }
 
     /** Moves the arm to high position */
@@ -224,6 +224,11 @@ public class Arm extends Subsystem4237
     public void moveToArmReadyToClamp()
     {
         targetPosition = TargetPosition.kArmReadyToClamp;
+    }
+
+    public void moveToSuctionCone()
+    {
+        targetPosition = TargetPosition.kSuctionCone;
     }
 
     public void moveToClampCone()

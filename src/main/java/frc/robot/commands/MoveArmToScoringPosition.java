@@ -95,6 +95,14 @@ public class MoveArmToScoringPosition extends CommandBase
                 case kReadyToPickUp:
                     arm.moveToReadyToPickUp();
                     break;
+
+                case kArmReadyToClamp:
+                    arm.moveToArmReadyToClamp();
+                    break;
+
+                case kSuctionCone:
+                    arm.moveToSuctionCone();
+                    break;
                 
                 case kOverride:
                     break;
