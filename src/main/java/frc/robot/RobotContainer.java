@@ -44,6 +44,7 @@ import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoCommandList;
 import frc.robot.commands.AutoDriveDistance;
+import frc.robot.commands.ClampCone;
 import frc.robot.commands.ExtendScorer;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
@@ -90,8 +91,8 @@ public class RobotContainer
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= false;
-	private boolean useDrivetrain   		= false;
+	private boolean useGyro					= true;
+	private boolean useDrivetrain   		= true;
 	private boolean useGrabber 				= true;
 	private boolean useWrist				= true;
 	private boolean useArm 					= true;
@@ -101,7 +102,7 @@ public class RobotContainer
 	private boolean useDriverController		= true;
 	private boolean useOperatorController 	= true;
 	private boolean useMainShuffleboard		= true;
-	private boolean useVision				= false;
+	private boolean useVision				= true;
 	private boolean useDataLog				= false;
 	
 	public final boolean fullRobot;
@@ -250,8 +251,9 @@ public class RobotContainer
 			
 			BooleanSupplier rightBumper = driverController.getButtonSupplier(Xbox.Button.kRightBumper);
 			Trigger rightBumperTrigger = new Trigger(rightBumper);
-			rightBumperTrigger.onTrue( new MoveArmToScoringPosition(arm, TargetPosition.kClamp)
-							  .andThen( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp)));
+			rightBumperTrigger.onTrue( new ClampCone(shoulder, arm, grabber));
+			// rightBumperTrigger.onTrue( new MoveArmToScoringPosition(arm, TargetPosition.kClamp)
+			// 				  .andThen( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp)));
 			// rightBumperTrigger.whileTrue( new StartEndCommand(() -> candle.signalCone(), () ->  candle.turnOffLight(), candle));
 
 			BooleanSupplier leftBumper = driverController.getButtonSupplier(Xbox.Button.kLeftBumper);

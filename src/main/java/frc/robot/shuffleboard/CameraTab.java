@@ -46,7 +46,7 @@ public class CameraTab
         cw.setLocation(0, 0, 16, 20); // small screen
         cw.setProperties(false, "white", false, "NONE");
 
-        cw.createCameraShuffleboardWidgetLL("limelight", new String[]{"http://10.42.37.11:5800"}); // could get URLs from NT
+        cw.createCameraShuffleboardWidgetLL("limelight-", new String[]{"http://10.42.37.11:5800"}); // could get URLs from NT
 
         createTimeRemainingBox();
 

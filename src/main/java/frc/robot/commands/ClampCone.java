@@ -5,6 +5,8 @@ package frc.robot.commands;
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.TargetPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
@@ -12,7 +14,7 @@ import frc.robot.subsystems.Shoulder;
 /** 
  * An example command that uses an example subsystem. 
  */
-public class ClampCone extends CommandBase 
+public class ClampCone extends SequentialCommandGroup
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -43,50 +45,62 @@ public class ClampCone extends CommandBase
         
         // Use addRequirements() here to declare subsystem dependencies.
         if(shoulder != null && arm != null && grabber != null)
-            {
-                // addRequirements(this.shoulder);
-                // addRequirements(this.arm);
-                // addRequirements(this.grabber);
-            }
-    }
-
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize()
-    {}
-
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute()
-    {
-        if(shoulder != null && arm != null && grabber != null)
         {
-            arm.moveToArmReadyToClamp();
-            shoulder.moveToSuctionCone();
-            grabber.grabGamePiece();
-            shoulder.moveToShoulderReadyToClamp();
-            arm.moveToClampCone();
-            shoulder.moveToClampCone();
+            addRequirements(this.shoulder);
+            addRequirements(this.arm);
+            addRequirements(this.grabber);
+
+            build();
         }
     }
 
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted)
-    {}
+    private void build()
+    {
+        addCommands( new MoveArmToScoringPosition(arm, TargetPosition.kArmReadyToClamp) );
+        addCommands( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kSuctionCone) );
+        addCommands( new GrabGamePiece(grabber));
+        addCommands( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kShoulderReadyToClamp) );
+        addCommands( new MoveArmToScoringPosition(arm, TargetPosition.kClamp) );
+        addCommands( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp) );
+    }
 
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() 
-    {
-        return false;
-    }
+    // // Called when the command is initially scheduled.
+    // @Override
+    // public void initialize()
+    // {}
+
+    // // Called every time the scheduler runs while the command is scheduled.
+    // @Override
+    // public void execute()
+    // {
+    //     if(shoulder != null && arm != null && grabber != null)
+    //     {
+    //         arm.moveToArmReadyToClamp();
+    //         shoulder.moveToSuctionCone();
+    //         grabber.grabGamePiece();
+    //         shoulder.moveToShoulderReadyToClamp();
+    //         arm.moveToClampCone();
+    //         shoulder.moveToClampCone();
+    //     }
+    // }
+
+    // // Called once the command ends or is interrupted.
+    // @Override
+    // public void end(boolean interrupted)
+    // {}
+
+    // // Returns true when the command should end.
+    // @Override
+    // public boolean isFinished() 
+    // {
+    //     return false;
+    // }
     
-    @Override
-    public boolean runsWhenDisabled()
-    {
-        return false;
-    }
+    // @Override
+    // public boolean runsWhenDisabled()
+    // {
+    //     return false;
+    // }
 
     @Override
     public String toString()

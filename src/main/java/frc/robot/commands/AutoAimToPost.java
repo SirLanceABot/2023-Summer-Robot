@@ -86,9 +86,9 @@ public class AutoAimToPost extends CommandBase
         drivePower = -(POST_ALIGNMENT_DRIVE_KP * error);
 
         if(Math.abs(error) < 10.0)
-            {
-                drivePower = Math.copySign(POST_ALIGNMENT_MAX_SPEED, drivePower);
-            }
+        {
+            drivePower = Math.copySign(POST_ALIGNMENT_MAX_SPEED, drivePower);
+        }
 
         if(drivetrain != null)
         {
