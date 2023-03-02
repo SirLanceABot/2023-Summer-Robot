@@ -327,7 +327,22 @@ public class Shoulder extends Subsystem4237
         targetPosition = TargetPosition.kGather;
     }
 
-    public void moveToClamp()
+    public void moveToReadyToPickUp()
+    {
+        targetPosition = TargetPosition.kReadyToPickUp;
+    }
+
+    public void moveToSuctionCone()
+    {
+        targetPosition = TargetPosition.kSuctionCone;
+    }
+
+    public void moveToShoulderReadyToClamp()
+    {
+        targetPosition = TargetPosition.kShoulderReadyToClamp;
+    }
+
+    public void moveToClampCone()
     {
         targetPosition = TargetPosition.kClamp;
     }

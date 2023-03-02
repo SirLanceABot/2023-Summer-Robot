@@ -106,7 +106,11 @@ public final class Constants
         public static final double MIDDLE = 297000.0;
         public static final double LOW = 155000.0;
         public static final double GATHER = 0.0;
+        // public static final double SHOULDER_READY_TO_GRAB = 
+        public static final double SUCTION_CONE = 38912.2;
+        public static final double SHOULDER_READY_TO_CLAMP = 112639.2;
         public static final double CLAMP = 682.0;
+        public static final double READY_TO_PICK_UP = 104740.0;
     }
 
     public static class Arm
@@ -118,7 +122,11 @@ public final class Constants
         public static final double MIDDLE = 323000.0;
         public static final double LOW = 161000.0;
         public static final double GATHER = 0.0;
+        public static final double ARM_READY_TO_GRAB = 161595.3;
+        // public static final double ARM_SUCTION_CONE = 
+        // public static final double ARM_READY_TO_CLAMP = 
         public static final double CLAMP = 292.6;
+        public static final double READY_TO_PICK_UP = 0.0;
     }
 
     public static class Grabber
@@ -286,7 +294,11 @@ public final class Constants
         kLow(Constants.Shoulder.LOW, Constants.Arm.LOW),
         kMiddle(Constants.Shoulder.MIDDLE, Constants.Arm.MIDDLE),
         kHigh(Constants.Shoulder.HIGH, Constants.Arm.HIGH),
+        kArmReadyToClamp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.ARM_READY_TO_GRAB),
+        kSuctionCone(Constants.Shoulder.SUCTION_CONE, Constants.Arm.ARM_READY_TO_GRAB),
+        kShoulderReadyToClamp(Constants.Shoulder.SHOULDER_READY_TO_CLAMP, Constants.Arm.ARM_READY_TO_GRAB),
         kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),
+        kReadyToPickUp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.READY_TO_PICK_UP),
         kOverride(-4237, -4237);
         
      

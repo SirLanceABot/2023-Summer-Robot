@@ -216,10 +216,22 @@ public class Arm extends Subsystem4237
         targetPosition = TargetPosition.kGather;
     }
 
-    public void moveToClamp()
+    public void moveToReadyToPickUp()
+    {
+        targetPosition = TargetPosition.kReadyToPickUp;
+    }
+
+    public void moveToArmReadyToClamp()
+    {
+        targetPosition = TargetPosition.kArmReadyToClamp;
+    }
+
+    public void moveToClampCone()
     {
         targetPosition = TargetPosition.kClamp;
     }
+
+    
 
     /**
      * Stops the motor

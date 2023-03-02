@@ -90,8 +90,8 @@ public class RobotContainer
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= true;
-	private boolean useDrivetrain   		= true;
+	private boolean useGyro					= false;
+	private boolean useDrivetrain   		= false;
 	private boolean useGrabber 				= true;
 	private boolean useWrist				= true;
 	private boolean useArm 					= true;
@@ -256,6 +256,9 @@ public class RobotContainer
 
 			BooleanSupplier leftBumper = driverController.getButtonSupplier(Xbox.Button.kLeftBumper);
 			Trigger leftBumperTrigger = new Trigger(leftBumper);
+			leftBumperTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kReadyToPickUp)
+							.andThen(new MoveArmToScoringPosition(arm, TargetPosition.kReadyToPickUp)));
+			
 			// leftBumperTrigger.whileTrue( new StartEndCommand(() -> candle.signalCube(), () ->  candle.turnOffLight(), candle));
         }
 	}

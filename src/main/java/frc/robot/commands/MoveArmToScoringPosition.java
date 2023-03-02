@@ -89,7 +89,11 @@ public class MoveArmToScoringPosition extends CommandBase
                     break;
 
                 case kClamp:
-                    arm.moveToClamp();
+                    arm.moveToClampCone();
+                    break;
+                
+                case kReadyToPickUp:
+                    arm.moveToReadyToPickUp();
                     break;
                 
                 case kOverride:
