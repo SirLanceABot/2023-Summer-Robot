@@ -102,7 +102,7 @@ public final class Constants
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 345000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
-        public static final double HIGH = 328000.0;
+        public static final double HIGH = 340000.0;
         public static final double MIDDLE = 297000.0;
         public static final double LOW = 155000.0;
         public static final double GATHER = 0.0;

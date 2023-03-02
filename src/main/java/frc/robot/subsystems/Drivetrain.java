@@ -485,7 +485,7 @@ public class Drivetrain extends Subsystem4237
 
         periodicIO.swerveModuleStates = new SwerveModuleState[4];
         // double m_maxOutput = 2.;
-        double m_maxOutput = xSpeed;
+        double m_maxOutput = Math.abs(xSpeed);
         
         //  assuming fl, fr, bl, br
         periodicIO.swerveModuleStates[0] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));

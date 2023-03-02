@@ -180,7 +180,7 @@ public class Arm extends Subsystem4237
     public void retractArm()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.armSpeed = -0.15;
+        periodicIO.armSpeed = -0.35;
     }
 
     /**
@@ -189,7 +189,7 @@ public class Arm extends Subsystem4237
     public void extendArm()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.armSpeed = 0.15;
+        periodicIO.armSpeed = 0.35;
     }
 
     /** Moves the arm to high position */

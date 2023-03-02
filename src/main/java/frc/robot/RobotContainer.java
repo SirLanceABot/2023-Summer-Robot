@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -43,15 +44,18 @@ import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoCommandList;
 import frc.robot.commands.AutoDriveDistance;
+import frc.robot.commands.ExtendScorer;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
 import frc.robot.commands.ScoreGamePiece;
+import frc.robot.commands.ScoreGamePieceV2;
 import frc.robot.commands.SlowSwerveDrive;
 import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 import frc.robot.commands.MoveWristDown;
 import frc.robot.commands.MoveWristUp;
 import frc.robot.commands.ReleaseGamePiece;
+import frc.robot.commands.RetractScorer;
 import frc.robot.commands.ReturnToGather;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.TurnOffShoulder;
@@ -313,7 +317,10 @@ public class RobotContainer
 			Trigger dPadUpTrigger = new Trigger(dPadUp);
 			if(arm != null && shoulder != null)
 			{
-				dPadUpTrigger.onTrue( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kHigh));
+				dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, grabber, wrist, TargetPosition.kHigh)
+							 .andThen( new ReleaseGamePiece(grabber))
+							 );
+				// dPadUpTrigger.onTrue( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kHigh));
 				// dPadUpTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh)
 				// 			// .andThen( new PrintCommand("Shoulder done moving"))
 				// 			// .andThen( new WaitCommand(2))
@@ -332,8 +339,9 @@ public class RobotContainer
 			Trigger dPadDownTrigger = new Trigger(dPadDown);
 			if(arm != null && shoulder != null)
 			{
+				dPadDownTrigger.onTrue( new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kGather));
 				// dPadDownTrigger.onTrue( new ReturnToGather(arm, shoulder));
-				dPadDownTrigger.onTrue( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+				// dPadDownTrigger.onTrue( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kGather));
 				// dPadDownTrigger.onTrue( new MoveArmToScoringPosition(arm, ArmPosition.kGather)
 				// 			  .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather)));
 				// // dPadDownTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kGather));
@@ -350,7 +358,14 @@ public class RobotContainer
 			Trigger dPadLeftTrigger = new Trigger(dPadLeft);
 			if(arm != null && shoulder != null)
 			{
-				dPadLeftTrigger.onTrue( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kMiddle));
+				dPadLeftTrigger.onTrue(
+					new ConditionalCommand(
+						new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kMiddle),
+						new ExtendScorer(shoulder, arm, grabber, wrist, TargetPosition.kMiddle)
+						.andThen( new ReleaseGamePiece(grabber)),
+						() -> shoulder.getPosition() > TargetPosition.kMiddle.shoulder)
+					);
+				// dPadLeftTrigger.onTrue( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kMiddle));
 				// dPadLeftTrigger.onTrue(  new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle)
 				// 			   .andThen( new MoveArmToScoringPosition(arm, ArmPosition.kMiddle)));
 				// dPadLeftTrigger.onTrue( new MoveArmToScoringPosition(arm, ArmPosition.kMiddle));
@@ -366,7 +381,14 @@ public class RobotContainer
 			Trigger dPadRightTrigger = new Trigger(dPadRight);
 			if(arm != null && shoulder != null)
 			{
-				dPadRightTrigger.onTrue( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kLow));
+				dPadRightTrigger.onTrue(
+					new ConditionalCommand(
+						new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kLow),
+						new ExtendScorer(shoulder, arm, grabber, wrist, TargetPosition.kLow)
+						.andThen( new ReleaseGamePiece(grabber)),
+						() -> shoulder.getPosition() > TargetPosition.kLow.shoulder)
+					);
+				// dPadRightTrigger.onTrue( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kLow));
 				// dPadRightTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow)
 				// 			    .andThen( new MoveArmToScoringPosition(arm, ArmPosition.kLow)));
 					// dPadRightTrigger.onTrue( new MoveArmToScoringPosition(arm, ArmPosition.kLow));
@@ -423,13 +445,16 @@ public class RobotContainer
 			if(grabber != null)
 			{
 				// suction
-				aButtonTrigger.toggleOnTrue( new StartEndCommand(
-					() -> grabber.grabGamePiece(),
-					() -> grabber.releaseGamePiece(),
-					grabber));
+				// aButtonTrigger.toggleOnTrue( new StartEndCommand(
+				// 	() -> grabber.grabGamePiece(),
+				// 	() -> grabber.releaseGamePiece(),
+				// 	grabber));
+				aButtonTrigger.onTrue( new InstantCommand( () -> grabber.grabGamePiece()));
+				
 				// aButtonTrigger.onTrue( new ReleaseGamePiece(grabber));
 	
-				// aButtonTrigger.toggleOnTrue(new MoveWristUp(grabber)
+				// aButtonTrigger.toggleOnTrue(new GrabGamePiece(grabber));
+				// aButtonTrigger.toggleOnFalse( new ReleaseGamePiece(grabber));
 				// 			  .andThen(new ReleaseGamePiece(grabber)));
 				
 				// aButtonTrigger.toggleOnFalse(new MoveWristDown(grabber));
@@ -458,8 +483,8 @@ public class RobotContainer
 			// Command command = new GrabGamePiece(grabber)
 			Command command = new InstantCommand(() -> grabber.grabGamePiece())
 								.andThen( new WaitCommand(0.5))
-								.andThen( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kMiddle))
-								.andThen( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather))
+								.andThen( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kMiddle))
+								.andThen( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kGather))
 								.andThen( new InstantCommand(() -> compressor.disable()))
 								// .andThen( new MoveWristUp(wrist))
 								// .andThen( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle))

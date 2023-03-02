@@ -87,7 +87,7 @@ public class GrabGamePiece extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        if(timer.hasElapsed(0.5))
+        if(timer.hasElapsed(1.0))
         {
             return true;
         }

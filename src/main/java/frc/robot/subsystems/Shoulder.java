@@ -289,14 +289,14 @@ public class Shoulder extends Subsystem4237
     public void moveUp()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.motorSpeed = 0.15;//0.5;
+        periodicIO.motorSpeed = 0.35;//0.5;
     }
 
     /** Moves the shoulder down */
     public void moveDown()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.motorSpeed = -0.15;//0.5;
+        periodicIO.motorSpeed = -0.35;//0.5;
     }
 
     /** Moves the shoulder to high position */

@@ -304,7 +304,7 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void goToSecondGamePiece()
     {
-        add(new AutoDriveDistance(drivetrain, gyro, -0.75, 0.0, 4.5));
+        add(new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 3.75));
     }
 
     private void goToChargingStation(double distance)

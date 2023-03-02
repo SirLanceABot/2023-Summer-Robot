@@ -31,8 +31,9 @@ public class AutoAimToPost extends CommandBase
 
     NetworkTableEntry tx = table.getEntry("tx");
 
-    private final double POST_ALIGNMENT_TOLERANCE = 0.5;  //Limelight angle measurement in degrees
-    private final double POST_ALIGNMENT_DRIVE_KP = 0.020;
+    private final double POST_ALIGNMENT_TOLERANCE = 0.50;  //Limelight angle measurement in degrees
+    private final double POST_ALIGNMENT_DRIVE_KP = 0.050;
+    private final double POST_ALIGNMENT_MAX_SPEED = 0.3;
 
     private double error;
     private double drivePower;
@@ -46,15 +47,18 @@ public class AutoAimToPost extends CommandBase
      */
     public AutoAimToPost(Drivetrain drivetrain, Vision vision) 
     {
-        System.out.println(fullClassName + ": Constructor Started");
+        // System.out.println(fullClassName + ": Constructor Started");
         
         this.drivetrain = drivetrain;
         this.vision = vision;
         
         if(this.drivetrain != null)
+        {
             addRequirements(drivetrain);
+        }
+            
         
-        System.out.println(fullClassName + ": Constructor Finished");
+        // System.out.println(fullClassName + ": Constructor Finished");
     }
 
     // Called when the command is initially scheduled.
@@ -69,11 +73,18 @@ public class AutoAimToPost extends CommandBase
         // double xDistance = vision.getx();
         error = vision.getX();
 
+        System.out.println("Error: " + error);
+
         drivePower = -(POST_ALIGNMENT_DRIVE_KP * error);
+
+        if(Math.abs(error) < 10.0)
+            {
+                drivePower = Math.copySign(POST_ALIGNMENT_MAX_SPEED, drivePower);
+            }
 
         if(drivetrain != null)
         {
-            drivetrain.drive(0.0, drivePower, 0.0, true);
+            drivetrain.drive(0.0, drivePower, 0.0, false);
         }
         // System.out.println("  X: " + xDistance);
     }
@@ -86,7 +97,7 @@ public class AutoAimToPost extends CommandBase
 
         if(drivetrain != null)
         {
-            drivetrain.drive(0.0, 0.0, 0.0, true);
+            drivetrain.drive(0.0, 0.0, 0.0, false);
         }
         // System.out.println("End X: " + xDistance);
     }
