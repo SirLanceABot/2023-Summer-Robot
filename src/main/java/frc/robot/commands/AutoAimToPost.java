@@ -34,7 +34,7 @@ public class AutoAimToPost extends CommandBase
 
     private final double POST_ALIGNMENT_TOLERANCE = 0.50;  //Limelight angle measurement in degrees
     private final double POST_ALIGNMENT_DRIVE_KP = 0.050;
-    private final double POST_ALIGNMENT_MAX_SPEED = 0.3;
+    private final double POST_ALIGNMENT_MIN_SPEED = 0.2;
     private final Timer timer = new Timer();
 
     private double error;
@@ -85,9 +85,9 @@ public class AutoAimToPost extends CommandBase
 
         drivePower = -(POST_ALIGNMENT_DRIVE_KP * error);
 
-        if(Math.abs(error) < 10.0)
+        if(Math.abs(drivePower) < POST_ALIGNMENT_MIN_SPEED)
         {
-            drivePower = Math.copySign(POST_ALIGNMENT_MAX_SPEED, drivePower);
+            drivePower = Math.copySign(POST_ALIGNMENT_MIN_SPEED, drivePower);
         }
 
         if(drivetrain != null)
