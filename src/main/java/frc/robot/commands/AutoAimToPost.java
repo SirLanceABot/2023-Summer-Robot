@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.Drivetrain;
@@ -34,6 +35,7 @@ public class AutoAimToPost extends CommandBase
     private final double POST_ALIGNMENT_TOLERANCE = 0.50;  //Limelight angle measurement in degrees
     private final double POST_ALIGNMENT_DRIVE_KP = 0.050;
     private final double POST_ALIGNMENT_MAX_SPEED = 0.3;
+    private final Timer timer = new Timer();
 
     private double error;
     private double drivePower;
@@ -64,7 +66,13 @@ public class AutoAimToPost extends CommandBase
     // Called when the command is initially scheduled.
     @Override
     public void initialize()
-    {}
+    {
+        // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);  //turns limelight on
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);  //turns limelight on
+        timer.reset();
+        timer.start();
+
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
@@ -73,7 +81,7 @@ public class AutoAimToPost extends CommandBase
         // double xDistance = vision.getx();
         error = vision.getX();
 
-        System.out.println("Error: " + error);
+        // System.out.println("Error: " + error);
 
         drivePower = -(POST_ALIGNMENT_DRIVE_KP * error);
 
@@ -99,6 +107,10 @@ public class AutoAimToPost extends CommandBase
         {
             drivetrain.drive(0.0, 0.0, 0.0, false);
         }
+
+        // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);  //turns limelight off
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);  //turns limelight off
+
         // System.out.println("End X: " + xDistance);
     }
 
@@ -108,7 +120,7 @@ public class AutoAimToPost extends CommandBase
     {
         error = vision.getX();
 
-        if(Math.abs(error) < POST_ALIGNMENT_TOLERANCE)
+        if(Math.abs(error) < POST_ALIGNMENT_TOLERANCE && timer.hasElapsed(1.0))
         {
             return true;
         }
