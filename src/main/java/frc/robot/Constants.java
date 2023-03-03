@@ -111,6 +111,7 @@ public final class Constants
         public static final double SHOULDER_READY_TO_CLAMP = 168639.2;
         public static final double CLAMP = 682.0;
         public static final double READY_TO_PICK_UP = 104740.0;
+        public static final double STARTING_POSITION = 10000.0;
     }
 
     public static class Arm
@@ -127,6 +128,7 @@ public final class Constants
         // public static final double ARM_READY_TO_CLAMP = 
         public static final double CLAMP = 292.6;
         public static final double READY_TO_PICK_UP = 0.0;
+        public static final double STARTING_POSITION = 0.0;
     }
 
     public static class Grabber
@@ -299,6 +301,7 @@ public final class Constants
         kShoulderReadyToClamp(Constants.Shoulder.SHOULDER_READY_TO_CLAMP, Constants.Arm.ARM_READY_TO_GRAB),
         kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),
         kReadyToPickUp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.READY_TO_PICK_UP),
+        kStartingPosition(Constants.Shoulder.STARTING_POSITION, Constants.Arm.STARTING_POSITION),
         kOverride(-4237, -4237);
         
      

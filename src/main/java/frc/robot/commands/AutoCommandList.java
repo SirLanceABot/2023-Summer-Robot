@@ -111,6 +111,7 @@ public class AutoCommandList extends SequentialCommandGroup
             case kNeither:
                 if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes)
                 {
+                    add( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp));
                     add( new InstantCommand(() -> grabber.grabGamePiece(), grabber));
                     add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
                     add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));

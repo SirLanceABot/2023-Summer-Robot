@@ -235,6 +235,12 @@ public class Arm extends Subsystem4237
     {
         targetPosition = TargetPosition.kClamp;
     }
+    
+    public void moveToStartingPosition()
+    {
+        targetPosition = TargetPosition.kStartingPosition;
+    }
+
 
     
 

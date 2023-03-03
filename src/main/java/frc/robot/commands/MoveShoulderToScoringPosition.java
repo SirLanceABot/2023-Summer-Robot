@@ -96,6 +96,10 @@ public class MoveShoulderToScoringPosition extends CommandBase
                 case kSuctionCone:
                     shoulder.moveToSuctionCone();
                     break;
+
+                case kStartingPosition:
+                    shoulder.moveToStartingPosition();
+                    break;
                 
                 case kOverride:
                     break;

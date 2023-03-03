@@ -103,6 +103,10 @@ public class MoveArmToScoringPosition extends CommandBase
                 case kSuctionCone:
                     arm.moveToSuctionCone();
                     break;
+
+                case kStartingPosition:
+                    arm.moveToStartingPosition();
+                    break;
                 
                 case kOverride:
                     break;
