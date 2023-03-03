@@ -130,7 +130,7 @@ public class SwerveModule extends RobotDriveBase
         driveMotor.configVoltageCompSaturation(Constants.DrivetrainConstants.MAX_BATTERY_VOLTAGE);
         driveMotor.enableVoltageCompensation(true);
 
-        System.out.println("DriveTalon");
+        // System.out.println("DriveTalon");
 
         // Setup PID through TalonFX
         // Old values were 3.5, 0, 0.09
@@ -181,7 +181,7 @@ public class SwerveModule extends RobotDriveBase
         turnMotor.configNeutralDeadband(0.001);
         turnMotor.configVoltageCompSaturation(Constants.DrivetrainConstants.MAX_BATTERY_VOLTAGE);
         turnMotor.enableVoltageCompensation(true);
-        System.out.println("configTurnTalon");
+        // System.out.println("configTurnTalon");
     }
 
     private void configCANCoder()
@@ -210,7 +210,7 @@ public class SwerveModule extends RobotDriveBase
         // frontLeftEncoder = new CANCoder(Constants.SwerveModule.frontLeft.turnMotorEncoder);
         // System.out.println("setStatusFramePeriod " + turnEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, (int)(steerAdjustPeriod*1000.*.8)));
         CANCoderConfigs.magnetOffsetDegrees = turnEncoderOffset;
-        System.out.println("configAllSettings " + turnEncoder.configAllSettings(CANCoderConfigs));
+        // System.out.println("configAllSettings " + turnEncoder.configAllSettings(CANCoderConfigs));
         // System.out.println(CANCoderConfigs.toString());
     }
 

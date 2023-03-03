@@ -264,6 +264,14 @@ public class RobotContainer
 							.andThen(new MoveArmToScoringPosition(arm, TargetPosition.kReadyToPickUp)));
 			
 			// leftBumperTrigger.whileTrue( new StartEndCommand(() -> candle.signalCube(), () ->  candle.turnOffLight(), candle));
+
+			//Dpad down button
+			BooleanSupplier dPadDown = driverController.getDpadSupplier(Xbox.Dpad.kDown);
+			Trigger dPadDownTrigger = new Trigger(dPadDown);
+			if(shoulder != null)
+			{
+				dPadDownTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kStartingPosition));
+			}
         }
 	}
 

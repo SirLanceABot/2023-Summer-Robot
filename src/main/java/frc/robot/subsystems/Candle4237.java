@@ -115,7 +115,7 @@ public class Candle4237 extends Subsystem4237
 
         public LedAnimation next()
         {
-            System.out.println("Next Animation" + vals[(this.ordinal() + 1) % vals.length]);
+            // System.out.println("Next Animation" + vals[(this.ordinal() + 1) % vals.length]);
             return vals[(this.ordinal() + 1) % vals.length];
         }
         public LedAnimation prev()
@@ -352,7 +352,7 @@ public class Candle4237 extends Subsystem4237
             stopAnimation();
             for (Section section : sections)
             {
-                System.out.println(this.startLed + " " + this.ledCount + " " + periodicIO.status);
+                // System.out.println(this.startLed + " " + this.ledCount + " " + periodicIO.status);
                 setColor(section.startLed, section.ledCount, section.status);
             }
         }
@@ -420,7 +420,7 @@ public class Candle4237 extends Subsystem4237
         }
         else 
         {
-            System.out.println("Blink Event Overlap: " + fail + " " + startBlinkTime + " " + blinkDuration + " " + blinkColor);
+            // System.out.println("Blink Event Overlap: " + fail + " " + startBlinkTime + " " + blinkDuration + " " + blinkColor);
         }
     }
 

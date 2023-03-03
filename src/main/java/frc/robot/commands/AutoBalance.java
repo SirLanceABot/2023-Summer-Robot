@@ -58,7 +58,7 @@ public class AutoBalance extends CommandBase
     */
     public AutoBalance(Drivetrain drivetrain, Gyro4237 gyro) 
     {
-        System.out.println("Constructor");
+        // System.out.println("Constructor");
         this.drivetrain = drivetrain;
         this.gyro = gyro;
         

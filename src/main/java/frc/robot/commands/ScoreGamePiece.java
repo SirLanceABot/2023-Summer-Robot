@@ -184,7 +184,7 @@ public class ScoreGamePiece extends CommandBase
                 movementStep++;
                 
             case 6:
-                System.out.println("DONE");
+                // System.out.println("DONE");
                 isFinished = true;
                 break;
         }

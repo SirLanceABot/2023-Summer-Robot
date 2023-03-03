@@ -111,7 +111,7 @@ public final class Constants
         public static final double SHOULDER_READY_TO_CLAMP = 168639.2;
         public static final double CLAMP = 682.0;
         public static final double READY_TO_PICK_UP = 104740.0;
-        public static final double STARTING_POSITION = 10000.0;
+        public static final double STARTING_POSITION = 42000.0;
     }
 
     public static class Arm

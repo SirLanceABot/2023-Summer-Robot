@@ -37,7 +37,7 @@ public class MoveWristDown extends CommandBase
      */
     public MoveWristDown(Wrist wrist) 
     {
-        System.out.println(fullClassName + ": Constructor Started");
+        // System.out.println(fullClassName + ": Constructor Started");
         
         this.wrist = wrist;
         
@@ -45,7 +45,7 @@ public class MoveWristDown extends CommandBase
         if (this.wrist != null)
             addRequirements(this.wrist);
 
-        System.out.println(fullClassName + ": Constructor Finished");
+        // System.out.println(fullClassName + ": Constructor Finished");
     }
 
     // Called when the command is initially scheduled.

@@ -376,7 +376,7 @@ public class Arm extends Subsystem4237
                     }
                     else if(encoderResetTimer.hasElapsed(0.1))
                     {
-                        System.out.println("Attempts: " + resetAttemptCounter);
+                        // System.out.println("Attempts: " + resetAttemptCounter);
                         // DataLogManager.log("Attempts: " + resetAttemptCounter);
                         resetAttemptCounter++;
                         armEncoder.setPosition(0.0);
