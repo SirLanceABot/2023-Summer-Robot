@@ -144,6 +144,7 @@ public class Shoulder extends Subsystem4237
         System.out.println(fullClassName + " : Constructor Started");
 
         configShoulderMotor();
+        relativeEncoder.setPosition(Constants.Shoulder.STARTING_POSITION);
 
         System.out.println(fullClassName + " : Constructor Finished");
     }

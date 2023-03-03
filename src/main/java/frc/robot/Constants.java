@@ -102,8 +102,8 @@ public final class Constants
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 345000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
-        public static final double HIGH = 340000.0;
-        public static final double MIDDLE = 297000.0;
+        public static final double HIGH = 343000.0; //340000 double suction
+        public static final double MIDDLE = 300000.0; //297000 double suction
         public static final double LOW = 155000.0;
         public static final double GATHER = 0.0;
         // public static final double SHOULDER_READY_TO_GRAB = 
@@ -124,6 +124,7 @@ public final class Constants
         public static final double LOW = 161000.0;
         public static final double GATHER = 0.0;
         public static final double ARM_READY_TO_GRAB = 161595.3;
+        public static final double ARM_READY_TO_SUCTION = 165000.0;
         // public static final double ARM_SUCTION_CONE = 
         // public static final double ARM_READY_TO_CLAMP = 
         public static final double CLAMP = 292.6;
@@ -296,7 +297,7 @@ public final class Constants
         kLow(Constants.Shoulder.LOW, Constants.Arm.LOW),
         kMiddle(Constants.Shoulder.MIDDLE, Constants.Arm.MIDDLE),
         kHigh(Constants.Shoulder.HIGH, Constants.Arm.HIGH),
-        kArmReadyToClamp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.ARM_READY_TO_GRAB),
+        kArmReadyToClamp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.ARM_READY_TO_SUCTION),
         kSuctionCone(Constants.Shoulder.SUCTION_CONE, Constants.Arm.ARM_READY_TO_GRAB),
         kShoulderReadyToClamp(Constants.Shoulder.SHOULDER_READY_TO_CLAMP, Constants.Arm.ARM_READY_TO_GRAB),
         kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),

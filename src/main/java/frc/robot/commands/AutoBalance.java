@@ -43,11 +43,11 @@ public class AutoBalance extends CommandBase
     
 
     // private final double CS_BALANCE_GOAL_DEGREES = 0.0;
-    private final double CS_BALANCE_DRIVE_KP = 0.030;
+    private final double CS_BALANCE_DRIVE_KP = 0.025;
     private final double CS_BALANCE_TOLERANCE = 3.0;
     private final double CS_BALANCE_MIN_TIME_LEVEL = 0.75;
-    private final double CS_BALANCE_MAX_SPEED = 0.5;
-
+    private final double CS_BALANCE_MAX_SPEED = 0.75;
+    private boolean approach = true;
 
     /**
     * Creates a new AutoBalance.
@@ -73,6 +73,7 @@ public class AutoBalance extends CommandBase
     @Override
     public void initialize()
     {
+        approach = true;
         // driveForwardTimer.reset();
         // driveForwardTimer.start();
     }
@@ -99,6 +100,13 @@ public class AutoBalance extends CommandBase
             }
             currentYaw = (int)Math.abs(gyro.getYaw()) % 360;
 
+            if(currentPitch > 10.0)
+            {
+                approach = false;
+            }
+
+
+
             SmartDashboard.putNumber("Current Pitch", currentPitch);
             SmartDashboard.putNumber("Current Yaw", currentYaw);
 
@@ -106,18 +114,33 @@ public class AutoBalance extends CommandBase
 
             // drivePower =  Math.min(CS_BALANCE_DRIVE_KP * error, 1);
     
-            drivePower = (CS_BALANCE_DRIVE_KP * error);
+            // drivePower = (CS_BALANCE_DRIVE_KP * error);
 
-            if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 12.0)
+            if(approach)
             {
                 drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
             }
-            // else if(Math.abs(error) < 11.0)
-            // else if(Math.abs(currentPitch) < Math.abs(previousPitch))
-            else if(Math.abs(maxPitch) - Math.abs(currentPitch) > 1.0)
+            else
             {
-                drivePower = 0.0;
+
+                drivePower = (CS_BALANCE_DRIVE_KP * error);
+                // if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 12.0)
+                // {
+                //     drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
+                // }
+                // else if(Math.abs(error) < 12.0 && Math.abs(error) > 10.0)
+                // {
+                //     drivePower = Math.copySign(0.5 * CS_BALANCE_MAX_SPEED, drivePower);
+                // }
+                // // else if(Math.abs(error) < 11.0)
+                // // else if(Math.abs(currentPitch) < Math.abs(previousPitch))
+                // else if(Math.abs(maxPitch) - Math.abs(currentPitch) > 1.0)
+                // {
+                //     // drivePower = 0.0;
+                //     drivePower = Math.copySign(0.5 * CS_BALANCE_MAX_SPEED, drivePower);
+                // }
             }
+            
 
             if((currentYaw > 135 && currentYaw < 225))
             {

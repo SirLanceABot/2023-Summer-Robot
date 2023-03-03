@@ -242,6 +242,15 @@ public class RobotContainer
 			// 			  .andThen( () -> driverController.setRumble(0.0)));
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
+			//Right trigger 
+			BooleanSupplier rightTrigger = driverController.getButtonSupplier(Xbox.Button.kRightTrigger);
+			Trigger rightTriggerTrigger = new Trigger(rightTrigger);
+			if(grabber != null)
+			{
+				// rightTriggerTrigger.whileTrue( new InstantCommand (() -> arm.extendArm(), arm));
+				rightTriggerTrigger.onTrue( new ReleaseGamePiece(grabber));
+			}
+
 			//Left Trigger
 			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
 			Trigger lefTriggerTrigger = new Trigger(leftTrigger);

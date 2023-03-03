@@ -23,6 +23,7 @@ import frc.robot.shuffleboard.AutonomousTabData.ScoreSecondPiece;
 import frc.robot.shuffleboard.AutonomousTabData.ContainingPreload;
 import frc.robot.shuffleboard.AutonomousTabData.DriveToSecondPiece;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Arm;
 // import frc.robot.subsystems.Arm.TargetPosition;
 import frc.robot.subsystems.Drivetrain;
@@ -111,8 +112,10 @@ public class AutoCommandList extends SequentialCommandGroup
             case kNeither:
                 if(autonomousTabData.containingPreload == ContainingPreload.kYes && autonomousTabData.playPreload == PlayPreload.kYes)
                 {
-                    add( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp));
-                    add( new InstantCommand(() -> grabber.grabGamePiece(), grabber));
+                    // add( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp));
+                    // add( new InstantCommand(() -> grabber.grabGamePiece(), grabber));
+                    add( new GrabGamePiece(grabber));
+                    add( new WaitCommand(1.0));
                     add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
                     add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
                 }
