@@ -99,10 +99,10 @@ public final class Constants
 
     public static class Shoulder
     {
-        public static final float ENCODER_FORWARD_SOFT_LIMIT = 345000.0f;
+        public static final float ENCODER_FORWARD_SOFT_LIMIT = 380000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
-        public static final double HIGH = 343000.0; //340000 double suction
+        public static final double HIGH = 375000.0; //340000 double suction
         public static final double MIDDLE = 300000.0; //297000 double suction
         public static final double LOW = 155000.0;
         public static final double GATHER = 0.0;

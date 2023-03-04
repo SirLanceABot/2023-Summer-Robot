@@ -248,7 +248,9 @@ public class RobotContainer
 			if(grabber != null)
 			{
 				// rightTriggerTrigger.whileTrue( new InstantCommand (() -> arm.extendArm(), arm));
-				rightTriggerTrigger.onTrue( new ReleaseGamePiece(grabber));
+				rightTriggerTrigger.onTrue( new ReleaseGamePiece(grabber)
+								   .andThen( new  WaitCommand(0.5))
+								   .andThen( new InstantCommand( () -> grabber.closeSolenoid())));
 			}
 
 			//Left Trigger

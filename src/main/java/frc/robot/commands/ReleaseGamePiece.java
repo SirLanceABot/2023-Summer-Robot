@@ -83,7 +83,7 @@ public class ReleaseGamePiece extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        return false;
+        return true;
     }
 
     public String toString()

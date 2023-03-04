@@ -117,7 +117,9 @@ public class AutoCommandList extends SequentialCommandGroup
                     add( new GrabGamePiece(grabber));
                     add( new WaitCommand(1.0));
                     add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
+                    add( new WaitCommand(0.5));
                     add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+                    add( new InstantCommand( () -> grabber.closeSolenoid()));
                 }
 
                 if(autonomousTabData.driveToSecondPiece == DriveToSecondPiece.kYes)
@@ -313,21 +315,26 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void goToChargingStation(double distance)
     {
-        if(distance == 0.0)
-        {
-            add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 4.4));
-			add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 2.9));
-			add( new AutoBalance(drivetrain, gyro));
-			add( new LockWheels(drivetrain));
-        }
-        else
-        {
-            add(new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 4.4));
-            add(new AutoDriveDistance(drivetrain, gyro, 0.0, distance, 1.5));
-            add(new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.4));
-            add( new AutoBalance(drivetrain, gyro));
-			add( new LockWheels(drivetrain));
-        }
+        add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75));
+	    add( new AutoBalance(drivetrain, gyro));
+		add( new LockWheels(drivetrain));
+        
+        // if(distance == 0.0)
+        // {
+        //     // add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 4.4));
+		// 	// add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 2.9));
+        //     add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 3.0));
+		// 	add( new AutoBalance(drivetrain, gyro));
+		// 	add( new LockWheels(drivetrain));
+        // }
+        // else
+        // {
+        //     add(new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 4.4));
+        //     add(new AutoDriveDistance(drivetrain, gyro, 0.0, distance, 1.5));
+        //     add(new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.4));
+        //     add( new AutoBalance(drivetrain, gyro));
+		// 	add( new LockWheels(drivetrain));
+        // }
         
     }
 

@@ -152,6 +152,11 @@ public class Grabber extends Subsystem4237
         periodicIO.vacuumState = VacuumState.kOpen;
     }
 
+    public void closeSolenoid()
+    {
+        periodicIO.vacuumState = VacuumState.kClosed;
+    }
+
     // public void wristUp()
     // {
     //     periodicIO.wristPosition = WristPosition.kUp;
