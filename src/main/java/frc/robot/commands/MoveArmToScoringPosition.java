@@ -29,9 +29,6 @@ public class MoveArmToScoringPosition extends CommandBase
     private TargetPosition desiredPosition;
 
     /**
-     * 
-     * DO NOT USE THIS COMMAND 
-     * INSTEAD USE SCOREGAMEPIECE
      * Creates a new MoveArmToScoringPosition.
      * Moves the arm to one of the predetermined positions
      *
@@ -106,6 +103,10 @@ public class MoveArmToScoringPosition extends CommandBase
 
                 case kStartingPosition:
                     arm.moveToStartingPosition();
+                    break;
+                    
+                case kSubstation:
+                    arm.moveToSubstation();
                     break;
                 
                 case kOverride:

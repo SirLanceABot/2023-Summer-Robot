@@ -101,6 +101,10 @@ public class MoveShoulderToScoringPosition extends CommandBase
                     shoulder.moveToStartingPosition();
                     break;
                 
+                case kSubstation:
+                    shoulder.moveToSubstation();
+                    break;
+                
                 case kOverride:
                     break;
             }

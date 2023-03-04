@@ -241,7 +241,10 @@ public class Arm extends Subsystem4237
         targetPosition = TargetPosition.kStartingPosition;
     }
 
-
+    public void  moveToSubstation()
+    {
+        targetPosition = TargetPosition.kSubstation;
+    }
     
 
     /**

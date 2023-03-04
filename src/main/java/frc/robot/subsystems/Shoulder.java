@@ -353,6 +353,11 @@ public class Shoulder extends Subsystem4237
         targetPosition = TargetPosition.kStartingPosition;
     }
 
+    public void  moveToSubstation()
+    {
+        targetPosition = TargetPosition.kSubstation;
+    }
+
     /** Turns the shoulder off */
     public void off()
     {

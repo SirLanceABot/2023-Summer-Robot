@@ -112,6 +112,7 @@ public final class Constants
         public static final double CLAMP = 682.0;
         public static final double READY_TO_PICK_UP = 104740.0;
         public static final double STARTING_POSITION = 42000.0;
+        public static final double SUBSTATION = 330000.0;
     }
 
     public static class Arm
@@ -130,6 +131,7 @@ public final class Constants
         public static final double CLAMP = 292.6;
         public static final double READY_TO_PICK_UP = 0.0;
         public static final double STARTING_POSITION = 0.0;
+        public static final double SUBSTATION = 319000.0;
     }
 
     public static class Grabber
@@ -303,6 +305,7 @@ public final class Constants
         kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),
         kReadyToPickUp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.READY_TO_PICK_UP),
         kStartingPosition(Constants.Shoulder.STARTING_POSITION, Constants.Arm.STARTING_POSITION),
+        kSubstation(Constants.Shoulder.SUBSTATION, Constants.Arm.SUBSTATION),
         kOverride(-4237, -4237);
         
      
