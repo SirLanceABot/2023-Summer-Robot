@@ -116,9 +116,13 @@ public class AutoCommandList extends SequentialCommandGroup
                     // add( new InstantCommand(() -> grabber.grabGamePiece(), grabber));
                     add( new GrabGamePiece(grabber));
                     add( new WaitCommand(1.0));
-                    add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
+                    //Commented out this line below
+                    // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
+                    add( new ExtendScorer(shoulder, arm, grabber, wrist, angle1));
                     add( new WaitCommand(0.5));
-                    add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+                    //Commented out line below between Calvin and St. Joe
+                    // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+                    add( new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kGather));
                     add( new InstantCommand( () -> grabber.closeSolenoid()));
                 }
 
