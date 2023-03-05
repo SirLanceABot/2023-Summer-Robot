@@ -407,13 +407,15 @@ public class RobotContainer
 			Trigger dPadRightTrigger = new Trigger(dPadRight);
 			if(arm != null && shoulder != null)
 			{
-				dPadRightTrigger.onTrue(
-					new ConditionalCommand(
-						new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kLow),
-						new ExtendScorer(shoulder, arm, grabber, wrist, TargetPosition.kLow)
-						.andThen( new ReleaseGamePiece(grabber)),
-						() -> shoulder.getPosition() > TargetPosition.kLow.shoulder)
-					);
+				dPadRightTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kSubstation)
+								.andThen( new MoveArmToScoringPosition(arm, TargetPosition.kSubstation)));
+				// dPadRightTrigger.onTrue(
+				// 	new ConditionalCommand(
+				// 		new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kLow),
+				// 		new ExtendScorer(shoulder, arm, grabber, wrist, TargetPosition.kLow)
+				// 		.andThen( new ReleaseGamePiece(grabber)),
+				// 		() -> shoulder.getPosition() > TargetPosition.kLow.shoulder)
+				// 	);
 				// dPadRightTrigger.onTrue( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kLow));
 				// dPadRightTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow)
 				// 			    .andThen( new MoveArmToScoringPosition(arm, ArmPosition.kLow)));
