@@ -12,6 +12,7 @@ import frc.robot.subsystems.Wrist.WristPosition;
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 
@@ -70,8 +71,9 @@ public class ExtendScorer extends SequentialCommandGroup
     private void build()
     {
         addCommands( new MoveShoulderToScoringPosition(shoulder, targetPosition) );
-        addCommands( new MoveWrist(wrist, WristPosition.kUp) );
-        addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
+        addCommands( new ParallelCommandGroup( new MoveWrist(wrist, WristPosition.kUp), new MoveArmToScoringPosition(arm, targetPosition)));
+        // addCommands( new MoveWrist(wrist, WristPosition.kUp) );
+        // addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
         // addCommands( new ReleaseGamePiece(grabber) );
     }
 

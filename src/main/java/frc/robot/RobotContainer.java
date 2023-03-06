@@ -340,9 +340,10 @@ public class RobotContainer
 			Trigger dPadUpTrigger = new Trigger(dPadUp);
 			if(arm != null && shoulder != null)
 			{
-				dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kHigh)
-							 .andThen( new ReleaseGamePiece(grabber))
-							 );
+				dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kHigh));
+				// dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kHigh)
+				// 			 .andThen( new ReleaseGamePiece(grabber))
+				// 			 );
 				// dPadUpTrigger.onTrue( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kHigh));
 				// dPadUpTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kHigh)
 				// 			// .andThen( new PrintCommand("Shoulder done moving"))
@@ -384,10 +385,16 @@ public class RobotContainer
 				dPadLeftTrigger.onTrue(
 					new ConditionalCommand(
 						new RetractScorer(shoulder, arm, wrist, TargetPosition.kMiddle),
-						new ExtendScorer(shoulder, arm, wrist, TargetPosition.kMiddle)
-						.andThen( new ReleaseGamePiece(grabber)),
+						new ExtendScorer(shoulder, arm, wrist, TargetPosition.kMiddle),
 						() -> shoulder.getPosition() > TargetPosition.kMiddle.shoulder)
 					);
+				// dPadLeftTrigger.onTrue(
+				// 	new ConditionalCommand(
+				// 		new RetractScorer(shoulder, arm, wrist, TargetPosition.kMiddle),
+				// 		new ExtendScorer(shoulder, arm, wrist, TargetPosition.kMiddle)
+				// 		.andThen( new ReleaseGamePiece(grabber)),
+				// 		() -> shoulder.getPosition() > TargetPosition.kMiddle.shoulder)
+				// 	);
 				// dPadLeftTrigger.onTrue( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kMiddle));
 				// dPadLeftTrigger.onTrue(  new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kMiddle)
 				// 			   .andThen( new MoveArmToScoringPosition(arm, ArmPosition.kMiddle)));
@@ -404,8 +411,7 @@ public class RobotContainer
 			Trigger dPadRightTrigger = new Trigger(dPadRight);
 			if(arm != null && shoulder != null)
 			{
-				dPadRightTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kSubstation)
-								.andThen( new MoveArmToScoringPosition(arm, TargetPosition.kSubstation)));
+				dPadRightTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kSubstation));
 				// dPadRightTrigger.onTrue(
 				// 	new ConditionalCommand(
 				// 		new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kLow),
