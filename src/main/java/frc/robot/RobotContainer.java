@@ -202,8 +202,8 @@ public class RobotContainer
 			if(drivetrain != null && vision != null && operatorController != null)
 			{
 				aButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)
-							.andThen( () -> operatorController.setRumble(0.5, 0.5, 0.5))         
-							.andThen( () -> driverController.setRumble(0.5, 0.5, 0.5)) );							// .andThen( () -> operatorController.setRumble(0.5))         
+							.andThen( () -> operatorController.setRumble(0.5, 0.75, 0.75))         
+							.andThen( () -> driverController.setRumble(0.5, 0.75, 0.75)) );							// .andThen( () -> operatorController.setRumble(0.5))         
 							// .andThen( () -> driverController.setRumble(0.5))
 							// .andThen( new WaitCommand(0.5))
 							// .andThen( () -> operatorController.setRumble(0.0))
@@ -343,7 +343,7 @@ public class RobotContainer
 			Trigger dPadUpTrigger = new Trigger(dPadUp);
 			if(arm != null && shoulder != null)
 			{
-				dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, grabber, wrist, TargetPosition.kHigh)
+				dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kHigh)
 							 .andThen( new ReleaseGamePiece(grabber))
 							 );
 				// dPadUpTrigger.onTrue( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kHigh));
@@ -365,7 +365,7 @@ public class RobotContainer
 			Trigger dPadDownTrigger = new Trigger(dPadDown);
 			if(arm != null && shoulder != null)
 			{
-				dPadDownTrigger.onTrue( new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+				dPadDownTrigger.onTrue( new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather));
 				// dPadDownTrigger.onTrue( new ReturnToGather(arm, shoulder));
 				// dPadDownTrigger.onTrue( new ScoreGamePieceV2(shoulder, arm, grabber, wrist, TargetPosition.kGather));
 				// dPadDownTrigger.onTrue( new MoveArmToScoringPosition(arm, ArmPosition.kGather)
@@ -386,8 +386,8 @@ public class RobotContainer
 			{
 				dPadLeftTrigger.onTrue(
 					new ConditionalCommand(
-						new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kMiddle),
-						new ExtendScorer(shoulder, arm, grabber, wrist, TargetPosition.kMiddle)
+						new RetractScorer(shoulder, arm, wrist, TargetPosition.kMiddle),
+						new ExtendScorer(shoulder, arm, wrist, TargetPosition.kMiddle)
 						.andThen( new ReleaseGamePiece(grabber)),
 						() -> shoulder.getPosition() > TargetPosition.kMiddle.shoulder)
 					);

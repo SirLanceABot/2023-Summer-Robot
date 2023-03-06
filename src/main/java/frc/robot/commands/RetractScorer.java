@@ -33,7 +33,7 @@ public class RetractScorer extends SequentialCommandGroup
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Shoulder shoulder;
     private final Arm arm;
-    private final Grabber grabber;
+    // private final Grabber grabber;
     private final Wrist wrist;
     private TargetPosition targetPosition;
 
@@ -43,24 +43,24 @@ public class RetractScorer extends SequentialCommandGroup
      *
      * @param shoulder The shoulder subsystem.
      * @param arm The arm subystem.
-     * @param grabber The grabber subsystem.
      * @param wrist The wrist subsystem.
      * @param targetPosition Target position (Type: TargetPosition)
      */
-    public RetractScorer(Shoulder shoulder, Arm arm, Grabber grabber, Wrist wrist, TargetPosition targetPosition) 
+    public RetractScorer(Shoulder shoulder, Arm arm, Wrist wrist, TargetPosition targetPosition) 
     {
         this.shoulder = shoulder;
         this.arm = arm;
-        this.grabber = grabber;
+        // this.grabber = grabber;
         this.wrist = wrist;
         this.targetPosition = targetPosition;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        if(shoulder != null && arm != null &&  grabber != null && wrist != null)
+        // if(shoulder != null && arm != null &&  grabber != null && wrist != null)
+        if(shoulder != null && arm != null && wrist != null)
         {
             addRequirements(this.shoulder);
             addRequirements(this.arm);
-            addRequirements(this.grabber);
+            // addRequirements(this.grabber);
             addRequirements(this.wrist);
 
             build();
@@ -72,7 +72,7 @@ public class RetractScorer extends SequentialCommandGroup
         addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
         addCommands( new MoveWrist(wrist, WristPosition.kDown) );
         addCommands( new MoveShoulderToScoringPosition(shoulder, targetPosition) );
-        addCommands( new ReleaseGamePiece(grabber) );
+        // addCommands( new ReleaseGamePiece(grabber) );
     }
 
     @Override

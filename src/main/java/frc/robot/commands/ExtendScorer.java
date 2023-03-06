@@ -33,7 +33,7 @@ public class ExtendScorer extends SequentialCommandGroup
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Shoulder shoulder;
     private final Arm arm;
-    private final Grabber grabber;
+    // private final Grabber grabber;
     private final Wrist wrist;
     private TargetPosition targetPosition;
 
@@ -43,20 +43,20 @@ public class ExtendScorer extends SequentialCommandGroup
      *
      * @param shoulder The shoulder subsystem.
      * @param arm The arm subystem.
-     * @param grabber The grabber subsystem.
      * @param wrist The wrist subsystem.
      * @param targetPosition Target position (Type: TargetPosition)
      */
-    public ExtendScorer(Shoulder shoulder, Arm arm, Grabber grabber, Wrist wrist, TargetPosition targetPosition) 
+    public ExtendScorer(Shoulder shoulder, Arm arm, Wrist wrist, TargetPosition targetPosition) 
     {
         this.shoulder = shoulder;
         this.arm = arm;
-        this.grabber = grabber;
+        // this.grabber = grabber;
         this.wrist = wrist;
         this.targetPosition = targetPosition;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        if(shoulder != null && arm != null &&  grabber != null && wrist != null)
+        // if(shoulder != null && arm != null &&  grabber != null && wrist != null)
+        if(shoulder != null && arm != null && wrist != null)
         {
             addRequirements(this.shoulder);
             addRequirements(this.arm);
