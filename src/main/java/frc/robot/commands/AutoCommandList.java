@@ -92,20 +92,20 @@ public class AutoCommandList extends SequentialCommandGroup
     private void build()
     {
         // commandList.clear();
-        Constants.TargetPosition angle1 = TargetPosition.kGather;
-        Constants.TargetPosition angle2 = TargetPosition.kGather;
-        Constants.TargetPosition piece1 = TargetPosition.kGather;
-        Constants.TargetPosition piece2 = TargetPosition.kGather;
-        double distance = 0.0;
+        Constants.TargetPosition shoulderPositionPiece1 = TargetPosition.kGather;
+        Constants.TargetPosition shoulderPositionPiece2 = TargetPosition.kGather;
+        Constants.TargetPosition armPositionPiece1 = TargetPosition.kGather;
+        Constants.TargetPosition armPositionPiece2 = TargetPosition.kGather;
+        double location = 0.0;
         // RowPlayedPiece1 row1 = autonomousTabData.rowPlayedPiece1.getSelected();
 
         add(new StopDrive(drivetrain));
 
-        angle1 = getAngle1Shoulder(autonomousTabData.rowPlayedPiece1);
-        angle2 = getAngle2Shoulder(autonomousTabData.rowPlayedPiece2);
-        piece1 = getAngle1Arm(autonomousTabData.rowPlayedPiece1);
-        piece2 = getAngle2Arm(autonomousTabData.rowPlayedPiece2);
-        distance = getAllianceAndLocation();
+        shoulderPositionPiece1 = getShoulderPositionPiece1(autonomousTabData.rowPlayedPiece1);
+        shoulderPositionPiece2 = getShoulderPositionPiece2(autonomousTabData.rowPlayedPiece2);
+        armPositionPiece1 = getArmPositionPiece1(autonomousTabData.rowPlayedPiece1);
+        armPositionPiece2 = getArmPosition2(autonomousTabData.rowPlayedPiece2);
+        location = getAllianceAndLocation();
 
         switch(autonomousTabData.autonomousCommands)
         {
@@ -117,8 +117,9 @@ public class AutoCommandList extends SequentialCommandGroup
                     add( new GrabGamePiece(grabber));
                     add( new WaitCommand(1.0));
                     //Commented out this line below
-                    // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
-                    add( new ExtendScorer(shoulder, arm, wrist, angle1));
+                    // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, shoulderPositionPiece1));
+                    add( new ExtendScorer(shoulder, arm, wrist, shoulderPositionPiece1));
+                    add( new ReleaseGamePiece(grabber));
                     add( new WaitCommand(0.5));
                     //Commented out line below between Calvin and St. Joe
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
@@ -142,24 +143,33 @@ public class AutoCommandList extends SequentialCommandGroup
                 {
                     turnRobot180();
                     driveOut(4.4);
-                    add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle2));
-                    add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+                    //Updated between Calvin and St. Joe
+                    // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, shoulderPositionPiece2));
+                    // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+                    add( new ExtendScorer(shoulder, arm, wrist, shoulderPositionPiece2));
+                    add( new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather));
                 }
 
                 if(autonomousTabData.moveOntoChargingStation == MoveOntoChargingStation.kYes)
                 {
-                    goToChargingStation(distance);
+                    goToChargingStation(location);
                 }
                 break;
             case kChargingStation:
-                add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
-                add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+                // Changed between Calvin and St. Joe
+                // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, shoulderPositionPiece2));
+                // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
                 driveOut(4.26);
-                goToChargingStation(distance);
+                goToChargingStation(location);
                 break;
             case kTwoGamePieces:
-                add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
-                add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+                // Changed between Calvin and St. Joe
+                // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
+                // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
+                add( new ExtendScorer(shoulder, arm, wrist, shoulderPositionPiece1));
+                add( new WaitCommand(0.5));
+                add( new ReleaseGamePiece(grabber));
+                add( new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather));
                 goToSecondGamePiece();
                 turnRobot180();
                 add( new GrabGamePiece(grabber));
@@ -168,92 +178,92 @@ public class AutoCommandList extends SequentialCommandGroup
     
     }
 
-    private Constants.TargetPosition getAngle1Shoulder(AutonomousTabData.RowPlayedPiece1 rpp1)
+    private Constants.TargetPosition getShoulderPositionPiece1(AutonomousTabData.RowPlayedPiece1 rpp1)
     {
-        TargetPosition angle = TargetPosition.kGather;
+        TargetPosition position = TargetPosition.kGather;
         switch(rpp1)
         {
             case kNone:
-                angle = TargetPosition.kGather;
+                position = TargetPosition.kGather;
                 break;
             case kBottom:
-                angle = TargetPosition.kLow;
+                position = TargetPosition.kLow;
                 break;
             case kMiddle:
-                angle = TargetPosition.kMiddle;
+                position = TargetPosition.kMiddle;
                 break;
             case kTop:
-                angle = TargetPosition.kHigh;
+                position = TargetPosition.kHigh;
                 break;
         }
 
-        return angle;
+        return position;
     }
 
-    private Constants.TargetPosition getAngle1Arm(AutonomousTabData.RowPlayedPiece1 rpp1)
+    private Constants.TargetPosition getArmPositionPiece1(AutonomousTabData.RowPlayedPiece1 rpp1)
     {
-        TargetPosition piece1 = TargetPosition.kGather;
+        TargetPosition position = TargetPosition.kGather;
         switch(rpp1)
         {
             case kNone:
-                piece1 = TargetPosition.kGather;
+                position = TargetPosition.kGather;
                 break;
             case kBottom:
-                piece1 = TargetPosition.kLow;
+                position = TargetPosition.kLow;
                 break;
             case kMiddle:
-                piece1 = TargetPosition.kMiddle;
+                position = TargetPosition.kMiddle;
                 break;
             case kTop:
-                piece1 = TargetPosition.kHigh;
+                position = TargetPosition.kHigh;
                 break;
         }
 
-        return piece1;
+        return position;
     }
 
-    private Constants.TargetPosition getAngle2Shoulder(AutonomousTabData.RowPlayedPiece2 rpp2)
+    private Constants.TargetPosition getShoulderPositionPiece2(AutonomousTabData.RowPlayedPiece2 rpp2)
     {
-        TargetPosition angle = TargetPosition.kGather;
+        TargetPosition position = TargetPosition.kGather;
         switch(rpp2)
         {
             case kNone:
-                angle = TargetPosition.kGather;
+                position = TargetPosition.kGather;
                 break;
             case kBottom:
-                angle = TargetPosition.kLow;
+                position = TargetPosition.kLow;
                 break;
             case kMiddle:
-                angle = TargetPosition.kMiddle;
+                position = TargetPosition.kMiddle;
                 break;
             case kTop:
-                angle = TargetPosition.kHigh;
+                position = TargetPosition.kHigh;
                 break;
         }
 
-        return angle;
+        return position;
     }
 
-    private Constants.TargetPosition getAngle2Arm(AutonomousTabData.RowPlayedPiece2 rpp2)
+    private Constants.TargetPosition getArmPosition2(AutonomousTabData.RowPlayedPiece2 rpp2)
     {
-        TargetPosition piece2 = TargetPosition.kGather;
+        TargetPosition position = TargetPosition.kGather;
         switch(rpp2)
         {
             case kNone:
-                piece2 = TargetPosition.kGather;
+                position = TargetPosition.kGather;
                 break;
             case kBottom:
-                piece2 = TargetPosition.kLow;
+                position = TargetPosition.kLow;
                 break;
             case kMiddle:
-                piece2 = TargetPosition.kMiddle;
+                position = TargetPosition.kMiddle;
                 break;
             case kTop:
-                piece2 = TargetPosition.kHigh;
+                position = TargetPosition.kHigh;
                 break;
         }
 
-        return piece2;
+        return position;
     }
 
     private double getAllianceAndLocation()
