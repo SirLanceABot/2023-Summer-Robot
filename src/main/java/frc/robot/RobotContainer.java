@@ -55,8 +55,6 @@ import frc.robot.commands.ScoreGamePieceV2;
 import frc.robot.commands.SlowSwerveDrive;
 import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
-import frc.robot.commands.MoveWristDown;
-import frc.robot.commands.MoveWristUp;
 import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.RetractScorer;
 import frc.robot.commands.SwerveDrive;
@@ -487,6 +485,14 @@ public class RobotContainer
 				// aButtonTrigger.toggleOnFalse(new MoveWristDown(grabber));
 			// DoubleSupplier leftYAxis = operatorController.getAxisSupplier(Xbox.Axis.kLeftY);
 				// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
+			}
+
+			// Start Button
+			BooleanSupplier startButton = operatorController.getButtonSupplier(Xbox.Button.kStart);
+			Trigger startButtonTrigger = new Trigger(startButton);
+			if(shoulder != null && arm != null)
+			{
+
 			}
 
 			if(candle != null)

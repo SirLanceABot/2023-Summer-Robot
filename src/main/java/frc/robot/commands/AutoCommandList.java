@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.TargetPosition;
@@ -29,6 +30,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Wrist.WristPosition;
 import frc.robot.subsystems.Shoulder;
 // import frc.robot.subsystems.Shoulder.TargetPosition;
 
@@ -123,7 +125,16 @@ public class AutoCommandList extends SequentialCommandGroup
                     add( new WaitCommand(0.5));
                     //Commented out line below between Calvin and St. Joe
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
-                    add( new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather));
+                    if(autonomousTabData.moveOntoChargingStation == MoveOntoChargingStation.kYes)
+                    {
+                        add( new MoveArmToScoringPosition(arm, TargetPosition.kGather));
+                        add( new MoveWrist(wrist, WristPosition.kDown));
+                    }
+                    else
+                    {
+                        add( new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather));
+                    }
+                    
                     add( new InstantCommand( () -> grabber.closeSolenoid()));
                 }
 
@@ -329,7 +340,17 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void goToChargingStation(double distance)
     {
-        add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75));
+        if(autonomousTabData.playPreload == PlayPreload.kYes)
+        {
+            // add( new ParallelCommandGroup( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather), new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75)));
+            add( new ParallelCommandGroup( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather), new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 5.0)));
+        }
+        else
+        {
+            // add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75));
+            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 5.0));
+        }
+        add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 1.5));
 	    add( new AutoBalance(drivetrain, gyro));
 		add( new LockWheels(drivetrain));
         
