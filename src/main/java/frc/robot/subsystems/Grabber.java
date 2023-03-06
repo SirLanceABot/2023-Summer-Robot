@@ -81,6 +81,8 @@ public class Grabber extends Subsystem4237
     //         new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 
     //         Constants.Grabber.WRIST_UP, Constants.Grabber.WRIST_DOWN);
     private final CANSparkMax vacuumMotor = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_PORT, MotorType.kBrushless);
+    // private final CANSparkMax vacuumMotor = new CANSparkMax(7, MotorType.kBrushless);   //testing
+
     private final PowerDistribution vacuumSolenoid = new PowerDistribution(Constants.Grabber.VACCUM_CAN_ID, ModuleType.kRev);
     private PeriodicIO periodicIO = new PeriodicIO();
 

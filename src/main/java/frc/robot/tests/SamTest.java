@@ -115,7 +115,7 @@ public class SamTest implements Test
         else if(joystick.getRawButton(2))   //B
         {
             // shoulder.moveDown();
-            grabber.grabGamePiece();
+            grabber.releaseGamePiece();
         }
         // else
         // {
