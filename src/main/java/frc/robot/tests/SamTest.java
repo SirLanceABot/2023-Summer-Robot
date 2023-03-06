@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 // import edu.wpi.first.wpilibj.PneumaticsModuleType;
 // import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Arm;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 // import frc.robot.subsystems.Arm;
@@ -41,16 +42,12 @@ public class SamTest implements Test
         System.out.println("Loading: " + fullClassName);
     }
 
-    public enum CommandState
-    {
-        kWaiting, kRan;
-    }
-
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
-    private final Shoulder shoulder;
-    private final Arm arm;
+    // private final Shoulder shoulder;
+    // private final Arm arm;
+    private final Grabber grabber;
     // private final CANSparkMax canSparkMax = new CANSparkMax(3, MotorType.kBrushless);
     private final Joystick joystick;
     // private final DoubleSolenoid testSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 0, 1);
@@ -67,8 +64,9 @@ public class SamTest implements Test
         this.robotContainer = robotContainer;
         // vision = this.robotContainer.vision;
         // drivetrain = this.robotContainer.drivetrain;
-        shoulder = this.robotContainer.shoulder;
-        arm = this.robotContainer.arm;
+        // shoulder = this.robotContainer.shoulder;
+        // arm = this.robotContainer.arm;
+        grabber = this.robotContainer.grabber;
         // canSparkMax.restoreFactoryDefaults();
         // canSparkMax.setIdleMode(IdleMode.kBrake);
         joystick = new Joystick(0);
@@ -111,30 +109,32 @@ public class SamTest implements Test
         // }
         if(joystick.getRawButton(1))    //A
         {
-            shoulder.moveUp();
+            // shoulder.moveUp();
+            grabber.grabGamePiece();
         }
         else if(joystick.getRawButton(2))   //B
         {
-            shoulder.moveDown();
+            // shoulder.moveDown();
+            grabber.grabGamePiece();
         }
-        else
-        {
-            shoulder.off();
-        }
+        // else
+        // {
+        //     shoulder.off();
+        // }
 
-        if(joystick.getRawButton(3))   //X
-        {
-            arm.extendArm();
-        }
-        else if(joystick.getRawButton(4))   //Y
-        {
-            arm.retractArm();
-        }
-        else
-        {
-            arm.off();
+        // if(joystick.getRawButton(3))   //X
+        // {
+        //     arm.extendArm();
+        // }
+        // else if(joystick.getRawButton(4))   //Y
+        // {
+        //     arm.retractArm();
+        // }
+        // else
+        // {
+        //     arm.off();
             
-        }
+        // }
     
         // System.out.println(shoulder);
 
