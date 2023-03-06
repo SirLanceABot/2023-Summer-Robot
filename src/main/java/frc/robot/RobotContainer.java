@@ -59,7 +59,6 @@ import frc.robot.commands.MoveWristDown;
 import frc.robot.commands.MoveWristUp;
 import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.RetractScorer;
-import frc.robot.commands.ReturnToGather;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.TurnOffShoulder;
 import frc.robot.controls.DriverController;
