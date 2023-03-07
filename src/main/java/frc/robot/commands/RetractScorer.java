@@ -71,7 +71,9 @@ public class RetractScorer extends SequentialCommandGroup
     private void build()
     {
         addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
-        addCommands( new ParallelCommandGroup( new MoveWrist(wrist, WristPosition.kDown), new MoveArmToScoringPosition(arm, targetPosition)));
+        addCommands( new ParallelCommandGroup( 
+            new MoveWrist(wrist, WristPosition.kDown), 
+            new MoveShoulderToScoringPosition(shoulder, targetPosition)));
         // addCommands( new MoveWrist(wrist, WristPosition.kDown) );
         // addCommands( new MoveShoulderToScoringPosition(shoulder, targetPosition) );
         // addCommands( new ReleaseGamePiece(grabber) );

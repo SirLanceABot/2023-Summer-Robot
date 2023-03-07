@@ -280,6 +280,15 @@ public class Shoulder extends Subsystem4237
         return periodicIO.currentAngle;
     }
 
+    /** Takes degrees and converts to encoder ticks */
+    /** @param degrees degrees you want shoulder to move */
+    /** @return encoder ticks neccesary to move given degrees */
+    public double getEncoderTicksForDegrees(double degrees)
+    {
+        double ticks = (degrees / 360.0) * 4096.0 * 100.0 * (68.0/32.0);
+        return ticks;
+    }
+
     /** @return  motor velocity (double) */
     public double getVelocity() // motor velocity
     {

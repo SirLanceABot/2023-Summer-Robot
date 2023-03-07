@@ -174,6 +174,15 @@ public class Arm extends Subsystem4237
         return periodicIO.armPosition;
     }
 
+    /** Takes inches and converts to encoder ticks */
+    /** @param inches inches you want arm to move */
+    /** @return encoder ticks neccesary to move given degrees */
+    public double getEncoderTicksForInches(double inches)
+    {
+        double ticks = (inches / (3.142 * 1.378)) * 4096.0 * 25.0 * (36.0/18.0);
+        return ticks;
+    }
+
     /**
      * Set the motor to move backward
      */

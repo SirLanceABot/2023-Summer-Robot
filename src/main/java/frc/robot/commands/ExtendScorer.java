@@ -71,7 +71,9 @@ public class ExtendScorer extends SequentialCommandGroup
     private void build()
     {
         addCommands( new MoveShoulderToScoringPosition(shoulder, targetPosition) );
-        addCommands( new ParallelCommandGroup( new MoveWrist(wrist, WristPosition.kUp), new MoveArmToScoringPosition(arm, targetPosition)));
+        addCommands( new ParallelCommandGroup( 
+            new MoveWrist(wrist, WristPosition.kUp), 
+            new MoveArmToScoringPosition(arm, targetPosition)));
         // addCommands( new MoveWrist(wrist, WristPosition.kUp) );
         // addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
         // addCommands( new ReleaseGamePiece(grabber) );
