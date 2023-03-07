@@ -98,7 +98,7 @@ public class AutoCommandList extends SequentialCommandGroup
         Constants.TargetPosition shoulderPositionPiece2 = TargetPosition.kGather;
         Constants.TargetPosition armPositionPiece1 = TargetPosition.kGather;
         Constants.TargetPosition armPositionPiece2 = TargetPosition.kGather;
-        double location = 0.0;
+        int location = 0;
         // RowPlayedPiece1 row1 = autonomousTabData.rowPlayedPiece1.getSelected();
 
         add(new StopDrive(drivetrain));
@@ -277,22 +277,24 @@ public class AutoCommandList extends SequentialCommandGroup
         return position;
     }
 
-    private double getAllianceAndLocation()
+    private int getAllianceAndLocation()
     {
         DriverStation.Alliance alliance = DriverStation.getAlliance();
         boolean isRedLeft = (alliance == DriverStation.Alliance.Red && autonomousTabData.startingLocation == StartingLocation.kLeft);
         boolean isBlueRight = (alliance == DriverStation.Alliance.Blue && autonomousTabData.startingLocation == StartingLocation.kRight);
+        boolean isRedRight = (alliance == DriverStation.Alliance.Red && autonomousTabData.startingLocation == StartingLocation.kRight);
+        boolean isBlueLeft = (alliance == DriverStation.Alliance.Blue && autonomousTabData.startingLocation == StartingLocation.kLeft);
         if(isRedLeft || isBlueRight)
         {
-            return 1.0;
+            return 1;
         }
-        else if(!isRedLeft || !isBlueRight)
+        else if(isRedRight || isBlueLeft)
         {
-            return -1.0;
+            return -1;
         }
         else
         {
-            return 0.0;
+            return 0;
         }
     }
 
@@ -338,18 +340,31 @@ public class AutoCommandList extends SequentialCommandGroup
         add(new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 3.75));
     }
 
-    private void goToChargingStation(double distance)
+    private void goToChargingStation(double location)
     {
         if(autonomousTabData.playPreload == PlayPreload.kYes)
         {
             // add( new ParallelCommandGroup( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather), new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75)));
-            add( new ParallelCommandGroup( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather), new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 5.0)));
+            add( new ParallelCommandGroup( 
+                 new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather),
+                 new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 5.0)));
         }
         else
         {
             // add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75));
             add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 5.0));
         }
+
+        if(location == -1)
+        {
+            add( new AutoDriveDistance(drivetrain, gyro, 0.0, 1.5, 2.5));
+        }
+
+        if(location == 1)
+        {
+            add( new AutoDriveDistance(drivetrain, gyro, 0.0, -1.5, 2.5));
+        }
+
         add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 1.5));
 	    add( new AutoBalance(drivetrain, gyro));
 		add( new LockWheels(drivetrain));
