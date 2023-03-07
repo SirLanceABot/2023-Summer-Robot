@@ -354,15 +354,6 @@ public class AutoCommandList extends SequentialCommandGroup
 	    add( new AutoBalance(drivetrain, gyro));
 		add( new LockWheels(drivetrain));
         
-        // if(distance == 0.0)
-        // {
-        //     // add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 4.4));
-		// 	// add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 2.9));
-        //     add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 3.0));
-		// 	add( new AutoBalance(drivetrain, gyro));
-		// 	add( new LockWheels(drivetrain));
-        // }
-        // else
         // {
         //     add(new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 4.4));
         //     add(new AutoDriveDistance(drivetrain, gyro, 0.0, distance, 1.5));

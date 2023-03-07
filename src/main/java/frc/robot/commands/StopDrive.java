@@ -46,4 +46,10 @@ public class StopDrive extends CommandBase
     {
         return true;
     }
+
+    @Override
+    public String toString()
+    {
+        return "StopDrive()";
+    }
 }

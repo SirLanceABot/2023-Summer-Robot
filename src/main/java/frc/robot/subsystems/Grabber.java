@@ -68,7 +68,10 @@ public class Grabber extends Subsystem4237
     public class PeriodicIO
     {
         //INPUTS
-        private double vacuumEncoder = 0.0;
+        private double vacuumEncoderBottom = 0.0;
+        private double vacuumEncoderTop = 0.0;
+        private double vacuumMotorBottomCurrent = 0.0;
+        private double vacuumMotorTopCurrent = 0.0;
 
         //OUTPUTS
         // private WristPosition wristPosition = WristPosition.kOff;
@@ -80,15 +83,19 @@ public class Grabber extends Subsystem4237
     // private final DoubleSolenoid wristSolenoid = 
     //         new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 
     //         Constants.Grabber.WRIST_UP, Constants.Grabber.WRIST_DOWN);
-    private final CANSparkMax vacuumMotor = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_PORT, MotorType.kBrushless);
+    private final CANSparkMax vacuumMotorBottom = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_BOTTOM_PORT, MotorType.kBrushless);
+    private final CANSparkMax vacuumMotorTop = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_TOP_PORT, MotorType.kBrushless);
     // private final CANSparkMax vacuumMotor = new CANSparkMax(7, MotorType.kBrushless);   //testing
 
     private final PowerDistribution vacuumSolenoid = new PowerDistribution(Constants.Grabber.VACCUM_CAN_ID, ModuleType.kRev);
     private PeriodicIO periodicIO = new PeriodicIO();
 
-    private RelativeEncoder vacuumMotorEncoder;
-    private SparkMaxLimitSwitch forwardLimitSwitch;
-    private SparkMaxLimitSwitch reverseLimitSwitch;
+    private RelativeEncoder vacuumMotorEncoderBottom;
+    private RelativeEncoder vacuumMotorEncoderTop;
+    private SparkMaxLimitSwitch forwardLimitSwitchBottom;
+    private SparkMaxLimitSwitch forwardLimitSwitchTop;
+    private SparkMaxLimitSwitch reverseLimitSwitchBottom;
+    private SparkMaxLimitSwitch reverseLimitSwitchTop;
 
     /**
      * Contructor for the grabber mechanism
@@ -99,6 +106,7 @@ public class Grabber extends Subsystem4237
 
         configCANSparkMax();
         vacuumSolenoid.setSwitchableChannel(false);
+        
         // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
 
         System.out.println(fullClassName + ": Constructor Finished");
@@ -110,30 +118,44 @@ public class Grabber extends Subsystem4237
     private void configCANSparkMax()
     {   
         // Factory Defaults
-        vacuumMotor.restoreFactoryDefaults();
+        vacuumMotorBottom.restoreFactoryDefaults();
+        vacuumMotorTop.restoreFactoryDefaults();
         
         // Invert the direction of the motor
-        vacuumMotor.setInverted(false);
+        vacuumMotorBottom.setInverted(false);
+        vacuumMotorTop.setInverted(false);
 
         // Brake or Coast mode
-        vacuumMotor.setIdleMode(IdleMode.kBrake);
+        vacuumMotorBottom.setIdleMode(IdleMode.kBrake);
+        vacuumMotorTop.setIdleMode(IdleMode.kBrake);
 
         // Set the Feedback Sensor
         // vacuumMotor.setSensorPhase(false);
-        vacuumMotorEncoder = vacuumMotor.getEncoder();
+        vacuumMotorEncoderBottom = vacuumMotorBottom.getEncoder();
+        vacuumMotorEncoderTop = vacuumMotorTop.getEncoder();
         // grabberMotorEncoder.setPositionConversionFactor(4096);
 
         // Soft Limits
-        vacuumMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
-        vacuumMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-        vacuumMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
-        vacuumMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        vacuumMotorBottom.setSoftLimit(SoftLimitDirection.kForward, 0);
+        vacuumMotorBottom.enableSoftLimit(SoftLimitDirection.kForward, false);
+        vacuumMotorBottom.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        vacuumMotorBottom.enableSoftLimit(SoftLimitDirection.kReverse, false);
+
+        vacuumMotorTop.setSoftLimit(SoftLimitDirection.kForward, 0);
+        vacuumMotorTop.enableSoftLimit(SoftLimitDirection.kForward, false);
+        vacuumMotorTop.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        vacuumMotorTop.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
         // Hard Limits
-        forwardLimitSwitch = vacuumMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-        forwardLimitSwitch.enableLimitSwitch(false);
-        reverseLimitSwitch = vacuumMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-        reverseLimitSwitch.enableLimitSwitch(false);
+        forwardLimitSwitchBottom = vacuumMotorBottom.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        forwardLimitSwitchBottom.enableLimitSwitch(false);
+        reverseLimitSwitchBottom = vacuumMotorBottom.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        reverseLimitSwitchBottom.enableLimitSwitch(false);
+
+        forwardLimitSwitchTop = vacuumMotorTop.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        forwardLimitSwitchTop.enableLimitSwitch(false);
+        reverseLimitSwitchTop = vacuumMotorTop.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        reverseLimitSwitchTop.enableLimitSwitch(false);
     }
 
     /**
@@ -169,10 +191,26 @@ public class Grabber extends Subsystem4237
     //     periodicIO.wristPosition = WristPosition.kDown;
     // }
 
-    public double getVacuumEncoder()
+    public double getVacuumEncoderBottom()
     {
-        return periodicIO.vacuumEncoder;
+        return periodicIO.vacuumEncoderBottom;
     }
+
+    public double getVacuumEncoderTop()
+    {
+        return periodicIO.vacuumEncoderTop;
+    }
+
+    public double getVacuumBottomCurrent()
+    {
+        return periodicIO.vacuumMotorBottomCurrent;
+    }
+
+    public double getVacuumTopCurrent()
+    {
+        return periodicIO.vacuumMotorTopCurrent;
+    }
+
 
 
     /* (non-Javadoc)
@@ -182,8 +220,10 @@ public class Grabber extends Subsystem4237
     @Override
     public synchronized void readPeriodicInputs()
     {
-        periodicIO.vacuumEncoder = vacuumMotorEncoder.getPosition();
-
+        periodicIO.vacuumMotorBottomCurrent = vacuumMotorBottom.getOutputCurrent();
+        periodicIO.vacuumMotorTopCurrent = vacuumMotorTop.getOutputCurrent();
+        periodicIO.vacuumEncoderBottom = vacuumMotorEncoderBottom.getPosition();
+        periodicIO.vacuumEncoderTop = vacuumMotorEncoderTop.getPosition();
     }
 
     /* (non-Javadoc)
@@ -194,7 +234,8 @@ public class Grabber extends Subsystem4237
     public synchronized void writePeriodicOutputs()
     {
         // wristSolenoid.set(periodicIO.wristPosition.value);
-        vacuumMotor.set(periodicIO.vacuumMotorSpeed);
+        vacuumMotorBottom.set(periodicIO.vacuumMotorSpeed);
+        vacuumMotorTop.set(periodicIO.vacuumMotorSpeed);
         vacuumSolenoid.setSwitchableChannel(periodicIO.vacuumState.value);
     }
 
@@ -213,7 +254,7 @@ public class Grabber extends Subsystem4237
     @Override
     public String toString()
     {
-        return "Encoder Distance: " + String.format("%.4f", periodicIO.vacuumEncoder);
+        return "Encoder Distance: " + String.format("%.4f", periodicIO.vacuumEncoderTop) + String.format("%.4f", periodicIO.vacuumEncoderBottom);
     }
 }
 

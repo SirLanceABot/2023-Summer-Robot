@@ -89,8 +89,9 @@ public final class Constants
     
     public static class Subsystem
     {
-        public static final int GATHERER_MOTOR_PORT     = 2;
-        public static final int GRABBER_MOTOR_PORT      = 3;
+        public static final int GATHERER_MOTOR_PORT     = 25;
+        public static final int GRABBER_MOTOR_BOTTOM_PORT    = 3;
+        public static final int GRABBER_MOTOR_TOP_PORT    = 2;
         public static final int ARM_MOTOR_PORT          = 4;
         public static final int SHOULDER_MOTOR_PORT     = 5;
 

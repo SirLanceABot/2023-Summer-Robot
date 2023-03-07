@@ -36,7 +36,10 @@ public class SensorTab
     private Translation2d startingPosition;
     private Double encoderValue = 0.0;
     private GenericEntry shoulderEncoderBox;
-    private GenericEntry grabberEncoderBox;
+    private GenericEntry grabberEncoderBottomBox;
+    private GenericEntry grabberEncoderTopBox;
+    private GenericEntry grabberMotorBottomCurrentBox;
+    private GenericEntry grabberMotorTopCurrentBox;
     private GenericEntry gyroBox;
     private GenericEntry armEncoderBox;
     private GenericEntry flsEncoderBox;
@@ -63,7 +66,13 @@ public class SensorTab
         if(shoulder != null)
             shoulderEncoderBox = createShoulderEncoderBox();
         if(grabber != null)
-            grabberEncoderBox = createGrabberEncoderBox();
+        {
+            grabberEncoderBottomBox = createGrabberEncoderBottomBox();
+            grabberEncoderTopBox = createGrabberEncoderTopBox();
+            grabberMotorBottomCurrentBox = createGrabberBottomCurrentBox();
+            grabberMotorTopCurrentBox = createGrabberTopCurrentBox();
+        }
+            
         if(arm != null)
             armEncoderBox = createArmEncoderBox();
         if(drivetrain != null)
@@ -93,11 +102,38 @@ public class SensorTab
         .getEntry();
     }
 
-    private GenericEntry createGrabberEncoderBox()
+    private GenericEntry createGrabberEncoderBottomBox()
     {
-        return sensorTab.add("Grabber Encoder", grabber.getVacuumEncoder())
+        return sensorTab.add("Grabber Encoder Bottom", grabber.getVacuumEncoderBottom())
         .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
-        .withPosition(0, 3)  // sets position of widget
+        .withPosition(10, 0)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createGrabberEncoderTopBox()
+    {
+        return sensorTab.add("Grabber Encoder Top", grabber.getVacuumEncoderTop())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(10, 3)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createGrabberBottomCurrentBox()
+    {
+        return sensorTab.add("Grabber Motor Bottom Current", grabber.getVacuumBottomCurrent())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(10, 6)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createGrabberTopCurrentBox()
+    {
+        return sensorTab.add("Grabber Motor Top Current", grabber.getVacuumTopCurrent())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(10, 9)  // sets position of widget
         .withSize(4, 2)    // sets size of widget
         .getEntry();
     }
@@ -161,7 +197,13 @@ public class SensorTab
         if(shoulder != null)
             shoulderEncoderBox.setDouble(shoulder.getPosition());
         if(grabber != null)
-            grabberEncoderBox.setDouble(grabber.getVacuumEncoder());
+        {
+            grabberEncoderBottomBox.setDouble(grabber.getVacuumEncoderBottom());
+            grabberEncoderTopBox.setDouble(grabber.getVacuumEncoderTop());
+            grabberMotorBottomCurrentBox.setDouble(grabber.getVacuumBottomCurrent());
+            grabberMotorTopCurrentBox.setDouble(grabber.getVacuumTopCurrent());
+        }
+            
         if(arm != null)
             armEncoderBox.setDouble(arm.getArmPosition());
         if(drivetrain != null)
