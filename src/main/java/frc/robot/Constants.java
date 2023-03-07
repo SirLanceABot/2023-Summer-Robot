@@ -103,8 +103,8 @@ public final class Constants
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 380000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
-        public static final double HIGH = 375000.0; //340000 double suction
-        public static final double MIDDLE = 300000.0; //297000 double suction
+        public static final double HIGH = 205000.0; //375000 big single suction //340000 double small suction
+        public static final double MIDDLE = 176000.0; //300000 big single suction //297000 double small suction
         public static final double LOW = 155000.0;
         public static final double GATHER = 0.0;
         // public static final double SHOULDER_READY_TO_GRAB = 
@@ -112,8 +112,8 @@ public final class Constants
         public static final double SHOULDER_READY_TO_CLAMP = 168639.2;
         public static final double CLAMP = 682.0;
         public static final double READY_TO_PICK_UP = 104740.0;
-        public static final double STARTING_POSITION = 42000.0;
-        public static final double SUBSTATION = 330000.0;
+        public static final double STARTING_POSITION = 20000.0; //42000 old
+        public static final double SUBSTATION = 220000.0;//330000 old
     }
 
     public static class Arm
@@ -121,8 +121,8 @@ public final class Constants
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 995000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
-        public static final double HIGH = 958000.0;
-        public static final double MIDDLE = 323000.0;
+        public static final double HIGH = 932000.0;
+        public static final double MIDDLE = 307000.0;
         public static final double LOW = 161000.0;
         public static final double GATHER = 0.0;
         public static final double ARM_READY_TO_GRAB = 161595.3;
@@ -132,7 +132,7 @@ public final class Constants
         public static final double CLAMP = 292.6;
         public static final double READY_TO_PICK_UP = 0.0;
         public static final double STARTING_POSITION = 0.0;
-        public static final double SUBSTATION = 319000.0;
+        public static final double SUBSTATION = 360000.0;//319000 old
     }
 
     public static class Grabber
@@ -300,14 +300,15 @@ public final class Constants
         kLow(Constants.Shoulder.LOW, Constants.Arm.LOW),
         kMiddle(Constants.Shoulder.MIDDLE, Constants.Arm.MIDDLE),
         kHigh(Constants.Shoulder.HIGH, Constants.Arm.HIGH),
+        kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),
+        kStartingPosition(Constants.Shoulder.STARTING_POSITION, Constants.Arm.STARTING_POSITION),
+        kSubstation(Constants.Shoulder.SUBSTATION, Constants.Arm.SUBSTATION),
+        kOverride(-4237, -4237),
+
         kArmReadyToClamp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.ARM_READY_TO_SUCTION),
         kSuctionCone(Constants.Shoulder.SUCTION_CONE, Constants.Arm.ARM_READY_TO_GRAB),
         kShoulderReadyToClamp(Constants.Shoulder.SHOULDER_READY_TO_CLAMP, Constants.Arm.ARM_READY_TO_GRAB),
-        kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),
-        kReadyToPickUp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.READY_TO_PICK_UP),
-        kStartingPosition(Constants.Shoulder.STARTING_POSITION, Constants.Arm.STARTING_POSITION),
-        kSubstation(Constants.Shoulder.SUBSTATION, Constants.Arm.SUBSTATION),
-        kOverride(-4237, -4237);
+        kReadyToPickUp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.READY_TO_PICK_UP);
         
      
         public final double shoulder;

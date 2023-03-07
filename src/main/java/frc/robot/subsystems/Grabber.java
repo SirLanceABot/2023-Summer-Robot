@@ -83,8 +83,8 @@ public class Grabber extends Subsystem4237
     // private final DoubleSolenoid wristSolenoid = 
     //         new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 
     //         Constants.Grabber.WRIST_UP, Constants.Grabber.WRIST_DOWN);
-    private final CANSparkMax vacuumMotorBottom = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_BOTTOM_PORT, MotorType.kBrushless);
-    private final CANSparkMax vacuumMotorTop = new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_TOP_PORT, MotorType.kBrushless);
+    private final CANSparkMax vacuumMotorBottom =   new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_BOTTOM_PORT, MotorType.kBrushless);
+    private final CANSparkMax vacuumMotorTop =      new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_TOP_PORT, MotorType.kBrushless);
     // private final CANSparkMax vacuumMotor = new CANSparkMax(7, MotorType.kBrushless);   //testing
 
     private final PowerDistribution vacuumSolenoid = new PowerDistribution(Constants.Grabber.VACCUM_CAN_ID, ModuleType.kRev);

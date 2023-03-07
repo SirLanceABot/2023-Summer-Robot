@@ -51,7 +51,7 @@ public class Wrist extends Subsystem4237
 
     private final DoubleSolenoid wristSolenoid = 
             new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 
-            Constants.Grabber.WRIST_UP, Constants.Grabber.WRIST_DOWN);
+            Constants.Grabber.WRIST_DOWN, Constants.Grabber.WRIST_UP);
     private PeriodicIO periodicIO = new PeriodicIO();
 
     /**

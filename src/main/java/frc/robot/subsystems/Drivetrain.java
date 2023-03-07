@@ -68,6 +68,19 @@ public class Drivetrain extends Subsystem4237
         kDrive, kLockwheels, kStop, kArcadeDrive;
     }
 
+    public enum ArcadeDriveDirection
+    {
+        kStraight(0.0), kStrafe(90.0);
+
+        public double value;
+        
+        private ArcadeDriveDirection(double value)
+        {
+            this.value =  value;
+        }
+
+    }
+
     // *** CLASS & INSTANCE VARIABLES ***
     // private static final Translation2d frontLeftLocation = new Translation2d(Constant.DRIVETRAIN_WHEELBASE_METERS / 2, Constant.DRIVETRAIN_TRACKWIDTH_METERS / 2);
     // private static final Translation2d frontRightLocation = new Translation2d(Constant.DRIVETRAIN_WHEELBASE_METERS / 2, -Constant.DRIVETRAIN_TRACKWIDTH_METERS / 2);
@@ -336,6 +349,7 @@ public class Drivetrain extends Subsystem4237
                 break;
 
             case kArcadeDrive:
+                SwerveDriveKinematics.desaturateWheelSpeeds(periodicIO.swerveModuleStates, Constants.DrivetrainConstants.MAX_DRIVE_SPEED);
                 break;
 
             case kStop:
@@ -477,7 +491,7 @@ public class Drivetrain extends Subsystem4237
  * @param xSpeed robot speed -1 to +1
  * @param rotation angle of wheels and chassis -1 to +1
  */
-    public void arcadeDrive(double xSpeed, double rotation)
+    public void arcadeDrive(double xSpeed, double rotation, double moduleAngle)
     {
         driveMode = DriveMode.kArcadeDrive;
 
@@ -485,17 +499,21 @@ public class Drivetrain extends Subsystem4237
 
         periodicIO.swerveModuleStates = new SwerveModuleState[4];
         // double m_maxOutput = 2.;
-        double m_maxOutput = Math.abs(xSpeed);
+        double maxOutput = Math.abs(xSpeed);
         
         //  assuming fl, fr, bl, br
-        periodicIO.swerveModuleStates[0] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
-        periodicIO.swerveModuleStates[1] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
-        periodicIO.swerveModuleStates[2] = new SwerveModuleState(speeds.left * m_maxOutput, Rotation2d.fromDegrees(0));
-        periodicIO.swerveModuleStates[3] = new SwerveModuleState(speeds.right * m_maxOutput, Rotation2d.fromDegrees(0));
+        periodicIO.swerveModuleStates[0] = new SwerveModuleState(speeds.left * maxOutput, Rotation2d.fromDegrees(moduleAngle));
+        periodicIO.swerveModuleStates[1] = new SwerveModuleState(speeds.right * maxOutput, Rotation2d.fromDegrees(moduleAngle));
+        periodicIO.swerveModuleStates[2] = new SwerveModuleState(speeds.left * maxOutput, Rotation2d.fromDegrees(moduleAngle));
+        periodicIO.swerveModuleStates[3] = new SwerveModuleState(speeds.right * maxOutput, Rotation2d.fromDegrees(moduleAngle));
+        // periodicIO.swerveModuleStates[0] = new SwerveModuleState(speeds.left * maxOutput, Rotation2d.fromDegrees(0));
+        // periodicIO.swerveModuleStates[1] = new SwerveModuleState(speeds.right * maxOutput, Rotation2d.fromDegrees(0));
+        // periodicIO.swerveModuleStates[2] = new SwerveModuleState(speeds.left * maxOutput, Rotation2d.fromDegrees(0));
+        // periodicIO.swerveModuleStates[3] = new SwerveModuleState(speeds.right * maxOutput, Rotation2d.fromDegrees(0));
         
     }
 
-        /**
+    /**
      * Drive a "straight" distance in meters
      * 
      * @param startingPosition of the robot

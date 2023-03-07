@@ -30,6 +30,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Drivetrain.ArcadeDriveDirection;
 import frc.robot.subsystems.Wrist.WristPosition;
 import frc.robot.subsystems.Shoulder;
 // import frc.robot.subsystems.Shoulder.TargetPosition;
@@ -302,7 +303,7 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void driveOut(double distance)
     {
-        add(new AutoDriveDistance(drivetrain, gyro, 0.5, 0.0, distance));
+        add(new AutoDriveDistance(drivetrain, gyro, 0.5, 0.0, ArcadeDriveDirection.kStraight, distance));
     }
 
     // private void strafeDrive(double distance)
@@ -337,7 +338,7 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void goToSecondGamePiece()
     {
-        add(new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 3.75));
+        add(new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 3.75));
     }
 
     private void goToChargingStation(double location)
@@ -347,25 +348,25 @@ public class AutoCommandList extends SequentialCommandGroup
             // add( new ParallelCommandGroup( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather), new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75)));
             add( new ParallelCommandGroup( 
                  new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather),
-                 new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 5.0)));
+                 new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 4.0)));
         }
         else
         {
             // add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75));
-            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 5.0));
+            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 4.0));
         }
 
-        if(location == -1)
+        if(autonomousTabData.startingLocation == StartingLocation.kLeft)
         {
-            add( new AutoDriveDistance(drivetrain, gyro, 0.0, 1.5, 2.5));
+            add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.8));
         }
 
-        if(location == 1)
+        if(autonomousTabData.startingLocation == StartingLocation.kRight)
         {
-            add( new AutoDriveDistance(drivetrain, gyro, 0.0, -1.5, 2.5));
+            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.8));
         }
 
-        add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 1.5));
+        add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.5));
 	    add( new AutoBalance(drivetrain, gyro));
 		add( new LockWheels(drivetrain));
         

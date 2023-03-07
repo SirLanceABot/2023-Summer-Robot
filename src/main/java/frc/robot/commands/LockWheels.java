@@ -63,4 +63,10 @@ public class LockWheels extends CommandBase
         return true;
     }
 
+    @Override
+    public String toString()
+    {
+        return "LockWheels()";
+    }
+
 }

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain.ArcadeDriveDirection;
 
 public class AutoDriveDistance extends CommandBase
 {
@@ -25,17 +26,19 @@ public class AutoDriveDistance extends CommandBase
     private double initialYaw;
     private double currentYaw;
     private double correctionRotate;
+    private ArcadeDriveDirection arcadeDriveDirection;
     private double distanceToDriveMeters;
     // private boolean isFinished;
     private Translation2d startingPosition;
 
 
-    public AutoDriveDistance(Drivetrain drivetrain, Gyro4237 gyro, double xSpeed, double ySpeed, double distanceToDriveMeters)
+    public AutoDriveDistance(Drivetrain drivetrain, Gyro4237 gyro, double xSpeed, double ySpeed, ArcadeDriveDirection arcadeDriveDirection, double distanceToDriveMeters)
     {
         this.drivetrain = drivetrain;
         this.gyro = gyro;
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
+        this.arcadeDriveDirection = arcadeDriveDirection;
         this.distanceToDriveMeters = distanceToDriveMeters;
 
         if(this.drivetrain != null)
@@ -65,7 +68,7 @@ public class AutoDriveDistance extends CommandBase
         {
             // drivetrain.drive(xSpeed, ySpeed, 0.0, false);
             // drivetrain.drive(xSpeed, ySpeed, correctionRotate, false);
-            drivetrain.arcadeDrive(xSpeed, correctionRotate);
+            drivetrain.arcadeDrive(xSpeed, correctionRotate, arcadeDriveDirection.value);
 
             // double distanceDrivenMeters = drivetrain.getDistanceDrivenMeters(startingPosition);
             // if(Math.abs(distanceDrivenMeters) < Math.abs(distanceToDriveMeters))
@@ -106,7 +109,7 @@ public class AutoDriveDistance extends CommandBase
     @Override
     public String toString()
     {
-        return "AutoDriveDistance(" + xSpeed + ", " + ySpeed + ", " + distanceToDriveMeters + ")";
+        return "AutoDriveDistance(" + xSpeed + ", " + ySpeed + ", " + arcadeDriveDirection + ", " + distanceToDriveMeters + ")";
     }
 }
 
