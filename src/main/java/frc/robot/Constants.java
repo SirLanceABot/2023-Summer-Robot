@@ -105,7 +105,7 @@ public final class Constants
 
         public static final double HIGH = 205000.0; //375000 big single suction //340000 double small suction
         public static final double MIDDLE = 176000.0; //300000 big single suction //297000 double small suction
-        public static final double LOW = 155000.0;
+        public static final double LOW = 55000.0;
         public static final double GATHER = 0.0;
         // public static final double SHOULDER_READY_TO_GRAB = 
         public static final double SUCTION_CONE = 38912.2;
@@ -113,7 +113,7 @@ public final class Constants
         public static final double CLAMP = 682.0;
         public static final double READY_TO_PICK_UP = 104740.0;
         public static final double STARTING_POSITION = 20000.0; //42000 old
-        public static final double SUBSTATION = 220000.0;//330000 old
+        public static final double SUBSTATION = 225000.0;//330000 old
     }
 
     public static class Arm
@@ -121,8 +121,8 @@ public final class Constants
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 995000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
-        public static final double HIGH = 932000.0;
-        public static final double MIDDLE = 307000.0;
+        public static final double HIGH = 912000.0;
+        public static final double MIDDLE = 250000.0;
         public static final double LOW = 161000.0;
         public static final double GATHER = 0.0;
         public static final double ARM_READY_TO_GRAB = 161595.3;

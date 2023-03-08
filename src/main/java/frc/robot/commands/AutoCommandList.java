@@ -118,18 +118,19 @@ public class AutoCommandList extends SequentialCommandGroup
                     // add( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp));
                     // add( new InstantCommand(() -> grabber.grabGamePiece(), grabber));
                     add( new GrabGamePiece(grabber));
-                    add( new WaitCommand(1.0));
+                    add( new InstantCommand( () -> shoulder.initialPinch(), shoulder));
+                    add( new WaitCommand(0.25));
                     //Commented out this line below
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, shoulderPositionPiece1));
                     add( new ExtendScorer(shoulder, arm, wrist, shoulderPositionPiece1));
                     add( new ReleaseGamePiece(grabber));
-                    add( new WaitCommand(0.5));
+                    add( new WaitCommand(0.25));
                     //Commented out line below between Calvin and St. Joe
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
                     if(autonomousTabData.moveOntoChargingStation == MoveOntoChargingStation.kYes)
                     {
-                        add( new MoveArmToScoringPosition(arm, TargetPosition.kGather));
-                        add( new MoveWrist(wrist, WristPosition.kDown));
+                        // add( new MoveArmToScoringPosition(arm, TargetPosition.kGather));
+                        // add( new MoveWrist(wrist, WristPosition.kDown));
                     }
                     else
                     {
@@ -346,24 +347,29 @@ public class AutoCommandList extends SequentialCommandGroup
         if(autonomousTabData.playPreload == PlayPreload.kYes)
         {
             // add( new ParallelCommandGroup( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather), new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75)));
-            add( new ParallelCommandGroup( 
-                 new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather),
-                 new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 4.0)));
+            add( new ParallelCommandGroup(
+                 new AutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
+                 new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather)));
+
+            //      new MoveArmToScoringPosition(arm, TargetPosition.kGather), 
+            //      new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather),
+            //      new AutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75)));
+                //  new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 2.0)));
         }
         else
         {
             // add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75));
-            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 4.0));
+            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 3.75));
         }
 
         if(autonomousTabData.startingLocation == StartingLocation.kLeft)
         {
-            add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.8));
+            add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.6));
         }
 
         if(autonomousTabData.startingLocation == StartingLocation.kRight)
         {
-            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.8));
+            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.6));
         }
 
         add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.5));

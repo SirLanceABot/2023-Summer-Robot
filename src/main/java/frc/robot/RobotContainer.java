@@ -48,6 +48,7 @@ import frc.robot.commands.AutoCommandList;
 import frc.robot.commands.AutoDriveDistance;
 import frc.robot.commands.ClampCone;
 import frc.robot.commands.ExtendScorer;
+import frc.robot.commands.ExtendScorerSubstation;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
 import frc.robot.commands.ScoreGamePiece;
@@ -85,7 +86,7 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= false;
+	private boolean useFullRobot			= true;
 	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
@@ -231,7 +232,10 @@ public class RobotContainer
 			//Y Button
 			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
-			yButtonTrigger.toggleOnTrue(new SlowSwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+			if(drivetrain != null)
+			{
+				yButtonTrigger.toggleOnTrue(new SlowSwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+			}
 			// yButtonTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.0, 0.5)) );
 			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)         
 			// 			  .andThen( () -> driverController.setRumble(0.5))
@@ -255,21 +259,18 @@ public class RobotContainer
 			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
 			// lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
 
-			if(drivetrain != null)
-				drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
-			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
 			
 			BooleanSupplier rightBumper = driverController.getButtonSupplier(Xbox.Button.kRightBumper);
 			Trigger rightBumperTrigger = new Trigger(rightBumper);
-			rightBumperTrigger.onTrue( new ClampCone(shoulder, arm, grabber));
+			// rightBumperTrigger.onTrue( new ClampCone(shoulder, arm, grabber));
 			// rightBumperTrigger.onTrue( new MoveArmToScoringPosition(arm, TargetPosition.kClamp)
 			// 				  .andThen( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp)));
 			// rightBumperTrigger.whileTrue( new StartEndCommand(() -> candle.signalCone(), () ->  candle.turnOffLight(), candle));
 
 			BooleanSupplier leftBumper = driverController.getButtonSupplier(Xbox.Button.kLeftBumper);
 			Trigger leftBumperTrigger = new Trigger(leftBumper);
-			leftBumperTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kReadyToPickUp)
-							.andThen(new MoveArmToScoringPosition(arm, TargetPosition.kReadyToPickUp)));
+			// leftBumperTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kReadyToPickUp)
+			// 				.andThen(new MoveArmToScoringPosition(arm, TargetPosition.kReadyToPickUp)));
 			
 			// leftBumperTrigger.whileTrue( new StartEndCommand(() -> candle.signalCube(), () ->  candle.turnOffLight(), candle));
 
@@ -280,6 +281,12 @@ public class RobotContainer
 			{
 				dPadDownTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kStartingPosition));
 			}
+
+			if(drivetrain != null)
+			{
+				drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+			}
+			// drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> 0.5, () -> 0.0, () -> 0.0, false));
         }
 	}
 
@@ -411,7 +418,7 @@ public class RobotContainer
 			Trigger dPadRightTrigger = new Trigger(dPadRight);
 			if(arm != null && shoulder != null)
 			{
-				dPadRightTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kSubstation));
+				dPadRightTrigger.onTrue( new ExtendScorerSubstation(shoulder, arm, grabber));
 				// dPadRightTrigger.onTrue(
 				// 	new ConditionalCommand(
 				// 		new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kLow),

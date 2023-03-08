@@ -14,14 +14,13 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 
 /** 
  * Move arm and shoulder to a scoring position. Uses arm and shoulder subsytems. 
  */
-public class ExtendScorer extends SequentialCommandGroup
+public class ExtendScorerSubstation extends SequentialCommandGroup
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -36,35 +35,28 @@ public class ExtendScorer extends SequentialCommandGroup
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Shoulder shoulder;
     private final Arm arm;
-    // private final Grabber grabber;
-    private final Wrist wrist;
-    private TargetPosition targetPosition;
+    private final Grabber grabber;
 
 
     /**
-     * Creates a new ExtendScorer.
+     * Creates a new ExtendScorerSubstation.
      *
      * @param shoulder The shoulder subsystem.
      * @param arm The arm subystem.
-     * @param wrist The wrist subsystem.
-     * @param targetPosition Target position (Type: TargetPosition)
      */
-    public ExtendScorer(Shoulder shoulder, Arm arm, Wrist wrist, TargetPosition targetPosition) 
+    public ExtendScorerSubstation(Shoulder shoulder, Arm arm, Grabber grabber) 
     {
         this.shoulder = shoulder;
         this.arm = arm;
-        // this.grabber = grabber;
-        this.wrist = wrist;
-        this.targetPosition = targetPosition;
+        this.grabber = grabber;
         
         // Use addRequirements() here to declare subsystem dependencies.
         // if(shoulder != null && arm != null &&  grabber != null && wrist != null)
-        if(shoulder != null && arm != null && wrist != null)
+        if(shoulder != null && arm != null && grabber != null)
         {
             addRequirements(this.shoulder);
             addRequirements(this.arm);
-            // addRequirements(this.grabber);
-            addRequirements(this.wrist);
+            addRequirements(this.grabber);
 
             build();
         }
@@ -72,13 +64,15 @@ public class ExtendScorer extends SequentialCommandGroup
 
     private void build()
     {
-        
         addCommands( new ParallelCommandGroup( 
-            new MoveShoulderToScoringPosition(shoulder, targetPosition),
+            new MoveShoulderToScoringPosition(shoulder, TargetPosition.kSubstation),
             new SequentialCommandGroup( 
-                new WaitUntilCommand(() -> shoulder.getPosition() > TargetPosition.kLow.shoulder).withTimeout(1.0),
-                new MoveWrist(wrist, WristPosition.kUp))));
-        addCommands( new MoveArmToScoringPosition(arm, targetPosition));
+                new WaitUntilCommand(() -> shoulder.getPosition() > TargetPosition.kLow.shoulder).withTimeout(1.0)),
+                new MoveArmToScoringPosition(arm, TargetPosition.kSubstation)));
+        // addCommands( new MoveShoulderToScoringPosition(shoulder, targetPosition) );
+        // addCommands( new ParallelCommandGroup( 
+        //     new GrabGamePiece(grabber), 
+        //     new MoveArmToScoringPosition(arm, targetPosition)));
         // addCommands( new MoveWrist(wrist, WristPosition.kUp) );
         // addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
         // addCommands( new ReleaseGamePiece(grabber) );
@@ -87,6 +81,6 @@ public class ExtendScorer extends SequentialCommandGroup
     @Override
     public String toString()
     {
-        return "ExtendScorer(" + targetPosition + ")";
+        return "ExtendScorerSubstation()";
     }
 }

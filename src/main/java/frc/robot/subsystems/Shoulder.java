@@ -119,8 +119,8 @@ public class Shoulder extends Subsystem4237
     private final double kD = 0.0; //1.0;
     private final double kIz = 0.0;
     private final double kFF = 0.0;
-    private final double kMaxOutput = 0.2;
-    private final double kMinOutput = -0.2;
+    private final double kMaxOutput = 0.4;
+    private final double kMinOutput = -0.4;
     private final double kGatherMaxOutput = 0.2;
     private final double kGatherMinOutput = -0.2;
 
@@ -307,6 +307,13 @@ public class Shoulder extends Subsystem4237
     {
         targetPosition = TargetPosition.kOverride;
         periodicIO.motorSpeed = -0.2;//0.5;
+    }
+
+    /** Moves the shoulder down to get pressure at beginning of match */
+    public void initialPinch()
+    {
+        targetPosition = TargetPosition.kOverride;
+        periodicIO.motorSpeed = -0.1;//0.5;
     }
 
     /** Moves the shoulder to high position */
