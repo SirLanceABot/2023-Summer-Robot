@@ -102,8 +102,8 @@ public class AutonomousTab
 
         //add options to Box
         autonomousCommandsBox.setDefaultOption("None", AutonomousTabData.AutonomousCommands.kNeither);
-        autonomousCommandsBox.addOption("Charge Station", AutonomousTabData.AutonomousCommands.kChargingStation);
-        autonomousCommandsBox.addOption("2 Pieces", AutonomousTabData.AutonomousCommands.kTwoGamePieces);
+        // autonomousCommandsBox.addOption("Charge Station", AutonomousTabData.AutonomousCommands.kChargingStation);
+        // autonomousCommandsBox.addOption("2 Pieces", AutonomousTabData.AutonomousCommands.kTwoGamePieces);
 
         //put the widget on the shuffleboard
         autonomousTab.add(autonomousCommandsBox)

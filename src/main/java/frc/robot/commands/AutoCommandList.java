@@ -304,7 +304,7 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void driveOut(double distance)
     {
-        add(new AutoDriveDistance(drivetrain, gyro, 0.5, 0.0, ArcadeDriveDirection.kStraight, distance));
+        add(new ArcadeAutoDriveDistance(drivetrain, gyro, 0.5, 0.0, ArcadeDriveDirection.kStraight, distance));
     }
 
     // private void strafeDrive(double distance)
@@ -339,42 +339,105 @@ public class AutoCommandList extends SequentialCommandGroup
 
     private void goToSecondGamePiece()
     {
-        add(new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 3.75));
+        add(new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 3.75));
     }
 
     private void goToChargingStation(double location)
     {
-        if(autonomousTabData.playPreload == PlayPreload.kYes)
+        switch(autonomousTabData.startingLocation)
         {
-            // add( new ParallelCommandGroup( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather), new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75)));
-            add( new ParallelCommandGroup(
-                 new AutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
-                 new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather)));
+            case kLeft:
+                if(autonomousTabData.playPreload == PlayPreload.kYes)
+                {
+                    add( new ParallelCommandGroup(
+                            new SequentialCommandGroup(
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
+                                new AutoDriveDistance(drivetrain, gyro, 0.0, 1.5, 1.6),
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.8)),
+                            new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather)));
+                }
+                else
+                {
+                    add( new SequentialCommandGroup(
+                            new ArcadeAutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
+                            new AutoDriveDistance(drivetrain, gyro, 0.0, 1.5, 1.6),
+                            new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.8)));
+                }
 
-            //      new MoveArmToScoringPosition(arm, TargetPosition.kGather), 
-            //      new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather),
-            //      new AutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75)));
-                //  new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 2.0)));
-        }
-        else
-        {
-            // add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75));
-            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 3.75));
+                add( new AutoBalance(drivetrain, gyro, 1));
+                break;
+            
+            case kMiddle:
+                if(autonomousTabData.playPreload == PlayPreload.kYes)
+                {
+                    add( new ParallelCommandGroup(
+                            new SequentialCommandGroup(
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 1.75),
+                                new AutoBalance(drivetrain, gyro, -1)),
+                            new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather))); 
+                }
+                else
+                {
+                    add( new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 1.75));
+                    add( new AutoBalance(drivetrain, gyro, -1));
+                }
+                break;
+            
+            case kRight:
+                if(autonomousTabData.playPreload == PlayPreload.kYes)
+                {
+                    add( new ParallelCommandGroup(
+                            new SequentialCommandGroup(
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
+                                new AutoDriveDistance(drivetrain, gyro, 0.0, -1.5, 1.6),
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.8)),
+                            new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather)));
+                }
+                else
+                {
+                    add( new SequentialCommandGroup(
+                            new ArcadeAutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
+                            new AutoDriveDistance(drivetrain, gyro, 0.0, -1.5, 1.6),
+                            new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.8)));
+                }
+
+                add( new AutoBalance(drivetrain, gyro, 1));
+                break;
         }
 
-        if(autonomousTabData.startingLocation == StartingLocation.kLeft)
-        {
-            add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.6));
-        }
-
-        if(autonomousTabData.startingLocation == StartingLocation.kRight)
-        {
-            add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.6));
-        }
-
-        add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.5));
-	    add( new AutoBalance(drivetrain, gyro));
 		add( new LockWheels(drivetrain));
+
+        // if(autonomousTabData.playPreload == PlayPreload.kYes)
+        // {
+        //     // add( new ParallelCommandGroup( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather), new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75)));
+        //     add( new ParallelCommandGroup(
+        //          new AutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
+        //          new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather)));
+
+        //     //      new MoveArmToScoringPosition(arm, TargetPosition.kGather), 
+        //     //      new MoveShoulderToScoringPosition(shoulder, TargetPosition.kGather),
+        //     //      new AutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75)));
+        //         //  new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 2.0)));
+        // }
+        // else
+        // {
+        //     // add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, 1.75));
+        //     add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 3.75));
+        // }
+
+        // if(autonomousTabData.startingLocation == StartingLocation.kLeft)
+        // {
+        //     add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.6));
+        // }
+
+        // if(autonomousTabData.startingLocation == StartingLocation.kRight)
+        // {
+        //     add( new AutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStrafe, 1.6));
+        // }
+
+        // add( new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.5));
+
+	    
         
         // {
         //     add(new AutoDriveDistance(drivetrain, gyro, 1.5, 0.0, 4.4));

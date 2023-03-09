@@ -65,6 +65,7 @@ public class ExtendScorerSubstation extends SequentialCommandGroup
     private void build()
     {
         addCommands( new ParallelCommandGroup( 
+            new GrabGamePiece(grabber),
             new MoveShoulderToScoringPosition(shoulder, TargetPosition.kSubstation),
             new SequentialCommandGroup( 
                 new WaitUntilCommand(() -> shoulder.getPosition() > TargetPosition.kLow.shoulder).withTimeout(1.0)),

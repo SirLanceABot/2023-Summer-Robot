@@ -31,6 +31,7 @@ public class AutoBalance extends CommandBase
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Drivetrain drivetrain;
     private final Gyro4237 gyro;
+    private int initialDirection;
     private final Timer finishBalanceTimer = new Timer();
     private BalanceState balanceState = BalanceState.kNotLevel;
 
@@ -40,14 +41,17 @@ public class AutoBalance extends CommandBase
     private double currentYaw;
     private double error;
     private double drivePower;
+    private double direction;
     
 
     // private final double CS_BALANCE_GOAL_DEGREES = 0.0;
     private final double CS_BALANCE_DRIVE_KP = 0.025;
     private final double CS_BALANCE_TOLERANCE = 3.0;
     private final double CS_BALANCE_MIN_TIME_LEVEL = 0.75;
-    private final double CS_BALANCE_MAX_SPEED = 0.75;
+    private final double CS_BALANCE_MAX_SPEED = 1.5;
     private boolean approach = true;
+    // private int approachCounter = 0;
+    // private int balanceCounter = 0;
 
     /**
     * Creates a new AutoBalance.
@@ -55,12 +59,14 @@ public class AutoBalance extends CommandBase
     *
     * @param drivetrain Drivetrain subsytem.
     * @param gyro Gyro4237 sensor.
+    * @param initialDirection Initial direction to drive before balancing +forward, -reverse
     */
-    public AutoBalance(Drivetrain drivetrain, Gyro4237 gyro) 
+    public AutoBalance(Drivetrain drivetrain, Gyro4237 gyro, int initialDirection) 
     {
         // System.out.println("Constructor");
         this.drivetrain = drivetrain;
         this.gyro = gyro;
+        this.initialDirection = initialDirection;
         
         // Use addRequirements() here to declare subsystem dependencies.
         if(drivetrain != null)
@@ -74,6 +80,11 @@ public class AutoBalance extends CommandBase
     public void initialize()
     {
         approach = true;
+        drivePower = CS_BALANCE_MAX_SPEED;
+        maxPitch = 0.0;
+        // approachCounter = 0;
+        // balanceCounter = 0;
+        balanceState = BalanceState.kNotLevel;
         // driveForwardTimer.reset();
         // driveForwardTimer.start();
     }
@@ -94,23 +105,22 @@ public class AutoBalance extends CommandBase
 
             // previousPitch = currentPitch;
             currentPitch = gyro.getPitch();
-            if(Math.abs(currentPitch) > Math.abs(maxPitch))
-            {
-                maxPitch = currentPitch;
-            }
-            currentYaw = (int)Math.abs(gyro.getYaw()) % 360;
+            error = 0.0 - currentPitch;   //controlling to zero
 
-            if(currentPitch > 10.0)
+            // if(Math.abs(currentPitch) > Math.abs(maxPitch))
+            // {
+            //     maxPitch = currentPitch;
+            // }
+            // currentYaw = (int)Math.abs(gyro.getYaw()) % 360;
+
+            if(Math.abs(currentPitch) > 10.0)
             {
                 approach = false;
             }
 
-
-
             SmartDashboard.putNumber("Current Pitch", currentPitch);
             SmartDashboard.putNumber("Current Yaw", currentYaw);
 
-            error = currentPitch;
 
             // drivePower =  Math.min(CS_BALANCE_DRIVE_KP * error, 1);
     
@@ -118,12 +128,16 @@ public class AutoBalance extends CommandBase
 
             if(approach)
             {
-                drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
+                // approachCounter++;
+                // System.out.println("Approach " + approachCounter);
+                drivePower = CS_BALANCE_MAX_SPEED;
+                // drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
             }
             else
             {
-
-                drivePower = (CS_BALANCE_DRIVE_KP * error);
+                // balanceCounter++;
+                // System.out.println("Balance: " + balanceCounter + " Approach: " + approachCounter);
+                drivePower = CS_BALANCE_DRIVE_KP * error;
                 // if(Math.abs(drivePower) > CS_BALANCE_MAX_SPEED || Math.abs(error) > 12.0)
                 // {
                 //     drivePower = Math.copySign(CS_BALANCE_MAX_SPEED, drivePower);
@@ -142,14 +156,21 @@ public class AutoBalance extends CommandBase
             }
             
 
-            if((currentYaw > 135 && currentYaw < 225))
-            {
-                drivePower = -drivePower;
-            }
+            // if((currentYaw > 135 && currentYaw < 225))
+            // {
+            //     drivePower = -drivePower;
+            // }
 
             if(drivetrain != null)
             {
-                drivetrain.drive(drivePower, 0.0, 0.0, false);
+                if(approach)
+                {
+                    drivetrain.drive(drivePower * initialDirection, 0.0, 0.0, false); 
+                }
+                else
+                {
+                    drivetrain.drive(drivePower, 0.0, 0.0, false);
+                }
             }
         }     
     }
@@ -170,7 +191,11 @@ public class AutoBalance extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        if(Math.abs(error) > CS_BALANCE_TOLERANCE)
+        if(approach)
+        {
+            return false;
+        }
+        else if(Math.abs(error) > CS_BALANCE_TOLERANCE)
         {
             balanceState = BalanceState.kNotLevel;
             return false;

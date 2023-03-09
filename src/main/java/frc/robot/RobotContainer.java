@@ -45,7 +45,7 @@ import frc.robot.Constants.TargetPosition;
 import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoCommandList;
-import frc.robot.commands.AutoDriveDistance;
+import frc.robot.commands.ArcadeAutoDriveDistance;
 import frc.robot.commands.ClampCone;
 import frc.robot.commands.ExtendScorer;
 import frc.robot.commands.ExtendScorerSubstation;
@@ -87,20 +87,20 @@ public class RobotContainer
     }
 	
 	private boolean useFullRobot			= true;
-	private boolean useBindings				= true;
+	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= true;
-	private boolean useDrivetrain   		= true;
-	private boolean useGrabber 				= true;
-	private boolean useWrist				= true;
-	private boolean useArm 					= true;
-	private boolean useShoulder				= true;
+	private boolean useGyro					= false;
+	private boolean useDrivetrain   		= false;
+	private boolean useGrabber 				= false;
+	private boolean useWrist				= false;
+	private boolean useArm 					= false;
+	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= true;
-	private boolean useOperatorController 	= true;
+	private boolean useDriverController		= false;
+	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= true;
 	private boolean useVision				= false;
 	private boolean useDataLog				= false;
@@ -213,7 +213,7 @@ public class RobotContainer
 			Trigger bButtonTrigger = new Trigger(bButton);
 			if(drivetrain != null)
 			{
-				bButtonTrigger.onTrue( new AutoBalance(drivetrain, gyro));
+				bButtonTrigger.onTrue( new AutoBalance(drivetrain, gyro, -1));
 			}
 			// bButtonTrigger.onTrue( new AutoDriveDistance(drivetrain, 0.5, 0.0, 1.0)
 			// 			  .andThen( new AutoBalance(drivetrain, gyro)));
