@@ -202,15 +202,25 @@ public class Arm extends Subsystem4237
     }
 
     /** Moves the arm to high position */
-    public void moveToHigh()
+    public void moveToHighCone()
     {
-        targetPosition = TargetPosition.kHigh;
+        targetPosition = TargetPosition.kHighCone;
+    }
+
+    public void moveToHighCube()
+    {
+        targetPosition = TargetPosition.kHighCube;
     }
 
     /** Moves the arm to middle position */
-    public void moveToMiddle()
+    public void moveToMiddleCone()
     {
-        targetPosition = TargetPosition.kMiddle;
+        targetPosition = TargetPosition.kMiddleCone;
+    }
+
+    public void moveToMiddleCube()
+    {
+        targetPosition = TargetPosition.kMiddleCube;
     }
  
     /** Moves the arm to low position */

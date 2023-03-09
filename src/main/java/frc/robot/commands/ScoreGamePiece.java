@@ -198,12 +198,12 @@ public class ScoreGamePiece extends CommandBase
         {
             switch(targetPosition)
             {
-                case kHigh:
-                    shoulder.moveToHigh();
+                case kHighCone:
+                    shoulder.moveToHighCone();
                     break;
                 
-                case kMiddle:
-                    shoulder.moveToMiddle();
+                case kMiddleCone:
+                    shoulder.moveToMiddleCone();
                     break;
                 
                 case kLow:
@@ -227,12 +227,12 @@ public class ScoreGamePiece extends CommandBase
         {
             switch(targetPosition)
             {
-                case kHigh:
-                    arm.moveToHigh();
+                case kHighCone:
+                    arm.moveToHighCone();
                     break;
                 
-                case kMiddle:
-                    arm.moveToMiddle();
+                case kMiddleCone:
+                    arm.moveToMiddleCone();
                     break;
                 
                 case kLow:

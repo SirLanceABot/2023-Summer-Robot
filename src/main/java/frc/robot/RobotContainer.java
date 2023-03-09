@@ -48,6 +48,7 @@ import frc.robot.commands.AutoCommandList;
 import frc.robot.commands.ArcadeAutoDriveDistance;
 import frc.robot.commands.ClampCone;
 import frc.robot.commands.ExtendScorer;
+import frc.robot.commands.ExtendScorerCube;
 import frc.robot.commands.ExtendScorerSubstation;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
@@ -87,7 +88,7 @@ public class RobotContainer
     }
 	
 	private boolean useFullRobot			= true;
-	private boolean useBindings				= false;
+	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
@@ -282,6 +283,7 @@ public class RobotContainer
 				dPadDownTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kStartingPosition));
 			}
 
+			// Default Command
 			if(drivetrain != null)
 			{
 				drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
@@ -347,7 +349,7 @@ public class RobotContainer
 			Trigger dPadUpTrigger = new Trigger(dPadUp);
 			if(arm != null && shoulder != null)
 			{
-				dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kHigh));
+				dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kHighCone));
 				// dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kHigh)
 				// 			 .andThen( new ReleaseGamePiece(grabber))
 				// 			 );
@@ -391,9 +393,9 @@ public class RobotContainer
 			{
 				dPadLeftTrigger.onTrue(
 					new ConditionalCommand(
-						new RetractScorer(shoulder, arm, wrist, TargetPosition.kMiddle),
-						new ExtendScorer(shoulder, arm, wrist, TargetPosition.kMiddle),
-						() -> shoulder.getPosition() > TargetPosition.kMiddle.shoulder)
+						new RetractScorer(shoulder, arm, wrist, TargetPosition.kMiddleCone),
+						new ExtendScorer(shoulder, arm, wrist, TargetPosition.kMiddleCone),
+						() -> shoulder.getPosition() > TargetPosition.kMiddleCone.shoulder)
 					);
 				// dPadLeftTrigger.onTrue(
 				// 	new ConditionalCommand(
@@ -436,6 +438,24 @@ public class RobotContainer
 			// 	dPadRightTrigger.onTrue(( new MoveShoulderToScoringPosition(shoulder, ShoulderPosition.kLow))
 			// 				 	.andThen( new PrintCommand("DPad RIGHT")));
 			// }
+
+			// Start Button
+			BooleanSupplier startButton = operatorController.getButtonSupplier(Xbox.Button.kStart);
+			Trigger startButtonTrigger = new Trigger(startButton);
+
+			// Start Button and dPad Up
+			Trigger startAndUpTrigger  = startButtonTrigger.and(dPadUpTrigger);
+			if(shoulder != null && arm != null && wrist != null)
+			{
+				startAndUpTrigger.onTrue( new PrintCommand("START AND UP").andThen( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kHighCube)));
+			}
+
+			// Start Button and dPad Left
+			Trigger startAndLeftTrigger  = startButtonTrigger.and(dPadLeftTrigger);
+			if(shoulder != null && arm != null && wrist != null)
+			{
+				startAndLeftTrigger.onTrue( new PrintCommand("START AND LEFT").andThen( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kMiddleCube)));
+			}
 
 			//X button
 			BooleanSupplier xButton = operatorController.getButtonSupplier(Xbox.Button.kX);
@@ -500,14 +520,9 @@ public class RobotContainer
 				// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
 			}
 
-			// Start Button
-			BooleanSupplier startButton = operatorController.getButtonSupplier(Xbox.Button.kStart);
-			Trigger startButtonTrigger = new Trigger(startButton);
-			if(shoulder != null && arm != null)
-			{
-
-			}
-
+			
+			
+			// Default Command
 			if(candle != null)
 				candle.setDefaultCommand(new RunCommand (() -> candle.signalRed(), candle));
 		}

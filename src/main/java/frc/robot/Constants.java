@@ -103,8 +103,10 @@ public final class Constants
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 380000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
-        public static final double HIGH = 205000.0; //375000 big single suction //340000 double small suction
-        public static final double MIDDLE = 176000.0; //300000 big single suction //297000 double small suction
+        public static final double HIGH_CONE = 205000.0; //375000 big single suction //340000 double small suction
+        public static final double HIGH_CUBE = 225000.0;
+        public static final double MIDDLE_CONE = 176000.0; //300000 big single suction //297000 double small suction
+        public static final double MIDDLE_CUBE = 205000.0;
         public static final double LOW = 55000.0;
         public static final double GATHER = 0.0;
         // public static final double SHOULDER_READY_TO_GRAB = 
@@ -121,8 +123,10 @@ public final class Constants
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 995000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
-        public static final double HIGH = 912000.0;
-        public static final double MIDDLE = 250000.0;
+        public static final double HIGH_CONE = 912000.0;
+        public static final double HIGH_CUBE = 912000.0;
+        public static final double MIDDLE_CONE = 250000.0;
+        public static final double MIDDLE_CUBE = 438000.0;
         public static final double LOW = 161000.0;
         public static final double GATHER = 0.0;
         public static final double ARM_READY_TO_GRAB = 161595.3;
@@ -298,8 +302,10 @@ public final class Constants
     {
         kGather(Constants.Shoulder.GATHER, Constants.Arm.GATHER),
         kLow(Constants.Shoulder.LOW, Constants.Arm.LOW),
-        kMiddle(Constants.Shoulder.MIDDLE, Constants.Arm.MIDDLE),
-        kHigh(Constants.Shoulder.HIGH, Constants.Arm.HIGH),
+        kMiddleCone(Constants.Shoulder.MIDDLE_CONE, Constants.Arm.MIDDLE_CONE),
+        kMiddleCube(Constants.Shoulder.MIDDLE_CUBE, Constants.Arm.MIDDLE_CUBE),
+        kHighCone(Constants.Shoulder.HIGH_CONE, Constants.Arm.HIGH_CONE),
+        kHighCube(Constants.Shoulder.HIGH_CUBE, Constants.Arm.HIGH_CUBE),
         kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),
         kStartingPosition(Constants.Shoulder.STARTING_POSITION, Constants.Arm.STARTING_POSITION),
         kSubstation(Constants.Shoulder.SUBSTATION, Constants.Arm.SUBSTATION),

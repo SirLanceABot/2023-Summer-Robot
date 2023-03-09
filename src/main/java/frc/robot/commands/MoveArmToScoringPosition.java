@@ -69,12 +69,20 @@ public class MoveArmToScoringPosition extends CommandBase
         {
             switch(desiredPosition)
             {
-                case kHigh:
-                    arm.moveToHigh();
+                case kHighCone:
+                    arm.moveToHighCone();
+                    break;
+
+                case kHighCube:
+                    arm.moveToHighCube();
                     break;
                 
-                case kMiddle:
-                    arm.moveToMiddle();
+                case kMiddleCone:
+                    arm.moveToMiddleCone();
+                    break;
+
+                case kMiddleCube:
+                    arm.moveToMiddleCube();
                     break;
                 
                 case kLow:

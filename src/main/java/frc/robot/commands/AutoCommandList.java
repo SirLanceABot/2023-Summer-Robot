@@ -203,10 +203,10 @@ public class AutoCommandList extends SequentialCommandGroup
                 position = TargetPosition.kLow;
                 break;
             case kMiddle:
-                position = TargetPosition.kMiddle;
+                position = TargetPosition.kMiddleCone;
                 break;
             case kTop:
-                position = TargetPosition.kHigh;
+                position = TargetPosition.kHighCone;
                 break;
         }
 
@@ -225,10 +225,10 @@ public class AutoCommandList extends SequentialCommandGroup
                 position = TargetPosition.kLow;
                 break;
             case kMiddle:
-                position = TargetPosition.kMiddle;
+                position = TargetPosition.kMiddleCone;
                 break;
             case kTop:
-                position = TargetPosition.kHigh;
+                position = TargetPosition.kHighCone;
                 break;
         }
 
@@ -247,10 +247,10 @@ public class AutoCommandList extends SequentialCommandGroup
                 position = TargetPosition.kLow;
                 break;
             case kMiddle:
-                position = TargetPosition.kMiddle;
+                position = TargetPosition.kMiddleCone;
                 break;
             case kTop:
-                position = TargetPosition.kHigh;
+                position = TargetPosition.kHighCone;
                 break;
         }
 
@@ -269,10 +269,10 @@ public class AutoCommandList extends SequentialCommandGroup
                 position = TargetPosition.kLow;
                 break;
             case kMiddle:
-                position = TargetPosition.kMiddle;
+                position = TargetPosition.kMiddleCone;
                 break;
             case kTop:
-                position = TargetPosition.kHigh;
+                position = TargetPosition.kHighCone;
                 break;
         }
 
@@ -352,7 +352,7 @@ public class AutoCommandList extends SequentialCommandGroup
                     add( new ParallelCommandGroup(
                             new SequentialCommandGroup(
                                 new ArcadeAutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
-                                new AutoDriveDistance(drivetrain, gyro, 0.0, 1.5, 1.6),
+                                new AutoDriveDistance(drivetrain, gyro, 0.0, 1.5, 1.75),
                                 new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.8)),
                             new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather)));
                 }
@@ -360,7 +360,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 {
                     add( new SequentialCommandGroup(
                             new ArcadeAutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
-                            new AutoDriveDistance(drivetrain, gyro, 0.0, 1.5, 1.6),
+                            new AutoDriveDistance(drivetrain, gyro, 0.0, 1.5, 1.75),
                             new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.8)));
                 }
 
@@ -372,8 +372,11 @@ public class AutoCommandList extends SequentialCommandGroup
                 {
                     add( new ParallelCommandGroup(
                             new SequentialCommandGroup(
-                                new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 1.75),
-                                new AutoBalance(drivetrain, gyro, -1)),
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 4.1),
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.5),
+                                // new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 1.75),
+                                // new AutoBalance(drivetrain, gyro, -1)),
+                                new AutoBalance(drivetrain, gyro, 1)),
                             new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather))); 
                 }
                 else
@@ -389,7 +392,7 @@ public class AutoCommandList extends SequentialCommandGroup
                     add( new ParallelCommandGroup(
                             new SequentialCommandGroup(
                                 new ArcadeAutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
-                                new AutoDriveDistance(drivetrain, gyro, 0.0, -1.5, 1.6),
+                                new AutoDriveDistance(drivetrain, gyro, 0.0, -1.5, 1.75),
                                 new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.8)),
                             new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather)));
                 }
@@ -397,7 +400,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 {
                     add( new SequentialCommandGroup(
                             new ArcadeAutoDriveDistance(drivetrain, gyro, -3.0, 0.0, ArcadeDriveDirection.kStraight, 3.75),
-                            new AutoDriveDistance(drivetrain, gyro, 0.0, -1.5, 1.6),
+                            new AutoDriveDistance(drivetrain, gyro, 0.0, -1.5, 1.75),
                             new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.8)));
                 }
 

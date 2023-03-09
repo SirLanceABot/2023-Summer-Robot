@@ -317,17 +317,27 @@ public class Shoulder extends Subsystem4237
     }
 
     /** Moves the shoulder to high position */
-    public void moveToHigh()
+    public void moveToHighCone()
     {
-        // System.out.println("Shoulder Moving to High");
-        targetPosition = TargetPosition.kHigh;
+        targetPosition = TargetPosition.kHighCone;
+    }
+
+    /** Moves the shoulder to high position */
+    public void moveToHighCube()
+    {
+        targetPosition = TargetPosition.kHighCube;
     }
 
     /** Moves the shoulder to middle position */
-    public void moveToMiddle()
+    public void moveToMiddleCone()
     {
-        // System.out.println("Shoulder Moving to Middle");
-        targetPosition = TargetPosition.kMiddle;
+        targetPosition = TargetPosition.kMiddleCone;
+    }
+
+    /** Moves the shoulder to high position */
+    public void moveToMiddleCube()
+    {
+        targetPosition = TargetPosition.kMiddleCube;
     }
  
     /** Moves the shoulder to low position */

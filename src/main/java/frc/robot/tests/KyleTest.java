@@ -60,12 +60,12 @@ public class KyleTest implements Test
         }
         else if (joystick.getRawButtonPressed(4))
         {   // Second to rightmost button = 3/4
-            desiredPosition = TargetPosition.kMiddle;
+            desiredPosition = TargetPosition.kMiddleCone;
             System.out.println("3/4, desiredPosition.min = " + desiredPosition.arm + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(6))
         {   // Rightmost button = fully extenden
-            desiredPosition = TargetPosition.kHigh;
+            desiredPosition = TargetPosition.kHighCone;
             System.out.println("All Out, desiredPosition.min = " + desiredPosition.arm + " armPosition = " + arm.getArmPosition());
         }
 

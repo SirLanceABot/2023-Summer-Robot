@@ -65,12 +65,20 @@ public class MoveShoulderToScoringPosition extends CommandBase
         {
             switch(desiredPosition)
             {
-                case kHigh:
-                    shoulder.moveToHigh();
+                case kHighCone:
+                    shoulder.moveToHighCone();
+                    break;
+
+                case kHighCube:
+                    shoulder.moveToHighCube();
                     break;
                 
-                case kMiddle:
-                    shoulder.moveToMiddle();
+                case kMiddleCone:
+                    shoulder.moveToMiddleCone();
+                    break;
+                
+                case kMiddleCube:
+                    shoulder.moveToMiddleCube();
                     break;
                 
                 case kLow:
