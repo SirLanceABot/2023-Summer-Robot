@@ -496,10 +496,10 @@ public class Drivetrain extends Subsystem4237
         driveMode = DriveMode.kArcadeDrive;
 
         //TEST THIS
-        // if(Math.abs(rotation) > 0.3)    //clamps rotation at -0.3 to 0.3
-        // {
-        //     rotation = Math.copySign(0.3, rotation);
-        // }
+        if(Math.abs(rotation) > 0.3)    //clamps rotation at -0.3 to 0.3
+        {
+            rotation = Math.copySign(0.3, rotation);
+        }
 
         WheelSpeeds speeds = DifferentialDrive.arcadeDriveIK(xSpeed, rotation, false);
 

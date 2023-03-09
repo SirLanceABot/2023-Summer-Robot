@@ -373,7 +373,7 @@ public class AutoCommandList extends SequentialCommandGroup
                     add( new ParallelCommandGroup(
                             new SequentialCommandGroup(
                                 new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 4.1),
-                                new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.5),
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.9),
                                 // new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 1.75),
                                 // new AutoBalance(drivetrain, gyro, -1)),
                                 new AutoBalance(drivetrain, gyro, 1)),
