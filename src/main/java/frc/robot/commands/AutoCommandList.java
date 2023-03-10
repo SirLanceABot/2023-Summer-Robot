@@ -381,8 +381,12 @@ public class AutoCommandList extends SequentialCommandGroup
                 }
                 else
                 {
-                    add( new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 1.75));
-                    add( new AutoBalance(drivetrain, gyro, -1));
+                    add( new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 4.1));
+                    add( new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.9));
+                    add( new AutoBalance(drivetrain, gyro, 1));
+
+                    // add( new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 1.75));
+                    // add( new AutoBalance(drivetrain, gyro, -1));
                 }
                 break;
             
