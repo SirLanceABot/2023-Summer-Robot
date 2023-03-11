@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -72,7 +73,8 @@ public class Grabber extends Subsystem4237
         private double vacuumEncoderTop = 0.0;
         private double vacuumMotorBottomCurrent = 0.0;
         private double vacuumMotorTopCurrent = 0.0;
-
+        private boolean bottomDigitalInputBool;
+        private boolean topDigitalInputBool;
         //OUTPUTS
         // private WristPosition wristPosition = WristPosition.kOff;
         private double vacuumMotorSpeed = 0.0;
@@ -96,6 +98,10 @@ public class Grabber extends Subsystem4237
     private SparkMaxLimitSwitch forwardLimitSwitchTop;
     private SparkMaxLimitSwitch reverseLimitSwitchBottom;
     private SparkMaxLimitSwitch reverseLimitSwitchTop;
+    private DigitalInput bottomDigitalInput = new DigitalInput(3);
+    private DigitalInput topDigitalInput = new DigitalInput(2);
+
+    
 
     /**
      * Contructor for the grabber mechanism
@@ -211,6 +217,17 @@ public class Grabber extends Subsystem4237
         return periodicIO.vacuumMotorTopCurrent;
     }
 
+    public boolean getBottomDigitalInput()
+    {
+        return periodicIO.bottomDigitalInputBool;
+    }
+
+    public boolean getTopDigitalInput()
+    {
+        return periodicIO.topDigitalInputBool;
+    }
+
+    
 
 
     /* (non-Javadoc)
@@ -224,6 +241,8 @@ public class Grabber extends Subsystem4237
         periodicIO.vacuumMotorTopCurrent = vacuumMotorTop.getOutputCurrent();
         periodicIO.vacuumEncoderBottom = vacuumMotorEncoderBottom.getPosition();
         periodicIO.vacuumEncoderTop = vacuumMotorEncoderTop.getPosition();
+        periodicIO.bottomDigitalInputBool = bottomDigitalInput.get();
+        periodicIO.topDigitalInputBool = topDigitalInput.get();
     }
 
     /* (non-Javadoc)

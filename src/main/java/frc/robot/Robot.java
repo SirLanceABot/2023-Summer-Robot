@@ -209,6 +209,11 @@ public class Robot extends TimedRobot
             {
                 robotContainer.mainShuffleboard.sensorTab.updateEncoderData(); 
             }
+
+            if(robotContainer.mainShuffleboard != null && robotContainer.mainShuffleboard.cameraTab != null)
+            {
+                robotContainer.mainShuffleboard.cameraTab.updateEncoderData(); 
+            }
         }       
     }
 

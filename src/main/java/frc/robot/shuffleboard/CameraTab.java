@@ -2,6 +2,7 @@ package frc.robot.shuffleboard;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -10,6 +11,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.Shoulder;
 
 public class CameraTab 
 {
@@ -26,19 +29,28 @@ public class CameraTab
     // *** CLASS & INSTANCE VARIABLES ***
     // Create a Shuffleboard Tab
     private ShuffleboardTab cameraTab = Shuffleboard.getTab("Camera");
+    private Shoulder shoulder;
+    private Grabber grabber;
 
     private int oldTime = 0;
 
     // Create text output boxes
     private NetworkTableEntry timeRemaining;
+    private GenericEntry shoulderEncoderBox;
+    private GenericEntry grabberMotorBottomCurrentBox;
+    private GenericEntry grabberMotorTopCurrentBox;
+    private GenericEntry grabberBottomDigitalInputBox;
+    private GenericEntry grabberTopDigitalInputBox;
 
     private Double timeRemainingData = 0.0;
     String compressorStateString = "No data";
 
     // *** CLASS CONSTRUCTOR ***
-    CameraTab()
+    CameraTab(Shoulder shoulder, Grabber grabber)
     {
         System.out.println(fullClassName + " : Constructor Started");
+
+        
 
         // // limelight on shuffleboard
         CameraWidget cw = new CameraWidget(cameraTab);
@@ -50,10 +62,84 @@ public class CameraTab
 
         createTimeRemainingBox();
 
+        this.shoulder = shoulder;
+        this.grabber = grabber;
+
+        if(shoulder != null)
+            shoulderEncoderBox = createShoulderEncoderBox();
+
+        if(grabber != null)
+        {
+            grabberMotorBottomCurrentBox = createGrabberBottomCurrentBox();
+            grabberMotorTopCurrentBox = createGrabberTopCurrentBox();
+            grabberBottomDigitalInputBox = createGrabberBottomDigitalInputBox();
+            grabberTopDigitalInputBox = createGrabberTopDigitalInputBox();
+        }
+
         System.out.println(fullClassName + ": Constructor Finished");
     }
 
     // *** CLASS & INSTANCE METHODS ***
+
+    private GenericEntry createShoulderEncoderBox()
+    {
+        return cameraTab.add("Shoulder Encoder", shoulder.getPosition())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(24, 0)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createGrabberBottomCurrentBox()
+    {
+        return cameraTab.add("Grabber Motor Bottom Current", grabber.getVacuumBottomCurrent())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(20, 0)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createGrabberTopCurrentBox()
+    {
+        return cameraTab.add("Grabber Motor Top Current", grabber.getVacuumTopCurrent())
+        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+        .withPosition(20, 3)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createGrabberBottomDigitalInputBox()
+    {
+        return cameraTab.add("Grabber Bottom Digital Input", grabber.getBottomDigitalInput())
+        .withWidget(BuiltInWidgets.kBooleanBox)   // specifies type of widget: "kTextView"
+        .withPosition(20, 6)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    private GenericEntry createGrabberTopDigitalInputBox()
+    {
+        return cameraTab.add("Grabber Top Digital Input", grabber.getTopDigitalInput())
+        .withWidget(BuiltInWidgets.kBooleanBox)   // specifies type of widget: "kTextView"
+        .withPosition(20, 9)  // sets position of widget
+        .withSize(4, 2)    // sets size of widget
+        .getEntry();
+    }
+
+    public void updateEncoderData()
+    {
+        if(shoulder != null)
+            shoulderEncoderBox.setDouble(shoulder.getPosition());
+
+        if(grabber != null)
+        {
+            grabberMotorBottomCurrentBox.setDouble(grabber.getVacuumBottomCurrent());
+            grabberMotorTopCurrentBox.setDouble(grabber.getVacuumTopCurrent());
+            grabberBottomDigitalInputBox.setBoolean(grabber.getBottomDigitalInput());
+            grabberTopDigitalInputBox.setBoolean(grabber.getTopDigitalInput());
+        }
+    }
+
     private void createTimeRemainingBox()
     {
         cameraTab.add("Time Remaining", timeRemainingData.toString())

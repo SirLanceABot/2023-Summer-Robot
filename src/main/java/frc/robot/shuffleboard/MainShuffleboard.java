@@ -43,7 +43,7 @@ public class MainShuffleboard
         useOperatorControllerTab = useOperatorControllerTab && robotContainer.operatorController != null;
 
         autonomousTab           = (useFullRobot || useAutonomousTab)         ? new AutonomousTab()                                                                                           : null;
-        cameraTab               = (useFullRobot || useCameraTab)             ? new CameraTab()                                                                                               : null;
+        cameraTab               = (useFullRobot || useCameraTab)             ? new CameraTab(robotContainer.shoulder, robotContainer.grabber)                                                                                               : null;
         sensorTab               = (useSensorTab)             ? new SensorTab(robotContainer.shoulder, robotContainer.grabber, robotContainer.arm, robotContainer.drivetrain, robotContainer.gyro) : null;
         driverControllerTab     = (useDriverControllerTab)   ? new DriverControllerTab(robotContainer.driverController)                                                      : null;
         operatorControllerTab   = (useOperatorControllerTab) ? new OperatorControllerTab(robotContainer.operatorController)                                                  : null;
@@ -76,7 +76,11 @@ public class MainShuffleboard
     public void setCameras()
     {
         if(cameraTab != null)
+        {
             cameraTab.updateCameraTab();
+            cameraTab.updateEncoderData();
+        }
+            
     }
 
     //-------------------------------------------------------------------//
