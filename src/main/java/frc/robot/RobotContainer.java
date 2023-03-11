@@ -104,7 +104,7 @@ public class RobotContainer
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= true;
 	private boolean useVision				= false;
-	private boolean useDataLog				= false;
+	private boolean useDataLog				= true;
 	
 	public final boolean fullRobot;
 	public final ExampleSubsystem exampleSubsystem;
@@ -123,7 +123,7 @@ public class RobotContainer
 	public final Gyro4237 gyro;
 	// public final PowerDistribution pdh;
 	public final Compressor compressor;
-	public final DataLog log;
+	public final  DataLog log;
 
 	/** 
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -142,7 +142,7 @@ public class RobotContainer
 		accelerometer		= (useAccelerometer)						? new Accelerometer4237()		: null;
 		gyro 				= (useFullRobot || useGyro)					? new Gyro4237()				: null;	
 		drivetrain 			= (useFullRobot || useDrivetrain) 			? new Drivetrain(gyro, log) 	: null;
-		grabber 			= (useFullRobot || useGrabber) 				? new Grabber() 				: null;
+		grabber 			= (useFullRobot || useGrabber) 				? new Grabber(log) 				: null;
 		wrist				= (useFullRobot || useWrist)				? new Wrist()					: null;
 		arm 				= (useFullRobot || useArm) 					? new Arm() 					: null;
 		shoulder 			= (useFullRobot || useShoulder) 			? new Shoulder() 				: null;

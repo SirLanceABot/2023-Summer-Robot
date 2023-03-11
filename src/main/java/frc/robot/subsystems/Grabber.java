@@ -10,8 +10,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 
@@ -75,10 +81,23 @@ public class Grabber extends Subsystem4237
         private double vacuumMotorTopCurrent = 0.0;
         private boolean bottomDigitalInputBool;
         private boolean topDigitalInputBool;
+        private double pdhSolenoidCurrent;
+        private boolean pdhSolenoidGet;
+        private boolean pdhSolenoidSet;
         //OUTPUTS
         // private WristPosition wristPosition = WristPosition.kOff;
         private double vacuumMotorSpeed = 0.0;
         private VacuumState vacuumState = VacuumState.kClosed;
+
+        DoubleLogEntry vacuumBottomCurrentEntry;
+        DoubleLogEntry vacuumTopCurrentEntry;
+        BooleanLogEntry bottomDigitalInputEntry;
+        BooleanLogEntry topDigitalInputEntry;
+        DoubleLogEntry pdhSolenoidCurrentEntry;
+        BooleanLogEntry pdhSolenoidSetEntry;
+        BooleanLogEntry pdhSolenoidGetEntry;
+        
+
     }
 
     // private final PneumaticsModuleType moduleType = PneumaticsModuleType.CTREPCM;
@@ -100,19 +119,26 @@ public class Grabber extends Subsystem4237
     private SparkMaxLimitSwitch reverseLimitSwitchTop;
     private DigitalInput bottomDigitalInput = new DigitalInput(3);
     private DigitalInput topDigitalInput = new DigitalInput(2);
+    private boolean useDataLog = true;
+    private DataLog log;
 
     
 
     /**
      * Contructor for the grabber mechanism
      */
-    public Grabber()
+    public Grabber(DataLog log)
     {
         System.out.println(fullClassName + " : Constructor Started");
 
+        this.log = log;
+        if(useDataLog)
+        {
+            logVacuumInit();
+        }
+
         configCANSparkMax();
         vacuumSolenoid.setSwitchableChannel(false);
-        
         // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
 
         System.out.println(fullClassName + ": Constructor Finished");
@@ -123,6 +149,9 @@ public class Grabber extends Subsystem4237
      */
     private void configCANSparkMax()
     {   
+        // // Start Data Log
+        // DataLogManager.start();
+
         // Factory Defaults
         vacuumMotorBottom.restoreFactoryDefaults();
         vacuumMotorTop.restoreFactoryDefaults();
@@ -227,7 +256,29 @@ public class Grabber extends Subsystem4237
         return periodicIO.topDigitalInputBool;
     }
 
-    
+    private void logVacuumInit()
+    {
+        periodicIO.vacuumBottomCurrentEntry = new DoubleLogEntry(log, "Bottom Current", "Amps");
+        periodicIO.vacuumTopCurrentEntry = new DoubleLogEntry(log, "Top Current", "Amps");
+        periodicIO.bottomDigitalInputEntry = new BooleanLogEntry(log, "Bottom Digital Input", "raw");
+        periodicIO.topDigitalInputEntry = new BooleanLogEntry(log, "Top Digital Input", "raw");
+        periodicIO.pdhSolenoidCurrentEntry = new DoubleLogEntry(log, "PDH Solenoid Current", "Amps");
+        periodicIO.pdhSolenoidGetEntry = new BooleanLogEntry(log, "PDH Solenoid Get", "raw");
+        periodicIO.pdhSolenoidSetEntry = new BooleanLogEntry(log, "PDH Solenoid Set", "raw");
+
+
+    }
+
+    private void logVacuum()
+    {
+        periodicIO.vacuumBottomCurrentEntry.append(periodicIO.vacuumMotorBottomCurrent);
+        periodicIO.vacuumTopCurrentEntry.append(periodicIO.vacuumMotorTopCurrent);
+        periodicIO.bottomDigitalInputEntry.append(periodicIO.bottomDigitalInputBool);
+        periodicIO.topDigitalInputEntry.append(periodicIO.topDigitalInputBool);
+        periodicIO.pdhSolenoidCurrentEntry.append(periodicIO.pdhSolenoidCurrent);
+        periodicIO.pdhSolenoidGetEntry.append(periodicIO.pdhSolenoidGet);
+        periodicIO.pdhSolenoidSetEntry.append(periodicIO.pdhSolenoidSet);
+    }
 
 
     /* (non-Javadoc)
@@ -243,6 +294,17 @@ public class Grabber extends Subsystem4237
         periodicIO.vacuumEncoderTop = vacuumMotorEncoderTop.getPosition();
         periodicIO.bottomDigitalInputBool = bottomDigitalInput.get();
         periodicIO.topDigitalInputBool = topDigitalInput.get();
+        periodicIO.pdhSolenoidCurrent = vacuumSolenoid.getCurrent(23);
+        periodicIO.pdhSolenoidGet = vacuumSolenoid.getSwitchableChannel();
+        
+
+        // if(useDataLog)
+        // {
+        //     DataLogManager.log("Vacuum Bottom Current:  " + periodicIO.vacuumMotorBottomCurrent);
+        //     DataLogManager.log("Vacuum Top Current:  " + periodicIO.vacuumMotorTopCurrent);
+        //     DataLogManager.log("Bottom Digital Input:  " + periodicIO.bottomDigitalInputBool);
+        //     DataLogManager.log("Top Digital Input:  " + periodicIO.topDigitalInputBool);
+        // }
     }
 
     /* (non-Javadoc)
@@ -252,10 +314,18 @@ public class Grabber extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
+       
         // wristSolenoid.set(periodicIO.wristPosition.value);
         vacuumMotorBottom.set(periodicIO.vacuumMotorSpeed);
         vacuumMotorTop.set(periodicIO.vacuumMotorSpeed);
         vacuumSolenoid.setSwitchableChannel(periodicIO.vacuumState.value);
+        periodicIO.pdhSolenoidSet = periodicIO.vacuumState.value;
+
+        if(useDataLog && DriverStation.isEnabled())
+        {
+            logVacuum();
+        }
+        
     }
 
     @Override
