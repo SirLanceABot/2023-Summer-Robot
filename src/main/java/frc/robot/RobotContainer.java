@@ -38,9 +38,7 @@ import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
-// import frc.robot.subsystems.Arm.TargetPosition;
 import frc.robot.subsystems.Candle4237.LedStatus;
-// import frc.robot.subsystems.Shoulder.TargetPosition;
 import frc.robot.Constants.TargetPosition;
 import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.AutoBalance;
@@ -60,7 +58,6 @@ import frc.robot.commands.MoveShoulderToScoringPosition;
 import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.RetractScorer;
 import frc.robot.commands.SwerveDrive;
-import frc.robot.commands.TurnOffShoulder;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
 import frc.robot.controls.Xbox;
@@ -87,8 +84,8 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= true;
-	private boolean useBindings				= true;
+	private boolean useFullRobot			= false;
+	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
@@ -102,9 +99,9 @@ public class RobotContainer
 	private boolean useCandle				= false;
 	private boolean useDriverController		= false;
 	private boolean useOperatorController 	= false;
-	private boolean useMainShuffleboard		= true;
+	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
-	private boolean useDataLog				= true;
+	private boolean useDataLog				= false;
 	
 	public final boolean fullRobot;
 	public final ExampleSubsystem exampleSubsystem;
@@ -447,14 +444,14 @@ public class RobotContainer
 			Trigger startAndUpTrigger  = startButtonTrigger.and(dPadUpTrigger);
 			if(shoulder != null && arm != null && wrist != null)
 			{
-				startAndUpTrigger.onTrue( new PrintCommand("START AND UP").andThen( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kHighCube)));
+				startAndUpTrigger.onTrue( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kHighCube));
 			}
 
 			// Start Button and dPad Left
 			Trigger startAndLeftTrigger  = startButtonTrigger.and(dPadLeftTrigger);
 			if(shoulder != null && arm != null && wrist != null)
 			{
-				startAndLeftTrigger.onTrue( new PrintCommand("START AND LEFT").andThen( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kMiddleCube)));
+				startAndLeftTrigger.onTrue( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kMiddleCube));
 			}
 
 			//X button

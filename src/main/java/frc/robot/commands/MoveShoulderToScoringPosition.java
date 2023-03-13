@@ -30,8 +30,6 @@ public class MoveShoulderToScoringPosition extends CommandBase
     
     /**
      * 
-     * DO NOT USE THIS COMMAND 
-     * INSTEAD USE SCOREGAMEPIECE
      * Creates a new MoveShoulderToScoringPosition.
      * Moves the shoulder to one of the predetermined positions
      *

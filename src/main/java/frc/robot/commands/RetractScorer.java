@@ -40,7 +40,7 @@ public class RetractScorer extends SequentialCommandGroup
 
 
     /**
-     * Creates a new ExtendScorer.
+     * Creates a new RetractScorer.
      *
      * @param shoulder The shoulder subsystem.
      * @param arm The arm subystem.
