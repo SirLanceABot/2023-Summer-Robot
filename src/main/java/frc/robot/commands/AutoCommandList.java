@@ -122,7 +122,7 @@ public class AutoCommandList extends SequentialCommandGroup
                     add( new WaitCommand(0.25));
                     //Commented out this line below
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, shoulderPositionPiece1));
-                    add( new ExtendScorer(shoulder, arm, wrist, shoulderPositionPiece1));
+                    add( new ExtendScorer(shoulder, arm, wrist, grabber, shoulderPositionPiece1));
                     add( new ReleaseGamePiece(grabber));
                     add( new WaitCommand(0.25));
                     //Commented out line below between Calvin and St. Joe
@@ -159,7 +159,7 @@ public class AutoCommandList extends SequentialCommandGroup
                     //Updated between Calvin and St. Joe
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, shoulderPositionPiece2));
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
-                    add( new ExtendScorer(shoulder, arm, wrist, shoulderPositionPiece2));
+                    add( new ExtendScorer(shoulder, arm, wrist, grabber, shoulderPositionPiece2));
                     add( new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather));
                 }
 
@@ -179,7 +179,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 // Changed between Calvin and St. Joe
                 // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, angle1));
                 // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
-                add( new ExtendScorer(shoulder, arm, wrist, shoulderPositionPiece1));
+                add( new ExtendScorer(shoulder, arm, wrist, grabber, shoulderPositionPiece1));
                 add( new WaitCommand(0.5));
                 add( new ReleaseGamePiece(grabber));
                 add( new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather));
@@ -200,7 +200,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 position = TargetPosition.kGather;
                 break;
             case kBottom:
-                position = TargetPosition.kLow;
+                position = TargetPosition.kLowCone;
                 break;
             case kMiddle:
                 position = TargetPosition.kMiddleCone;
@@ -222,7 +222,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 position = TargetPosition.kGather;
                 break;
             case kBottom:
-                position = TargetPosition.kLow;
+                position = TargetPosition.kLowCone;
                 break;
             case kMiddle:
                 position = TargetPosition.kMiddleCone;
@@ -244,7 +244,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 position = TargetPosition.kGather;
                 break;
             case kBottom:
-                position = TargetPosition.kLow;
+                position = TargetPosition.kLowCone;
                 break;
             case kMiddle:
                 position = TargetPosition.kMiddleCone;
@@ -266,7 +266,7 @@ public class AutoCommandList extends SequentialCommandGroup
                 position = TargetPosition.kGather;
                 break;
             case kBottom:
-                position = TargetPosition.kLow;
+                position = TargetPosition.kLowCone;
                 break;
             case kMiddle:
                 position = TargetPosition.kMiddleCone;

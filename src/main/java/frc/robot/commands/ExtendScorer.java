@@ -7,8 +7,6 @@ import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Wrist.WristPosition;
 
-// import frc.robot.subsystems.Arm.TargetPosition;
-// import frc.robot.subsystems.Shoulder.TargetPosition;
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -36,7 +34,7 @@ public class ExtendScorer extends SequentialCommandGroup
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Shoulder shoulder;
     private final Arm arm;
-    // private final Grabber grabber;
+    private final Grabber grabber;
     private final Wrist wrist;
     private TargetPosition targetPosition;
 
@@ -47,23 +45,24 @@ public class ExtendScorer extends SequentialCommandGroup
      * @param shoulder The shoulder subsystem.
      * @param arm The arm subystem.
      * @param wrist The wrist subsystem.
+     * @param grabber The grabber subsystem.
      * @param targetPosition Target position (Type: TargetPosition)
      */
-    public ExtendScorer(Shoulder shoulder, Arm arm, Wrist wrist, TargetPosition targetPosition) 
+    public ExtendScorer(Shoulder shoulder, Arm arm, Wrist wrist, Grabber grabber, TargetPosition targetPosition) 
     {
         this.shoulder = shoulder;
         this.arm = arm;
-        // this.grabber = grabber;
+        this.grabber = grabber;
         this.wrist = wrist;
         this.targetPosition = targetPosition;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        // if(shoulder != null && arm != null &&  grabber != null && wrist != null)
-        if(shoulder != null && arm != null && wrist != null)
+        // if(shoulder != null && arm != null && wrist != null)
+        if(shoulder != null && arm != null &&  grabber != null && wrist != null)
         {
             addRequirements(this.shoulder);
             addRequirements(this.arm);
-            // addRequirements(this.grabber);
+            addRequirements(this.grabber);
             addRequirements(this.wrist);
 
             build();
@@ -72,16 +71,34 @@ public class ExtendScorer extends SequentialCommandGroup
 
     private void build()
     {
-        
-        addCommands( new ParallelCommandGroup( 
+        if(targetPosition == TargetPosition.kHighCone || targetPosition == TargetPosition.kMiddleCone || targetPosition == TargetPosition.kLowCone)
+        {
+            addCommands( new ParallelCommandGroup( 
             new MoveShoulderToScoringPosition(shoulder, targetPosition),
             new SequentialCommandGroup( 
-                new WaitUntilCommand(() -> shoulder.getPosition() > TargetPosition.kLow.shoulder).withTimeout(1.0),
+                new WaitUntilCommand(() -> shoulder.getPosition() > TargetPosition.kLowCone.shoulder).withTimeout(1.0),
                 new MoveWrist(wrist, WristPosition.kUp))));
-        addCommands( new MoveArmToScoringPosition(arm, targetPosition));
-        // addCommands( new MoveWrist(wrist, WristPosition.kUp) );
-        // addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
-        // addCommands( new ReleaseGamePiece(grabber) );
+            addCommands( new MoveArmToScoringPosition(arm, targetPosition));
+            // addCommands( new MoveWrist(wrist, WristPosition.kUp) );
+            // addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
+            // addCommands( new ReleaseGamePiece(grabber) );
+        }
+
+        if(targetPosition == TargetPosition.kHighCube || targetPosition == TargetPosition.kMiddleCube || targetPosition == TargetPosition.kLowCube)
+        {
+            addCommands( new MoveShoulderToScoringPosition(shoulder, targetPosition));
+            addCommands( new MoveArmToScoringPosition(arm, targetPosition));
+        }
+
+        if(targetPosition == TargetPosition.kSubstation)
+        {
+            addCommands( new ParallelCommandGroup( 
+            new GrabGamePiece(grabber),
+            new MoveShoulderToScoringPosition(shoulder, TargetPosition.kSubstation),
+            new SequentialCommandGroup( 
+                new WaitUntilCommand(() -> shoulder.getPosition() > TargetPosition.kLowCone.shoulder).withTimeout(1.0)),
+                new MoveArmToScoringPosition(arm, TargetPosition.kSubstation)));
+        }
     }
 
     @Override

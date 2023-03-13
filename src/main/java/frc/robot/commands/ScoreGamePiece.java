@@ -206,7 +206,7 @@ public class ScoreGamePiece extends CommandBase
                     shoulder.moveToMiddleCone();
                     break;
                 
-                case kLow:
+                case kLowCone:
                     shoulder.moveToLow();
                     break;
                 
@@ -235,7 +235,7 @@ public class ScoreGamePiece extends CommandBase
                     arm.moveToMiddleCone();
                     break;
                 
-                case kLow:
+                case kLowCone:
                     arm.moveToLow();
                     break;
                 

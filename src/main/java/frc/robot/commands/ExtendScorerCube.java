@@ -42,7 +42,8 @@ public class ExtendScorerCube extends SequentialCommandGroup
 
 
     /**
-     * Creates a new ExtendScorer.
+     * Creates a new ExtendScorerCube.
+     * DELETE AFTER TESTING EXTEND SCORE WITH NEW CASES
      *
      * @param shoulder The shoulder subsystem.
      * @param arm The arm subystem.

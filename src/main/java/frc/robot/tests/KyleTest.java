@@ -55,7 +55,7 @@ public class KyleTest implements Test
         }
         else if (joystick.getRawButtonPressed(3))
         {   // Second to leftmost buton = half
-            desiredPosition = TargetPosition.kLow;
+            desiredPosition = TargetPosition.kLowCone;
             System.out.println("Half, desiredPosition.min = " + desiredPosition.arm + " armPosition = " + arm.getArmPosition());
         }
         else if (joystick.getRawButtonPressed(4))

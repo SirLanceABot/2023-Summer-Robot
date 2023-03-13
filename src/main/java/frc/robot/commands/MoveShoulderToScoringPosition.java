@@ -79,7 +79,7 @@ public class MoveShoulderToScoringPosition extends CommandBase
                     shoulder.moveToMiddleCube();
                     break;
                 
-                case kLow:
+                case kLowCone:
                     shoulder.moveToLow();
                     break;
                 

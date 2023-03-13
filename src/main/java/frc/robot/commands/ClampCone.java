@@ -12,7 +12,7 @@ import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
 
 /** 
- * An example command that uses an example subsystem. 
+ * Moves scorer from intake position to pick up the gamepiece, turns on the suction, then clamps down the gamepiece
  */
 public class ClampCone extends SequentialCommandGroup
 {
@@ -33,9 +33,11 @@ public class ClampCone extends SequentialCommandGroup
 
 
     /**
-     * Creates a new ExampleCommand.
+     * Creates a new ClampCone.
      *
-     * @param subsystem The subsystem used by this command.
+     * @param shoulder Shoulder subsystem.
+     * @param arm Arm subsystem.
+     * @param grabber Grabber subsystem.
      */
     public ClampCone(Shoulder shoulder, Arm arm, Grabber grabber) 
     {

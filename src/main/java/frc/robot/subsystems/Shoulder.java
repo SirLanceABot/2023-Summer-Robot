@@ -344,7 +344,7 @@ public class Shoulder extends Subsystem4237
     public void moveToLow()
     {
         // System.out.println("Shoulder Moving to Low");
-        targetPosition = TargetPosition.kLow;
+        targetPosition = TargetPosition.kLowCone;
     }
 
     /** Moves the shoulderto gather position */

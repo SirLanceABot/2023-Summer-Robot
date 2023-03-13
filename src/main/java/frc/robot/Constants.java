@@ -107,7 +107,8 @@ public final class Constants
         public static final double HIGH_CUBE = 225000.0;
         public static final double MIDDLE_CONE = 176000.0; //300000 big single suction //297000 double small suction
         public static final double MIDDLE_CUBE = 205000.0;
-        public static final double LOW = 55000.0;
+        public static final double LOW_CONE = 55000.0;
+        public static final double LOW_CUBE = 55000.0;
         public static final double GATHER = 0.0;
         // public static final double SHOULDER_READY_TO_GRAB = 
         public static final double SUCTION_CONE = 38912.2;
@@ -127,7 +128,8 @@ public final class Constants
         public static final double HIGH_CUBE = 912000.0;
         public static final double MIDDLE_CONE = 250000.0;
         public static final double MIDDLE_CUBE = 438000.0;
-        public static final double LOW = 161000.0;
+        public static final double LOW_CONE = 161000.0;
+        public static final double LOW_CUBE = 161000.0;
         public static final double GATHER = 0.0;
         public static final double ARM_READY_TO_GRAB = 161595.3;
         public static final double ARM_READY_TO_SUCTION = 165000.0;
@@ -301,7 +303,8 @@ public final class Constants
     public enum TargetPosition
     {
         kGather(Constants.Shoulder.GATHER, Constants.Arm.GATHER),
-        kLow(Constants.Shoulder.LOW, Constants.Arm.LOW),
+        kLowCone(Constants.Shoulder.LOW_CONE, Constants.Arm.LOW_CONE),
+        kLowCube(Constants.Shoulder.LOW_CUBE, Constants.Arm.LOW_CUBE),
         kMiddleCone(Constants.Shoulder.MIDDLE_CONE, Constants.Arm.MIDDLE_CONE),
         kMiddleCube(Constants.Shoulder.MIDDLE_CUBE, Constants.Arm.MIDDLE_CUBE),
         kHighCone(Constants.Shoulder.HIGH_CONE, Constants.Arm.HIGH_CONE),

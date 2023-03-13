@@ -85,6 +85,7 @@ public class RobotContainer
     }
 	
 	private boolean useFullRobot			= false;
+	private boolean useScorer				= false;
 	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
@@ -132,23 +133,23 @@ public class RobotContainer
 		if(useDataLog)
 			DataLogManager.start();
 			
-		log					= (useDataLog)								? DataLogManager.getLog()		: null;
+		log					= (useDataLog)									? DataLogManager.getLog()								: null;
 
-		fullRobot = useFullRobot;
-		exampleSubsystem 	= (useExampleSubsystem)						? new ExampleSubsystem() 		: null;
-		accelerometer		= (useAccelerometer)						? new Accelerometer4237()		: null;
-		gyro 				= (useFullRobot || useGyro)					? new Gyro4237()				: null;	
-		drivetrain 			= (useFullRobot || useDrivetrain) 			? new Drivetrain(gyro, log) 	: null;
-		grabber 			= (useFullRobot || useGrabber) 				? new Grabber(log) 				: null;
-		wrist				= (useFullRobot || useWrist)				? new Wrist()					: null;
-		arm 				= (useFullRobot || useArm) 					? new Arm() 					: null;
-		shoulder 			= (useFullRobot || useShoulder) 			? new Shoulder() 				: null;
-		gatherer 			= (useGatherer) 							? new Gatherer() 				: null;
-		candle 				= (useFullRobot || useCandle)				? new Candle4237() 				: null;
-		driverController 	= (useFullRobot || useDriverController) 	? new DriverController(Constants.Controller.DRIVER) 		: null;
-		operatorController 	= (useFullRobot || useOperatorController) 	? new OperatorController(Constants.Controller.OPERATOR)	 	: null;
-		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)		? new MainShuffleboard(this)	: null;
-		vision 				= (useFullRobot || useVision)				? new Vision()					: null;
+		fullRobot 			= (useFullRobot);
+		exampleSubsystem 	= (useExampleSubsystem)							? new ExampleSubsystem() 								: null;
+		accelerometer		= (useAccelerometer)							? new Accelerometer4237()								: null;
+		gyro 				= (useFullRobot || useGyro)						? new Gyro4237()										: null;	
+		drivetrain 			= (useFullRobot || useDrivetrain) 				? new Drivetrain(gyro, log) 							: null;
+		grabber 			= (useFullRobot || useScorer || useGrabber) 	? new Grabber(log) 										: null;
+		wrist				= (useFullRobot || useScorer || useWrist)		? new Wrist()											: null;
+		arm 				= (useFullRobot || useScorer || useArm) 		? new Arm() 											: null;
+		shoulder 			= (useFullRobot || useScorer || useShoulder) 	? new Shoulder() 										: null;
+		gatherer 			= (useGatherer) 								? new Gatherer() 										: null;
+		candle 				= (useFullRobot || useCandle)					? new Candle4237() 										: null;
+		driverController 	= (useFullRobot || useDriverController) 		? new DriverController(Constants.Controller.DRIVER) 	: null;
+		operatorController 	= (useFullRobot || useOperatorController) 		? new OperatorController(Constants.Controller.OPERATOR)	: null;
+		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)			? new MainShuffleboard(this)							: null;
+		vision 				= (useFullRobot || useVision)					? new Vision()											: null;
 		
 		// pdh = new PowerDistribution(1, ModuleType.kRev);
 		compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
@@ -252,6 +253,7 @@ public class RobotContainer
 								   .andThen( new InstantCommand( () -> grabber.closeSolenoid())));
 			}
 
+
 			//Left Trigger
 			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
 			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
@@ -344,9 +346,9 @@ public class RobotContainer
 			//Dpad up button
 			BooleanSupplier dPadUp = operatorController.getDpadSupplier(Xbox.Dpad.kUp);
 			Trigger dPadUpTrigger = new Trigger(dPadUp);
-			if(arm != null && shoulder != null)
+			if(shoulder != null && arm != null && wrist != null && grabber != null)
 			{
-				dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kHighCone));
+				dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, grabber, TargetPosition.kHighCone));
 				// dPadUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, TargetPosition.kHigh)
 				// 			 .andThen( new ReleaseGamePiece(grabber))
 				// 			 );
@@ -367,7 +369,7 @@ public class RobotContainer
 			//Dpad down button
 			BooleanSupplier dPadDown = operatorController.getDpadSupplier(Xbox.Dpad.kDown);
 			Trigger dPadDownTrigger = new Trigger(dPadDown);
-			if(arm != null && shoulder != null)
+			if(shoulder != null && arm != null && wrist != null)
 			{
 				dPadDownTrigger.onTrue( new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather));
 				// dPadDownTrigger.onTrue( new ReturnToGather(arm, shoulder));
@@ -386,12 +388,12 @@ public class RobotContainer
 			//Dpad left button
 			BooleanSupplier dPadLeft = operatorController.getDpadSupplier(Xbox.Dpad.kLeft);
 			Trigger dPadLeftTrigger = new Trigger(dPadLeft);
-			if(arm != null && shoulder != null)
+			if(shoulder != null && arm != null && wrist != null && grabber != null)
 			{
 				dPadLeftTrigger.onTrue(
 					new ConditionalCommand(
 						new RetractScorer(shoulder, arm, wrist, TargetPosition.kMiddleCone),
-						new ExtendScorer(shoulder, arm, wrist, TargetPosition.kMiddleCone),
+						new ExtendScorer(shoulder, arm, wrist, grabber, TargetPosition.kMiddleCone),
 						() -> shoulder.getPosition() > TargetPosition.kMiddleCone.shoulder)
 					);
 				// dPadLeftTrigger.onTrue(
@@ -415,9 +417,12 @@ public class RobotContainer
 			//Dpad right button
 			BooleanSupplier dPadRight = operatorController.getDpadSupplier(Xbox.Dpad.kRight);
 			Trigger dPadRightTrigger = new Trigger(dPadRight);
-			if(arm != null && shoulder != null)
+			if(shoulder != null && arm != null && wrist != null && grabber != null)
 			{
-				dPadRightTrigger.onTrue( new ExtendScorerSubstation(shoulder, arm, grabber));
+				dPadRightTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, grabber, TargetPosition.kSubstation));
+
+				// dPadRightTrigger.onTrue( new ExtendScorerSubstation(shoulder, arm, grabber));
+
 				// dPadRightTrigger.onTrue(
 				// 	new ConditionalCommand(
 				// 		new RetractScorer(shoulder, arm, grabber, wrist, TargetPosition.kLow),
@@ -442,16 +447,29 @@ public class RobotContainer
 
 			// Start Button and dPad Up
 			Trigger startAndUpTrigger  = startButtonTrigger.and(dPadUpTrigger);
-			if(shoulder != null && arm != null && wrist != null)
+			if(shoulder != null && arm != null && wrist != null && grabber != null)
 			{
-				startAndUpTrigger.onTrue( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kHighCube));
+				startAndUpTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, grabber, TargetPosition.kHighCube));
+				
+				// startAndUpTrigger.onTrue( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kHighCube));
 			}
 
 			// Start Button and dPad Left
 			Trigger startAndLeftTrigger  = startButtonTrigger.and(dPadLeftTrigger);
-			if(shoulder != null && arm != null && wrist != null)
+			if(shoulder != null && arm != null && wrist != null && grabber != null)
 			{
-				startAndLeftTrigger.onTrue( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kMiddleCube));
+				startAndLeftTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, grabber, TargetPosition.kMiddleCube));
+
+				// startAndLeftTrigger.onTrue( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kMiddleCube));
+			}
+
+			// Start Button and dPad Down
+			Trigger startAndDownTrigger  = startButtonTrigger.and(dPadDownTrigger);
+			if(shoulder != null && arm != null && wrist != null && grabber != null)
+			{
+				startAndDownTrigger.onTrue( new ExtendScorer(shoulder, arm, wrist, grabber, TargetPosition.kLowCube));
+
+				// startAndLeftTrigger.onTrue( new ExtendScorerCube(shoulder, arm, wrist, TargetPosition.kMiddleCube));
 			}
 
 			//X button

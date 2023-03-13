@@ -40,9 +40,11 @@ public class ExtendScorerSubstation extends SequentialCommandGroup
 
     /**
      * Creates a new ExtendScorerSubstation.
+     * DELETE AFTER TESTING EXTEND SCORE WITH NEW CASES
      *
      * @param shoulder The shoulder subsystem.
      * @param arm The arm subystem.
+     * @param grabber The grabber subsystem
      */
     public ExtendScorerSubstation(Shoulder shoulder, Arm arm, Grabber grabber) 
     {
@@ -68,7 +70,7 @@ public class ExtendScorerSubstation extends SequentialCommandGroup
             new GrabGamePiece(grabber),
             new MoveShoulderToScoringPosition(shoulder, TargetPosition.kSubstation),
             new SequentialCommandGroup( 
-                new WaitUntilCommand(() -> shoulder.getPosition() > TargetPosition.kLow.shoulder).withTimeout(1.0)),
+                new WaitUntilCommand(() -> shoulder.getPosition() > TargetPosition.kLowCone.shoulder).withTimeout(1.0)),
                 new MoveArmToScoringPosition(arm, TargetPosition.kSubstation)));
         // addCommands( new MoveShoulderToScoringPosition(shoulder, targetPosition) );
         // addCommands( new ParallelCommandGroup( 

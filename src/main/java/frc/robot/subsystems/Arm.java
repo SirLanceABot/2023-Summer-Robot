@@ -226,7 +226,7 @@ public class Arm extends Subsystem4237
     /** Moves the arm to low position */
     public void moveToLow()
     {
-        targetPosition = TargetPosition.kLow;
+        targetPosition = TargetPosition.kLowCone;
     }
 
     /** Moves the arm to gather position */

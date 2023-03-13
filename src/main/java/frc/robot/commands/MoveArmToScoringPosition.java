@@ -85,7 +85,7 @@ public class MoveArmToScoringPosition extends CommandBase
                     arm.moveToMiddleCube();
                     break;
                 
-                case kLow:
+                case kLowCone:
                     arm.moveToLow();
                     break;
                 
