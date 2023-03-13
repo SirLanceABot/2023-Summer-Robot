@@ -39,6 +39,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Candle4237.LedStatus;
+import frc.robot.Constants.SuctionState;
 import frc.robot.Constants.TargetPosition;
 import frc.robot.commands.AutoAimToPost;
 import frc.robot.commands.AutoBalance;
@@ -53,6 +54,7 @@ import frc.robot.commands.LockWheels;
 import frc.robot.commands.ScoreGamePiece;
 import frc.robot.commands.ScoreGamePieceV2;
 import frc.robot.commands.SlowSwerveDrive;
+import frc.robot.commands.SuctionControl;
 import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 import frc.robot.commands.ReleaseGamePiece;
@@ -248,7 +250,8 @@ public class RobotContainer
 			if(grabber != null)
 			{
 				// rightTriggerTrigger.whileTrue( new InstantCommand (() -> arm.extendArm(), arm));
-				rightTriggerTrigger.onTrue( new ReleaseGamePiece(grabber)
+				// rightTriggerTrigger.onTrue( new ReleaseGamePiece(grabber)
+				rightTriggerTrigger.onTrue( new SuctionControl(grabber, SuctionState.kOn)
 								   .andThen( new  WaitCommand(0.5))
 								   .andThen( new InstantCommand( () -> grabber.closeSolenoid())));
 			}

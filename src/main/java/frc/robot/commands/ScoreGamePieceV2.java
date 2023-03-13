@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.Constants.SuctionState;
 import frc.robot.Constants.TargetPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
@@ -76,14 +77,16 @@ public class ScoreGamePieceV2 extends SequentialCommandGroup
             addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
             addCommands( new MoveWrist(wrist, WristPosition.kDown) );
             addCommands( new MoveShoulderToScoringPosition(shoulder, targetPosition) );
-            addCommands( new ReleaseGamePiece(grabber) );
+            // addCommands( new ReleaseGamePiece(grabber) );
+            addCommands( new SuctionControl(grabber, SuctionState.kOff) );
         }
         else
         {
             addCommands( new MoveShoulderToScoringPosition(shoulder, targetPosition) );
             addCommands( new MoveWrist(wrist, WristPosition.kUp) );
             addCommands( new MoveArmToScoringPosition(arm, targetPosition) );
-            addCommands( new ReleaseGamePiece(grabber) );
+            // addCommands( new ReleaseGamePiece(grabber) );
+            addCommands( new SuctionControl(grabber, SuctionState.kOff) );
         }
     }
 

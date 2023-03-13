@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.Constants.SuctionState;
 import frc.robot.Constants.TargetPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
@@ -93,7 +94,8 @@ public class ExtendScorer extends SequentialCommandGroup
         if(targetPosition == TargetPosition.kSubstation)
         {
             addCommands( new ParallelCommandGroup( 
-            new GrabGamePiece(grabber),
+            // new GrabGamePiece(grabber),
+            new SuctionControl(grabber, SuctionState.kOn),
             new MoveShoulderToScoringPosition(shoulder, TargetPosition.kSubstation),
             new SequentialCommandGroup( 
                 new WaitUntilCommand(() -> shoulder.getPosition() > TargetPosition.kLowCone.shoulder).withTimeout(1.0)),

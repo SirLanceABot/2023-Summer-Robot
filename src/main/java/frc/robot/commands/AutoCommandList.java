@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.SuctionState;
 import frc.robot.Constants.TargetPosition;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.shuffleboard.AutonomousTabData;
@@ -117,13 +118,15 @@ public class AutoCommandList extends SequentialCommandGroup
                 {
                     // add( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp));
                     // add( new InstantCommand(() -> grabber.grabGamePiece(), grabber));
-                    add( new GrabGamePiece(grabber));
+
+                    // add( new GrabGamePiece(grabber));
+                    add( new SuctionControl(grabber, SuctionState.kOn));
                     add( new InstantCommand( () -> shoulder.initialPinch(), shoulder));
                     add( new WaitCommand(0.25));
                     //Commented out this line below
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, shoulderPositionPiece1));
                     add( new ExtendScorer(shoulder, arm, wrist, grabber, shoulderPositionPiece1));
-                    add( new ReleaseGamePiece(grabber));
+                    add( new SuctionControl(grabber, SuctionState.kOff));
                     add( new WaitCommand(0.25));
                     //Commented out line below between Calvin and St. Joe
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
@@ -149,7 +152,8 @@ public class AutoCommandList extends SequentialCommandGroup
 
                 if(autonomousTabData.pickUpGamePieces == PickUpGamePieces.kYes)
                 {
-                    add( new GrabGamePiece(grabber));
+                    // add( new GrabGamePiece(grabber));
+                    add( new SuctionControl(grabber, SuctionState.kOn));
                 }
 
                 if(autonomousTabData.scoreSecondPiece == ScoreSecondPiece.kYes)
@@ -181,11 +185,13 @@ public class AutoCommandList extends SequentialCommandGroup
                 // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, TargetPosition.kGather));
                 add( new ExtendScorer(shoulder, arm, wrist, grabber, shoulderPositionPiece1));
                 add( new WaitCommand(0.5));
-                add( new ReleaseGamePiece(grabber));
+                // add( new ReleaseGamePiece(grabber));
+                add( new SuctionControl(grabber, SuctionState.kOff));
                 add( new RetractScorer(shoulder, arm, wrist, TargetPosition.kGather));
                 goToSecondGamePiece();
                 turnRobot180();
-                add( new GrabGamePiece(grabber));
+                // add( new GrabGamePiece(grabber));
+                add( new SuctionControl(grabber, SuctionState.kOn));
                 break;
         }
     

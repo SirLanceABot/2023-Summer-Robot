@@ -6,6 +6,7 @@ import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.SuctionState;
 import frc.robot.Constants.TargetPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
@@ -60,7 +61,8 @@ public class ClampCone extends SequentialCommandGroup
     {
         addCommands( new MoveArmToScoringPosition(arm, TargetPosition.kArmReadyToClamp) );
         addCommands( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kSuctionCone) );
-        addCommands( new GrabGamePiece(grabber));
+        // addCommands( new GrabGamePiece(grabber));
+        addCommands( new SuctionControl(grabber, SuctionState.kOn));
         addCommands( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kShoulderReadyToClamp) );
         addCommands( new MoveArmToScoringPosition(arm, TargetPosition.kClamp) );
         addCommands( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp) );

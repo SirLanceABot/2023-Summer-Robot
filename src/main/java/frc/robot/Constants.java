@@ -329,5 +329,10 @@ public final class Constants
             this.arm = arm;
         }
     }
+
+    public enum SuctionState
+    {
+        kOn, kOff;
+    }
     
 }

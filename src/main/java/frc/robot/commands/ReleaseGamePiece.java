@@ -32,9 +32,10 @@ public class ReleaseGamePiece extends CommandBase
 
 
     /**
-     * Creates a new ExampleCommand.
+     * Creates a new ReleaseGamePiece.
+     * DELETE AFTER TESTING NEW SUCTION CONTROL
      *
-     * @param subsystem The subsystem used by this command.
+     * @param grabber The grabber subsystem.
      */
     public ReleaseGamePiece(Grabber grabber) 
     {
