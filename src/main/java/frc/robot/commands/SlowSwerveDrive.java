@@ -44,8 +44,10 @@ public class SlowSwerveDrive extends CommandBase
     public void execute()
     {
         if(drivetrain != null)
+        {
             // change robot speed
-            drivetrain.drive(xSpeed.getAsDouble() * 0.15, ySpeed.getAsDouble() * 0.15, turn.getAsDouble(), fieldRelative);
+            drivetrain.drive(xSpeed.getAsDouble() * 0.15, ySpeed.getAsDouble() * 0.15, turn.getAsDouble() * 0.5, fieldRelative);
+        }
     }
 
     @Override

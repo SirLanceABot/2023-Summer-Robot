@@ -51,8 +51,6 @@ import frc.robot.commands.ExtendScorerCube;
 import frc.robot.commands.ExtendScorerSubstation;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
-import frc.robot.commands.ScoreGamePiece;
-import frc.robot.commands.ScoreGamePieceV2;
 import frc.robot.commands.SlowSwerveDrive;
 import frc.robot.commands.SuctionControl;
 import frc.robot.commands.MoveArmToScoringPosition;
@@ -123,7 +121,9 @@ public class RobotContainer
 	public final Gyro4237 gyro;
 	// public final PowerDistribution pdh;
 	public final Compressor compressor;
-	public final  DataLog log;
+	public static DataLog log;
+	// public static final DataLog log = DataLogManager.getLog();
+
 
 	/** 
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -133,9 +133,13 @@ public class RobotContainer
 	{
 		// Create the needed subsystems
 		if(useDataLog)
+		{
 			DataLogManager.start();
+			log = DataLogManager.getLog();
+		}
 			
-		log					= (useDataLog)									? DataLogManager.getLog()								: null;
+			
+		// log					= (useDataLog)									? DataLogManager.getLog()								: null;
 
 		fullRobot 			= (useFullRobot);
 		exampleSubsystem 	= (useExampleSubsystem)							? new ExampleSubsystem() 								: null;
@@ -251,7 +255,7 @@ public class RobotContainer
 			{
 				// rightTriggerTrigger.whileTrue( new InstantCommand (() -> arm.extendArm(), arm));
 				// rightTriggerTrigger.onTrue( new ReleaseGamePiece(grabber)
-				rightTriggerTrigger.onTrue( new SuctionControl(grabber, SuctionState.kOn)
+				rightTriggerTrigger.onTrue( new SuctionControl(grabber, SuctionState.kOff)
 								   .andThen( new  WaitCommand(0.5))
 								   .andThen( new InstantCommand( () -> grabber.closeSolenoid())));
 			}
