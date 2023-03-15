@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Candle4237;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 // import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
@@ -47,7 +48,8 @@ public class SamTest implements Test
     private final RobotContainer robotContainer;
     // private final Shoulder shoulder;
     // private final Arm arm;
-    private final Grabber grabber;
+    // private final Grabber grabber;
+    private final Candle4237 candle;
     // private final CANSparkMax canSparkMax = new CANSparkMax(3, MotorType.kBrushless);
     private final Joystick joystick;
     // private final DoubleSolenoid testSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 0, 1);
@@ -66,7 +68,8 @@ public class SamTest implements Test
         // drivetrain = this.robotContainer.drivetrain;
         // shoulder = this.robotContainer.shoulder;
         // arm = this.robotContainer.arm;
-        grabber = this.robotContainer.grabber;
+        // grabber = this.robotContainer.grabber;
+        candle = this.robotContainer.candle;
         // canSparkMax.restoreFactoryDefaults();
         // canSparkMax.setIdleMode(IdleMode.kBrake);
         joystick = new Joystick(0);
@@ -110,12 +113,13 @@ public class SamTest implements Test
         if(joystick.getRawButton(1))    //A
         {
             // shoulder.moveUp();
-            grabber.grabGamePiece();
+            // grabber.grabGamePiece();
+            candle.signalGreen();
         }
         else if(joystick.getRawButton(2))   //B
         {
             // shoulder.moveDown();
-            grabber.releaseGamePiece();
+            // grabber.releaseGamePiece();
         }
         // else
         // {

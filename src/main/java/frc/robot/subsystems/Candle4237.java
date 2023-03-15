@@ -135,7 +135,7 @@ public class Candle4237 extends Subsystem4237
 
     private PeriodicIO periodicIO = new PeriodicIO();
     private final CANdle candle = new CANdle(Constants.Candle.CANDLE_PORT, "rio");
-    private final static int totalLedCount = 68; // CANdle = 8, LED Strip = 60, LED Strip + CANdle = 68
+    private final static int totalLedCount = 8; // CANdle = 8, LED Strip = 60, LED Strip + CANdle = 68
     private final static int stripLedCount = 60;
     private final static int candleLedCount = 8;
     private Animation animation = null;
@@ -197,6 +197,19 @@ public class Candle4237 extends Subsystem4237
             sections.get(1).status = LedStatus.kRed;
         else 
             periodicIO.status = LedStatus.kRed;
+
+        periodicIO.toAnimate = LedAnimation.kDisabled;
+    }
+
+    /**
+     * Sets the LEDs to Green
+     */
+    public void signalGreen()
+    {
+        if (periodicIO.status == LedStatus.kSectioned)
+            sections.get(1).status = LedStatus.kGreen;
+        else 
+            periodicIO.status = LedStatus.kGreen;
 
         periodicIO.toAnimate = LedAnimation.kDisabled;
     }
