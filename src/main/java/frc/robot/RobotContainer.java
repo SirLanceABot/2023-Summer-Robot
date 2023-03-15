@@ -92,7 +92,7 @@ public class RobotContainer
 	private boolean useAccelerometer		= false;
 	private boolean useGyro					= false;
 	private boolean useDrivetrain   		= false;
-	private boolean useGrabber 				= true;
+	private boolean useGrabber 				= false;
 	private boolean useWrist				= false;
 	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
@@ -102,7 +102,7 @@ public class RobotContainer
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
-	private boolean useDataLog				= true;
+	private boolean useDataLog				= false;
 	
 	public final boolean fullRobot;
 	public final ExampleSubsystem exampleSubsystem;

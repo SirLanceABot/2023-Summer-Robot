@@ -120,25 +120,28 @@ public class SamTest implements Test
         {
             // shoulder.moveDown();
             // grabber.releaseGamePiece();
+            candle.signalRed();
         }
         // else
         // {
         //     shoulder.off();
         // }
 
-        // if(joystick.getRawButton(3))   //X
-        // {
-        //     arm.extendArm();
-        // }
-        // else if(joystick.getRawButton(4))   //Y
-        // {
-        //     arm.retractArm();
-        // }
-        // else
-        // {
-        //     arm.off();
+        else if(joystick.getRawButton(3))   //X
+        {
+            // arm.extendArm();
+            candle.signalCube();
+        }
+        else if(joystick.getRawButton(4))   //Y
+        {
+            // arm.retractArm();
+            candle.signalCone();
+        }
+        else
+        {
+            candle.turnOffLight();
             
-        // }
+        }
     
         // System.out.println(shoulder);
 
