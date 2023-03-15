@@ -93,6 +93,7 @@ public class Drivetrain extends Subsystem4237
     private final SwerveModule backRight;// = new SwerveModule(Port.Module.BACK_RIGHT);
 
     private final Gyro4237 gyro; //Pigeon2
+    private boolean useDataLog = true;
     private final DataLog log;
     private final SwerveDriveKinematics kinematics;
     
@@ -118,6 +119,17 @@ public class Drivetrain extends Subsystem4237
         
         this.gyro = gyro;
         this.log = log;
+        if(log == null)
+        {
+            useDataLog = false;
+        }
+
+        if(useDataLog)
+        {
+            logEncodersInit();
+        }
+
+
 
 
         frontLeft = new SwerveModule(dd.frontLeftSwerveModule);
