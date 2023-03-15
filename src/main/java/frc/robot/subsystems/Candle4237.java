@@ -40,7 +40,7 @@ public class Candle4237 extends Subsystem4237
 
     public enum LedStatus
     {
-        kPurple, kYellow, kRed, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhiteBlink, kSectioned;
+        kPurple, kYellow, kRed, kGreen, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhiteBlink, kSectioned;
     }
 
     // public enum LedAnimation
@@ -291,6 +291,9 @@ public class Candle4237 extends Subsystem4237
                 break; 
             case kRed: 
                 candle.setLEDs(255, 0, 0, 255, startLed, ledCount);
+                break;
+            case kGreen:
+                candle.setLEDs(0, 255, 0, 50, startLed, ledCount);
                 break;
             case kOff: 
                 candle.setLEDs(0, 0, 0, 0, startLed, ledCount);
