@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.sensors.Gyro4237;
 import frc.robot.sensors.Vision;
 
 
@@ -26,6 +27,7 @@ public class AutoAimToPost extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Drivetrain drivetrain;
+    private final Gyro4237 gyro;
     private final Vision vision;
 
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -33,12 +35,17 @@ public class AutoAimToPost extends CommandBase
     NetworkTableEntry tx = table.getEntry("tx");
 
     private final double POST_ALIGNMENT_TOLERANCE = 0.50;  //Limelight angle measurement in degrees
-    private final double POST_ALIGNMENT_DRIVE_KP = 0.050;
+    private final double POST_ALIGNMENT_ROTATE_TOLERANCE = 0.1;
+    private final double POST_ALIGNMENT_STRAFE_KP = 0.050;
+    private final double POST_ALIGNMENT_ROTATE_KP = 0.050;
     private final double POST_ALIGNMENT_MIN_SPEED = 0.2;
     private final Timer timer = new Timer();
 
-    private double error;
-    private double drivePower;
+    private double strafeError;
+    private double rotateError;
+    private double strafePower;
+    private double rotatePower;
+    private boolean doneRotating = false;
 
     /**
      * Creates a new AutoAimToPost
@@ -47,11 +54,12 @@ public class AutoAimToPost extends CommandBase
      * @param drivetrain Drivetrain subsystem.
      * @param vision Vision sensor.
      */
-    public AutoAimToPost(Drivetrain drivetrain, Vision vision) 
+    public AutoAimToPost(Drivetrain drivetrain, Gyro4237 gyro, Vision vision) 
     {
         // System.out.println(fullClassName + ": Constructor Started");
         
         this.drivetrain = drivetrain;
+        this.gyro = gyro;
         this.vision = vision;
         
         if(this.drivetrain != null)
@@ -79,22 +87,28 @@ public class AutoAimToPost extends CommandBase
     public void execute()
     {
         // double xDistance = vision.getx();
-        error = vision.getX();
+        strafeError = vision.getX();
+        rotateError = 180.0 - gyro.getYaw();
 
-        // System.out.println("Error: " + error);
+        strafePower = -(POST_ALIGNMENT_STRAFE_KP * strafeError);
+        rotatePower = POST_ALIGNMENT_ROTATE_KP * rotateError;
 
-        drivePower = -(POST_ALIGNMENT_DRIVE_KP * error);
-
-        if(Math.abs(drivePower) < POST_ALIGNMENT_MIN_SPEED)
+        if(Math.abs(strafePower) < POST_ALIGNMENT_MIN_SPEED)
         {
-            drivePower = Math.copySign(POST_ALIGNMENT_MIN_SPEED, drivePower);
+            strafePower = Math.copySign(POST_ALIGNMENT_MIN_SPEED, strafePower);
         }
 
         if(drivetrain != null)
         {
-            drivetrain.drive(0.0, drivePower, 0.0, false);
+            if(!doneRotating)
+            {
+                drivetrain.drive(0.0, strafePower, rotatePower, false);
+            }
+            else
+            {
+                drivetrain.drive(0.0, strafePower, 0.0, false);
+            }
         }
-        // System.out.println("  X: " + xDistance);
     }
 
     // Called once the command ends or is interrupted.
@@ -118,9 +132,15 @@ public class AutoAimToPost extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        error = vision.getX();
+        strafeError = vision.getX();
+        rotateError = 180 - gyro.getYaw();
 
-        if(Math.abs(error) < POST_ALIGNMENT_TOLERANCE && timer.hasElapsed(1.0))
+        if(Math.abs(rotateError) < POST_ALIGNMENT_ROTATE_TOLERANCE)
+        {
+            doneRotating = true;
+        }
+
+        if(Math.abs(strafeError) < POST_ALIGNMENT_TOLERANCE && timer.hasElapsed(1.0) && doneRotating)
         {
             return true;
         }
