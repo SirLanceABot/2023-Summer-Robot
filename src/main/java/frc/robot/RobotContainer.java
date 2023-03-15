@@ -92,7 +92,7 @@ public class RobotContainer
 	private boolean useAccelerometer		= false;
 	private boolean useGyro					= false;
 	private boolean useDrivetrain   		= false;
-	private boolean useGrabber 				= false;
+	private boolean useGrabber 				= true;
 	private boolean useWrist				= false;
 	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
@@ -102,7 +102,7 @@ public class RobotContainer
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
-	private boolean useDataLog				= false;
+	private boolean useDataLog				= true;
 	
 	public final boolean fullRobot;
 	public final ExampleSubsystem exampleSubsystem;
@@ -121,7 +121,7 @@ public class RobotContainer
 	public final Gyro4237 gyro;
 	// public final PowerDistribution pdh;
 	public final Compressor compressor;
-	public static DataLog log;
+	public DataLog log = null;
 	// public static final DataLog log = DataLogManager.getLog();
 
 
@@ -148,7 +148,7 @@ public class RobotContainer
 		drivetrain 			= (useFullRobot || useDrivetrain) 				? new Drivetrain(gyro, log) 							: null;
 		grabber 			= (useFullRobot || useScorer || useGrabber) 	? new Grabber(log) 										: null;
 		wrist				= (useFullRobot || useScorer || useWrist)		? new Wrist()											: null;
-		arm 				= (useFullRobot || useScorer || useArm) 		? new Arm() 											: null;
+		arm 				= (useFullRobot || useScorer || useArm) 		? new Arm(log) 											: null;
 		shoulder 			= (useFullRobot || useScorer || useShoulder) 	? new Shoulder() 										: null;
 		gatherer 			= (useGatherer) 								? new Gatherer() 										: null;
 		candle 				= (useFullRobot || useCandle)					? new Candle4237() 										: null;

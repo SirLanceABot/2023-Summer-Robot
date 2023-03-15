@@ -7,9 +7,15 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import com.revrobotics.SparkMaxPIDController;
 import frc.robot.Constants.TargetPosition;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import java.lang.invoke.MethodHandles;
 
@@ -62,6 +68,8 @@ public class Arm extends Subsystem4237
 
         // Outputs
         private double armSpeed = 0.0;
+        private DoubleLogEntry armSpeedEntry;
+        private DoubleLogEntry armPositionEntry; 
     }
     
     private PeriodicIO periodicIO = new PeriodicIO();
@@ -93,14 +101,26 @@ public class Arm extends Subsystem4237
     private ResetState resetState = ResetState.kDone;
     private TargetPosition targetPosition = TargetPosition.kOverride;
     private final int RESET_ATTEMPT_LIMIT = 5;
+    private boolean useDataLog = true;
+    private DataLog log;
+
 
     
 
     
-    public Arm()
+    public Arm(DataLog log)
     {
         System.out.println(fullClassName + " : Constructor Started");
 
+        this.log = log;
+        if(log == null)
+        {
+            useDataLog = false;
+        }
+        if(useDataLog)
+        {
+            logArmInit();
+        }
         configCANSparkMax();
 
         System.out.println(fullClassName + " : Constructor Finished");
@@ -313,6 +333,16 @@ public class Arm extends Subsystem4237
         }
     }
 
+    private void logArmInit()
+    {
+        periodicIO.armPositionEntry = new DoubleLogEntry(log, "Arm Position", "raw");
+    }
+
+    private void logArm()
+    {
+        periodicIO.armPositionEntry.append(periodicIO.armPosition);
+    }
+
     @Override
     public synchronized void readPeriodicInputs()
     {
@@ -414,6 +444,11 @@ public class Arm extends Subsystem4237
                     // DataLogManager.log("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
                 }
                 break;
+        }
+
+        if(useDataLog && DriverStation.isEnabled())
+        {
+            logArm();
         }
         // // TODO see the Shoulder code for resetting encoder
         // if (resetEncoderNow)

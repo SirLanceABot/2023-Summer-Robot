@@ -132,6 +132,10 @@ public class Grabber extends Subsystem4237
         System.out.println(fullClassName + " : Constructor Started");
 
         this.log = log;
+        if(log == null)
+        {
+            useDataLog = false;
+        }
         if(useDataLog)
         {
             logVacuumInit();
