@@ -21,7 +21,9 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 
-
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 // import edu.wpi.first.util.datalog.DataLog;
 // import edu.wpi.first.util.datalog.StringLogEntry;
 // import edu.wpi.first.wpilibj.DataLogManager;
@@ -93,6 +95,9 @@ public class Shoulder extends Subsystem4237
         
         // OUTPUTS
         private double motorSpeed;
+        private DoubleLogEntry currentPositionEntry;
+        private DoubleLogEntry currentAngleEntry;
+        private DoubleLogEntry currentVelocityEntry;
     }
 
     private PeriodicIO periodicIO = new PeriodicIO();
@@ -130,7 +135,8 @@ public class Shoulder extends Subsystem4237
     private LimitSwitchState reverseLSState = LimitSwitchState.kStillReleased;
     // private boolean previousLSPressed = false;
     private boolean useLSReset = true;     // Enable or Disable reverse limit switch reseting encoder
-    // private boolean useDataLog = true;      // Enable or Disable data logs
+    private boolean useDataLog = true;      // Enable or Disable data logs
+    private DataLog log;
     private ResetState resetState = ResetState.kDone;
     private TargetPosition targetPosition = TargetPosition.kOverride;
     
@@ -139,9 +145,19 @@ public class Shoulder extends Subsystem4237
 
 
     /** Creates a new Shoulder */
-    public Shoulder()
+    public Shoulder(DataLog log)
     { 
         System.out.println(fullClassName + " : Constructor Started");
+
+        this.log = log;
+        if(log == null)
+        {
+            useDataLog = false;
+        }
+        if(useDataLog)
+        {
+            logShoulderInit();
+        }
 
         configShoulderMotor();
         relativeEncoder.setPosition(Constants.Shoulder.STARTING_POSITION);
@@ -406,6 +422,20 @@ public class Shoulder extends Subsystem4237
         periodicIO.motorSpeed = 0.01;
     }
 
+    private void logShoulderInit()
+    {
+        periodicIO.currentPositionEntry = new DoubleLogEntry(log, "Shoulder Position", "raw");
+        periodicIO.currentAngleEntry = new DoubleLogEntry(log, "Shoulder Angle", "raw");
+        periodicIO.currentVelocityEntry = new DoubleLogEntry(log, "Shoulder Velocity", "raw");
+    }   
+
+    private void logShoulder()
+    {
+        periodicIO.currentPositionEntry.append(periodicIO.currentPosition);
+        periodicIO.currentAngleEntry.append(periodicIO.currentAngle);
+        periodicIO.currentVelocityEntry.append(periodicIO.currentVelocity);
+    }
+
     @Override
     public synchronized void readPeriodicInputs()
     {
@@ -515,6 +545,11 @@ public class Shoulder extends Subsystem4237
                     // DataLogManager.log("Reset encoder failed " + RESET_ATTEMPT_LIMIT + " times");
                 }
                 break;
+        }
+
+        if(useDataLog && DriverStation.isEnabled())
+        {
+            logShoulder();
         }
         // if(resetState == ResetState.kStart)
         // {

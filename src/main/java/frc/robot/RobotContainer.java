@@ -149,7 +149,7 @@ public class RobotContainer
 		grabber 			= (useFullRobot || useScorer || useGrabber) 	? new Grabber(log) 										: null;
 		wrist				= (useFullRobot || useScorer || useWrist)		? new Wrist()											: null;
 		arm 				= (useFullRobot || useScorer || useArm) 		? new Arm(log) 											: null;
-		shoulder 			= (useFullRobot || useScorer || useShoulder) 	? new Shoulder() 										: null;
+		shoulder 			= (useFullRobot || useScorer || useShoulder) 	? new Shoulder(log) 										: null;
 		gatherer 			= (useGatherer) 								? new Gatherer() 										: null;
 		candle 				= (useFullRobot || useCandle)					? new Candle4237() 										: null;
 		driverController 	= (useFullRobot || useDriverController) 		? new DriverController(Constants.Controller.DRIVER) 	: null;
