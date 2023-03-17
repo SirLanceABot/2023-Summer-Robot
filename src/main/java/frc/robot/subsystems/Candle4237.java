@@ -40,7 +40,7 @@ public class Candle4237 extends Subsystem4237
 
     public enum LedStatus
     {
-        kPurple, kYellow, kRed, kGreen, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhiteBlink, kSectioned;
+        kPurple, kYellow, kRed, kGreen, kWhite, kAnimated, kOff, kBlueBlink, kGreenBlink, kWhiteBlink, kSectioned;
     }
 
     // public enum LedAnimation
@@ -135,7 +135,7 @@ public class Candle4237 extends Subsystem4237
 
     private PeriodicIO periodicIO = new PeriodicIO();
     private final CANdle candle = new CANdle(Constants.Candle.CANDLE_PORT, "rio");
-    private final static int totalLedCount = 8; // CANdle = 8, LED Strip = 60, LED Strip + CANdle = 68
+    private final static int totalLedCount = 68; // CANdle = 8, LED Strip = 60, LED Strip + CANdle = 68
     private final static int stripLedCount = 60;
     private final static int candleLedCount = 8;
     private Animation animation = null;
@@ -210,6 +210,19 @@ public class Candle4237 extends Subsystem4237
             sections.get(1).status = LedStatus.kGreen;
         else 
             periodicIO.status = LedStatus.kGreen;
+
+        periodicIO.toAnimate = LedAnimation.kDisabled;
+    }
+
+    /**
+     * Sets the LEDs to White
+     */
+    public void signalWhite()
+    {
+        if (periodicIO.status == LedStatus.kSectioned)
+            sections.get(1).status = LedStatus.kWhite;
+        else 
+            periodicIO.status = LedStatus.kWhite;
 
         periodicIO.toAnimate = LedAnimation.kDisabled;
     }
@@ -297,16 +310,19 @@ public class Candle4237 extends Subsystem4237
         switch (status)
         {
             case kPurple: 
-                candle.setLEDs(255, 0, 255, 50, startLed, ledCount);
+                candle.setLEDs(255, 0, 255, 255, startLed, ledCount);
                 break;
             case kYellow: 
-                candle.setLEDs(255, 185, 0, 50, startLed, ledCount);
+                candle.setLEDs(255, 185, 0, 255, startLed, ledCount);
                 break; 
             case kRed: 
                 candle.setLEDs(255, 0, 0, 255, startLed, ledCount);
                 break;
             case kGreen:
-                candle.setLEDs(0, 255, 0, 50, startLed, ledCount);
+                candle.setLEDs(0, 255, 0, 255, startLed, ledCount);
+                break;
+            case kWhite:
+                candle.setLEDs(255, 255, 255, 255, startLed, ledCount);
                 break;
             case kOff: 
                 candle.setLEDs(0, 0, 0, 0, startLed, ledCount);

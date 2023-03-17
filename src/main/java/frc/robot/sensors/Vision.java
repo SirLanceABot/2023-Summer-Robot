@@ -26,13 +26,16 @@ public class Vision extends Sensor4237
         NetworkTableEntry tx = table.getEntry("tx");
         NetworkTableEntry ty = table.getEntry("ty");
         NetworkTableEntry ta = table.getEntry("ta");
+        NetworkTableEntry tv = table.getEntry("tv");
         private double x;
         private double y;
         private double area;
+        private boolean foundTarget;
     }
 
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     private PeriodicIO periodicIO;
+    private boolean isAligned;
 
     public Vision()
     {   
@@ -62,20 +65,38 @@ public class Vision extends Sensor4237
         return periodicIO.area;
     }
 
+    /** @return false if no target is found, true if target is found */
+    public boolean foundTarget()
+    {
+        return periodicIO.foundTarget;
+    }
+
+    public boolean isAligned()
+    {
+        return isAligned;
+    }
+
+    public void setIsAligned(boolean isAligned)
+    {
+        this.isAligned = isAligned;
+    }
+
     @Override
     public void readPeriodicInputs() 
     {
         periodicIO.x = periodicIO.tx.getDouble(0.0);
         periodicIO.y = periodicIO.ty.getDouble(0.0);
         periodicIO.area = periodicIO.ta.getDouble(0.0);
+        periodicIO.foundTarget = periodicIO.tv.getDouble(0.0) == 1.0 ? true : false;
     }
 
     @Override
     public void writePeriodicOutputs() 
     {
-        SmartDashboard.putNumber("LimelightX", periodicIO.x);
-        SmartDashboard.putNumber("LimelightY", periodicIO.y);
-        SmartDashboard.putNumber("LimelightArea", periodicIO.area);
+        // SmartDashboard.putNumber("LimelightX", periodicIO.x);
+        // SmartDashboard.putNumber("LimelightY", periodicIO.y);
+        // SmartDashboard.putNumber("LimelightArea", periodicIO.area);
+        // SmartDashboard.putBoolean("LimelightFoundTarget", periodicIO.foundTarget);
     }
     
 }

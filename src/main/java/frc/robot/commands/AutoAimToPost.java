@@ -1,13 +1,14 @@
 package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
+import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.sensors.Vision;
@@ -25,42 +26,56 @@ public class AutoAimToPost extends CommandBase
         System.out.println("Loading: " + fullClassName);
     }
 
+    private enum AlignmentState
+    {
+        kNotAligned, kAligned, kBeenAligned;
+    }
+
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Drivetrain drivetrain;
     private final Gyro4237 gyro;
     private final Vision vision;
+    private final Candle4237 candle;
 
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
     NetworkTableEntry tx = table.getEntry("tx");
 
     private final double POST_ALIGNMENT_TOLERANCE = 0.50;  //Limelight angle measurement in degrees
-    private final double POST_ALIGNMENT_ROTATE_TOLERANCE = 0.1;
-    private final double POST_ALIGNMENT_STRAFE_KP = 0.050;
+    private final double POST_ALIGNMENT_ROTATE_TOLERANCE = 1.0;
+    private final double POST_ALIGNMENT_STRAFE_KP = 0.030;
     private final double POST_ALIGNMENT_ROTATE_KP = 0.050;
-    private final double POST_ALIGNMENT_MIN_SPEED = 0.2;
-    private final Timer timer = new Timer();
+    private final double POST_ALIGNMENT_MIN_SPEED = 0.05;
+    private final Timer alignmentTimer = new Timer();
+    private final Timer limelightTimer = new Timer();
 
+    private AlignmentState alignmentState = AlignmentState.kNotAligned;
     private double strafeError;
     private double rotateError;
     private double strafePower;
     private double rotatePower;
+    private boolean doneStrafing = false;
     private boolean doneRotating = false;
+    private boolean foundTarget = false;
 
     /**
      * Creates a new AutoAimToPost
-     * 
      *
      * @param drivetrain Drivetrain subsystem.
+     * @param gyro Gyro sensor.
      * @param vision Vision sensor.
      */
-    public AutoAimToPost(Drivetrain drivetrain, Gyro4237 gyro, Vision vision) 
+    public AutoAimToPost(Drivetrain drivetrain, Gyro4237 gyro, Vision vision, Candle4237 candle) 
     {
         // System.out.println(fullClassName + ": Constructor Started");
-        
+        alignmentState = AlignmentState.kNotAligned;
+        doneStrafing = false;
+        doneRotating = false;
+
         this.drivetrain = drivetrain;
         this.gyro = gyro;
         this.vision = vision;
+        this.candle = candle;
         
         if(this.drivetrain != null)
         {
@@ -75,10 +90,17 @@ public class AutoAimToPost extends CommandBase
     @Override
     public void initialize()
     {
+        // System.out.println("Initialized");
         // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);  //turns limelight on
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);  //turns limelight on
-        timer.reset();
-        timer.start();
+        alignmentTimer.reset();
+        alignmentTimer.start();
+        limelightTimer.reset();
+        limelightTimer.start();
+        alignmentState = AlignmentState.kNotAligned;
+        doneStrafing = false;
+        doneRotating = false;
+        vision.setIsAligned(false);
 
     }
 
@@ -89,9 +111,12 @@ public class AutoAimToPost extends CommandBase
         // double xDistance = vision.getx();
         strafeError = vision.getX();
         rotateError = 180.0 - gyro.getYaw();
+        foundTarget = vision.foundTarget();
 
         strafePower = -(POST_ALIGNMENT_STRAFE_KP * strafeError);
         rotatePower = POST_ALIGNMENT_ROTATE_KP * rotateError;
+
+        System.out.println("foundTarget" + foundTarget + "alignmentState: " + alignmentState + " strafeError: " + strafeError);
 
         if(Math.abs(strafePower) < POST_ALIGNMENT_MIN_SPEED)
         {
@@ -100,11 +125,12 @@ public class AutoAimToPost extends CommandBase
 
         if(drivetrain != null)
         {
-            if(!doneRotating)
+            if(!doneRotating && foundTarget)
             {
-                drivetrain.drive(0.0, strafePower, rotatePower, false);
+                // drivetrain.drive(0.0, strafePower, rotatePower, false);
+                drivetrain.drive(0.0, 0.0, rotatePower, false);
             }
-            else
+            else if(doneRotating && foundTarget)
             {
                 drivetrain.drive(0.0, strafePower, 0.0, false);
             }
@@ -122,6 +148,21 @@ public class AutoAimToPost extends CommandBase
             drivetrain.drive(0.0, 0.0, 0.0, false);
         }
 
+        // if(candle != null)
+        // {
+        //     if(foundTarget)
+        //     {
+        //         candle.signalGreen();
+        //     }
+        //     else
+        //     {
+        //         candle.signalWhite();
+        //     }
+        // }
+        
+
+        // System.out.println("End");
+
         // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);  //turns limelight off
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);  //turns limelight off
 
@@ -132,16 +173,49 @@ public class AutoAimToPost extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        strafeError = vision.getX();
-        rotateError = 180 - gyro.getYaw();
+        // strafeError = vision.getX();
+        // rotateError = 180 - gyro.getYaw();
+        // foundTarget = vision.foundTarget();
+
+        if(!foundTarget && limelightTimer.hasElapsed(0.2))
+        {
+            vision.setIsAligned(false);
+            return true;
+        }
 
         if(Math.abs(rotateError) < POST_ALIGNMENT_ROTATE_TOLERANCE)
         {
             doneRotating = true;
+
+            if(Math.abs(strafeError) > POST_ALIGNMENT_TOLERANCE)
+            {
+                alignmentState = AlignmentState.kNotAligned;
+            }
+            else if(Math.abs(strafeError) <= POST_ALIGNMENT_TOLERANCE && alignmentState == AlignmentState.kNotAligned)
+            {
+                alignmentTimer.reset();
+                alignmentTimer.start();
+                alignmentState = AlignmentState.kAligned;
+            }
+            else if(alignmentState == AlignmentState.kAligned)
+            {
+                alignmentState = AlignmentState.kBeenAligned;
+            }
+            else if(!(alignmentState == AlignmentState.kBeenAligned && !alignmentTimer.hasElapsed(0.5)))
+            {
+                doneStrafing = true;
+            }
+        }
+        else
+        {
+            doneRotating = false;
         }
 
-        if(Math.abs(strafeError) < POST_ALIGNMENT_TOLERANCE && timer.hasElapsed(1.0) && doneRotating)
+        
+
+        if(doneStrafing && doneRotating)
         {
+            vision.setIsAligned(true);
             return true;
         }
         else
@@ -154,6 +228,11 @@ public class AutoAimToPost extends CommandBase
     public String toString()
     {
         return "AutoAimToPost(drivetrian, vision)";
+    }
+
+    public BooleanSupplier foundTarget()
+    {
+        return ()-> foundTarget;
     }
     
 }

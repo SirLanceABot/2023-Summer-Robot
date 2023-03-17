@@ -202,10 +202,14 @@ public class RobotContainer
 			//A Button
 			BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
 			Trigger aButtonTrigger = new Trigger(aButton);
-			if(drivetrain != null && gyro != null && vision != null && driverController != null)
+			if(drivetrain != null && gyro != null && vision != null)
 			{
-				aButtonTrigger.onTrue( new AutoAimToPost(drivetrain, gyro, vision)
-							  .andThen( new RunCommand( () -> candle.signalGreen()))
+				aButtonTrigger.onTrue( new AutoAimToPost(drivetrain, gyro, vision, candle)
+							  .andThen( new ConditionalCommand(
+											new RunCommand( () -> candle.signalGreen()),
+											new RunCommand( () -> candle.signalWhite()),
+											() -> vision.isAligned()))
+							//   .andThen( new RunCommand( () -> candle.signalGreen()))
 							  .until( driverController.tryingToMoveRobot()));
 							// .andThen( () -> operatorController.setRumble(0.5, 0.75, 0.75))         
 							// .andThen( () -> driverController.setRumble(0.5, 0.75, 0.75)) );							// .andThen( () -> operatorController.setRumble(0.5))         

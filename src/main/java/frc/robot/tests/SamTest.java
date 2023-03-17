@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 // import edu.wpi.first.wpilibj.DoubleSolenoid;
 // import javax.lang.model.util.ElementScanner14;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -114,34 +115,36 @@ public class SamTest implements Test
         {
             // shoulder.moveUp();
             // grabber.grabGamePiece();
-            candle.signalGreen();
+            // candle.signalGreen();
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);  //turns limelight on
+
         }
-        else if(joystick.getRawButton(2))   //B
-        {
-            // shoulder.moveDown();
-            // grabber.releaseGamePiece();
-            candle.signalRed();
-        }
+        // else if(joystick.getRawButton(2))   //B
+        // {
+        //     // shoulder.moveDown();
+        //     // grabber.releaseGamePiece();
+        //     candle.signalRed();
+        // }
+        // // else
+        // // {
+        // //     shoulder.off();
+        // // }
+
+        // else if(joystick.getRawButton(3))   //X
+        // {
+        //     // arm.extendArm();
+        //     candle.signalWhite();
+        // }
+        // else if(joystick.getRawButton(4))   //Y
+        // {
+        //     // arm.retractArm();
+        //     candle.signalCone();
+        // }
         // else
         // {
-        //     shoulder.off();
-        // }
-
-        else if(joystick.getRawButton(3))   //X
-        {
-            // arm.extendArm();
-            candle.signalCube();
-        }
-        else if(joystick.getRawButton(4))   //Y
-        {
-            // arm.retractArm();
-            candle.signalCone();
-        }
-        else
-        {
-            candle.turnOffLight();
+        //     candle.turnOffLight();
             
-        }
+        // }
     
         // System.out.println(shoulder);
 
