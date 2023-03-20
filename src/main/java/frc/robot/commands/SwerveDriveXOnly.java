@@ -6,7 +6,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
-public class SlowSwerveDrive extends CommandBase
+public class SwerveDriveXOnly extends CommandBase
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -24,7 +24,7 @@ public class SlowSwerveDrive extends CommandBase
     private DoubleSupplier turn;
     private boolean fieldRelative;
     
-    public SlowSwerveDrive(Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier turn, boolean fieldRelative)
+    public SwerveDriveXOnly(Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier turn, boolean fieldRelative)
     {
         this.drivetrain = drivetrain;
         this.xSpeed = xSpeed;
@@ -44,10 +44,8 @@ public class SlowSwerveDrive extends CommandBase
     public void execute()
     {
         if(drivetrain != null)
-        {
             // change robot speed
-            drivetrain.drive(xSpeed.getAsDouble() * 0.15, ySpeed.getAsDouble() * 0.15, turn.getAsDouble() * 0.5, fieldRelative);
-        }
+            drivetrain.drive(xSpeed.getAsDouble() * 0.2, 0.0, 0.0, fieldRelative);
     }
 
     @Override

@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -51,13 +52,14 @@ import frc.robot.commands.ExtendScorerCube;
 import frc.robot.commands.ExtendScorerSubstation;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
-import frc.robot.commands.SlowSwerveDrive;
+import frc.robot.commands.SwerveDriveCrawl;
 import frc.robot.commands.SuctionControl;
 import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.RetractScorer;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.commands.SwerveDriveXOnly;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
 import frc.robot.controls.Xbox;
@@ -204,19 +206,22 @@ public class RobotContainer
 			Trigger aButtonTrigger = new Trigger(aButton);
 			if(drivetrain != null && gyro != null && vision != null)
 			{
-				aButtonTrigger.onTrue( new AutoAimToPost(drivetrain, gyro, vision, candle)
+				aButtonTrigger.onTrue( new ParallelCommandGroup(
+											new AutoAimToPost(drivetrain, gyro, vision, candle),
+											new MoveShoulderToScoringPosition(shoulder, TargetPosition.kLowCone))
 							  .andThen( new ConditionalCommand(
 											new RunCommand( () -> candle.signalGreen()),
 											new RunCommand( () -> candle.signalWhite()),
 											() -> vision.isAligned()))
-							//   .andThen( new RunCommand( () -> candle.signalGreen()))
 							  .until( driverController.tryingToMoveRobot()));
-							// .andThen( () -> operatorController.setRumble(0.5, 0.75, 0.75))         
-							// .andThen( () -> driverController.setRumble(0.5, 0.75, 0.75)) );							// .andThen( () -> operatorController.setRumble(0.5))         
-							// .andThen( () -> driverController.setRumble(0.5))
-							// .andThen( new WaitCommand(0.5))
-							// .andThen( () -> operatorController.setRumble(0.0))
-							// .andThen( () -> driverController.setRumble(0.0)));
+
+
+				// aButtonTrigger.onTrue( new AutoAimToPost(drivetrain, gyro, vision, candle)
+				// 			  .andThen( new ConditionalCommand(
+				// 							new RunCommand( () -> candle.signalGreen()),
+				// 							new RunCommand( () -> candle.signalWhite()),
+				// 							() -> vision.isAligned()))
+				// 			  .until( driverController.tryingToMoveRobot()));
 			}
 
 			//B Button
@@ -224,10 +229,8 @@ public class RobotContainer
 			Trigger bButtonTrigger = new Trigger(bButton);
 			if(drivetrain != null)
 			{
-				bButtonTrigger.onTrue( new AutoBalance(drivetrain, gyro, -1));
+				bButtonTrigger.toggleOnTrue(new SwerveDriveXOnly(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			}
-			// bButtonTrigger.onTrue( new AutoDriveDistance(drivetrain, 0.5, 0.0, 1.0)
-			// 			  .andThen( new AutoBalance(drivetrain, gyro)));
 
 			//X Button-lockwheels
 			BooleanSupplier xButton = driverController.getButtonSupplier(Xbox.Button.kX);
@@ -235,9 +238,7 @@ public class RobotContainer
 			if(drivetrain != null)
 			{
 				xButtonTrigger.onTrue( new RunCommand( () -> drivetrain.lockWheels(), drivetrain )
-										.until(driverController.tryingToMoveRobot()) );
-				// xButtonTrigger.onTrue( Commands.run( () -> drivetrain.lockWheels(), drivetrain )
-				// 					.until(driverController.tryingToMoveRobot()) );
+							  .until(driverController.tryingToMoveRobot()) );
 			}
 			
 			//Y Button
@@ -245,47 +246,18 @@ public class RobotContainer
 			Trigger yButtonTrigger = new Trigger(yButton);
 			if(drivetrain != null)
 			{
-				yButtonTrigger.toggleOnTrue(new SlowSwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+				yButtonTrigger.toggleOnTrue(new SwerveDriveCrawl(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
 			}
-			// yButtonTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.0, 0.5)) );
-			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)         
-			// 			  .andThen( () -> driverController.setRumble(0.5))
-			// 			  .andThen( new WaitCommand(0.5))
-			// 			  .andThen( () -> driverController.setRumble(0.0)));
-			// yButtonTrigger.onTrue( new AutoAimToPost(drivetrain, vision)).andThen(() -> driverController.rumbleNow()));
 
 			//Right trigger 
 			BooleanSupplier rightTrigger = driverController.getButtonSupplier(Xbox.Button.kRightTrigger);
 			Trigger rightTriggerTrigger = new Trigger(rightTrigger);
 			if(grabber != null)
 			{
-				// rightTriggerTrigger.whileTrue( new InstantCommand (() -> arm.extendArm(), arm));
-				// rightTriggerTrigger.onTrue( new ReleaseGamePiece(grabber)
 				rightTriggerTrigger.onTrue( new SuctionControl(grabber, SuctionState.kOff)
 								   .andThen( new  WaitCommand(0.5))
 								   .andThen( new InstantCommand( () -> grabber.closeSolenoid())));
 			}
-
-
-			//Left Trigger
-			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
-			Trigger lefTriggerTrigger = new Trigger(leftTrigger);
-			// lefTriggerTrigger.onTrue( new AutoBalance(drivetrain, gyro));
-
-			
-			BooleanSupplier rightBumper = driverController.getButtonSupplier(Xbox.Button.kRightBumper);
-			Trigger rightBumperTrigger = new Trigger(rightBumper);
-			// rightBumperTrigger.onTrue( new ClampCone(shoulder, arm, grabber));
-			// rightBumperTrigger.onTrue( new MoveArmToScoringPosition(arm, TargetPosition.kClamp)
-			// 				  .andThen( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kClamp)));
-			// rightBumperTrigger.whileTrue( new StartEndCommand(() -> candle.signalCone(), () ->  candle.turnOffLight(), candle));
-
-			BooleanSupplier leftBumper = driverController.getButtonSupplier(Xbox.Button.kLeftBumper);
-			Trigger leftBumperTrigger = new Trigger(leftBumper);
-			// leftBumperTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kReadyToPickUp)
-			// 				.andThen(new MoveArmToScoringPosition(arm, TargetPosition.kReadyToPickUp)));
-			
-			// leftBumperTrigger.whileTrue( new StartEndCommand(() -> candle.signalCube(), () ->  candle.turnOffLight(), candle));
 
 			//Dpad down button
 			BooleanSupplier dPadDown = driverController.getDpadSupplier(Xbox.Dpad.kDown);
