@@ -3,13 +3,17 @@ package frc.robot.subsystems;
 import java.lang.invoke.MethodHandles;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
+
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
@@ -84,6 +88,8 @@ public class Grabber extends Subsystem4237
         private double pdhSolenoidCurrent;
         private boolean pdhSolenoidGet;
         private boolean pdhSolenoidSet;
+        private double analogSensorVoltage;
+
         //OUTPUTS
         // private WristPosition wristPosition = WristPosition.kOff;
         private double vacuumMotorSpeed = 0.0;
@@ -122,6 +128,8 @@ public class Grabber extends Subsystem4237
     private boolean useDataLog = true;
     private DataLog log;
 
+    private SparkMaxAnalogSensor analogSensor;
+
     
 
     /**
@@ -146,8 +154,10 @@ public class Grabber extends Subsystem4237
         // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
 
         System.out.println(fullClassName + ": Constructor Finished");
+
+        analogSensor = vacuumMotorTop.getAnalog(Mode.kAbsolute);
     }
-    
+
     /**
      * Makes the configurations of a Spark Max Motor
      */
@@ -260,6 +270,11 @@ public class Grabber extends Subsystem4237
         return periodicIO.topDigitalInputBool;
     }
 
+    public double getAnalogSensorVoltage()
+    {
+        return periodicIO.analogSensorVoltage;
+    }
+
     private void logVacuumInit()
     {
         periodicIO.vacuumBottomCurrentEntry = new DoubleLogEntry(log, "Bottom Current", "Amps");
@@ -300,6 +315,7 @@ public class Grabber extends Subsystem4237
         periodicIO.topDigitalInputBool = topDigitalInput.get();
         periodicIO.pdhSolenoidCurrent = vacuumSolenoid.getCurrent(23);
         periodicIO.pdhSolenoidGet = vacuumSolenoid.getSwitchableChannel();
+        periodicIO.analogSensorVoltage = analogSensor.getVoltage();
         
 
         // if(useDataLog)
@@ -324,6 +340,8 @@ public class Grabber extends Subsystem4237
         vacuumMotorTop.set(periodicIO.vacuumMotorSpeed);
         vacuumSolenoid.setSwitchableChannel(periodicIO.vacuumState.value);
         periodicIO.pdhSolenoidSet = periodicIO.vacuumState.value;
+
+        SmartDashboard.putNumber("Analog Sensor Voltage", periodicIO.analogSensorVoltage);
 
         if(useDataLog && DriverStation.isEnabled())
         {

@@ -359,45 +359,55 @@ public class Shoulder extends Subsystem4237
     /** Moves the shoulder to low position */
     public void moveToLow()
     {
-        // System.out.println("Shoulder Moving to Low");
         targetPosition = TargetPosition.kLowCone;
     }
 
-    /** Moves the shoulderto gather position */
+    /** Moves the shoulder to gather position */
     public void moveToGather()
     {
-        // System.out.println("Shoulder Moving to Gather");
         targetPosition = TargetPosition.kGather;
     }
 
+    /** Moves the shoulder to ready to pick up position */
     public void moveToReadyToPickUp()
     {
         targetPosition = TargetPosition.kReadyToPickUp;
     }
 
+    /** Moves the shoulder to suction cone position */
     public void moveToSuctionCone()
     {
         targetPosition = TargetPosition.kSuctionCone;
     }
 
+    /** Moves the shoulder to ready to clamp position */
     public void moveToShoulderReadyToClamp()
     {
         targetPosition = TargetPosition.kShoulderReadyToClamp;
     }
 
+    /** Moves the shoulder to clamp cone position */
     public void moveToClampCone()
     {
         targetPosition = TargetPosition.kClamp;
     }
 
+    /** Moves the shoulder to starting position */
     public void moveToStartingPosition()
     {
         targetPosition = TargetPosition.kStartingPosition;
     }
 
-    public void  moveToSubstation()
+    /** Moves the shoulder to substation position */
+    public void moveToSubstation()
     {
         targetPosition = TargetPosition.kSubstation;
+    }
+
+    /** Moves the shoulder to limelight position */
+    public void moveToLimelight()
+    {
+        targetPosition = TargetPosition.kLimelight;
     }
 
     /** Turns the shoulder off */

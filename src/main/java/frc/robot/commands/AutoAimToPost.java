@@ -100,6 +100,7 @@ public class AutoAimToPost extends CommandBase
         alignmentState = AlignmentState.kNotAligned;
         doneStrafing = false;
         doneRotating = false;
+        // foundTarget = false;
         vision.setIsAligned(false);
 
     }
@@ -116,7 +117,7 @@ public class AutoAimToPost extends CommandBase
         strafePower = -(POST_ALIGNMENT_STRAFE_KP * strafeError);
         rotatePower = POST_ALIGNMENT_ROTATE_KP * rotateError;
 
-        System.out.println("foundTarget" + foundTarget + "alignmentState: " + alignmentState + " strafeError: " + strafeError);
+        // System.out.println("foundTarget" + foundTarget + "alignmentState: " + alignmentState + " strafeError: " + strafeError);
 
         if(Math.abs(strafePower) < POST_ALIGNMENT_MIN_SPEED)
         {

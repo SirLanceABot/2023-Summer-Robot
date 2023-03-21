@@ -117,6 +117,7 @@ public final class Constants
         public static final double READY_TO_PICK_UP = 104740.0;
         public static final double STARTING_POSITION = 20000.0; //42000 old
         public static final double SUBSTATION = 225000.0;//330000 old
+        public static final double LIMELIGHT = 135000.0;
     }
 
     public static class Arm
@@ -312,6 +313,7 @@ public final class Constants
         kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),
         kStartingPosition(Constants.Shoulder.STARTING_POSITION, Constants.Arm.STARTING_POSITION),
         kSubstation(Constants.Shoulder.SUBSTATION, Constants.Arm.SUBSTATION),
+        kLimelight(Constants.Shoulder.LIMELIGHT, Constants.Arm.GATHER),
         kOverride(-4237, -4237),
 
         kArmReadyToClamp(Constants.Shoulder.READY_TO_PICK_UP, Constants.Arm.ARM_READY_TO_SUCTION),

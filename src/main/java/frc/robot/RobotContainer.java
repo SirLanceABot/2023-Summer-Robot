@@ -86,7 +86,7 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= false;
+	private boolean useFullRobot			= true;
 	private boolean useScorer				= false;
 	private boolean useBindings				= false;
 
@@ -208,7 +208,10 @@ public class RobotContainer
 			{
 				aButtonTrigger.onTrue( new ParallelCommandGroup(
 											new AutoAimToPost(drivetrain, gyro, vision, candle),
-											new MoveShoulderToScoringPosition(shoulder, TargetPosition.kLowCone))
+											new ConditionalCommand(
+												new MoveShoulderToScoringPosition(shoulder, TargetPosition.kLimelight), 
+												new PrintCommand("Target Not Found"),
+												() -> vision.foundTarget()))
 							  .andThen( new ConditionalCommand(
 											new RunCommand( () -> candle.signalGreen()),
 											new RunCommand( () -> candle.signalWhite()),

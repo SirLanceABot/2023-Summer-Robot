@@ -23,11 +23,6 @@ public class MoveShoulderToScoringPosition extends CommandBase
     private TargetPosition desiredPosition;
 
     
-    // private final double LEVEL_0_ANGLE = 5;         // Gatherer Position
-    // private final double LEVEL_1_ANGLE = 30;        // Low Scoring Position
-    // private final double LEVEL_2_ANGLE = 60;        // Middle Scoring Position
-    // private final double LEVEL_3_ANGLE = 100;       // High Scoring Position
-    
     /**
      * 
      * Creates a new MoveShoulderToScoringPosition.
@@ -109,6 +104,10 @@ public class MoveShoulderToScoringPosition extends CommandBase
                 
                 case kSubstation:
                     shoulder.moveToSubstation();
+                    break;
+
+                case kLimelight:
+                    shoulder.moveToLimelight();
                     break;
                 
                 case kOverride:
