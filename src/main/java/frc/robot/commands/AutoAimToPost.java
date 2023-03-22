@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
@@ -111,8 +112,10 @@ public class AutoAimToPost extends CommandBase
     {
         // double xDistance = vision.getx();
         strafeError = vision.getX();
-        rotateError = 180.0 - gyro.getYaw();
+        rotateError = MathUtil.inputModulus(180.0 - gyro.getYaw(), -180.0, 180.0);
         foundTarget = vision.foundTarget();
+
+        System.out.println("Yaw: " + gyro.getYaw() + " Rotate Error: " + rotateError);
 
         strafePower = -(POST_ALIGNMENT_STRAFE_KP * strafeError);
         rotatePower = POST_ALIGNMENT_ROTATE_KP * rotateError;
