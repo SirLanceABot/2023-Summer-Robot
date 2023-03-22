@@ -41,6 +41,8 @@ public class CameraTab
     private GenericEntry grabberMotorTopCurrentBox;
     private GenericEntry grabberBottomDigitalInputBox;
     private GenericEntry grabberTopDigitalInputBox;
+    // private GenericEntry topSuctionSuccessBox;
+    // private GenericEntry bottomSuctionSuccessBox;
 
     private Double timeRemainingData = 0.0;
     String compressorStateString = "No data";
@@ -50,17 +52,15 @@ public class CameraTab
     {
         System.out.println(fullClassName + " : Constructor Started");
 
-        
-
         // // limelight on shuffleboard
         CameraWidget cw = new CameraWidget(cameraTab);
-        cw.name("LimeLight");
+        cw.name("Limelight");
         cw.setLocation(0, 0, 16, 20); // small screen
         cw.setProperties(false, "white", false, "NONE");
 
         cw.createCameraShuffleboardWidgetLL("limelight-", new String[]{"http://10.42.37.11:5800"}); // could get URLs from NT
 
-        createTimeRemainingBox();
+        // createTimeRemainingBox();
 
         this.shoulder = shoulder;
         this.grabber = grabber;
@@ -74,6 +74,8 @@ public class CameraTab
             grabberMotorTopCurrentBox = createGrabberTopCurrentBox();
             grabberBottomDigitalInputBox = createGrabberBottomDigitalInputBox();
             grabberTopDigitalInputBox = createGrabberTopDigitalInputBox();
+            // topSuctionSuccessBox = createTopSuctionSuccessBox();
+            // bottomSuctionSuccessBox = createBottomSuctionSuccessBox();
         }
 
         System.out.println(fullClassName + ": Constructor Finished");
@@ -126,6 +128,24 @@ public class CameraTab
         .getEntry();
     }
 
+    // private GenericEntry createTopSuctionSuccessBox()
+    // {
+    //     return cameraTab.add("Top Suction Success", grabber.getAnalogSensorVoltage())
+    //     .withWidget(BuiltInWidgets.kBooleanBox)
+    //     .withPosition(20, 12)
+    //     .withSize(3, 3)
+    //     .getEntry();
+    // }
+
+    // private GenericEntry createBottomSuctionSuccessBox()
+    // {
+    //     return cameraTab.add("Bottom Suction Success", grabber.getAnalogSensorVoltage())
+    //     .withWidget(BuiltInWidgets.kBooleanBox)
+    //     .withPosition(20, 16)
+    //     .withSize(3, 3)
+    //     .getEntry(); 
+    // }
+
     public void updateEncoderData()
     {
         if(shoulder != null)
@@ -137,6 +157,8 @@ public class CameraTab
             grabberMotorTopCurrentBox.setDouble(grabber.getVacuumTopCurrent());
             grabberBottomDigitalInputBox.setBoolean(grabber.getBottomDigitalInput());
             grabberTopDigitalInputBox.setBoolean(grabber.getTopDigitalInput());
+            // topSuctionSuccessBox.setBoolean(grabber.getAnalogSensorVoltage() > 1.6 ? true : false);
+            // bottomSuctionSuccessBox.setBoolean(grabber.getAnalogSensorVoltage() > 1.6 ? true : false);
         }
     }
 

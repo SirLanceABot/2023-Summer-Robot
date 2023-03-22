@@ -118,8 +118,8 @@ public class AutoBalance extends CommandBase
                 approach = false;
             }
 
-            SmartDashboard.putNumber("Current Pitch", currentPitch);
-            SmartDashboard.putNumber("Current Yaw", currentYaw);
+            // SmartDashboard.putNumber("Current Pitch", currentPitch);
+            // SmartDashboard.putNumber("Current Yaw", currentYaw);
 
 
             // drivePower =  Math.min(CS_BALANCE_DRIVE_KP * error, 1);
