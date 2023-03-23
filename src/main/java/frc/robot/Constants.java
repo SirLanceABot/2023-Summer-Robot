@@ -148,6 +148,34 @@ public final class Constants
         public static final int WRIST_DOWN = 0;
         public static final int VACCUM_CAN_ID = 1;
 
+        //Vacuum Top
+        public static final double P_GAIN_TOP               = 0.0009;
+        public static final double I_GAIN_TOP               = 0.0000;
+        public static final double D_GAIN_TOP               = 0.0000;
+        public static final double I_ZONE_TOP               = 0.0000;
+        public static final double FEED_FORWARD_TOP         = 0.0000;
+        public static final double MIN_OUTPUT_TOP           = -0.500;
+        public static final double MAX_OUTPUT_TOP           = 0.0000;
+        public static final double MIN_VELOCITY_TOP         = 0.0000;
+        public static final double MAX_VELOCITY_TOP         = 2000.0;
+        public static final double MAX_ACCELERATION_TOP     = 1500.0;
+        public static final double CLOSED_LOOP_ERROR_TOP    = 0.1500;
+
+        //Vacuum Bottom
+        public static final double P_GAIN_BOTTOM            = 0.0009;
+        public static final double I_GAIN_BOTTOM            = 0.0000;
+        public static final double D_GAIN_BOTTOM            = 0.0000;
+        public static final double I_ZONE_BOTTOM            = 0.0000;
+        public static final double FEED_FORWARD_BOTTOM      = 0.0000;
+        public static final double MIN_OUTPUT_BOTTOM        = -0.500;
+        public static final double MAX_OUTPUT_BOTTOM        = 0.0000;
+        public static final double MIN_VELOCITY_BOTTOM      = 0.0000;
+        public static final double MAX_VELOCITY_BOTTOM      = 2000.0;
+        public static final double MAX_ACCELERATION_BOTTOM  = 1500.0;
+        public static final double CLOSED_LOOP_ERROR_BOTTOM = 0.1500;
+
+
+
     }
 
     public static class Drivetrain
@@ -289,6 +317,14 @@ public final class Constants
         // private static double BACK_LEFT_ENCODER_OFFSET = Constants.BACK_LEFT_ENCODER_OFFSET      ;
         // private static double BACK_RIGHT_ENCODER_OFFSET = Constants.BACK_RIGHT_ENCODER_OFFSET    ;
         
+    }
+
+    public static class Vacuum
+    {
+        public static final VacuumPumpConfig TOP = new VacuumPumpConfig(
+            "Top", Grabber.P_GAIN_TOP, true, Grabber.I_GAIN_TOP, Grabber.D_GAIN_TOP, Grabber.I_ZONE_TOP, Grabber.FEED_FORWARD_TOP, Grabber.MIN_OUTPUT_TOP, Grabber.MAX_OUTPUT_TOP, Grabber.MIN_VELOCITY_TOP,Grabber.MAX_VELOCITY_TOP, Grabber.MAX_ACCELERATION_TOP, Grabber.CLOSED_LOOP_ERROR_TOP);
+            public static final VacuumPumpConfig BOTTOM = new VacuumPumpConfig(
+            "Bottom", Grabber.P_GAIN_BOTTOM, true, Grabber.I_GAIN_BOTTOM, Grabber.D_GAIN_BOTTOM, Grabber.I_ZONE_BOTTOM, Grabber.FEED_FORWARD_BOTTOM, Grabber.MIN_OUTPUT_BOTTOM, Grabber.MAX_OUTPUT_BOTTOM, Grabber.MIN_VELOCITY_BOTTOM,Grabber.MAX_VELOCITY_BOTTOM, Grabber.MAX_ACCELERATION_BOTTOM, Grabber.CLOSED_LOOP_ERROR_BOTTOM);
     }
 
     public static class DrivetrainSetup
