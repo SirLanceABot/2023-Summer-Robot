@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -64,6 +65,7 @@ public class Grabber extends Subsystem4237
     //     }
     // }
 
+    
     public enum VacuumState
     {
         kOpen(true), kClosed(false);
@@ -89,6 +91,8 @@ public class Grabber extends Subsystem4237
         private boolean pdhSolenoidGet;
         private boolean pdhSolenoidSet;
         private double analogSensorVoltage;
+        public double kPTop, kITop, kDTop, kIzTop, kFFTop, kMaxOutputTop, kMinOutputTop, maxRPMTop, maxVelTop, minVelTop, maxAccTop, allowedErrTop;
+        public double kPBottom, kIBottom, kDBottom, kIzBottom, kFFBottom, kMaxOutputBottom, kMinOutputBottom, maxRPMBottom, maxVelBottom, minVelBottom, maxAccBottom, allowedErrBottom;
 
         //OUTPUTS
         // private WristPosition wristPosition = WristPosition.kOff;
@@ -101,8 +105,7 @@ public class Grabber extends Subsystem4237
         BooleanLogEntry topDigitalInputEntry;
         DoubleLogEntry pdhSolenoidCurrentEntry;
         BooleanLogEntry pdhSolenoidSetEntry;
-        BooleanLogEntry pdhSolenoidGetEntry;
-        
+        BooleanLogEntry pdhSolenoidGetEntry;       
 
     }
 
@@ -113,6 +116,7 @@ public class Grabber extends Subsystem4237
     private final CANSparkMax vacuumMotorBottom =   new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_BOTTOM_PORT, MotorType.kBrushless);
     private final CANSparkMax vacuumMotorTop =      new CANSparkMax(Constants.Subsystem.GRABBER_MOTOR_TOP_PORT, MotorType.kBrushless);
     // private final CANSparkMax vacuumMotor = new CANSparkMax(7, MotorType.kBrushless);   //testing
+   
 
     private final PowerDistribution vacuumSolenoid = new PowerDistribution(Constants.Grabber.VACCUM_CAN_ID, ModuleType.kRev);
     private PeriodicIO periodicIO = new PeriodicIO();
@@ -127,8 +131,11 @@ public class Grabber extends Subsystem4237
     private DigitalInput topDigitalInput = new DigitalInput(2);
     private boolean useDataLog = true;
     private DataLog log;
+    private SparkMaxAnalogSensor analogSensorTop;
+    private SparkMaxAnalogSensor analogSensorBottom;
+    private SparkMaxPIDController pidControllerTop;
+    private SparkMaxPIDController pidControllerBottom;
 
-    private SparkMaxAnalogSensor analogSensor;
 
     
 
@@ -154,8 +161,6 @@ public class Grabber extends Subsystem4237
         // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
 
         System.out.println(fullClassName + ": Constructor Finished");
-
-        analogSensor = vacuumMotorTop.getAnalog(Mode.kAbsolute);
     }
 
     /**
@@ -178,11 +183,23 @@ public class Grabber extends Subsystem4237
         vacuumMotorBottom.setIdleMode(IdleMode.kBrake);
         vacuumMotorTop.setIdleMode(IdleMode.kBrake);
 
+        // Get analog sensors
+        analogSensorTop = vacuumMotorTop.getAnalog(Mode.kAbsolute);
+        analogSensorBottom = vacuumMotorTop.getAnalog(Mode.kAbsolute);
+
         // Set the Feedback Sensor
         // vacuumMotor.setSensorPhase(false);
         vacuumMotorEncoderBottom = vacuumMotorBottom.getEncoder();
         vacuumMotorEncoderTop = vacuumMotorTop.getEncoder();
         // grabberMotorEncoder.setPositionConversionFactor(4096);
+
+        // PID controllers
+        pidControllerTop = vacuumMotorTop.getPIDController();
+        pidControllerBottom = vacuumMotorBottom.getPIDController();
+
+        // Set the Feedback Device
+        pidControllerTop.setFeedbackDevice(analogSensorTop);
+        pidControllerBottom.setFeedbackDevice(analogSensorBottom);
 
         // Soft Limits
         vacuumMotorBottom.setSoftLimit(SoftLimitDirection.kForward, 0);
@@ -205,6 +222,71 @@ public class Grabber extends Subsystem4237
         forwardLimitSwitchTop.enableLimitSwitch(false);
         reverseLimitSwitchTop = vacuumMotorTop.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
         reverseLimitSwitchTop.enableLimitSwitch(false);
+
+        // Smart Current Limits
+        vacuumMotorTop.setSmartCurrentLimit(40);
+        vacuumMotorBottom.setSmartCurrentLimit(40);
+
+        // Smart Motion Coefficients
+        periodicIO.maxVelTop = 2000; // rpm
+        periodicIO.maxAccTop = 1500;
+
+        // Smart Motion Coefficients
+        periodicIO.maxVelBottom = 2000; // rpm
+        periodicIO.maxAccBottom = 1500;
+
+        // PID coefficients Top
+        periodicIO.kPTop = 5e-5; 
+        periodicIO.kITop = 1e-6;
+        periodicIO.kDTop = 0; 
+        periodicIO.kIzTop = 0; 
+        periodicIO.kFFTop = 0.000156; 
+        periodicIO.kMaxOutputTop = 0.5; 
+        periodicIO.kMinOutputTop = 0.0;
+        periodicIO.maxRPMTop = 5700;
+
+        // set PID coefficients
+        pidControllerTop.setP(periodicIO.kPTop);
+        pidControllerTop.setI(periodicIO.kITop);
+        pidControllerTop.setD(periodicIO.kDTop);
+        pidControllerTop.setIZone(periodicIO.kIzTop);
+        pidControllerTop.setFF(periodicIO.kFFTop);
+        pidControllerTop.setOutputRange(periodicIO.kMinOutputTop, periodicIO.kMaxOutputTop);
+
+
+        // PID coefficients Bottom
+        periodicIO.kPBottom = 5e-5; 
+        periodicIO.kIBottom = 1e-6;
+        periodicIO.kDBottom = 0; 
+        periodicIO.kIzBottom = 0; 
+        periodicIO.kFFBottom = 0.000156; 
+        periodicIO.kMaxOutputBottom = 0.5; 
+        periodicIO.kMinOutputBottom = 0.0;
+        periodicIO.maxRPMBottom = 5700;
+
+
+        // set PID coefficients
+        pidControllerBottom.setP(periodicIO.kPBottom);
+        pidControllerBottom.setI(periodicIO.kIBottom);
+        pidControllerBottom.setD(periodicIO.kDBottom);
+        pidControllerBottom.setIZone(periodicIO.kIzBottom);
+        pidControllerBottom.setFF(periodicIO.kFFBottom);
+        pidControllerBottom.setOutputRange(periodicIO.kMinOutputBottom, periodicIO.kMaxOutputBottom);
+        
+
+        //PID stuff top
+        int smartMotionSlot = 0;
+        pidControllerTop.setSmartMotionMaxVelocity(periodicIO.maxVelTop, smartMotionSlot);
+        pidControllerTop.setSmartMotionMinOutputVelocity(periodicIO.minVelTop, smartMotionSlot);
+        pidControllerTop.setSmartMotionMaxAccel(periodicIO.maxAccTop, smartMotionSlot);
+        pidControllerTop.setSmartMotionAllowedClosedLoopError(periodicIO.allowedErrTop, smartMotionSlot);
+
+        //PID stuff bottom
+        pidControllerBottom.setSmartMotionMaxVelocity(periodicIO.maxVelBottom, smartMotionSlot);
+        pidControllerBottom.setSmartMotionMinOutputVelocity(periodicIO.minVelBottom, smartMotionSlot);
+        pidControllerBottom.setSmartMotionMaxAccel(periodicIO.maxAccBottom, smartMotionSlot);
+        pidControllerBottom.setSmartMotionAllowedClosedLoopError(periodicIO.allowedErrBottom, smartMotionSlot);
+        
     }
 
     /**
@@ -315,7 +397,7 @@ public class Grabber extends Subsystem4237
         periodicIO.topDigitalInputBool = topDigitalInput.get();
         periodicIO.pdhSolenoidCurrent = vacuumSolenoid.getCurrent(23);
         periodicIO.pdhSolenoidGet = vacuumSolenoid.getSwitchableChannel();
-        periodicIO.analogSensorVoltage = analogSensor.getVoltage();
+        periodicIO.analogSensorVoltage = analogSensorTop.getVoltage();
         
 
         // if(useDataLog)
