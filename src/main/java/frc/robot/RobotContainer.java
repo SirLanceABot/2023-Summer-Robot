@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -208,10 +209,12 @@ public class RobotContainer
 			{
 				aButtonTrigger.onTrue( new ParallelCommandGroup(
 											new AutoAimToPost(drivetrain, gyro, vision, candle),
-											new ConditionalCommand(
-												new MoveShoulderToScoringPosition(shoulder, TargetPosition.kLimelight), 
-												new PrintCommand("Target Not Found"),
-												() -> vision.foundTarget()))
+											new SequentialCommandGroup(
+												new WaitCommand(0.2),
+												new ConditionalCommand(
+													new MoveShoulderToScoringPosition(shoulder, TargetPosition.kLimelight), 
+													new PrintCommand("Target Not Found"),
+													() -> vision.foundTarget())))
 							  .andThen( new ConditionalCommand(
 											new RunCommand( () -> candle.signalGreen()),
 											new RunCommand( () -> candle.signalWhite()),

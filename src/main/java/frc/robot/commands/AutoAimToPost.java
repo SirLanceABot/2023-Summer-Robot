@@ -115,7 +115,7 @@ public class AutoAimToPost extends CommandBase
         rotateError = MathUtil.inputModulus(180.0 - gyro.getYaw(), -180.0, 180.0);
         foundTarget = vision.foundTarget();
 
-        System.out.println("Yaw: " + gyro.getYaw() + " Rotate Error: " + rotateError);
+        // System.out.println("Yaw: " + gyro.getYaw() + " Rotate Error: " + rotateError);
 
         strafePower = -(POST_ALIGNMENT_STRAFE_KP * strafeError);
         rotatePower = POST_ALIGNMENT_ROTATE_KP * rotateError;
