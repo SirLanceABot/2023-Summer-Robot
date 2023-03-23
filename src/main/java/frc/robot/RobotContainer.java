@@ -294,7 +294,7 @@ public class RobotContainer
 				// leftTriggerTrigger.whileTrue( new InstantCommand (() -> shoulder.moveUp(), shoulder));
 				leftTriggerTrigger.whileTrue( new StartEndCommand(
 					() -> shoulder.moveUp(),
-					() -> shoulder.off(),
+					() -> shoulder.hold(),
 					shoulder));
 			}
 
@@ -318,7 +318,7 @@ public class RobotContainer
 				// leftBumperTrigger.whileTrue( new InstantCommand (() -> shoulder.moveDown(), shoulder));
 				leftBumperTrigger.whileTrue( new StartEndCommand(
 					() -> shoulder.moveDown(),
-					() -> shoulder.off(),
+					() -> shoulder.hold(),
 					shoulder));
 			}
 			

@@ -133,8 +133,8 @@ public class Grabber extends Subsystem4237
     private DataLog log;
     private SparkMaxAnalogSensor analogSensorTop;
     private SparkMaxAnalogSensor analogSensorBottom;
-    private SparkMaxPIDController pidControllerTop;
-    private SparkMaxPIDController pidControllerBottom;
+    // private SparkMaxPIDController pidControllerTop;
+    // private SparkMaxPIDController pidControllerBottom;
 
 
     
@@ -193,13 +193,13 @@ public class Grabber extends Subsystem4237
         vacuumMotorEncoderTop = vacuumMotorTop.getEncoder();
         // grabberMotorEncoder.setPositionConversionFactor(4096);
 
-        // PID controllers
-        pidControllerTop = vacuumMotorTop.getPIDController();
-        pidControllerBottom = vacuumMotorBottom.getPIDController();
+        // // PID controllers
+        // pidControllerTop = vacuumMotorTop.getPIDController();
+        // pidControllerBottom = vacuumMotorBottom.getPIDController();
 
-        // Set the Feedback Device
-        pidControllerTop.setFeedbackDevice(analogSensorTop);
-        pidControllerBottom.setFeedbackDevice(analogSensorBottom);
+        // // Set the Feedback Device
+        // pidControllerTop.setFeedbackDevice(analogSensorTop);
+        // pidControllerBottom.setFeedbackDevice(analogSensorBottom);
 
         // Soft Limits
         vacuumMotorBottom.setSoftLimit(SoftLimitDirection.kForward, 0);
@@ -245,47 +245,47 @@ public class Grabber extends Subsystem4237
         periodicIO.kMinOutputTop = 0.0;
         periodicIO.maxRPMTop = 5700;
 
-        // set PID coefficients
-        pidControllerTop.setP(periodicIO.kPTop);
-        pidControllerTop.setI(periodicIO.kITop);
-        pidControllerTop.setD(periodicIO.kDTop);
-        pidControllerTop.setIZone(periodicIO.kIzTop);
-        pidControllerTop.setFF(periodicIO.kFFTop);
-        pidControllerTop.setOutputRange(periodicIO.kMinOutputTop, periodicIO.kMaxOutputTop);
+        // // set PID coefficients
+        // pidControllerTop.setP(periodicIO.kPTop);
+        // pidControllerTop.setI(periodicIO.kITop);
+        // pidControllerTop.setD(periodicIO.kDTop);
+        // pidControllerTop.setIZone(periodicIO.kIzTop);
+        // pidControllerTop.setFF(periodicIO.kFFTop);
+        // pidControllerTop.setOutputRange(periodicIO.kMinOutputTop, periodicIO.kMaxOutputTop);
 
 
-        // PID coefficients Bottom
-        periodicIO.kPBottom = 5e-5; 
-        periodicIO.kIBottom = 1e-6;
-        periodicIO.kDBottom = 0; 
-        periodicIO.kIzBottom = 0; 
-        periodicIO.kFFBottom = 0.000156; 
-        periodicIO.kMaxOutputBottom = 0.5; 
-        periodicIO.kMinOutputBottom = 0.0;
-        periodicIO.maxRPMBottom = 5700;
+        // // PID coefficients Bottom
+        // periodicIO.kPBottom = 5e-5; 
+        // periodicIO.kIBottom = 1e-6;
+        // periodicIO.kDBottom = 0; 
+        // periodicIO.kIzBottom = 0; 
+        // periodicIO.kFFBottom = 0.000156; 
+        // periodicIO.kMaxOutputBottom = 0.5; 
+        // periodicIO.kMinOutputBottom = 0.0;
+        // periodicIO.maxRPMBottom = 5700;
 
 
-        // set PID coefficients
-        pidControllerBottom.setP(periodicIO.kPBottom);
-        pidControllerBottom.setI(periodicIO.kIBottom);
-        pidControllerBottom.setD(periodicIO.kDBottom);
-        pidControllerBottom.setIZone(periodicIO.kIzBottom);
-        pidControllerBottom.setFF(periodicIO.kFFBottom);
-        pidControllerBottom.setOutputRange(periodicIO.kMinOutputBottom, periodicIO.kMaxOutputBottom);
+        // // set PID coefficients
+        // pidControllerBottom.setP(periodicIO.kPBottom);
+        // pidControllerBottom.setI(periodicIO.kIBottom);
+        // pidControllerBottom.setD(periodicIO.kDBottom);
+        // pidControllerBottom.setIZone(periodicIO.kIzBottom);
+        // pidControllerBottom.setFF(periodicIO.kFFBottom);
+        // pidControllerBottom.setOutputRange(periodicIO.kMinOutputBottom, periodicIO.kMaxOutputBottom);
         
 
-        //PID stuff top
-        int smartMotionSlot = 0;
-        pidControllerTop.setSmartMotionMaxVelocity(periodicIO.maxVelTop, smartMotionSlot);
-        pidControllerTop.setSmartMotionMinOutputVelocity(periodicIO.minVelTop, smartMotionSlot);
-        pidControllerTop.setSmartMotionMaxAccel(periodicIO.maxAccTop, smartMotionSlot);
-        pidControllerTop.setSmartMotionAllowedClosedLoopError(periodicIO.allowedErrTop, smartMotionSlot);
+        // //PID stuff top
+        // int smartMotionSlot = 0;
+        // pidControllerTop.setSmartMotionMaxVelocity(periodicIO.maxVelTop, smartMotionSlot);
+        // pidControllerTop.setSmartMotionMinOutputVelocity(periodicIO.minVelTop, smartMotionSlot);
+        // pidControllerTop.setSmartMotionMaxAccel(periodicIO.maxAccTop, smartMotionSlot);
+        // pidControllerTop.setSmartMotionAllowedClosedLoopError(periodicIO.allowedErrTop, smartMotionSlot);
 
-        //PID stuff bottom
-        pidControllerBottom.setSmartMotionMaxVelocity(periodicIO.maxVelBottom, smartMotionSlot);
-        pidControllerBottom.setSmartMotionMinOutputVelocity(periodicIO.minVelBottom, smartMotionSlot);
-        pidControllerBottom.setSmartMotionMaxAccel(periodicIO.maxAccBottom, smartMotionSlot);
-        pidControllerBottom.setSmartMotionAllowedClosedLoopError(periodicIO.allowedErrBottom, smartMotionSlot);
+        // //PID stuff bottom
+        // pidControllerBottom.setSmartMotionMaxVelocity(periodicIO.maxVelBottom, smartMotionSlot);
+        // pidControllerBottom.setSmartMotionMinOutputVelocity(periodicIO.minVelBottom, smartMotionSlot);
+        // pidControllerBottom.setSmartMotionMaxAccel(periodicIO.maxAccBottom, smartMotionSlot);
+        // pidControllerBottom.setSmartMotionAllowedClosedLoopError(periodicIO.allowedErrBottom, smartMotionSlot);
         
     }
 

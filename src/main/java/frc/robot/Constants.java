@@ -104,7 +104,7 @@ public final class Constants
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
         public static final double HIGH_CONE = 205000.0; //375000 big single suction //340000 double small suction
-        public static final double HIGH_CUBE = 225000.0;
+        public static final double HIGH_CUBE = 218000.0;
         public static final double MIDDLE_CONE = 176000.0; //300000 big single suction //297000 double small suction
         public static final double MIDDLE_CUBE = 205000.0;
         public static final double LOW_CONE = 55000.0;

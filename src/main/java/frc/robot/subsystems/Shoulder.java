@@ -109,6 +109,7 @@ public class Shoulder extends Subsystem4237
     // private final CANSparkMax shoulderMotor = new CANSparkMax(4,  MotorType.kBrushless); //test
 
     private final Timer encoderResetTimer = new Timer();
+    private final Timer overrideTimer = new Timer();
 
     private SparkMaxLimitSwitch forwardLimitSwitch;
     private SparkMaxLimitSwitch reverseLimitSwitch;
@@ -139,6 +140,7 @@ public class Shoulder extends Subsystem4237
     private DataLog log;
     private ResetState resetState = ResetState.kDone;
     private TargetPosition targetPosition = TargetPosition.kOverride;
+    private double currentOverridePosition;
     
 
     
@@ -413,8 +415,11 @@ public class Shoulder extends Subsystem4237
     /** Turns the shoulder off */
     public void off()
     {
+        overrideTimer.reset();
+        overrideTimer.start();
         targetPosition = TargetPosition.kOverride;
         periodicIO.motorSpeed = 0.0;
+        currentOverridePosition = periodicIO.currentPosition;
     }
 
     /** 
@@ -428,8 +433,11 @@ public class Shoulder extends Subsystem4237
     /** Holds the motor still */
     public void hold()
     {
+        overrideTimer.reset();
+        overrideTimer.start();
         targetPosition = TargetPosition.kOverride;
-        periodicIO.motorSpeed = 0.01;
+        periodicIO.motorSpeed = 0.02;
+        currentOverridePosition = periodicIO.currentPosition;
     }
 
     private void logShoulderInit()
@@ -506,13 +514,20 @@ public class Shoulder extends Subsystem4237
             case kDone:
                 if(targetPosition == TargetPosition.kOverride)
                 {
-                    shoulderMotor.set(periodicIO.motorSpeed);
+                    if( Math.abs(periodicIO.motorSpeed) < 0.1 && overrideTimer.hasElapsed(0.5))
+                    {
+                        pidController.setReference(currentOverridePosition, CANSparkMax.ControlType.kPosition);
+                    }
+                    else
+                    {
+                        shoulderMotor.set(periodicIO.motorSpeed);
+                    }
                 }
                 else if(targetPosition == TargetPosition.kGather)
                 {
-                    pidController.setOutputRange(kGatherMinOutput, kGatherMaxOutput);
+                    // pidController.setOutputRange(kGatherMinOutput, kGatherMaxOutput);
                     pidController.setReference(targetPosition.shoulder, CANSparkMax.ControlType.kPosition);
-                    pidController.setOutputRange(kMinOutput, kMaxOutput);
+                    // pidController.setOutputRange(kMinOutput, kMaxOutput);
                 }
                 else
                 {
