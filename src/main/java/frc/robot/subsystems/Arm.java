@@ -122,6 +122,7 @@ public class Arm extends Subsystem4237
             logArmInit();
         }
         configCANSparkMax();
+        armEncoder.setPosition(Constants.Arm.STARTING_POSITION);
 
         System.out.println(fullClassName + " : Constructor Finished");
     }
@@ -209,7 +210,7 @@ public class Arm extends Subsystem4237
     public void retractArm()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.armSpeed = -0.3;
+        periodicIO.armSpeed = -0.6;
     }
 
     /**
@@ -218,7 +219,7 @@ public class Arm extends Subsystem4237
     public void extendArm()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.armSpeed = 0.3;
+        periodicIO.armSpeed = 0.6;
     }
 
     /** Moves the arm to high position */

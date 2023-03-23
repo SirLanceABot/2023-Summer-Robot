@@ -83,7 +83,12 @@ public class Shoulder extends Subsystem4237
 
     private enum LimitSwitchState
     {
-        kPressed, kStillPressed, kReleased, kStillReleased
+        kPressed, kStillPressed, kReleased, kStillReleased;
+    }
+
+    private enum OverrideMode
+    {
+        kNotMoving, kMoving;
     }
 
     public class PeriodicIO
@@ -140,6 +145,7 @@ public class Shoulder extends Subsystem4237
     private DataLog log;
     private ResetState resetState = ResetState.kDone;
     private TargetPosition targetPosition = TargetPosition.kOverride;
+    private OverrideMode overrideMode = OverrideMode.kNotMoving;
     private double currentOverridePosition;
     
 
@@ -317,14 +323,16 @@ public class Shoulder extends Subsystem4237
     public void moveUp()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.motorSpeed = 0.2;//0.5;
+        overrideMode = OverrideMode.kMoving;
+        periodicIO.motorSpeed = 0.4;//0.5;
     }
 
     /** Moves the shoulder down */
     public void moveDown()
     {
         targetPosition = TargetPosition.kOverride;
-        periodicIO.motorSpeed = -0.2;//0.5;
+        overrideMode = OverrideMode.kMoving;
+        periodicIO.motorSpeed = -0.4;//0.5;
     }
 
     /** Moves the shoulder down to get pressure at beginning of match */
@@ -418,6 +426,7 @@ public class Shoulder extends Subsystem4237
         overrideTimer.reset();
         overrideTimer.start();
         targetPosition = TargetPosition.kOverride;
+        overrideMode = OverrideMode.kNotMoving;
         periodicIO.motorSpeed = 0.0;
         currentOverridePosition = periodicIO.currentPosition;
     }
@@ -436,6 +445,7 @@ public class Shoulder extends Subsystem4237
         overrideTimer.reset();
         overrideTimer.start();
         targetPosition = TargetPosition.kOverride;
+        overrideMode = OverrideMode.kNotMoving;
         periodicIO.motorSpeed = 0.02;
         currentOverridePosition = periodicIO.currentPosition;
     }
@@ -514,7 +524,7 @@ public class Shoulder extends Subsystem4237
             case kDone:
                 if(targetPosition == TargetPosition.kOverride)
                 {
-                    if( Math.abs(periodicIO.motorSpeed) < 0.1 && overrideTimer.hasElapsed(0.5))
+                    if( overrideMode == OverrideMode.kNotMoving && overrideTimer.hasElapsed(0.5))
                     {
                         pidController.setReference(currentOverridePosition, CANSparkMax.ControlType.kPosition);
                     }

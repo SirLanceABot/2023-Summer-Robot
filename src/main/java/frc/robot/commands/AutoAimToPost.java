@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Candle4237;
 import frc.robot.subsystems.Drivetrain;
@@ -42,11 +43,11 @@ public class AutoAimToPost extends CommandBase
 
     NetworkTableEntry tx = table.getEntry("tx");
 
-    private final double POST_ALIGNMENT_TOLERANCE = 0.50;  //Limelight angle measurement in degrees
-    private final double POST_ALIGNMENT_ROTATE_TOLERANCE = 1.0;
-    private final double POST_ALIGNMENT_STRAFE_KP = 0.030;
-    private final double POST_ALIGNMENT_ROTATE_KP = 0.050;
-    private final double POST_ALIGNMENT_MIN_SPEED = 0.05;
+    private double POST_ALIGNMENT_TOLERANCE = 0.50;  //Limelight angle measurement in degrees
+    private double POST_ALIGNMENT_ROTATE_TOLERANCE = 1.0;
+    private double POST_ALIGNMENT_STRAFE_KP = 0.06;
+    private double POST_ALIGNMENT_ROTATE_KP = 0.1;
+    private double POST_ALIGNMENT_MIN_SPEED = 0.04;
     private final Timer alignmentTimer = new Timer();
     private final Timer limelightTimer = new Timer();
 
@@ -72,6 +73,12 @@ public class AutoAimToPost extends CommandBase
         alignmentState = AlignmentState.kNotAligned;
         doneStrafing = false;
         doneRotating = false;
+
+        SmartDashboard.putNumber("Post Alignemnt Tolerance", POST_ALIGNMENT_TOLERANCE);
+        SmartDashboard.putNumber("Post Alignemnt Rotate Tolerance", POST_ALIGNMENT_ROTATE_TOLERANCE);
+        SmartDashboard.putNumber("Post Alignemnt Strafe KP", POST_ALIGNMENT_STRAFE_KP);
+        SmartDashboard.putNumber("Post Alignemnt Rotate KP", POST_ALIGNMENT_ROTATE_KP);
+        SmartDashboard.putNumber("Post Alignemnt Min Speed", POST_ALIGNMENT_MIN_SPEED);
 
         this.drivetrain = drivetrain;
         this.gyro = gyro;
@@ -104,6 +111,7 @@ public class AutoAimToPost extends CommandBase
         // foundTarget = false;
         vision.setIsAligned(false);
 
+        
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -115,11 +123,18 @@ public class AutoAimToPost extends CommandBase
         rotateError = MathUtil.inputModulus(180.0 - gyro.getYaw(), -180.0, 180.0);
         foundTarget = vision.foundTarget();
 
+        POST_ALIGNMENT_TOLERANCE = SmartDashboard.getNumber("Post Alignemnt Tolerance", POST_ALIGNMENT_TOLERANCE);
+        POST_ALIGNMENT_ROTATE_TOLERANCE = SmartDashboard.getNumber("Post Alignemnt Rotate Tolerance", POST_ALIGNMENT_ROTATE_TOLERANCE);
+        POST_ALIGNMENT_STRAFE_KP = SmartDashboard.getNumber("Post Alignemnt Strafe KP", POST_ALIGNMENT_STRAFE_KP);
+        POST_ALIGNMENT_ROTATE_KP = SmartDashboard.getNumber("Post Alignemnt Rotate KP", POST_ALIGNMENT_ROTATE_KP);
+        POST_ALIGNMENT_MIN_SPEED = SmartDashboard.getNumber("Post Alignemnt Min Speed", POST_ALIGNMENT_MIN_SPEED);
+
         // System.out.println("Yaw: " + gyro.getYaw() + " Rotate Error: " + rotateError);
 
         strafePower = -(POST_ALIGNMENT_STRAFE_KP * strafeError);
         rotatePower = POST_ALIGNMENT_ROTATE_KP * rotateError;
 
+        SmartDashboard.putNumber("Strafe Power", strafePower);
         // System.out.println("foundTarget" + foundTarget + "alignmentState: " + alignmentState + " strafeError: " + strafeError);
 
         if(Math.abs(strafePower) < POST_ALIGNMENT_MIN_SPEED)
