@@ -14,6 +14,7 @@ import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.DrivetrainConfig;
 import frc.robot.subsystems.SwerveModuleConfig;
+import frc.robot.subsystems.VacuumPumpConfig;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -156,6 +157,7 @@ public final class Constants
         public static final double FEED_FORWARD_TOP         = 0.0000;
         public static final double MIN_OUTPUT_TOP           = -0.500;
         public static final double MAX_OUTPUT_TOP           = 0.0000;
+        public static final double MAX_RPM_TOP              = 3450.0;
         public static final double MIN_VELOCITY_TOP         = 0.0000;
         public static final double MAX_VELOCITY_TOP         = 2000.0;
         public static final double MAX_ACCELERATION_TOP     = 1500.0;
@@ -169,6 +171,7 @@ public final class Constants
         public static final double FEED_FORWARD_BOTTOM      = 0.0000;
         public static final double MIN_OUTPUT_BOTTOM        = -0.500;
         public static final double MAX_OUTPUT_BOTTOM        = 0.0000;
+        public static final double MAX_RPM_BOTTOM           = 3450.0;
         public static final double MIN_VELOCITY_BOTTOM      = 0.0000;
         public static final double MAX_VELOCITY_BOTTOM      = 2000.0;
         public static final double MAX_ACCELERATION_BOTTOM  = 1500.0;
@@ -322,9 +325,13 @@ public final class Constants
     public static class Vacuum
     {
         public static final VacuumPumpConfig TOP = new VacuumPumpConfig(
-            "Top", Grabber.P_GAIN_TOP, true, Grabber.I_GAIN_TOP, Grabber.D_GAIN_TOP, Grabber.I_ZONE_TOP, Grabber.FEED_FORWARD_TOP, Grabber.MIN_OUTPUT_TOP, Grabber.MAX_OUTPUT_TOP, Grabber.MIN_VELOCITY_TOP,Grabber.MAX_VELOCITY_TOP, Grabber.MAX_ACCELERATION_TOP, Grabber.CLOSED_LOOP_ERROR_TOP);
+            "Top", Grabber.P_GAIN_TOP, Grabber.I_GAIN_TOP, Grabber.D_GAIN_TOP, Grabber.I_ZONE_TOP, 
+            Grabber.FEED_FORWARD_TOP, Grabber.MIN_OUTPUT_TOP, Grabber.MAX_OUTPUT_TOP, Grabber.MAX_RPM_TOP, Grabber.MIN_VELOCITY_TOP,
+            Grabber.MAX_VELOCITY_TOP, Grabber.MAX_ACCELERATION_TOP, Grabber.CLOSED_LOOP_ERROR_TOP);
             public static final VacuumPumpConfig BOTTOM = new VacuumPumpConfig(
-            "Bottom", Grabber.P_GAIN_BOTTOM, true, Grabber.I_GAIN_BOTTOM, Grabber.D_GAIN_BOTTOM, Grabber.I_ZONE_BOTTOM, Grabber.FEED_FORWARD_BOTTOM, Grabber.MIN_OUTPUT_BOTTOM, Grabber.MAX_OUTPUT_BOTTOM, Grabber.MIN_VELOCITY_BOTTOM,Grabber.MAX_VELOCITY_BOTTOM, Grabber.MAX_ACCELERATION_BOTTOM, Grabber.CLOSED_LOOP_ERROR_BOTTOM);
+            "Bottom", Grabber.P_GAIN_BOTTOM, Grabber.I_GAIN_BOTTOM, Grabber.D_GAIN_BOTTOM, Grabber.I_ZONE_BOTTOM,
+             Grabber.FEED_FORWARD_BOTTOM, Grabber.MIN_OUTPUT_BOTTOM, Grabber.MAX_OUTPUT_BOTTOM, Grabber.MAX_RPM_BOTTOM, Grabber.MIN_VELOCITY_BOTTOM,
+             Grabber.MAX_VELOCITY_BOTTOM, Grabber.MAX_ACCELERATION_BOTTOM, Grabber.CLOSED_LOOP_ERROR_BOTTOM);
     }
 
     public static class DrivetrainSetup
