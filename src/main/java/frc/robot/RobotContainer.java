@@ -87,7 +87,7 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= true;
+	private boolean useFullRobot			= false;
 	private boolean useScorer				= false;
 	private boolean useBindings				= false;
 
@@ -152,7 +152,7 @@ public class RobotContainer
 		grabber 			= (useFullRobot || useScorer || useGrabber) 	? new Grabber(log) 										: null;
 		wrist				= (useFullRobot || useScorer || useWrist)		? new Wrist()											: null;
 		arm 				= (useFullRobot || useScorer || useArm) 		? new Arm(log) 											: null;
-		shoulder 			= (useFullRobot || useScorer || useShoulder) 	? new Shoulder(log) 										: null;
+		shoulder 			= (useFullRobot || useScorer || useShoulder) 	? new Shoulder(log) 									: null;
 		gatherer 			= (useGatherer) 								? new Gatherer() 										: null;
 		candle 				= (useFullRobot || useCandle)					? new Candle4237() 										: null;
 		driverController 	= (useFullRobot || useDriverController) 		? new DriverController(Constants.Controller.DRIVER) 	: null;
@@ -526,11 +526,16 @@ public class RobotContainer
 				// shoulder.setDefaultCommand(new RunCommand( () -> { shoulder.on(leftYAxis.getAsDouble()/2.0); }, shoulder) );
 			}
 
-			
-			
+			// Rumble when shoulder encoder resets
+			BooleanSupplier shoulderEncoderReset = shoulder.encoderResetSupplier();
+			Trigger shoulderEncoderResetTrigger = new Trigger(shoulderEncoderReset);
+			shoulderEncoderResetTrigger.onTrue( new InstantCommand(() -> operatorController.setRumble(0.5, 0.5, 0.5)));
+
 			// Default Command
 			if(candle != null)
+			{
 				candle.setDefaultCommand(new RunCommand (() -> candle.signalRed(), candle));
+			}
 		}
 	}
 

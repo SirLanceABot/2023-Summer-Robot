@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
 
 // import com.ctre.phoenix.motorcontrol.ControlMode;
 // import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -319,12 +320,17 @@ public class Shoulder extends Subsystem4237
         return periodicIO.currentVelocity;
     }
 
+    public BooleanSupplier encoderResetSupplier()
+    {
+        return () -> (Math.abs(periodicIO.currentPosition) < 0.5 && resetState == ResetState.kDone);
+    }
+
     /** Moves the shoulder up */
     public void moveUp()
     {
         targetPosition = TargetPosition.kOverride;
         overrideMode = OverrideMode.kMoving;
-        periodicIO.motorSpeed = 0.4;//0.5;
+        periodicIO.motorSpeed = 0.1;//0.5;
     }
 
     /** Moves the shoulder down */
@@ -332,7 +338,7 @@ public class Shoulder extends Subsystem4237
     {
         targetPosition = TargetPosition.kOverride;
         overrideMode = OverrideMode.kMoving;
-        periodicIO.motorSpeed = -0.4;//0.5;
+        periodicIO.motorSpeed = -0.1;//0.5;
     }
 
     /** Moves the shoulder down to get pressure at beginning of match */
@@ -561,6 +567,7 @@ public class Shoulder extends Subsystem4237
                     {
                         resetState = ResetState.kDone;
                         resetAttemptCounter = 0;
+                        BooleanSupplier shoulderEncoderReset = () -> Math.abs(periodicIO.currentPosition) < 0.5;
                     }
                     else if(encoderResetTimer.hasElapsed(0.1))
                     {
