@@ -26,6 +26,11 @@ public class SuctionControl extends CommandBase
         System.out.println("Loading: " + fullClassName);
     }
 
+    public enum vacuumState
+    {
+        kMakeVacuum, kHoldVacuum;
+    }
+    
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Grabber grabber;
     private SuctionState suctionState;

@@ -39,8 +39,8 @@ public class CameraTab
     private GenericEntry shoulderEncoderBox;
     private GenericEntry grabberMotorBottomCurrentBox;
     private GenericEntry grabberMotorTopCurrentBox;
-    private GenericEntry grabberBottomDigitalInputBox;
-    private GenericEntry grabberTopDigitalInputBox;
+    // private GenericEntry grabberBottomDigitalInputBox;
+    // private GenericEntry grabberTopDigitalInputBox;
     // private GenericEntry topSuctionSuccessBox;
     // private GenericEntry bottomSuctionSuccessBox;
 
@@ -72,8 +72,8 @@ public class CameraTab
         {
             grabberMotorBottomCurrentBox = createGrabberBottomCurrentBox();
             grabberMotorTopCurrentBox = createGrabberTopCurrentBox();
-            grabberBottomDigitalInputBox = createGrabberBottomDigitalInputBox();
-            grabberTopDigitalInputBox = createGrabberTopDigitalInputBox();
+            //grabberBottomDigitalInputBox = createGrabberBottomDigitalInputBox();
+            //grabberTopDigitalInputBox = createGrabberTopDigitalInputBox();
             // topSuctionSuccessBox = createTopSuctionSuccessBox();
             // bottomSuctionSuccessBox = createBottomSuctionSuccessBox();
         }
@@ -110,23 +110,23 @@ public class CameraTab
         .getEntry();
     }
 
-    private GenericEntry createGrabberBottomDigitalInputBox()
-    {
-        return cameraTab.add("Grabber Bottom Digital Input", grabber.getBottomDigitalInput())
-        .withWidget(BuiltInWidgets.kBooleanBox)   // specifies type of widget: "kTextView"
-        .withPosition(20, 6)  // sets position of widget
-        .withSize(4, 2)    // sets size of widget
-        .getEntry();
-    }
+    // private GenericEntry createGrabberBottomDigitalInputBox()
+    // {
+    //     return cameraTab.add("Grabber Bottom Digital Input", grabber.getBottomDigitalInput())
+    //     .withWidget(BuiltInWidgets.kBooleanBox)   // specifies type of widget: "kTextView"
+    //     .withPosition(20, 6)  // sets position of widget
+    //     .withSize(4, 2)    // sets size of widget
+    //     .getEntry();
+    // }
 
-    private GenericEntry createGrabberTopDigitalInputBox()
-    {
-        return cameraTab.add("Grabber Top Digital Input", grabber.getTopDigitalInput())
-        .withWidget(BuiltInWidgets.kBooleanBox)   // specifies type of widget: "kTextView"
-        .withPosition(20, 9)  // sets position of widget
-        .withSize(4, 2)    // sets size of widget
-        .getEntry();
-    }
+    // private GenericEntry createGrabberTopDigitalInputBox()
+    // {
+    //     return cameraTab.add("Grabber Top Digital Input", grabber.getTopDigitalInput())
+    //     .withWidget(BuiltInWidgets.kBooleanBox)   // specifies type of widget: "kTextView"
+    //     .withPosition(20, 9)  // sets position of widget
+    //     .withSize(4, 2)    // sets size of widget
+    //     .getEntry();
+    // }
 
     // private GenericEntry createTopSuctionSuccessBox()
     // {
@@ -155,8 +155,8 @@ public class CameraTab
         {
             grabberMotorBottomCurrentBox.setDouble(grabber.getVacuumBottomCurrent());
             grabberMotorTopCurrentBox.setDouble(grabber.getVacuumTopCurrent());
-            grabberBottomDigitalInputBox.setBoolean(grabber.getBottomDigitalInput());
-            grabberTopDigitalInputBox.setBoolean(grabber.getTopDigitalInput());
+            //grabberBottomDigitalInputBox.setBoolean(grabber.getBottomDigitalInput());
+            //grabberTopDigitalInputBox.setBoolean(grabber.getTopDigitalInput());
             // topSuctionSuccessBox.setBoolean(grabber.getAnalogSensorVoltage() > 1.6 ? true : false);
             // bottomSuctionSuccessBox.setBoolean(grabber.getAnalogSensorVoltage() > 1.6 ? true : false);
         }

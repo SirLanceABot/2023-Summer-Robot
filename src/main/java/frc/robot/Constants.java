@@ -91,8 +91,6 @@ public final class Constants
     public static class Subsystem
     {
         public static final int GATHERER_MOTOR_PORT     = 25;
-        public static final int GRABBER_MOTOR_BOTTOM_PORT    = 3;
-        public static final int GRABBER_MOTOR_TOP_PORT    = 2;
         public static final int ARM_MOTOR_PORT          = 4;
         public static final int SHOULDER_MOTOR_PORT     = 5;
 
@@ -150,34 +148,20 @@ public final class Constants
         public static final int VACCUM_CAN_ID = 1;
 
         //Vacuum Top
-        public static final double P_GAIN_TOP               = 0.0009;
-        public static final double I_GAIN_TOP               = 0.0000;
-        public static final double D_GAIN_TOP               = 0.0000;
-        public static final double I_ZONE_TOP               = 0.0000;
-        public static final double FEED_FORWARD_TOP         = 0.0000;
-        public static final double MIN_OUTPUT_TOP           = -0.500;
-        public static final double MAX_OUTPUT_TOP           = 0.0000;
-        public static final double MAX_RPM_TOP              = 3450.0;
-        public static final double MIN_VELOCITY_TOP         = 0.0000;
-        public static final double MAX_VELOCITY_TOP         = 2000.0;
-        public static final double MAX_ACCELERATION_TOP     = 1500.0;
-        public static final double CLOSED_LOOP_ERROR_TOP    = 0.1500;
+        public static final int GRABBER_MOTOR_TOP_PORT          = 2;
+        public static final double LOW_PRESSURE_TOP             = 0.7500;
+        public static final double SPEED_LIMIT_TOP              = -2600.0;
+        public static final double AS_FAST_AS_POSSIBLE_TOP      = -1.000;
+        public static final double SETPOINT_TOP                 = 0.7100;
+        public static final double MAINTAIN_SPEED_LIMIT_TOP     = -0.500; //RUN POWER TOP
 
         //Vacuum Bottom
-        public static final double P_GAIN_BOTTOM            = 0.0009;
-        public static final double I_GAIN_BOTTOM            = 0.0000;
-        public static final double D_GAIN_BOTTOM            = 0.0000;
-        public static final double I_ZONE_BOTTOM            = 0.0000;
-        public static final double FEED_FORWARD_BOTTOM      = 0.0000;
-        public static final double MIN_OUTPUT_BOTTOM        = -0.500;
-        public static final double MAX_OUTPUT_BOTTOM        = 0.0000;
-        public static final double MAX_RPM_BOTTOM           = 3450.0;
-        public static final double MIN_VELOCITY_BOTTOM      = 0.0000;
-        public static final double MAX_VELOCITY_BOTTOM      = 2000.0;
-        public static final double MAX_ACCELERATION_BOTTOM  = 1500.0;
-        public static final double CLOSED_LOOP_ERROR_BOTTOM = 0.1500;
-
-
+        public static final int GRABBER_MOTOR_BOTTOM_PORT       = 3;
+        public static final double LOW_PRESSURE_BOTTOM          = 0.8300;
+        public static final double SPEED_LIMIT_BOTTOM           = -2350.0;
+        public static final double AS_FAST_AS_POSSIBLE_BOTTOM   = -1.000;
+        public static final double SETPOINT_BOTTOM              = 0.7900;
+        public static final double MAINTAIN_SPEED_LIMIT_BOTTOM  = -0.500; //RUN POWER BOTTOM
 
     }
 
@@ -330,13 +314,11 @@ public final class Constants
     public static class Vacuum
     {
         public static final VacuumPumpConfig TOP = new VacuumPumpConfig(
-            "Top", Grabber.P_GAIN_TOP, Grabber.I_GAIN_TOP, Grabber.D_GAIN_TOP, Grabber.I_ZONE_TOP, 
-            Grabber.FEED_FORWARD_TOP, Grabber.MIN_OUTPUT_TOP, Grabber.MAX_OUTPUT_TOP, Grabber.MAX_RPM_TOP, Grabber.MIN_VELOCITY_TOP,
-            Grabber.MAX_VELOCITY_TOP, Grabber.MAX_ACCELERATION_TOP, Grabber.CLOSED_LOOP_ERROR_TOP);
+            "Top", Grabber.GRABBER_MOTOR_TOP_PORT, Grabber.LOW_PRESSURE_TOP, Grabber.SPEED_LIMIT_TOP, Grabber.AS_FAST_AS_POSSIBLE_TOP, Grabber.SETPOINT_TOP, 
+            Grabber.MAINTAIN_SPEED_LIMIT_TOP);
             public static final VacuumPumpConfig BOTTOM = new VacuumPumpConfig(
-            "Bottom", Grabber.P_GAIN_BOTTOM, Grabber.I_GAIN_BOTTOM, Grabber.D_GAIN_BOTTOM, Grabber.I_ZONE_BOTTOM,
-             Grabber.FEED_FORWARD_BOTTOM, Grabber.MIN_OUTPUT_BOTTOM, Grabber.MAX_OUTPUT_BOTTOM, Grabber.MAX_RPM_BOTTOM, Grabber.MIN_VELOCITY_BOTTOM,
-             Grabber.MAX_VELOCITY_BOTTOM, Grabber.MAX_ACCELERATION_BOTTOM, Grabber.CLOSED_LOOP_ERROR_BOTTOM);
+            "Bottom", Grabber.GRABBER_MOTOR_BOTTOM_PORT, Grabber.LOW_PRESSURE_BOTTOM, Grabber.SPEED_LIMIT_BOTTOM, Grabber.AS_FAST_AS_POSSIBLE_BOTTOM, Grabber.SETPOINT_BOTTOM,
+             Grabber.MAINTAIN_SPEED_LIMIT_BOTTOM);
     }
 
     public static class DrivetrainSetup

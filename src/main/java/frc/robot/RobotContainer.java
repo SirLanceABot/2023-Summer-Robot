@@ -61,6 +61,7 @@ import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.RetractScorer;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.SwerveDriveXOnly;
+import frc.robot.commands.VacuumPumpControl;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
 import frc.robot.controls.Xbox;
@@ -87,9 +88,9 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= false;
+	private boolean useFullRobot			= true;
 	private boolean useScorer				= false;
-	private boolean useBindings				= false;
+	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
@@ -511,11 +512,14 @@ public class RobotContainer
 			if(grabber != null)
 			{
 				// suction
+				aButtonTrigger.onTrue( new InstantCommand( () -> grabber.grabGamePiece()));
+				// aButtonTrigger.onTrue(grabber.runVacuum());
+
 				// aButtonTrigger.toggleOnTrue( new StartEndCommand(
 				// 	() -> grabber.grabGamePiece(),
 				// 	() -> grabber.releaseGamePiece(),
 				// 	grabber));
-				aButtonTrigger.onTrue( new InstantCommand( () -> grabber.grabGamePiece()));
+				
 				
 				// aButtonTrigger.onTrue( new ReleaseGamePiece(grabber));
 	

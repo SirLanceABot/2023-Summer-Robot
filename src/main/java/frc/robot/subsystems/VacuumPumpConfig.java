@@ -15,72 +15,50 @@ public class VacuumPumpConfig
     }
 
     public final String pumpName;
-    public final double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
+    public final Integer motorChannel;
+    public final double lowPressure, speedLimit, asFastAsPossible, setPoint, maintainSpeedLimit;
 
     /**
      * @param pumpName      Name of pump (top or bottom)
-     * @param kP            P Gain
-     * @param kI            I Gain
-     * @param kD            D Gain
-     * @param kIz           I Zone
-     * @param kFF           Feed Forward
-     * @param kMaxOutput    Maximum Output
-     * @param kMinOutput    Minimum Output
-     * @param maxRPM        Maximum RPM (rounds per minute)
-     * @param maxVel        Maximum Velocity
-     * @param minVel        Minimum Velocity
-     * @param maxAcc        Maximum Acceleration
-     * @param allowedErr    Allowed Close Loop Error
+     * @param lowPressure           Low Pressure
+     * @param speedLimit            Speed Limit
+     * @param asFastAsPossible      As Fast As Possible
+     * @param setPoint              I Zone
+     * @param maintainSpeedLimit    Feed Forward
      */
     public VacuumPumpConfig(String pumpName,
-                            double kP,
-                            double kI,
-                            double kD,
-                            double kIz,
-                            double kFF,
-                            double kMaxOutput,
-                            double kMinOutput,
-                            double maxRPM,
-                            double maxVel,
-                            double minVel,
-                            double maxAcc,
-                            double allowedErr)
+                            Integer motorChannel,
+                            double lowPressure,
+                            double speedLimit,
+                            double asFastAsPossible,
+                            double setPoint,
+                            double maintainSpeedLimit
+                            )
     {
         this.pumpName = pumpName;
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
-        this.kIz = kIz;
-        this.kFF = kFF;
-        this.kMaxOutput = kMaxOutput;
-        this.kMinOutput = kMinOutput;
-        this.maxRPM = maxRPM;
-        this.maxVel = maxVel;
-        this.minVel = minVel;
-        this.maxAcc = maxAcc;
-        this.allowedErr = allowedErr;
+        this.motorChannel = motorChannel;
+        this.lowPressure = lowPressure;
+        this.speedLimit = speedLimit;
+        this.asFastAsPossible = asFastAsPossible;
+        this.setPoint = setPoint;
+        this.maintainSpeedLimit = maintainSpeedLimit;
     }
 
     public String toString()
     {
         StringBuilder sb = new StringBuilder(400);
         
-        sb.append("Name   Channel  PGain  IGain  DGain  IZone  FeedForw.  MaxOut  MinOut  MaxRPM  MaxVel  MinVel  MaxAcc  allowedErr \n");
+        sb.append("Name   MotorChannel  LowPressure  SpeedLimit  AsFastAsPossible  SetPoint  MaintainSpeedLimit");
 
-        sb.append(String.format("%-7s %-9s %-7d %-7d %-7d %-7d %-11d %-8d %-8d %-8d %-8d %-8d %-8d %-12d\n",
+        sb.append(String.format("%-7s %-10s %-10d %-10d %-10d %-10d %-10d\n",
             pumpName,
-            kP,
-            kI,
-            kD,
-            kIz,
-            kFF,
-            kMaxOutput,
-            kMinOutput,
-            maxRPM,
-            maxVel,
-            minVel,
-            maxAcc,
-            allowedErr));
+            motorChannel,
+            lowPressure,
+            speedLimit,
+            asFastAsPossible,
+            setPoint,
+            maintainSpeedLimit
+            ));
 
         return sb.toString();
     }
