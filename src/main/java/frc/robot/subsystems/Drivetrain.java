@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
 import frc.robot.Constants;
+import frc.robot.controls.AdaptiveSlewRateLimiter;
 import frc.robot.sensors.Gyro4237;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -96,6 +97,10 @@ public class Drivetrain extends Subsystem4237
     private boolean useDataLog = true;
     private final DataLog log;
     private final SwerveDriveKinematics kinematics;
+
+    private final AdaptiveSlewRateLimiter adaptiveXRateLimiter = new AdaptiveSlewRateLimiter(Constants.DrivetrainConstants.X_ACCELERATION_RATE_LIMT, Constants.DrivetrainConstants.X_DECELERATION_RATE_LIMT);
+    private final AdaptiveSlewRateLimiter adaptiveYRateLimiter = new AdaptiveSlewRateLimiter(Constants.DrivetrainConstants.Y_ACCELERATION_RATE_LIMT, Constants.DrivetrainConstants.Y_DECELERATION_RATE_LIMT);
+
     
 
 
@@ -190,8 +195,12 @@ public class Drivetrain extends Subsystem4237
             ySpeed = 0.0;
         if(Math.abs(turn) < 0.04)
             turn = 0.0;    
-        periodicIO.xSpeed = xSpeed;
-        periodicIO.ySpeed = ySpeed;
+        // periodicIO.xSpeed = xSpeed;
+        // periodicIO.ySpeed = ySpeed;
+
+        periodicIO.xSpeed = adaptiveXRateLimiter.calculate(xSpeed);
+        periodicIO.ySpeed = adaptiveYRateLimiter.calculate(ySpeed);
+
         periodicIO.turn = turn;
         periodicIO.fieldRelative = fieldRelative;
 

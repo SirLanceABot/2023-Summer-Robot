@@ -330,7 +330,7 @@ public class Shoulder extends Subsystem4237
     {
         targetPosition = TargetPosition.kOverride;
         overrideMode = OverrideMode.kMoving;
-        periodicIO.motorSpeed = 0.1;//0.5;
+        periodicIO.motorSpeed = 0.4;//0.5;
     }
 
     /** Moves the shoulder down */
@@ -338,7 +338,7 @@ public class Shoulder extends Subsystem4237
     {
         targetPosition = TargetPosition.kOverride;
         overrideMode = OverrideMode.kMoving;
-        periodicIO.motorSpeed = -0.1;//0.5;
+        periodicIO.motorSpeed = -0.4;//0.5;
     }
 
     /** Moves the shoulder down to get pressure at beginning of match */

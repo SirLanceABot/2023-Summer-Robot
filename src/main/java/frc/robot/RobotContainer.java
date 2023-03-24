@@ -105,7 +105,9 @@ public class RobotContainer
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
+
 	private boolean useDataLog				= false;
+	
 	
 	public final boolean fullRobot;
 	public final ExampleSubsystem exampleSubsystem;

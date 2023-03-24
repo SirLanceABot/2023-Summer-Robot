@@ -197,7 +197,7 @@ public final class Constants
 
         private static final int BACK_RIGHT_DRIVE       = 1; 
         private static final int BACK_RIGHT_ENCODER     = 2; 
-        private static final int BACK_RIGHT_TURN        = 3;  
+        private static final int BACK_RIGHT_TURN        = 3;
 
         public static final String CAN_BUS = CANIVORE;
     }
@@ -255,6 +255,11 @@ public final class Constants
 
         public static double DRIVETRAIN_WHEELBASE_METERS = Constants.DRIVETRAIN_WHEELBASE_METERS  ; // 23.5 Front to back
         public static double DRIVETRAIN_TRACKWIDTH_METERS = Constants.DRIVETRAIN_TRACKWIDTH_METERS ; // 23.5 // Side to side
+
+        public static final double X_ACCELERATION_RATE_LIMT = 15.0;
+        public static final double X_DECELERATION_RATE_LIMT = 10.0;
+        public static final double Y_ACCELERATION_RATE_LIMT = 15.0;
+        public static final double Y_DECELERATION_RATE_LIMT = 10.0;
 
     }
 
