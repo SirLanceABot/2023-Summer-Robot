@@ -87,7 +87,7 @@ public class Vision extends Sensor4237
         periodicIO.x = periodicIO.tx.getDouble(0.0);
         periodicIO.y = periodicIO.ty.getDouble(0.0);
         periodicIO.area = periodicIO.ta.getDouble(0.0);
-        periodicIO.foundTarget = periodicIO.tv.getInteger(0) == 1 ? true : false;
+        periodicIO.foundTarget = periodicIO.tv.getDouble(0.0) == 1.0 ? true : false;
     }
 
     @Override
