@@ -72,8 +72,14 @@ public class DriverController extends Xbox implements PeriodicIO
 
     public DoubleSupplier getAxisSupplier(Axis axis)
     {
-        return () -> periodicIO.axis[axis.value];
+        // return () -> periodicIO.axis[axis.value];
         // return () -> getRawAxis(axis);
+        return getAxisSupplier(axis, 1.0);
+    }
+
+    public DoubleSupplier getAxisSupplier(Axis axis, double scaleFactor)
+    {
+        return () -> periodicIO.axis[axis.value] * scaleFactor;
     }
 
     public BooleanSupplier getButtonSupplier(Button button)

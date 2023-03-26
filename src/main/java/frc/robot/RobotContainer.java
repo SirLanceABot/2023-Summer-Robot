@@ -197,6 +197,10 @@ public class RobotContainer
 			DoubleSupplier leftYAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftY);
 			DoubleSupplier leftXAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftX);
 			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
+			DoubleSupplier leftYAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kLeftY, 0.15);
+			DoubleSupplier leftXAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kLeftX, 0.15);
+			DoubleSupplier rightXAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kRightX, 0.5);
+			DoubleSupplier zero = () -> 0.0;
 
 			// Start Button
 			BooleanSupplier startButton = driverController.getButtonSupplier(Xbox.Button.kStart);
@@ -239,7 +243,8 @@ public class RobotContainer
 			Trigger bButtonTrigger = new Trigger(bButton);
 			if(drivetrain != null)
 			{
-				bButtonTrigger.toggleOnTrue(new SwerveDriveXOnly(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+				// bButtonTrigger.toggleOnTrue(new SwerveDriveXOnly(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+				bButtonTrigger.toggleOnTrue(new SwerveDrive(drivetrain, leftYAxisCrawl, zero, zero, true));
 			}
 
 			//X Button-lockwheels
@@ -256,7 +261,8 @@ public class RobotContainer
 			Trigger yButtonTrigger = new Trigger(yButton);
 			if(drivetrain != null)
 			{
-				yButtonTrigger.toggleOnTrue(new SwerveDriveCrawl(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+				// yButtonTrigger.toggleOnTrue(new SwerveDriveCrawl(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
+				yButtonTrigger.toggleOnTrue(new SwerveDrive(drivetrain, leftYAxisCrawl, leftXAxisCrawl, rightXAxisCrawl, true));
 			}
 
 			//Right trigger 
