@@ -43,7 +43,7 @@ import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Candle4237.LedStatus;
 import frc.robot.Constants.SuctionState;
 import frc.robot.Constants.TargetPosition;
-import frc.robot.commands.AutoAimToPost;
+import frc.robot.commands.AlignToPost;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoCommandList;
 import frc.robot.commands.ArcadeAutoDriveDistance;
@@ -59,6 +59,7 @@ import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.RetractScorer;
+import frc.robot.commands.Rotate180;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.SwerveDriveXOnly;
 import frc.robot.commands.VacuumPumpControl;
@@ -211,7 +212,7 @@ public class RobotContainer
 			if(drivetrain != null && gyro != null && vision != null)
 			{
 				aButtonTrigger.onTrue( new ParallelCommandGroup(
-											new AutoAimToPost(drivetrain, gyro, vision, candle),
+											new AlignToPost(drivetrain, gyro, vision, candle),
 											new SequentialCommandGroup(
 												new WaitCommand(0.2),
 												new ConditionalCommand(
@@ -266,6 +267,14 @@ public class RobotContainer
 				rightTriggerTrigger.onTrue( new SuctionControl(grabber, SuctionState.kOff)
 								   .andThen( new  WaitCommand(0.5))
 								   .andThen( new InstantCommand( () -> grabber.closeSolenoid())));
+			}
+
+			//Right Bumper
+			BooleanSupplier rightBumper = driverController.getButtonSupplier(Xbox.Button.kRightBumper);
+			Trigger rightBumperTrigger = new Trigger(rightBumper);
+			if(drivetrain != null && gyro != null)
+			{
+				rightBumperTrigger.onTrue( new Rotate180(drivetrain, gyro, leftXAxis, rightXAxis, true));
 			}
 
 			//Dpad down button

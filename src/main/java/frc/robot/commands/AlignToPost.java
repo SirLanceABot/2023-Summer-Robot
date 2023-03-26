@@ -16,7 +16,7 @@ import frc.robot.sensors.Gyro4237;
 import frc.robot.sensors.Vision;
 
 
-public class AutoAimToPost extends CommandBase
+public class AlignToPost extends CommandBase
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -67,7 +67,7 @@ public class AutoAimToPost extends CommandBase
      * @param gyro Gyro sensor.
      * @param vision Vision sensor.
      */
-    public AutoAimToPost(Drivetrain drivetrain, Gyro4237 gyro, Vision vision, Candle4237 candle) 
+    public AlignToPost(Drivetrain drivetrain, Gyro4237 gyro, Vision vision, Candle4237 candle) 
     {
         // System.out.println(fullClassName + ": Constructor Started");
         alignmentState = AlignmentState.kNotAligned;
