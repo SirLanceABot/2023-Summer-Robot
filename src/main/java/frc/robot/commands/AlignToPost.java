@@ -99,8 +99,8 @@ public class AlignToPost extends CommandBase
     public void initialize()
     {
         // System.out.println("Initialized");
-        // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);  //turns limelight on
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);  //turns limelight on
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);  //turns limelight on
+        // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);  //turns limelight on
         alignmentTimer.reset();
         alignmentTimer.start();
         limelightTimer.reset();
@@ -182,8 +182,8 @@ public class AlignToPost extends CommandBase
 
         // System.out.println("End");
 
-        // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);  //turns limelight off
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);  //turns limelight off
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);  //turns limelight off
+        // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);  //turns limelight off
 
         // System.out.println("End X: " + xDistance);
     }

@@ -90,7 +90,8 @@ public class Robot extends TimedRobot
     public void disabledInit()
     {
         System.out.println("Disabled Mode");
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+        // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
     }
 
     /**
