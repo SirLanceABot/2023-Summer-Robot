@@ -5,29 +5,21 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import frc.robot.Constants;
-import frc.robot.commands.VacuumPumpControl;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Timer;
 
 
 public class Grabber extends Subsystem4237
@@ -68,19 +60,17 @@ public class Grabber extends Subsystem4237
     //     }
     // }
 
-    
-    public enum SolenoidState
+    public enum VacuumState
     {
         kOpen(true), kClosed(false);
 
         public final boolean value;
 
-        private SolenoidState(boolean value)
+        private VacuumState(boolean value)
         {
             this.value = value;
         }
     }
-
 
     public class PeriodicIO
     {
@@ -94,22 +84,21 @@ public class Grabber extends Subsystem4237
         private boolean pdhSolenoidSet;
         private double analogSensorVoltageTop;
         private double analogSensorVoltageBottom;
-        private double vacuumEncoderVelocityTop;
-        private double vacuumEncoderVelocityBottom;
 
-        // public double kPTop, kITop, kDTop, kIzTop, kFFTop, kMaxOutputTop, kMinOutputTop, maxRPMTop, maxVelTop, minVelTop, maxAccTop, allowedErrTop;
-        // public double kPBottom, kIBottom, kDBottom, kIzBottom, kFFBottom, kMaxOutputBottom, kMinOutputBottom, maxRPMBottom, maxVelBottom, minVelBottom, maxAccBottom, allowedErrBottom;
 
         //OUTPUTS
         // private WristPosition wristPosition = WristPosition.kOff;
-        private double vacuumMotorSpeed = 0.0;
-        private SolenoidState solenoidState = SolenoidState.kClosed;
+        private double vacuumMotorSpeedTop = 0.0;
+        private double vacuumMotorSpeedBottom = 0.0;
+        
+        private VacuumState vacuumState = VacuumState.kClosed;
 
         DoubleLogEntry vacuumBottomCurrentEntry;
         DoubleLogEntry vacuumTopCurrentEntry;
         DoubleLogEntry pdhSolenoidCurrentEntry;
         BooleanLogEntry pdhSolenoidSetEntry;
-        BooleanLogEntry pdhSolenoidGetEntry;       
+        BooleanLogEntry pdhSolenoidGetEntry;
+        
 
     }
 
@@ -117,29 +106,32 @@ public class Grabber extends Subsystem4237
     // private final DoubleSolenoid wristSolenoid = 
     //         new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 
     //         Constants.Grabber.WRIST_UP, Constants.Grabber.WRIST_DOWN);
-    //private final CANSparkMax vacuumMotorBottom =   new CANSparkMax(Constants.Grabber.GRABBER_MOTOR_BOTTOM_PORT, MotorType.kBrushless);
-    //private final CANSparkMax vacuumMotorTop =      new CANSparkMax(Constants.Grabber.GRABBER_MOTOR_TOP_PORT, MotorType.kBrushless);
+    private final CANSparkMax vacuumMotorBottom =   new CANSparkMax(Constants.Grabber.GRABBER_MOTOR_BOTTOM_PORT, MotorType.kBrushless);
+    private final CANSparkMax vacuumMotorTop =      new CANSparkMax(Constants.Grabber.GRABBER_MOTOR_TOP_PORT, MotorType.kBrushless);
     // private final CANSparkMax vacuumMotor = new CANSparkMax(7, MotorType.kBrushless);   //testing
-    private final VacuumPump vacuumPumpTop = new VacuumPump(Constants.Vacuum.TOP);
-    private final VacuumPump vacuumPumpBottom = new VacuumPump(Constants.Vacuum.BOTTOM);
-    
 
     private final PowerDistribution vacuumSolenoid = new PowerDistribution(Constants.Grabber.VACCUM_CAN_ID, ModuleType.kRev);
     private PeriodicIO periodicIO = new PeriodicIO();
-    private ParallelCommandGroup runVacuum = new VacuumPumpControl(vacuumPumpTop).alongWith(new VacuumPumpControl(vacuumPumpBottom));
 
-    // private RelativeEncoder vacuumMotorEncoderBottom;
-    // private RelativeEncoder vacuumMotorEncoderTop;
-    // private SparkMaxLimitSwitch forwardLimitSwitchBottom;
-    // private SparkMaxLimitSwitch forwardLimitSwitchTop;
-    // private SparkMaxLimitSwitch reverseLimitSwitchBottom;
-    // private SparkMaxLimitSwitch reverseLimitSwitchTop;
+    private RelativeEncoder vacuumMotorEncoderBottom;
+    private RelativeEncoder vacuumMotorEncoderTop;
+    private SparkMaxLimitSwitch forwardLimitSwitchBottom;
+    private SparkMaxLimitSwitch forwardLimitSwitchTop;
+    private SparkMaxLimitSwitch reverseLimitSwitchBottom;
+    private SparkMaxLimitSwitch reverseLimitSwitchTop;
+    private SparkMaxAnalogSensor analogSensorTop;
+    private SparkMaxAnalogSensor analogSensorBottom;
+    private Timer solenoidTimer = new Timer();
+
     private boolean useDataLog = true;
     private DataLog log;
-    // private SparkMaxAnalogSensor analogSensorTop;
-    // private SparkMaxAnalogSensor analogSensorBottom;f
-    // private SparkMaxPIDController pidControllerTop;
-    // private SparkMaxPIDController pidControllerBottom;
+    private boolean isEnabled = false;
+    private boolean isDisabling = false;
+    private boolean isMaximumPressureReachedTop = false;
+    private boolean isMaximumPressureReachedBottom = false;
+    private boolean isTargetPressureReachedTop = false;
+    private boolean isTargetPressureReachedBottom = false;
+    
 
 
     
@@ -161,147 +153,75 @@ public class Grabber extends Subsystem4237
             logVacuumInit();
         }
 
-        //configCANSparkMax();
-        vacuumSolenoid.setSwitchableChannel(false);
+        configCANSparkMax();
+        vacuumSolenoid.setSwitchableChannel(VacuumState.kClosed.value);
         // SendableRegistry.addLW(digitalOutput, "Grabber", .toString());
 
         System.out.println(fullClassName + ": Constructor Finished");
+
+        analogSensorTop = vacuumMotorTop.getAnalog(Mode.kAbsolute);
+        analogSensorBottom = vacuumMotorBottom.getAnalog(Mode.kAbsolute);
     }
 
     /**
      * Makes the configurations of a Spark Max Motor
      */
-    // private void configCANSparkMax()
-    // {   
-    //     // // Start Data Log
-    //     // DataLogManager.start();
+    private void configCANSparkMax()
+    {   
+        // // Start Data Log
+        // DataLogManager.start();
 
-    //     // Factory Defaults
-    //     vacuumMotorBottom.restoreFactoryDefaults();
-    //     vacuumMotorTop.restoreFactoryDefaults();
+        // Factory Defaults
+        vacuumMotorBottom.restoreFactoryDefaults();
+        vacuumMotorTop.restoreFactoryDefaults();
         
-    //     // Invert the direction of the motor
-    //     vacuumMotorBottom.setInverted(false);
-    //     vacuumMotorTop.setInverted(false);
+        // Invert the direction of the motor
+        vacuumMotorBottom.setInverted(false);
+        vacuumMotorTop.setInverted(false);
 
-    //     // Brake or Coast mode
-    //     vacuumMotorBottom.setIdleMode(IdleMode.kBrake);
-    //     vacuumMotorTop.setIdleMode(IdleMode.kBrake);
+        // Brake or Coast mode
+        vacuumMotorBottom.setIdleMode(IdleMode.kBrake);
+        vacuumMotorTop.setIdleMode(IdleMode.kBrake);
 
-    //     // Get analog sensors
-    //     analogSensorTop = vacuumMotorTop.getAnalog(Mode.kAbsolute);
-    //     analogSensorBottom = vacuumMotorTop.getAnalog(Mode.kAbsolute);
+        // Set the Feedback Sensor
+        // vacuumMotor.setSensorPhase(false);
+        vacuumMotorEncoderBottom = vacuumMotorBottom.getEncoder();
+        vacuumMotorEncoderTop = vacuumMotorTop.getEncoder();
+        // grabberMotorEncoder.setPositionConversionFactor(4096);
 
-    //     // Set the Feedback Sensor
-    //     // vacuumMotor.setSensorPhase(false);
-    //     vacuumMotorEncoderBottom = vacuumMotorBottom.getEncoder();
-    //     vacuumMotorEncoderTop = vacuumMotorTop.getEncoder();
-    //     // grabberMotorEncoder.setPositionConversionFactor(4096);
+        // Soft Limits
+        vacuumMotorBottom.setSoftLimit(SoftLimitDirection.kForward, 0);
+        vacuumMotorBottom.enableSoftLimit(SoftLimitDirection.kForward, false);
+        vacuumMotorBottom.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        vacuumMotorBottom.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
-    //     // // PID controllers
-    //     // pidControllerTop = vacuumMotorTop.getPIDController();
-    //     // pidControllerBottom = vacuumMotorBottom.getPIDController();
+        vacuumMotorTop.setSoftLimit(SoftLimitDirection.kForward, 0);
+        vacuumMotorTop.enableSoftLimit(SoftLimitDirection.kForward, false);
+        vacuumMotorTop.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        vacuumMotorTop.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
-    //     // // Set the Feedback Device
-    //     // pidControllerTop.setFeedbackDevice(analogSensorTop);
-    //     // pidControllerBottom.setFeedbackDevice(analogSensorBottom);
+        // Hard Limits
+        forwardLimitSwitchBottom = vacuumMotorBottom.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        forwardLimitSwitchBottom.enableLimitSwitch(false);
+        reverseLimitSwitchBottom = vacuumMotorBottom.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        reverseLimitSwitchBottom.enableLimitSwitch(false);
 
-    //     // Soft Limits
-    //     vacuumMotorBottom.setSoftLimit(SoftLimitDirection.kForward, 0);
-    //     vacuumMotorBottom.enableSoftLimit(SoftLimitDirection.kForward, false);
-    //     vacuumMotorBottom.setSoftLimit(SoftLimitDirection.kReverse, 0);
-    //     vacuumMotorBottom.enableSoftLimit(SoftLimitDirection.kReverse, false);
-
-    //     vacuumMotorTop.setSoftLimit(SoftLimitDirection.kForward, 0);
-    //     vacuumMotorTop.enableSoftLimit(SoftLimitDirection.kForward, false);
-    //     vacuumMotorTop.setSoftLimit(SoftLimitDirection.kReverse, 0);
-    //     vacuumMotorTop.enableSoftLimit(SoftLimitDirection.kReverse, false);
-
-    //     // Hard Limits
-    //     forwardLimitSwitchBottom = vacuumMotorBottom.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    //     forwardLimitSwitchBottom.enableLimitSwitch(false);
-    //     reverseLimitSwitchBottom = vacuumMotorBottom.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    //     reverseLimitSwitchBottom.enableLimitSwitch(false);
-
-    //     forwardLimitSwitchTop = vacuumMotorTop.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    //     forwardLimitSwitchTop.enableLimitSwitch(false);
-    //     reverseLimitSwitchTop = vacuumMotorTop.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    //     reverseLimitSwitchTop.enableLimitSwitch(false);
-
-    //     // Smart Current Limits
-    //     vacuumMotorTop.setSmartCurrentLimit(40);
-    //     vacuumMotorBottom.setSmartCurrentLimit(40);
-
-        
-    //     // // Smart Motion Coefficients
-    //     // periodicIO.maxVelTop = 2000; // rpm
-    //     // periodicIO.maxAccTop = 1500;
-
-    //     // // Smart Motion Coefficients
-    //     // periodicIO.maxVelBottom = 2000; // rpm
-    //     // periodicIO.maxAccBottom = 1500;
-
-    //     // // PID coefficients Top
-    //     // periodicIO.kPTop = 5e-5; 
-    //     // periodicIO.kITop = 1e-6;
-    //     // periodicIO.kDTop = 0; 
-    //     // periodicIO.kIzTop = 0; 
-    //     // periodicIO.kFFTop = 0.000156; 
-    //     // periodicIO.kMaxOutputTop = 0.5; 
-    //     // periodicIO.kMinOutputTop = 0.0;
-    //     // periodicIO.maxRPMTop = 5700;
-
-    //     // // set PID coefficients
-    //     // pidControllerTop.setP(periodicIO.kPTop);
-    //     // pidControllerTop.setI(periodicIO.kITop);
-    //     // pidControllerTop.setD(periodicIO.kDTop);
-    //     // pidControllerTop.setIZone(periodicIO.kIzTop);
-    //     // pidControllerTop.setFF(periodicIO.kFFTop);
-    //     // pidControllerTop.setOutputRange(periodicIO.kMinOutputTop, periodicIO.kMaxOutputTop);
-
-
-    //     // // PID coefficients Bottom
-    //     // periodicIO.kPBottom = 5e-5; 
-    //     // periodicIO.kIBottom = 1e-6;
-    //     // periodicIO.kDBottom = 0; 
-    //     // periodicIO.kIzBottom = 0; 
-    //     // periodicIO.kFFBottom = 0.000156; 
-    //     // periodicIO.kMaxOutputBottom = 0.5; 
-    //     // periodicIO.kMinOutputBottom = 0.0;
-    //     // periodicIO.maxRPMBottom = 5700;
-
-
-    //     // // set PID coefficients
-    //     // pidControllerBottom.setP(periodicIO.kPBottom);
-    //     // pidControllerBottom.setI(periodicIO.kIBottom);
-    //     // pidControllerBottom.setD(periodicIO.kDBottom);
-    //     // pidControllerBottom.setIZone(periodicIO.kIzBottom);
-    //     // pidControllerBottom.setFF(periodicIO.kFFBottom);
-    //     // pidControllerBottom.setOutputRange(periodicIO.kMinOutputBottom, periodicIO.kMaxOutputBottom);
-        
-
-    //     // //PID stuff top
-    //     // int smartMotionSlot = 0;
-    //     // pidControllerTop.setSmartMotionMaxVelocity(periodicIO.maxVelTop, smartMotionSlot);
-    //     // pidControllerTop.setSmartMotionMinOutputVelocity(periodicIO.minVelTop, smartMotionSlot);
-    //     // pidControllerTop.setSmartMotionMaxAccel(periodicIO.maxAccTop, smartMotionSlot);
-    //     // pidControllerTop.setSmartMotionAllowedClosedLoopError(periodicIO.allowedErrTop, smartMotionSlot);
-
-    //     // //PID stuff bottom
-    //     // pidControllerBottom.setSmartMotionMaxVelocity(periodicIO.maxVelBottom, smartMotionSlot);
-    //     // pidControllerBottom.setSmartMotionMinOutputVelocity(periodicIO.minVelBottom, smartMotionSlot);
-    //     // pidControllerBottom.setSmartMotionMaxAccel(periodicIO.maxAccBottom, smartMotionSlot);
-    //     // pidControllerBottom.setSmartMotionAllowedClosedLoopError(periodicIO.allowedErrBottom, smartMotionSlot);
-        
-    // }
+        forwardLimitSwitchTop = vacuumMotorTop.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        forwardLimitSwitchTop.enableLimitSwitch(false);
+        reverseLimitSwitchTop = vacuumMotorTop.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        reverseLimitSwitchTop.enableLimitSwitch(false);
+    }
 
     /**
      * Releases the air on the pneumatics allowing the grabber to close
      */
     public void grabGamePiece()
     {
-        periodicIO.vacuumMotorSpeed = 0.5;
-        periodicIO.solenoidState = SolenoidState.kClosed;
+        isEnabled = true;
+        isDisabling = false;
+        // periodicIO.vacuumMotorSpeedTop = -0.5;
+        // periodicIO.vacuumMotorSpeedBottom = -0.5;
+        // periodicIO.vacuumState = VacuumState.kClosed;
     }
 
     /**
@@ -309,18 +229,18 @@ public class Grabber extends Subsystem4237
      */
     public void releaseGamePiece()
     {
-        periodicIO.vacuumMotorSpeed = 0.0;
-        periodicIO.solenoidState = SolenoidState.kOpen;
+        isEnabled = false;
+        isDisabling = true;
+        // periodicIO.vacuumMotorSpeedTop = 0.0;
+        // periodicIO.vacuumMotorSpeedBottom = 0.0;
+        // periodicIO.vacuumState = VacuumState.kOpen;
     }
 
     public void closeSolenoid()
     {
-        periodicIO.solenoidState = SolenoidState.kClosed;
-    }
-
-    public void openSolenoid()
-    {
-        periodicIO.solenoidState = SolenoidState.kOpen;
+        isEnabled = false;
+        isDisabling = false;
+        //periodicIO.vacuumState = VacuumState.kClosed;
     }
 
     // public void wristUp()
@@ -363,21 +283,6 @@ public class Grabber extends Subsystem4237
         return periodicIO.analogSensorVoltageBottom;
     }
 
-    public double getVacuumEncoderVelocityTop()
-    {
-        return periodicIO.vacuumEncoderVelocityTop;
-    }
-
-    public double getVacuumEncoderVelocityBottom()
-    {
-        return periodicIO.vacuumEncoderVelocityBottom;
-    }
-
-    public ParallelCommandGroup runVacuum()
-    {
-        return runVacuum;
-    }
-
     private void logVacuumInit()
     {
         periodicIO.vacuumBottomCurrentEntry = new DoubleLogEntry(log, "Bottom Current", "Amps");
@@ -398,6 +303,15 @@ public class Grabber extends Subsystem4237
         periodicIO.pdhSolenoidSetEntry.append(periodicIO.pdhSolenoidSet);
     }
 
+    public void reset()
+    {
+        isEnabled = false;
+        isDisabling = false;
+        isTargetPressureReachedTop = false;
+        isTargetPressureReachedBottom = false;
+        vacuumMotorTop.set(0);
+        vacuumMotorBottom.set(0);
+    }
 
     /* (non-Javadoc)
      * @see frc.robot.subsystems.Subsystem4237#readPeriodicInputs()
@@ -406,18 +320,16 @@ public class Grabber extends Subsystem4237
     @Override
     public synchronized void readPeriodicInputs()
     {
-        periodicIO.vacuumMotorBottomCurrent = vacuumPumpBottom.getOutputCurrent();
-        periodicIO.vacuumMotorTopCurrent = vacuumPumpTop.getOutputCurrent();
-        periodicIO.vacuumEncoderBottom = vacuumPumpBottom.getPosition();
-        periodicIO.vacuumEncoderTop = vacuumPumpTop.getPosition();
+        periodicIO.vacuumMotorTopCurrent = vacuumMotorTop.getOutputCurrent();
+        periodicIO.vacuumMotorBottomCurrent = vacuumMotorBottom.getOutputCurrent();
+        periodicIO.vacuumEncoderTop = vacuumMotorEncoderTop.getPosition();
+        periodicIO.vacuumEncoderBottom = vacuumMotorEncoderBottom.getPosition();
+        periodicIO.analogSensorVoltageTop = analogSensorTop.getVoltage();
+        periodicIO.analogSensorVoltageBottom = analogSensorBottom.getVoltage();
         periodicIO.pdhSolenoidCurrent = vacuumSolenoid.getCurrent(23);
         periodicIO.pdhSolenoidGet = vacuumSolenoid.getSwitchableChannel();
-        periodicIO.analogSensorVoltageTop = vacuumPumpTop.getVoltage();
-        periodicIO.analogSensorVoltageBottom = vacuumPumpBottom.getVoltage();
-        periodicIO.vacuumEncoderVelocityTop = vacuumPumpTop.getVelocity();
-        periodicIO.vacuumEncoderVelocityBottom = vacuumPumpTop.getVelocity();
+       
         
-
         // if(useDataLog)
         // {
         //     DataLogManager.log("Vacuum Bottom Current:  " + periodicIO.vacuumMotorBottomCurrent);
@@ -434,17 +346,83 @@ public class Grabber extends Subsystem4237
     @Override
     public synchronized void writePeriodicOutputs()
     {
+        if (isEnabled) 
+        {
+            vacuumSolenoid.setSwitchableChannel(VacuumState.kClosed.value);
+            
+            if (!isTargetPressureReachedTop) 
+            {
+                if (periodicIO.analogSensorVoltageTop > Constants.Grabber.TARGET_PRESSURE_TOP) 
+                {
+                    vacuumMotorTop.set(Constants.Grabber.MAX_SPEED_TOP);
+                } 
+                else 
+                {
+                    vacuumMotorTop.set(0);
+                    isTargetPressureReachedTop = true;
+                }
+            } 
+            else 
+            {
+                if (periodicIO.analogSensorVoltageTop > Constants.Grabber.MAX_PRESSURE_TOP) 
+                {
+                    isTargetPressureReachedTop = false;
+                }
+            } 
+
+            //We seperated the sensor statements so the motors only run when necessary and not when the individual one has enough pressure
+            if (!isTargetPressureReachedBottom) 
+            {
+                if (periodicIO.analogSensorVoltageBottom > Constants.Grabber.TARGET_PRESSURE_BOTTOM) 
+                {
+                    vacuumMotorBottom.set(Constants.Grabber.MAX_SPEED_BOTTOM);
+                } 
+                else 
+                {
+                    vacuumMotorBottom.set(0);
+                    isTargetPressureReachedBottom = true;
+                }
+            } 
+            else 
+            {
+                if (periodicIO.analogSensorVoltageBottom > Constants.Grabber.MAX_PRESSURE_BOTTOM) 
+                {
+                    isTargetPressureReachedBottom = false;
+                }
+            } 
+      
+            
+
+        } 
+        else 
+        {
+            if (isDisabling)
+            {
+                vacuumMotorTop.set(0);
+                vacuumMotorBottom.set(0);
+                vacuumSolenoid.setSwitchableChannel(VacuumState.kOpen.value);
+                isTargetPressureReachedTop = false;
+                isTargetPressureReachedBottom = false;
+                isDisabling = false;
+                solenoidTimer.reset();
+                solenoidTimer.start();
+            } 
+            else if (solenoidTimer.hasElapsed(0.5))
+            {
+                vacuumSolenoid.setSwitchableChannel(VacuumState.kClosed.value);
+                //reset();
+            }
+        } 
+
        
         // wristSolenoid.set(periodicIO.wristPosition.value);
+        // vacuumMotorTop.set(periodicIO.vacuumMotorSpeedTop);
+        // vacuumMotorBottom.set(periodicIO.vacuumMotorSpeedBottom);
+        // vacuumSolenoid.setSwitchableChannel(periodicIO.vacuumState.value);
+        //periodicIO.pdhSolenoidSet = periodicIO.vacuumState.value;
 
-        vacuumPumpBottom.set(periodicIO.vacuumMotorSpeed); //IN CASE OF REVERT
-        vacuumPumpTop.set(periodicIO.vacuumMotorSpeed);
-      
-        vacuumSolenoid.setSwitchableChannel(periodicIO.solenoidState.value);
-        periodicIO.pdhSolenoidSet = periodicIO.solenoidState.value;
-
-        //SmartDashboard.putNumber("Analog Sensor Voltage Top", periodicIO.analogSensorVoltageTop);
-        //SmartDashboard.putNumber("Analog Sensor Voltage Bottom", periodicIO.analogSensorVoltageBottom);
+        SmartDashboard.putNumber("Analog Sensor Voltage Top", periodicIO.analogSensorVoltageTop);
+        SmartDashboard.putNumber("Analog Sensor Voltage Bottom", periodicIO.analogSensorVoltageBottom);
 
         if(useDataLog && DriverStation.isEnabled())
         {
@@ -471,5 +449,3 @@ public class Grabber extends Subsystem4237
         return "Encoder Distance: " + String.format("%.4f", periodicIO.vacuumEncoderTop) + String.format("%.4f", periodicIO.vacuumEncoderBottom);
     }
 }
-
-

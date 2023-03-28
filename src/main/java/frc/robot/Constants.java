@@ -149,18 +149,18 @@ public final class Constants
 
         //Vacuum Top
         public static final int GRABBER_MOTOR_TOP_PORT          = 2;
-        public static final double LOW_PRESSURE_TOP             = 0.7500;
-        public static final double SPEED_LIMIT_TOP              = -2600.0;
+        public static final double MAX_PRESSURE_TOP             = 0.7000;
+        public static final double MAX_SPEED_TOP                = -0.5;
         public static final double AS_FAST_AS_POSSIBLE_TOP      = -1.000;
-        public static final double SETPOINT_TOP                 = 0.7100;
+        public static final double TARGET_PRESSURE_TOP          = 0.5000;
         public static final double MAINTAIN_SPEED_LIMIT_TOP     = -0.500; //RUN POWER TOP
 
         //Vacuum Bottom
         public static final int GRABBER_MOTOR_BOTTOM_PORT       = 3;
-        public static final double LOW_PRESSURE_BOTTOM          = 0.8300;
-        public static final double SPEED_LIMIT_BOTTOM           = -2350.0;
+        public static final double MAX_PRESSURE_BOTTOM          = 0.7000;
+        public static final double MAX_SPEED_BOTTOM             = -0.5;
         public static final double AS_FAST_AS_POSSIBLE_BOTTOM   = -1.000;
-        public static final double SETPOINT_BOTTOM              = 0.7900;
+        public static final double TARGET_PRESSURE_BOTTOM       = 0.5000;
         public static final double MAINTAIN_SPEED_LIMIT_BOTTOM  = -0.500; //RUN POWER BOTTOM
 
     }
@@ -314,10 +314,10 @@ public final class Constants
     public static class Vacuum
     {
         public static final VacuumPumpConfig TOP = new VacuumPumpConfig(
-            "Top", Grabber.GRABBER_MOTOR_TOP_PORT, Grabber.LOW_PRESSURE_TOP, Grabber.SPEED_LIMIT_TOP, Grabber.AS_FAST_AS_POSSIBLE_TOP, Grabber.SETPOINT_TOP, 
+            "Top", Grabber.GRABBER_MOTOR_TOP_PORT, Grabber.MAX_PRESSURE_TOP, Grabber.MAX_SPEED_TOP, Grabber.AS_FAST_AS_POSSIBLE_TOP, Grabber.TARGET_PRESSURE_TOP, 
             Grabber.MAINTAIN_SPEED_LIMIT_TOP);
             public static final VacuumPumpConfig BOTTOM = new VacuumPumpConfig(
-            "Bottom", Grabber.GRABBER_MOTOR_BOTTOM_PORT, Grabber.LOW_PRESSURE_BOTTOM, Grabber.SPEED_LIMIT_BOTTOM, Grabber.AS_FAST_AS_POSSIBLE_BOTTOM, Grabber.SETPOINT_BOTTOM,
+            "Bottom", Grabber.GRABBER_MOTOR_BOTTOM_PORT, Grabber.MAX_PRESSURE_BOTTOM, Grabber.MAX_SPEED_BOTTOM, Grabber.AS_FAST_AS_POSSIBLE_BOTTOM, Grabber.TARGET_PRESSURE_BOTTOM,
              Grabber.MAINTAIN_SPEED_LIMIT_BOTTOM);
     }
 
