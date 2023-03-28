@@ -36,6 +36,8 @@ public class Vision extends Sensor4237
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     private PeriodicIO periodicIO;
     private boolean isAligned;
+    private final double A = 4.8940189;
+    private final double B = -0.5459146235;
 
     public Vision()
     {   
@@ -63,6 +65,12 @@ public class Vision extends Sensor4237
     public double getArea()
     {
         return periodicIO.area;
+    }
+
+    /** @return the distance from the target using ta (double) */
+    public double getDistance()
+    {
+        return A * Math.pow(periodicIO.area, B);
     }
 
     /** @return false if no target is found, true if target is found */

@@ -193,8 +193,11 @@ public class Robot extends TimedRobot
             autonomousCommand.cancel();
             autonomousCommand = null;
         }
-
-        robotContainer.compressor.enableDigital();
+        
+        if(robotContainer.compressor != null)
+        {
+            robotContainer.compressor.enableDigital();
+        }
     }
 
     /**

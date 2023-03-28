@@ -7,7 +7,8 @@ import java.lang.invoke.MethodHandles;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 // import edu.wpi.first.wpilibj.DoubleSolenoid;
 // import javax.lang.model.util.ElementScanner14;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle4237;
 import frc.robot.commands.MoveShoulderToScoringPosition;
+import frc.robot.sensors.Vision;
 // import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 // import frc.robot.sensors.Vision;
@@ -50,13 +52,23 @@ public class SamTest implements Test
     // private final Shoulder shoulder;
     // private final Arm arm;
     // private final Grabber grabber;
-    private final Candle4237 candle;
+    // private final Candle4237 candle;
     // private final CANSparkMax canSparkMax = new CANSparkMax(3, MotorType.kBrushless);
     private final Joystick joystick;
     // private final DoubleSolenoid testSolenoid = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, 0, 1);
-    // private final Vision vision;
+    private final Vision vision;
     // private final Drivetrain drivetrain;
     // private CommandState commandState = CommandState.kWaiting;
+
+    private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    private NetworkTableEntry tx = table.getEntry("tx");
+    private NetworkTableEntry ty = table.getEntry("ty");
+    private NetworkTableEntry ta = table.getEntry("ta");
+
+    private double aprilTagTX;
+    private double aprilTagTY;
+    private double aprilTagTA;
+    private double aprilTagDistance;
   
 
     // *** CLASS CONSTRUCTOR ***
@@ -65,12 +77,12 @@ public class SamTest implements Test
         System.out.println(fullClassName + " : Constructor Started");
 
         this.robotContainer = robotContainer;
-        // vision = this.robotContainer.vision;
+        vision = this.robotContainer.vision;
         // drivetrain = this.robotContainer.drivetrain;
         // shoulder = this.robotContainer.shoulder;
         // arm = this.robotContainer.arm;
         // grabber = this.robotContainer.grabber;
-        candle = this.robotContainer.candle;
+        // candle = this.robotContainer.candle;
         // canSparkMax.restoreFactoryDefaults();
         // canSparkMax.setIdleMode(IdleMode.kBrake);
         joystick = new Joystick(0);
@@ -96,8 +108,18 @@ public class SamTest implements Test
      */
     public void periodic()
     {
-    //     SmartDashboard.putNumber("Encoder Value", shoulder.getPosition());
-    //     SmartDashboard.putNumber("Encoder Velocity", shoulder.getVelocity());
+        aprilTagTX = tx.getDouble(0.0);
+        aprilTagTY = ty.getDouble(0.0);
+        aprilTagTA = ta.getDouble(0.0);
+        aprilTagDistance = vision.getDistance();
+
+        SmartDashboard.putNumber("tx", aprilTagTX);
+        SmartDashboard.putNumber("ty", aprilTagTY);
+        SmartDashboard.putNumber("ta", aprilTagTA);
+        SmartDashboard.putNumber("Distance", aprilTagDistance);
+
+        //     SmartDashboard.putNumber("Encoder Value", shoulder.getPosition());
+        //     SmartDashboard.putNumber("Encoder Velocity", shoulder.getVelocity());
 
         // if(joystick.getRawButton(1))
         // {
@@ -116,19 +138,23 @@ public class SamTest implements Test
             // shoulder.moveUp();
             // grabber.grabGamePiece();
             // candle.signalGreen();
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);  //turns limelight on
+            // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);  //turns limelight on
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);  //turns limelight on
+            System.out.println("A");
 
         }
-        // else if(joystick.getRawButton(2))   //B
+        else if(joystick.getRawButton(2))   //B
+        {
+            // shoulder.moveDown();
+            // grabber.releaseGamePiece();
+            // candle.signalRed();
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);  //turns limelight on
+            System.out.println("B");
+        }
+        // else
         // {
-        //     // shoulder.moveDown();
-        //     // grabber.releaseGamePiece();
-        //     candle.signalRed();
+        //     shoulder.off();
         // }
-        // // else
-        // // {
-        // //     shoulder.off();
-        // // }
 
         // else if(joystick.getRawButton(3))   //X
         // {

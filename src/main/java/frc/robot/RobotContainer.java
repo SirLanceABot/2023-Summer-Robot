@@ -89,9 +89,9 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= true;
+	private boolean useFullRobot			= false;
 	private boolean useScorer				= false;
-	private boolean useBindings				= true;
+	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
@@ -163,9 +163,11 @@ public class RobotContainer
 		operatorController 	= (useFullRobot || useOperatorController) 		? new OperatorController(Constants.Controller.OPERATOR)	: null;
 		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)			? new MainShuffleboard(this)							: null;
 		vision 				= (useFullRobot || useVision)					? new Vision()											: null;
-		
+		compressor			= (useGrabber || useWrist)						? new Compressor(0, PneumaticsModuleType.CTREPCM)		: null;
+
 		// pdh = new PowerDistribution(1, ModuleType.kRev);
-		compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+		// compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+		
 
 		// Configure the trigger bindings
 		if(useFullRobot || useBindings)
