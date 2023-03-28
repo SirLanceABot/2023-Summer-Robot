@@ -215,10 +215,10 @@ public class RobotContainer
 			//A Button
 			BooleanSupplier aButton = driverController.getButtonSupplier(Xbox.Button.kA);
 			Trigger aButtonTrigger = new Trigger(aButton);
-			if(drivetrain != null && gyro != null && vision != null)
+			if(drivetrain != null && gyro != null && vision != null && candle != null)
 			{
 				aButtonTrigger.onTrue( new ParallelCommandGroup(
-											new AlignToPost(drivetrain, gyro, vision, candle),
+											new AlignToPost(drivetrain, gyro, vision),
 											new SequentialCommandGroup(
 												new WaitCommand(0.2),
 												new ConditionalCommand(
