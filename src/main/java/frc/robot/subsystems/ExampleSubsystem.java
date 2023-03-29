@@ -34,11 +34,11 @@ public class ExampleSubsystem extends Subsystem4237
     {}
 
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {}
 
     @Override
-    public synchronized void writePeriodicOutputs()
+    public void writePeriodicOutputs()
     {}
 
     @Override

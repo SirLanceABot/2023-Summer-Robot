@@ -79,7 +79,7 @@ public class Wrist extends Subsystem4237
      * Gets motor inputs such as encoders
      */
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {
 
     }
@@ -88,7 +88,7 @@ public class Wrist extends Subsystem4237
      * Sets motor speeds and directions
      */
     @Override
-    public synchronized void writePeriodicOutputs()
+    public void writePeriodicOutputs()
     {
         wristSolenoid.set(periodicIO.wristPosition.value);
     }

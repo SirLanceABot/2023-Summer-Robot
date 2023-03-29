@@ -49,7 +49,7 @@ public class Accelerometer4237 extends Sensor4237
 
     
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {
         periodicIO.x = accelerometer.getX();
         periodicIO.y = accelerometer.getY();
@@ -57,7 +57,7 @@ public class Accelerometer4237 extends Sensor4237
     }
 
     @Override
-    public synchronized void writePeriodicOutputs()
+    public void writePeriodicOutputs()
     {}
 
     @Override

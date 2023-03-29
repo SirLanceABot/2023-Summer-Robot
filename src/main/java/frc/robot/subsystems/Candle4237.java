@@ -363,14 +363,14 @@ public class Candle4237 extends Subsystem4237
     }
 
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {}
 
     /**
      * Sets the color/animation of all LEDs based on the current status
      */
     @Override  
-    public synchronized void writePeriodicOutputs() 
+    public void writePeriodicOutputs() 
     {
         checkBlinkEvent();
         if(periodicIO.status != LedStatus.kOff && periodicIO.status != LedStatus.kAnimated && periodicIO.status != LedStatus.kSectioned)

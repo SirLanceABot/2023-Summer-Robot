@@ -471,7 +471,7 @@ public class Shoulder extends Subsystem4237
     }
 
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {
         periodicIO.currentPosition = relativeEncoder.getPosition();
         periodicIO.currentVelocity = relativeEncoder.getVelocity();
@@ -523,7 +523,7 @@ public class Shoulder extends Subsystem4237
     }
 
     @Override
-    public synchronized void writePeriodicOutputs()
+    public void writePeriodicOutputs()
     {
         switch(resetState)
         {

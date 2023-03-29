@@ -103,13 +103,13 @@ public class Gatherer extends Subsystem4237
 
 
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {
 
     }
 
     @Override
-    public synchronized void writePeriodicOutputs()
+    public void writePeriodicOutputs()
     {
         gathererMotor.set(periodicIO.motorSpeed);
     }

@@ -89,7 +89,7 @@ public class Gyro4237 extends Sensor4237
     }
 
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {
         if (resetState == ResetState.kDone)
         {
@@ -104,7 +104,7 @@ public class Gyro4237 extends Sensor4237
     }
 
     @Override
-    public synchronized void writePeriodicOutputs()
+    public void writePeriodicOutputs()
     {
         if(resetState == ResetState.kStart)
         {

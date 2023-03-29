@@ -87,7 +87,7 @@ public class OperatorController extends Xbox implements PeriodicIO
     }
 
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {
         for(int a = 0; a <= 5; a++)
             periodicIO.axis[a] = getRawAxis(a);
@@ -102,7 +102,7 @@ public class OperatorController extends Xbox implements PeriodicIO
     }
 
     @Override
-    public synchronized void writePeriodicOutputs()
+    public void writePeriodicOutputs()
     {
         checkRumbleEvent();
     }

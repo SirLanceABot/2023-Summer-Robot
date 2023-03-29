@@ -345,7 +345,7 @@ public class Arm extends Subsystem4237
     }
 
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {
         periodicIO.armPosition = armEncoder.getPosition();
 
@@ -389,7 +389,7 @@ public class Arm extends Subsystem4237
      * Resets the encoders after a set period of time
      */
     @Override
-    public synchronized void writePeriodicOutputs()
+    public void writePeriodicOutputs()
     {
         switch(resetState)
         {
