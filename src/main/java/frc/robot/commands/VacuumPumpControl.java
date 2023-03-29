@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** 
  * An example command that uses an example subsystem. 
  */
-public class VacuumPumpControl extends CommandBase 
+class VacuumPumpControl extends CommandBase 
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -43,7 +43,7 @@ public class VacuumPumpControl extends CommandBase
      *
      * @param grabber The grabber subsystem.
      */
-    public VacuumPumpControl(VacuumPump vacuumPump) 
+    VacuumPumpControl(VacuumPump vacuumPump) 
     {
 
         this.vacuumPump = vacuumPump;

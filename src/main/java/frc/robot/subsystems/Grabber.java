@@ -88,17 +88,25 @@ public class Grabber extends Subsystem4237
 
         //OUTPUTS
         // private WristPosition wristPosition = WristPosition.kOff;
-        private double vacuumMotorSpeedTop = 0.0;
-        private double vacuumMotorSpeedBottom = 0.0;
         
         private VacuumState vacuumState = VacuumState.kClosed;
 
-        DoubleLogEntry vacuumBottomCurrentEntry;
-        DoubleLogEntry vacuumTopCurrentEntry;
+        private double vacuumVelocityTop;
+        private double vacuumVelocityBottom;
+
+        DoubleLogEntry vacuumCurrentEntryTop;
+        DoubleLogEntry vacuumCurrentEntryBottom;
         DoubleLogEntry pdhSolenoidCurrentEntry;
+        DoubleLogEntry vacuumVelocityEntryTop;
+        DoubleLogEntry vacuumVelocityEntryBottom;
+        DoubleLogEntry analogSensorPressureEntryTop;
+        DoubleLogEntry analogSensorPressureEntryBottom;
+        DoubleLogEntry analogSensorVoltageEntryTop;
+        DoubleLogEntry analogSensorVoltageEntryBottom;
         BooleanLogEntry pdhSolenoidSetEntry;
         BooleanLogEntry pdhSolenoidGetEntry;
-        
+        BooleanLogEntry vacuumStateEntry;
+        BooleanLogEntry isEnabledEntry;
 
     }
 
@@ -110,7 +118,7 @@ public class Grabber extends Subsystem4237
     private final CANSparkMax vacuumMotorTop =      new CANSparkMax(Constants.Grabber.GRABBER_MOTOR_TOP_PORT, MotorType.kBrushless);
     // private final CANSparkMax vacuumMotor = new CANSparkMax(7, MotorType.kBrushless);   //testing
 
-    private final PowerDistribution vacuumSolenoid = new PowerDistribution(Constants.Grabber.VACCUM_CAN_ID, ModuleType.kRev);
+    private final PowerDistribution vacuumSolenoid = new PowerDistribution(Constants.Grabber.VACUUM_CAN_ID, ModuleType.kRev);
     private PeriodicIO periodicIO = new PeriodicIO();
 
     private RelativeEncoder vacuumMotorEncoderBottom;
@@ -283,24 +291,43 @@ public class Grabber extends Subsystem4237
         return periodicIO.analogSensorVoltageBottom;
     }
 
+    public double convertVoltageToPsi(double voltage)
+    {
+        return (10.875 * voltage) - 19.9375;
+    }
+
     private void logVacuumInit()
     {
-        periodicIO.vacuumBottomCurrentEntry = new DoubleLogEntry(log, "Bottom Current", "Amps");
-        periodicIO.vacuumTopCurrentEntry = new DoubleLogEntry(log, "Top Current", "Amps");
+        periodicIO.vacuumCurrentEntryTop = new DoubleLogEntry(log, "Top Current", "Amps");
+        periodicIO.vacuumCurrentEntryBottom = new DoubleLogEntry(log, "Bottom Current", "Amps");
         periodicIO.pdhSolenoidCurrentEntry = new DoubleLogEntry(log, "PDH Solenoid Current", "Amps");
+        periodicIO.vacuumVelocityEntryTop = new DoubleLogEntry(log, "Top Motor Speed", "RPM");
+        periodicIO.vacuumVelocityEntryBottom = new DoubleLogEntry(log, "Bottom Motor Speed", "RPM");
+        periodicIO.analogSensorPressureEntryTop = new DoubleLogEntry(log, "Top Analog Sensor Pressure", "psi");
+        periodicIO.analogSensorPressureEntryBottom = new DoubleLogEntry(log, "Bottom Analog Sensor Pressure", "psi");
+        periodicIO.analogSensorVoltageEntryTop = new DoubleLogEntry(log, "Top Analog Sensor Voltage", "Volts");
+        periodicIO.analogSensorVoltageEntryBottom = new DoubleLogEntry(log, "Bottom Analog Sensor Voltage", "Volts");
         periodicIO.pdhSolenoidGetEntry = new BooleanLogEntry(log, "PDH Solenoid Get", "raw");
         periodicIO.pdhSolenoidSetEntry = new BooleanLogEntry(log, "PDH Solenoid Set", "raw");
-
-
+        periodicIO.vacuumStateEntry = new BooleanLogEntry(log, "PDH Solenoid Relay State", "raw");
+        periodicIO.isEnabledEntry = new BooleanLogEntry(log, "Is Vacuum Enabled?", "raw");
     }
 
     private void logVacuum()
     {
-        periodicIO.vacuumBottomCurrentEntry.append(periodicIO.vacuumMotorBottomCurrent);
-        periodicIO.vacuumTopCurrentEntry.append(periodicIO.vacuumMotorTopCurrent);
+        periodicIO.vacuumCurrentEntryBottom.append(periodicIO.vacuumMotorBottomCurrent);
+        periodicIO.vacuumCurrentEntryTop.append(periodicIO.vacuumMotorTopCurrent);
         periodicIO.pdhSolenoidCurrentEntry.append(periodicIO.pdhSolenoidCurrent);
+        periodicIO.vacuumVelocityEntryTop.append(periodicIO.vacuumVelocityTop);
+        periodicIO.vacuumVelocityEntryBottom.append(periodicIO.vacuumVelocityBottom);
+        periodicIO.analogSensorPressureEntryTop.append(convertVoltageToPsi(periodicIO.analogSensorVoltageTop * Constants.Grabber.VOLTAGE_SCALE_FACTOR));
+        periodicIO.analogSensorPressureEntryBottom.append(convertVoltageToPsi(periodicIO.analogSensorVoltageBottom * Constants.Grabber.VOLTAGE_SCALE_FACTOR));
+        periodicIO.analogSensorVoltageEntryTop.append(periodicIO.analogSensorVoltageTop);
+        periodicIO.analogSensorVoltageEntryBottom.append(periodicIO.analogSensorVoltageBottom);
         periodicIO.pdhSolenoidGetEntry.append(periodicIO.pdhSolenoidGet);
         periodicIO.pdhSolenoidSetEntry.append(periodicIO.pdhSolenoidSet);
+        periodicIO.vacuumStateEntry.append(periodicIO.vacuumState.value);
+        periodicIO.isEnabledEntry.append(isEnabled);
     }
 
     public void reset()
@@ -318,7 +345,7 @@ public class Grabber extends Subsystem4237
      * Gets motor inputs such as encoders
      */
     @Override
-    public synchronized void readPeriodicInputs()
+    public void readPeriodicInputs()
     {
         periodicIO.vacuumMotorTopCurrent = vacuumMotorTop.getOutputCurrent();
         periodicIO.vacuumMotorBottomCurrent = vacuumMotorBottom.getOutputCurrent();
@@ -328,7 +355,8 @@ public class Grabber extends Subsystem4237
         periodicIO.analogSensorVoltageBottom = analogSensorBottom.getVoltage();
         periodicIO.pdhSolenoidCurrent = vacuumSolenoid.getCurrent(23);
         periodicIO.pdhSolenoidGet = vacuumSolenoid.getSwitchableChannel();
-       
+        periodicIO.vacuumVelocityTop = vacuumMotorEncoderTop.getVelocity();
+        periodicIO.vacuumVelocityBottom = vacuumMotorEncoderBottom.getVelocity();
         
         // if(useDataLog)
         // {
@@ -344,7 +372,7 @@ public class Grabber extends Subsystem4237
      * Sets motor speeds and directions
      */
     @Override
-    public synchronized void writePeriodicOutputs()
+    public void writePeriodicOutputs()
     {
         if (isEnabled) 
         {
@@ -420,9 +448,6 @@ public class Grabber extends Subsystem4237
         // vacuumMotorBottom.set(periodicIO.vacuumMotorSpeedBottom);
         // vacuumSolenoid.setSwitchableChannel(periodicIO.vacuumState.value);
         //periodicIO.pdhSolenoidSet = periodicIO.vacuumState.value;
-
-        SmartDashboard.putNumber("Analog Sensor Voltage Top", periodicIO.analogSensorVoltageTop);
-        SmartDashboard.putNumber("Analog Sensor Voltage Bottom", periodicIO.analogSensorVoltageBottom);
 
         if(useDataLog && DriverStation.isEnabled())
         {

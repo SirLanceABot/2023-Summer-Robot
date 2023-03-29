@@ -145,23 +145,24 @@ public final class Constants
     {
         public static final int WRIST_UP = 1;
         public static final int WRIST_DOWN = 0;
-        public static final int VACCUM_CAN_ID = 1;
+        public static final int VACUUM_CAN_ID = 1;
+        public static final double VOLTAGE_SCALE_FACTOR = 5.0 / 3.3; // Sensor based on 5-volt system
 
         //Vacuum Top
         public static final int GRABBER_MOTOR_TOP_PORT          = 2;
-        public static final double MAX_PRESSURE_TOP             = 0.7000;
-        public static final double MAX_SPEED_TOP                = -0.5;
-        public static final double AS_FAST_AS_POSSIBLE_TOP      = -1.000;
-        public static final double TARGET_PRESSURE_TOP          = 0.5000;
-        public static final double MAINTAIN_SPEED_LIMIT_TOP     = -0.500; //RUN POWER TOP
+        public static final double MAX_PRESSURE_TOP             = 0.7; //0.7
+        public static final double MAX_SPEED_TOP                = -0.5; //-0.5;
+        // public static final double AS_FAST_AS_POSSIBLE_TOP      = -1.000;
+        public static final double TARGET_PRESSURE_TOP          = 0.71; // = -12.21625 psi
+        public static final double MAINTAIN_SPEED_LIMIT_TOP     = -0.5; //-0.5; //RUN POWER TOP
 
         //Vacuum Bottom
         public static final int GRABBER_MOTOR_BOTTOM_PORT       = 3;
-        public static final double MAX_PRESSURE_BOTTOM          = 0.7000;
-        public static final double MAX_SPEED_BOTTOM             = -0.5;
-        public static final double AS_FAST_AS_POSSIBLE_BOTTOM   = -1.000;
-        public static final double TARGET_PRESSURE_BOTTOM       = 0.5000;
-        public static final double MAINTAIN_SPEED_LIMIT_BOTTOM  = -0.500; //RUN POWER BOTTOM
+        public static final double MAX_PRESSURE_BOTTOM          = 0.7; //0.7;
+        public static final double MAX_SPEED_BOTTOM             = -0.5; //-0.5;
+        // public static final double AS_FAST_AS_POSSIBLE_BOTTOM   = -1.000;
+        public static final double TARGET_PRESSURE_BOTTOM       = 0.79; // = -11.34625 psi
+        public static final double MAINTAIN_SPEED_LIMIT_BOTTOM  = -0.5; //-0.5; //RUN POWER BOTTOM
 
     }
 
@@ -311,15 +312,15 @@ public final class Constants
         
     }
 
-    public static class Vacuum
-    {
-        public static final VacuumPumpConfig TOP = new VacuumPumpConfig(
-            "Top", Grabber.GRABBER_MOTOR_TOP_PORT, Grabber.MAX_PRESSURE_TOP, Grabber.MAX_SPEED_TOP, Grabber.AS_FAST_AS_POSSIBLE_TOP, Grabber.TARGET_PRESSURE_TOP, 
-            Grabber.MAINTAIN_SPEED_LIMIT_TOP);
-            public static final VacuumPumpConfig BOTTOM = new VacuumPumpConfig(
-            "Bottom", Grabber.GRABBER_MOTOR_BOTTOM_PORT, Grabber.MAX_PRESSURE_BOTTOM, Grabber.MAX_SPEED_BOTTOM, Grabber.AS_FAST_AS_POSSIBLE_BOTTOM, Grabber.TARGET_PRESSURE_BOTTOM,
-             Grabber.MAINTAIN_SPEED_LIMIT_BOTTOM);
-    }
+    // public static class Vacuum
+    // {
+    //     public static final VacuumPumpConfig TOP = new VacuumPumpConfig(
+    //         "Top", Grabber.GRABBER_MOTOR_TOP_PORT, Grabber.MAX_PRESSURE_TOP, Grabber.MAX_SPEED_TOP, Grabber.AS_FAST_AS_POSSIBLE_TOP, Grabber.TARGET_PRESSURE_TOP, 
+    //         Grabber.MAINTAIN_SPEED_LIMIT_TOP);
+    //         public static final VacuumPumpConfig BOTTOM = new VacuumPumpConfig(
+    //         "Bottom", Grabber.GRABBER_MOTOR_BOTTOM_PORT, Grabber.MAX_PRESSURE_BOTTOM, Grabber.MAX_SPEED_BOTTOM, Grabber.AS_FAST_AS_POSSIBLE_BOTTOM, Grabber.TARGET_PRESSURE_BOTTOM,
+    //          Grabber.MAINTAIN_SPEED_LIMIT_BOTTOM);
+    // }
 
     public static class DrivetrainSetup
     {

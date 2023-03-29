@@ -62,7 +62,6 @@ import frc.robot.commands.RetractScorer;
 import frc.robot.commands.Rotate180;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.SwerveDriveXOnly;
-import frc.robot.commands.VacuumPumpControl;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
 import frc.robot.controls.Xbox;
@@ -89,7 +88,7 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= false;
+	private boolean useFullRobot			= true;
 	private boolean useScorer				= false;
 	private boolean useBindings				= false;
 
