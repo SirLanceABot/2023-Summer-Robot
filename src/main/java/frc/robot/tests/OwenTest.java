@@ -15,6 +15,7 @@ import frc.robot.subsystems.Shoulder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.SuctionControl;
 import frc.robot.shuffleboard.AutonomousTab;
@@ -47,6 +48,7 @@ public class OwenTest implements Test
     private final double kP = -0.001;
     private final double kI = 0.0;
     private final double kD = 0.0;
+    private final Timer tier;
     final int kUltrasonicPingPort = 2;
     final int kUltrasonicEchoPort = 1;
     private final MedianFilter m_filter = new MedianFilter(5);
@@ -72,6 +74,7 @@ public class OwenTest implements Test
     {
         this.robotContainer = robotContainer;
         this.operatorController = robotContainer.operatorController;
+        tier = new Timer();
         // this.grabber = robotContainer.grabber;
         // this.mainShuffleboard = robotContainer.mainShuffleboard;
         // this.shoulder = robotContainer.shoulder;
@@ -83,7 +86,9 @@ public class OwenTest implements Test
      */
     public void init()
     {
-        // m_pidController.setSetpoint(rumbleDistance);
+        // m_pidController.setSetpoint(rumbleDistance);]
+        tier.start();
+        
     }
 
     /**
@@ -95,9 +100,15 @@ public class OwenTest implements Test
         // double filteredMeasurement = m_filter.calculate(measurement);
         // double pidOutput = m_pidController.calculate(filteredMeasurement);
         pot.get();
-        System.out.println("Distance: " + pot.get() / 304.8 + "\n");
+        if(tier.hasElapsed(1.0))
+        {
+            System.out.println("Distance: " + pot.get() / 304.8 + "\n");
+            tier.restart();
+        }
+        // System.out.println("Distance: " + pot.get() / 304.8 + "\n");
         if(pot.get() / 304.8 < 4.0 && pot.get() / 304.8 > 3.0)
         {
+
             operatorController.setRumble(0.1, 0.5, 0.5);
         }
         // // grabber.compressorEnable();
