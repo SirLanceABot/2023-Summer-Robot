@@ -44,6 +44,7 @@ import frc.robot.subsystems.Candle4237.LedStatus;
 import frc.robot.Constants.SuctionState;
 import frc.robot.Constants.TargetPosition;
 import frc.robot.commands.AlignToPost;
+import frc.robot.commands.DriveToSubstation;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoCommandList;
 import frc.robot.commands.ArcadeAutoDriveDistance;
@@ -282,6 +283,14 @@ public class RobotContainer
 			if(drivetrain != null && gyro != null)
 			{
 				rightBumperTrigger.onTrue( new Rotate180(drivetrain, gyro, leftXAxis, rightXAxis, true));
+			}
+
+			//Left trigger 
+			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
+			Trigger leftTriggerTrigger = new Trigger(leftTrigger);
+			if(drivetrain != null && gyro != null && vision != null)
+			{
+				leftTriggerTrigger.onTrue( new DriveToSubstation(drivetrain, gyro, vision));
 			}
 
 			//Dpad down button

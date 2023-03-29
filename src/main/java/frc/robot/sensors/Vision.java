@@ -67,7 +67,7 @@ public class Vision extends Sensor4237
         return periodicIO.area;
     }
 
-    /** @return the distance from the target using ta (double) */
+    /** @return the distance in FEET from the limelight to the target (double) */
     public double getDistance()
     {
         return A * Math.pow(periodicIO.area, B);

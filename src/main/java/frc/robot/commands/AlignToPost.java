@@ -72,11 +72,11 @@ public class AlignToPost extends CommandBase
         doneStrafing = false;
         doneRotating = false;
 
-        SmartDashboard.putNumber("Post Alignemnt Tolerance", POST_ALIGNMENT_TOLERANCE);
-        SmartDashboard.putNumber("Post Alignemnt Rotate Tolerance", POST_ALIGNMENT_ROTATE_TOLERANCE);
-        SmartDashboard.putNumber("Post Alignemnt Strafe KP", POST_ALIGNMENT_STRAFE_KP);
-        SmartDashboard.putNumber("Post Alignemnt Rotate KP", POST_ALIGNMENT_ROTATE_KP);
-        SmartDashboard.putNumber("Post Alignemnt Min Speed", POST_ALIGNMENT_MIN_SPEED);
+        // SmartDashboard.putNumber("Post Alignemnt Tolerance", POST_ALIGNMENT_TOLERANCE);
+        // SmartDashboard.putNumber("Post Alignemnt Rotate Tolerance", POST_ALIGNMENT_ROTATE_TOLERANCE);
+        // SmartDashboard.putNumber("Post Alignemnt Strafe KP", POST_ALIGNMENT_STRAFE_KP);
+        // SmartDashboard.putNumber("Post Alignemnt Rotate KP", POST_ALIGNMENT_ROTATE_KP);
+        // SmartDashboard.putNumber("Post Alignemnt Min Speed", POST_ALIGNMENT_MIN_SPEED);
 
         this.drivetrain = drivetrain;
         this.gyro = gyro;
@@ -120,18 +120,17 @@ public class AlignToPost extends CommandBase
         rotateError = MathUtil.inputModulus(180.0 - gyro.getYaw(), -180.0, 180.0);
         foundTarget = vision.foundTarget();
 
-        POST_ALIGNMENT_TOLERANCE = SmartDashboard.getNumber("Post Alignemnt Tolerance", POST_ALIGNMENT_TOLERANCE);
-        POST_ALIGNMENT_ROTATE_TOLERANCE = SmartDashboard.getNumber("Post Alignemnt Rotate Tolerance", POST_ALIGNMENT_ROTATE_TOLERANCE);
-        POST_ALIGNMENT_STRAFE_KP = SmartDashboard.getNumber("Post Alignemnt Strafe KP", POST_ALIGNMENT_STRAFE_KP);
-        POST_ALIGNMENT_ROTATE_KP = SmartDashboard.getNumber("Post Alignemnt Rotate KP", POST_ALIGNMENT_ROTATE_KP);
-        POST_ALIGNMENT_MIN_SPEED = SmartDashboard.getNumber("Post Alignemnt Min Speed", POST_ALIGNMENT_MIN_SPEED);
+        // POST_ALIGNMENT_TOLERANCE = SmartDashboard.getNumber("Post Alignemnt Tolerance", POST_ALIGNMENT_TOLERANCE);
+        // POST_ALIGNMENT_ROTATE_TOLERANCE = SmartDashboard.getNumber("Post Alignemnt Rotate Tolerance", POST_ALIGNMENT_ROTATE_TOLERANCE);
+        // POST_ALIGNMENT_STRAFE_KP = SmartDashboard.getNumber("Post Alignemnt Strafe KP", POST_ALIGNMENT_STRAFE_KP);
+        // POST_ALIGNMENT_ROTATE_KP = SmartDashboard.getNumber("Post Alignemnt Rotate KP", POST_ALIGNMENT_ROTATE_KP);
+        // POST_ALIGNMENT_MIN_SPEED = SmartDashboard.getNumber("Post Alignemnt Min Speed", POST_ALIGNMENT_MIN_SPEED);
 
         // System.out.println("Yaw: " + gyro.getYaw() + " Rotate Error: " + rotateError);
 
         strafePower = -(POST_ALIGNMENT_STRAFE_KP * strafeError);
         rotatePower = POST_ALIGNMENT_ROTATE_KP * rotateError;
 
-        SmartDashboard.putNumber("Strafe Power", strafePower);
         // System.out.println("foundTarget" + foundTarget + "alignmentState: " + alignmentState + " strafeError: " + strafeError);
 
         if(Math.abs(strafePower) < POST_ALIGNMENT_MIN_SPEED)

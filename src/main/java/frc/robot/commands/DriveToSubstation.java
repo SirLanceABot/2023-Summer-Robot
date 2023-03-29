@@ -16,7 +16,7 @@ import frc.robot.sensors.Gyro4237;
 import frc.robot.sensors.Vision;
 
 
-public class AlignToSubstation extends CommandBase
+public class DriveToSubstation extends CommandBase
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -44,12 +44,12 @@ public class AlignToSubstation extends CommandBase
 
     private double SUBSTATION_ALIGNMENT_ROTATE_TOLERANCE = 1.0;
     private double POST_ALIGNMENT_ROTATE_KP = 0.1;
-    private double DRIVE_KP = 0.05;
+    private double DRIVE_KP = 0.03;
     private double POST_ALIGNMENT_MIN_SPEED = 0.04;
-    private final Timer alignmentTimer = new Timer();
+    // private final Timer alignmentTimer = new Timer();
     private final Timer limelightTimer = new Timer();
 
-    private AlignmentState alignmentState = AlignmentState.kNotAligned;
+    // private AlignmentState alignmentState = AlignmentState.kNotAligned;
     private double drivePower;
     private double distanceToDrive;
     private double rotatePower;
@@ -59,16 +59,16 @@ public class AlignToSubstation extends CommandBase
     private boolean foundTarget = false;
 
     /**
-     * Creates a new AutoAimToPost
+     * Creates a new AlignToSubstation
      *
      * @param drivetrain Drivetrain subsystem.
      * @param gyro Gyro sensor.
      * @param vision Vision sensor.
      */
-    public AlignToSubstation(Drivetrain drivetrain, Gyro4237 gyro, Vision vision) 
+    public DriveToSubstation(Drivetrain drivetrain, Gyro4237 gyro, Vision vision) 
     {
         // System.out.println(fullClassName + ": Constructor Started");
-        alignmentState = AlignmentState.kNotAligned;
+        // alignmentState = AlignmentState.kNotAligned;
         doneDriving = false;
         doneRotating = false;
 
@@ -91,13 +91,13 @@ public class AlignToSubstation extends CommandBase
     @Override
     public void initialize()
     {
-        // System.out.println("Initialized");
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);  //turns limelight on
+        System.out.println("Initialized");
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);  //april tag pipeline
         // alignmentTimer.reset();
         // alignmentTimer.start();
         limelightTimer.reset();
         limelightTimer.start();
-        alignmentState = AlignmentState.kNotAligned;
+        // alignmentState = AlignmentState.kNotAligned;
         doneDriving = false;
         doneRotating = false;
         // foundTarget = false;
@@ -114,12 +114,15 @@ public class AlignToSubstation extends CommandBase
 
         DRIVE_KP = SmartDashboard.getNumber("Drive KP", DRIVE_KP);
 
-        // System.out.println("Yaw: " + gyro.getYaw() + " Rotate Error: " + rotateError);
 
         drivePower = -(DRIVE_KP * distanceToDrive);
         rotatePower = POST_ALIGNMENT_ROTATE_KP * rotateError;
 
         SmartDashboard.putNumber("Drive Power", drivePower);
+        SmartDashboard.putNumber("Rotate Power", rotatePower);
+        SmartDashboard.putNumber("Distance to Drive", distanceToDrive);
+        SmartDashboard.putNumber("Rotate Error", rotateError);
+        SmartDashboard.putBoolean("Found Target", foundTarget);
 
         // if(Math.abs(drivePower) < POST_ALIGNMENT_MIN_SPEED)
         // {
@@ -144,63 +147,44 @@ public class AlignToSubstation extends CommandBase
     @Override
     public void end(boolean interrupted)
     {
-        // double xDistance = vision.getX();
-
         if(drivetrain != null)
         {
             drivetrain.drive(0.0, 0.0, 0.0, false);
         }   
-
-        // System.out.println("End");
+        System.out.println("End");
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() 
     {
-        // strafeError = vision.getX();
-        // rotateError = 180 - gyro.getYaw();
-        // foundTarget = vision.foundTarget();
-
         if(!foundTarget && limelightTimer.hasElapsed(0.2))
         {
-            vision.setIsAligned(false);
             return true;
         }
 
-        // if(Math.abs(rotateError) < SUBSTATION_ALIGNMENT_ROTATE_TOLERANCE)
-        // {
-        //     doneRotating = true;
+        if(Math.abs(rotateError) < SUBSTATION_ALIGNMENT_ROTATE_TOLERANCE)
+        {
+            doneRotating = true;
 
-        //     if(Math.abs(strafeError) > POST_ALIGNMENT_TOLERANCE)
-        //     {
-        //         alignmentState = AlignmentState.kNotAligned;
-        //     }
-        //     else if(Math.abs(strafeError) <= POST_ALIGNMENT_TOLERANCE && alignmentState == AlignmentState.kNotAligned)
-        //     {
-        //         alignmentTimer.reset();
-        //         alignmentTimer.start();
-        //         alignmentState = AlignmentState.kAligned;
-        //     }
-        //     else if(alignmentState == AlignmentState.kAligned)
-        //     {
-        //         alignmentState = AlignmentState.kBeenAligned;
-        //     }
-        //     else if(!(alignmentState == AlignmentState.kBeenAligned && !alignmentTimer.hasElapsed(0.5)))
-        //     {
-        //         doneDriving = true;
-        //     }
-        // }
-        // else
-        // {
-        //     doneRotating = false;
-        // }
+            if(distanceToDrive > 3.3)
+            {
+                doneDriving = false;
+            }
+            else
+            {
+                doneDriving = true;
+            }
+        }
+        else
+        {
+            doneRotating = false;
+        }
 
         
 
         if(doneDriving && doneRotating)
         {
-            vision.setIsAligned(true);
             return true;
         }
         else
