@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
@@ -294,6 +296,11 @@ public class Grabber extends Subsystem4237
     public double convertVoltageToPsi(double voltage)
     {
         return (10.875 * voltage) - 19.9375;
+    }
+
+    public BooleanSupplier vacuumSuctionSupplier()
+    {
+        return () -> (isTargetPressureReachedTop && isTargetPressureReachedBottom);
     }
 
     private void logVacuumInit()

@@ -301,6 +301,11 @@ public class RobotContainer
 				dPadDownTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kStartingPosition));
 			}
 
+			// Rumble when gamepiece has full suction
+			BooleanSupplier vacuumSuction = grabber.vacuumSuctionSupplier();
+			Trigger vacuumSuctionTrigger = new Trigger(vacuumSuction);
+			vacuumSuctionTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.5, 0.5)));
+
 			// Default Command
 			if(drivetrain != null)
 			{

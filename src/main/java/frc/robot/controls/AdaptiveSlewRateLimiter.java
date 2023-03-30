@@ -38,8 +38,8 @@ public class AdaptiveSlewRateLimiter
         double elapsedTime = currentTime - prevTime;
         double currRateLimit = (Math.abs(input) > Math.abs(prevVal) ? accelRateLimit : decelRateLimit);
 
-        SmartDashboard.putNumber("Acc?",Math.abs(input) > Math.abs(prevVal) ? 1 : 0);
-        SmartDashboard.putNumber("Prev Val",prevVal);
+        // SmartDashboard.putNumber("Acc?",Math.abs(input) > Math.abs(prevVal) ? 1 : 0);
+        // SmartDashboard.putNumber("Prev Val",prevVal);
 
         prevVal +=
                 MathUtil.clamp(input - prevVal, -currRateLimit * elapsedTime, currRateLimit * elapsedTime);
