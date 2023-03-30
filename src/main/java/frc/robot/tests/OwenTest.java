@@ -51,7 +51,7 @@ public class OwenTest implements Test
     private final Timer tier;
     final int kUltrasonicPingPort = 2;
     final int kUltrasonicEchoPort = 1;
-    private final MedianFilter m_filter = new MedianFilter(5);
+    // private final MedianFilter m_filter = new MedianFilter(5);
     // private final PWMSparkMax m_leftMotor = new PWMSparkMax(kUltrasonicEchoPort);
     // private final Ultrasonic m_ultrasonic1 = new Ultrasonic(kUltrasonicPingPort, kUltrasonicEchoPort);
     // private final Ultrasonic m_ultrasonic3 = new Ultrasonic(null, null);

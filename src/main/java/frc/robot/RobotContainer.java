@@ -70,6 +70,7 @@ import frc.robot.sensors.Accelerometer4237;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.shuffleboard.MainShuffleboard;
 import frc.robot.sensors.Vision;
+import frc.robot.sensors.Ultrasonic4237;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -107,6 +108,7 @@ public class RobotContainer
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
+	private boolean useUltrasonic			= false;
 
 	private boolean useDataLog				= false;
 	
@@ -126,6 +128,7 @@ public class RobotContainer
 	public final MainShuffleboard mainShuffleboard;
 	public final Accelerometer4237 accelerometer;
 	public final Gyro4237 gyro;
+	private final Ultrasonic4237 ultrasonic;
 	// public final PowerDistribution pdh;
 	public final Compressor compressor;
 	public DataLog log = null;
@@ -164,6 +167,7 @@ public class RobotContainer
 		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)			? new MainShuffleboard(this)							: null;
 		vision 				= (useFullRobot || useVision)					? new Vision()											: null;
 		compressor			= (useGrabber || useWrist)						? new Compressor(0, PneumaticsModuleType.CTREPCM)		: null;
+		ultrasonic			= (useFullRobot || useUltrasonic)				? new Ultrasonic4237()									: null;
 
 		// pdh = new PowerDistribution(1, ModuleType.kRev);
 		// compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
