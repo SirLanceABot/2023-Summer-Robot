@@ -27,7 +27,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.drive.*;
 
 
-public class SwerveModule extends RobotDriveBase
+class SwerveModule extends RobotDriveBase
 {
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
@@ -74,7 +74,7 @@ public class SwerveModule extends RobotDriveBase
      *
      * @param smd SwerveModuleData for making SwerveModules
      */
-    public SwerveModule(SwerveModuleConfig smd)
+    SwerveModule(SwerveModuleConfig smd)
     {
         moduleName = smd.moduleName;
 

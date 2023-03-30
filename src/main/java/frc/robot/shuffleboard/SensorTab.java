@@ -6,21 +6,21 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.sendable.SendableRegistry;
-// import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import frc.robot.RobotContainer;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.sensors.Gyro4237;
 // import frc.robot.RobotContainer;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.SwerveModule;
+// import frc.robot.subsystems.SwerveModule;
+// import frc.robot.RobotContainer;
+// import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class SensorTab
 {
@@ -32,7 +32,7 @@ public class SensorTab
     private Arm arm;
     private Gyro4237 gyro;
     private Drivetrain drivetrain;
-    private SwerveModule swerveModule;
+    // private SwerveModule swerveModule;
     private Translation2d startingPosition;
     private Double encoderValue = 0.0;
     private GenericEntry shoulderEncoderBox;
