@@ -45,6 +45,7 @@ import frc.robot.Constants.SuctionState;
 import frc.robot.Constants.TargetPosition;
 import frc.robot.commands.AlignToPost;
 import frc.robot.commands.DriveToSubstation;
+import frc.robot.commands.DriveToSubstationSensor;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoCommandList;
 import frc.robot.commands.ArcadeAutoDriveDistance;
@@ -92,25 +93,25 @@ public class RobotContainer
 	
 	private boolean useFullRobot			= true;
 	private boolean useScorer				= false;
-	private boolean useBindings				= false;
+	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= false;
-	private boolean useDrivetrain   		= false;
-	private boolean useGrabber 				= false;
+	private boolean useGyro					= true;
+	private boolean useDrivetrain   		= true;
+	private boolean useGrabber 				= true;
 	private boolean useWrist				= false;
 	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= false;
+	private boolean useDriverController		= true;
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
-	private boolean useUltrasonic			= false;
+	private boolean useUltrasonic			= true;
 
-	private boolean useDataLog				= false;
+	private boolean useDataLog				= true;
 	
 	
 	public final boolean fullRobot;
@@ -297,6 +298,15 @@ public class RobotContainer
 				leftTriggerTrigger.onTrue( new DriveToSubstation(drivetrain, gyro, vision));
 			}
 
+			//Left Bumper
+			BooleanSupplier leftBumper = driverController.getButtonSupplier(Xbox.Button.kLeftBumper);
+			Trigger leftBumperTrigger = new Trigger(leftBumper);
+			if(drivetrain != null && gyro != null && ultrasonic != null)
+			{
+				leftBumperTrigger.toggleOnTrue(new DriveToSubstationSensor(drivetrain, gyro, ultrasonic));
+				// leftBumperTrigger.toggleOnFalse(new DriveToSubstationSensor(drivetrain, gyro, ultrasonic));
+			}
+
 			//Dpad down button
 			BooleanSupplier dPadDown = driverController.getDpadSupplier(Xbox.Dpad.kDown);
 			Trigger dPadDownTrigger = new Trigger(dPadDown);
@@ -308,7 +318,12 @@ public class RobotContainer
 			// Rumble when gamepiece has full suction
 			BooleanSupplier vacuumSuction = grabber.vacuumSuctionSupplier();
 			Trigger vacuumSuctionTrigger = new Trigger(vacuumSuction);
-			vacuumSuctionTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.5, 0.5)));
+			if(grabber != null)
+			{
+				vacuumSuctionTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.5, 0.5)));
+			}
+			
+			
 
 			// Default Command
 			if(drivetrain != null)

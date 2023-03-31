@@ -22,31 +22,74 @@ import frc.robot.shuffleboard.AutonomousTab;
 import frc.robot.shuffleboard.MainShuffleboard;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import frc.robot.controls.Xbox;
 import frc.robot.controls.OperatorController;
 
-public class Ultrasonic4237 
+public class Ultrasonic4237 extends Sensor4237
 {
+
+    private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
+
+    // *** STATIC INITIALIZATION BLOCK ***
+    // This block of code is run first when the class is loaded
+    static
+    {
+        System.out.println("Loading: " + fullClassName);
+    }
+
+    private class PeriodicIO
+    {
+        
+        private double potInFeet;
+        private double filteredMeasurement;
+        private Timer timer;
+    }
+
     private final AnalogInput sonarSensor = new AnalogInput(0);
     private final AnalogPotentiometer pot = new AnalogPotentiometer(sonarSensor, 5000, 0);
     final int kUltrasonicPingPort = 2;
     final int kUltrasonicEchoPort = 1;
-    // private final Timer timer;
+    private final MedianFilter m_filter = new MedianFilter(5);
+    private final PeriodicIO periodicIO = new PeriodicIO();
+    
 
-    // public Ultrasonic4237()
-    // {
-        
-    // }
-
-    public void readPeriodicInputs()
+    public Ultrasonic4237()
     {
-
+        periodicIO.timer = new Timer();
+        startTimer();
     }
 
+    public void startTimer()
+    {
+        periodicIO.timer.start();
+    }
+
+    public double getPotentiometer()
+    {
+        
+        periodicIO.filteredMeasurement = m_filter.calculate(pot.get() /304.8);
+        return periodicIO.filteredMeasurement;
+    }
+
+    @Override
+    public void readPeriodicInputs()
+    {
+        periodicIO.potInFeet = getPotentiometer();
+    }
+
+    @Override
     public void writePeriodicOutputs()
     {
+        // System.out.println("Distance: " + pot.get() / 304.8 + "\n");
+        SmartDashboard.putNumber("Distance", periodicIO.potInFeet);
+    }
 
+    @Override
+    public String toString()
+    {
+        return String.format("Ultrasonic %f \n", periodicIO.potInFeet);
     }
 }
