@@ -68,7 +68,7 @@ public class Vision extends Sensor4237
     }
 
     /** @return the distance in FEET from the limelight to the target (double) */
-    public double getDistance()
+    public double getAprilTagDistance()
     {
         return A * Math.pow(periodicIO.area, B);
     }

@@ -108,7 +108,7 @@ public class DriveToSubstation extends CommandBase
     @Override
     public void execute()
     {
-        distanceToDrive = vision.getDistance();
+        distanceToDrive = vision.getAprilTagDistance();
         rotateError = MathUtil.inputModulus(180.0 - gyro.getYaw(), -180.0, 180.0);
         foundTarget = vision.foundTarget();
 

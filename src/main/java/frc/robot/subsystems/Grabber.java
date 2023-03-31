@@ -74,6 +74,11 @@ public class Grabber extends Subsystem4237
         }
     }
 
+    public enum RumbleState
+    {
+        kWaiting, kNow, kRumbled;
+    }
+
     public class PeriodicIO
     {
         //INPUTS
@@ -141,9 +146,8 @@ public class Grabber extends Subsystem4237
     private boolean isMaximumPressureReachedBottom = false;
     private boolean isTargetPressureReachedTop = false;
     private boolean isTargetPressureReachedBottom = false;
-    
 
-
+    private RumbleState rumbleState = RumbleState.kWaiting;
     
 
     /**
@@ -229,6 +233,7 @@ public class Grabber extends Subsystem4237
     {
         isEnabled = true;
         isDisabling = false;
+        rumbleState = RumbleState.kWaiting;
         // periodicIO.vacuumMotorSpeedTop = -0.5;
         // periodicIO.vacuumMotorSpeedBottom = -0.5;
         // periodicIO.vacuumState = VacuumState.kClosed;
@@ -241,6 +246,7 @@ public class Grabber extends Subsystem4237
     {
         isEnabled = false;
         isDisabling = true;
+        rumbleState = RumbleState.kRumbled;
         // periodicIO.vacuumMotorSpeedTop = 0.0;
         // periodicIO.vacuumMotorSpeedBottom = 0.0;
         // periodicIO.vacuumState = VacuumState.kOpen;
@@ -300,7 +306,7 @@ public class Grabber extends Subsystem4237
 
     public BooleanSupplier vacuumSuctionSupplier()
     {
-        return () -> (isTargetPressureReachedTop && isTargetPressureReachedBottom);
+        return () -> (isTargetPressureReachedTop && isTargetPressureReachedBottom && rumbleState == RumbleState.kNow);
     }
 
     private void logVacuumInit()
@@ -425,6 +431,18 @@ public class Grabber extends Subsystem4237
                     isTargetPressureReachedBottom = false;
                 }
             } 
+
+            if(isTargetPressureReachedTop && isTargetPressureReachedBottom)
+            {
+                if(rumbleState == RumbleState.kWaiting)
+                {
+                    rumbleState = RumbleState.kNow;
+                }
+                else if(rumbleState == RumbleState.kNow)
+                {
+                    rumbleState = RumbleState.kRumbled;
+                }
+            }
       
             
 

@@ -111,7 +111,7 @@ public class SamTest implements Test
         aprilTagTX = tx.getDouble(0.0);
         aprilTagTY = ty.getDouble(0.0);
         aprilTagTA = ta.getDouble(0.0);
-        aprilTagDistance = vision.getDistance();
+        aprilTagDistance = vision.getAprilTagDistance();
 
         SmartDashboard.putNumber("tx", aprilTagTX);
         SmartDashboard.putNumber("ty", aprilTagTY);
