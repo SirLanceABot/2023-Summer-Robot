@@ -55,14 +55,12 @@ import frc.robot.commands.ExtendScorerCube;
 import frc.robot.commands.ExtendScorerSubstation;
 import frc.robot.commands.GrabGamePiece;
 import frc.robot.commands.LockWheels;
-import frc.robot.commands.SwerveDriveCrawl;
 import frc.robot.commands.SuctionControl;
 import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.RetractScorer;
 import frc.robot.commands.SwerveDrive;
-import frc.robot.commands.SwerveDriveXOnly;
 import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
 import frc.robot.controls.Xbox;
@@ -282,12 +280,9 @@ public class RobotContainer
 			}
 
 			// //Right Bumper
-			// BooleanSupplier rightBumper = driverController.getButtonSupplier(Xbox.Button.kRightBumper);
-			// Trigger rightBumperTrigger = new Trigger(rightBumper);
-			// if(drivetrain != null && gyro != null)
-			// {
-			// 	rightBumperTrigger.onTrue( new Rotate180(drivetrain, gyro, leftXAxis, rightXAxis, true));
-			// }
+			BooleanSupplier rightBumper = driverController.getButtonSupplier(Xbox.Button.kRightBumper);
+			Trigger rightBumperTrigger = new Trigger(rightBumper);
+			
 
 			//Left trigger 
 			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
