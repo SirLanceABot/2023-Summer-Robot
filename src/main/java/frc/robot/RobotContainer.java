@@ -248,7 +248,7 @@ public class RobotContainer
 			if(drivetrain != null)
 			{
 				// bButtonTrigger.toggleOnTrue(new SwerveDriveXOnly(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
-				bButtonTrigger.toggleOnTrue(new SwerveDrive(drivetrain, leftYAxisCrawl, zero, zero, true));
+				bButtonTrigger.whileTrue(new SwerveDrive(drivetrain, leftYAxisCrawl, zero, zero, true));
 			}
 
 			//X Button-lockwheels
@@ -317,8 +317,6 @@ public class RobotContainer
 				vacuumSuctionTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.5, 0.5)));
 			}
 			
-			
-
 			// Default Command
 			if(drivetrain != null)
 			{
