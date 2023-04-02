@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.sensors.Ultrasonic4237;
+import frc.robot.commands.StopDrive;
 
 
 public class DriveToSubstationSensor extends CommandBase
@@ -85,21 +86,23 @@ public class DriveToSubstationSensor extends CommandBase
     public void execute()
     {
         
-        if( drivetrain != null)
+        if( drivetrain != null && ultrasonic != null)
         {
-            if(ultrasonic.getPotentiometer() > 5.0)
+            if(ultrasonic.getDistance() > 8.0)
             {
                 drivetrain.drive(1.0, 0.0, 0.0, false);
             }
 
-            if(ultrasonic.getPotentiometer() < 5.0)
+            if(ultrasonic.getDistance() < 8.0)
             {
                 drivetrain.drive(0.2, 0.0, 0.0, false);
             }
 
-            if(ultrasonic.getPotentiometer() < 3.0)
+            if(ultrasonic.getDistance() < 5.0)
             {
-                drivetrain.drive(0.0, 0.0, 0.0, false);
+                System.out.println("Under 5");
+                // drivetrain.drive(0.0, 0.0, 0.0, false);
+                drivetrain.stopMotor();
             }
         }
         // if(Math.abs(drivePower) < POST_ALIGNMENT_MIN_SPEED)
