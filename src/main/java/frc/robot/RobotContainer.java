@@ -61,7 +61,6 @@ import frc.robot.commands.MoveArmToScoringPosition;
 import frc.robot.commands.MoveShoulderToScoringPosition;
 import frc.robot.commands.ReleaseGamePiece;
 import frc.robot.commands.RetractScorer;
-import frc.robot.commands.Rotate180;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.commands.SwerveDriveXOnly;
 import frc.robot.controls.DriverController;
@@ -91,27 +90,27 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= true;
+	private boolean useFullRobot			= false;
 	private boolean useScorer				= false;
-	private boolean useBindings				= true;
+	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= true;
-	private boolean useDrivetrain   		= true;
-	private boolean useGrabber 				= true;
+	private boolean useGyro					= false;
+	private boolean useDrivetrain   		= false;
+	private boolean useGrabber 				= false;
 	private boolean useWrist				= false;
 	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= true;
+	private boolean useDriverController		= false;
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
-	private boolean useUltrasonic			= true;
+	private boolean useUltrasonic			= false;
 
-	private boolean useDataLog				= true;
+	private boolean useDataLog				= false;
 	
 	
 	public final boolean fullRobot;
@@ -282,13 +281,13 @@ public class RobotContainer
 								   .andThen( new InstantCommand( () -> grabber.closeSolenoid())));
 			}
 
-			//Right Bumper
-			BooleanSupplier rightBumper = driverController.getButtonSupplier(Xbox.Button.kRightBumper);
-			Trigger rightBumperTrigger = new Trigger(rightBumper);
-			if(drivetrain != null && gyro != null)
-			{
-				rightBumperTrigger.onTrue( new Rotate180(drivetrain, gyro, leftXAxis, rightXAxis, true));
-			}
+			// //Right Bumper
+			// BooleanSupplier rightBumper = driverController.getButtonSupplier(Xbox.Button.kRightBumper);
+			// Trigger rightBumperTrigger = new Trigger(rightBumper);
+			// if(drivetrain != null && gyro != null)
+			// {
+			// 	rightBumperTrigger.onTrue( new Rotate180(drivetrain, gyro, leftXAxis, rightXAxis, true));
+			// }
 
 			//Left trigger 
 			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Shoulder;
 
@@ -30,25 +31,29 @@ public class CameraTab
     // Create a Shuffleboard Tab
     private ShuffleboardTab cameraTab = Shuffleboard.getTab("Camera");
     private Shoulder shoulder;
+    private Arm arm;
     private Grabber grabber;
-
+    
     private int oldTime = 0;
 
     // Create text output boxes
     private NetworkTableEntry timeRemaining;
     private GenericEntry shoulderEncoderBox;
-    private GenericEntry grabberMotorBottomCurrentBox;
-    private GenericEntry grabberMotorTopCurrentBox;
+    private GenericEntry armEncoderBox;
+    // private GenericEntry grabberMotorBottomCurrentBox;
+    // private GenericEntry grabberMotorTopCurrentBox;
     // private GenericEntry grabberBottomDigitalInputBox;
     // private GenericEntry grabberTopDigitalInputBox;
-    // private GenericEntry topSuctionSuccessBox;
-    // private GenericEntry bottomSuctionSuccessBox;
+    private GenericEntry topVacuumPressureBox;
+    private GenericEntry bottomVacuumPressureBox;
+
+
 
     private Double timeRemainingData = 0.0;
     String compressorStateString = "No data";
 
     // *** CLASS CONSTRUCTOR ***
-    CameraTab(Shoulder shoulder, Grabber grabber)
+    CameraTab(Shoulder shoulder, Arm arm, Grabber grabber)
     {
         System.out.println(fullClassName + " : Constructor Started");
 
@@ -63,19 +68,25 @@ public class CameraTab
         // createTimeRemainingBox();
 
         this.shoulder = shoulder;
+        this.arm = arm;
         this.grabber = grabber;
 
         if(shoulder != null)
+        {
             shoulderEncoderBox = createShoulderEncoderBox();
-
+        }
         if(grabber != null)
         {
-            grabberMotorBottomCurrentBox = createGrabberBottomCurrentBox();
-            grabberMotorTopCurrentBox = createGrabberTopCurrentBox();
+            // grabberMotorBottomCurrentBox = createGrabberBottomCurrentBox();
+            // grabberMotorTopCurrentBox = createGrabberTopCurrentBox();
             //grabberBottomDigitalInputBox = createGrabberBottomDigitalInputBox();
             //grabberTopDigitalInputBox = createGrabberTopDigitalInputBox();
-            // topSuctionSuccessBox = createTopSuctionSuccessBox();
-            // bottomSuctionSuccessBox = createBottomSuctionSuccessBox();
+            topVacuumPressureBox = createTopVacuumPressureBox();
+            bottomVacuumPressureBox = createBottomVacuumPressureBox();
+        }
+        if(arm != null)
+        {
+            armEncoderBox = createArmEncoderBox();
         }
 
         System.out.println(fullClassName + ": Constructor Finished");
@@ -92,23 +103,23 @@ public class CameraTab
         .getEntry();
     }
 
-    private GenericEntry createGrabberBottomCurrentBox()
-    {
-        return cameraTab.add("Grabber Motor Bottom Current", grabber.getVacuumBottomCurrent())
-        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
-        .withPosition(20, 0)  // sets position of widget
-        .withSize(4, 2)    // sets size of widget
-        .getEntry();
-    }
+    // private GenericEntry createGrabberBottomCurrentBox()
+    // {
+    //     return cameraTab.add("Grabber Motor Bottom Current", grabber.getVacuumBottomCurrent())
+    //     .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+    //     .withPosition(20, 0)  // sets position of widget
+    //     .withSize(4, 2)    // sets size of widget
+    //     .getEntry();
+    // }
 
-    private GenericEntry createGrabberTopCurrentBox()
-    {
-        return cameraTab.add("Grabber Motor Top Current", grabber.getVacuumTopCurrent())
-        .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
-        .withPosition(20, 3)  // sets position of widget
-        .withSize(4, 2)    // sets size of widget
-        .getEntry();
-    }
+    // private GenericEntry createGrabberTopCurrentBox()
+    // {
+    //     return cameraTab.add("Grabber Motor Top Current", grabber.getVacuumTopCurrent())
+    //     .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
+    //     .withPosition(20, 3)  // sets position of widget
+    //     .withSize(4, 2)    // sets size of widget
+    //     .getEntry();
+    // }
 
     // private GenericEntry createGrabberBottomDigitalInputBox()
     // {
@@ -128,48 +139,62 @@ public class CameraTab
     //     .getEntry();
     // }
 
-    // private GenericEntry createTopSuctionSuccessBox()
-    // {
-    //     return cameraTab.add("Top Suction Success", grabber.getAnalogSensorVoltage())
-    //     .withWidget(BuiltInWidgets.kBooleanBox)
-    //     .withPosition(20, 12)
-    //     .withSize(3, 3)
-    //     .getEntry();
-    // }
+    private GenericEntry createTopVacuumPressureBox()
+    {
+        return cameraTab.add("Top Vacuum Pressure", grabber.convertVoltageToPsi(grabber.getAnalogSensorVoltageTop()))
+        .withWidget(BuiltInWidgets.kTextView)
+        .withPosition(20, 12)
+        .withSize(3, 3)
+        .getEntry();
+    }
 
-    // private GenericEntry createBottomSuctionSuccessBox()
-    // {
-    //     return cameraTab.add("Bottom Suction Success", grabber.getAnalogSensorVoltage())
-    //     .withWidget(BuiltInWidgets.kBooleanBox)
-    //     .withPosition(20, 16)
-    //     .withSize(3, 3)
-    //     .getEntry(); 
-    // }
+    private GenericEntry createBottomVacuumPressureBox()
+    {
+        return cameraTab.add("Bottom Vacuum Pressure", grabber.convertVoltageToPsi(grabber.getAnalogSensorVoltageBottom()))
+        .withWidget(BuiltInWidgets.kTextView)
+        .withPosition(23, 12)
+        .withSize(3, 3)
+        .getEntry();
+    }
+
+    private GenericEntry createArmEncoderBox()
+    {
+        return cameraTab.add("Arm Endocer", arm.getArmPosition())
+        .withWidget(BuiltInWidgets.kTextView)
+        .withPosition(20, 12)
+        .withSize(3, 3)
+        .getEntry();
+    }
 
     public void updateEncoderData()
     {
         if(shoulder != null)
+        {
             shoulderEncoderBox.setDouble(shoulder.getPosition());
-
+        }
         if(grabber != null)
         {
-            grabberMotorBottomCurrentBox.setDouble(grabber.getVacuumBottomCurrent());
-            grabberMotorTopCurrentBox.setDouble(grabber.getVacuumTopCurrent());
-            //grabberBottomDigitalInputBox.setBoolean(grabber.getBottomDigitalInput());
-            //grabberTopDigitalInputBox.setBoolean(grabber.getTopDigitalInput());
-            // topSuctionSuccessBox.setBoolean(grabber.getAnalogSensorVoltage() > 1.6 ? true : false);
-            // bottomSuctionSuccessBox.setBoolean(grabber.getAnalogSensorVoltage() > 1.6 ? true : false);
+            // grabberMotorBottomCurrentBox.setDouble(grabber.getVacuumBottomCurrent());
+            // grabberMotorTopCurrentBox.setDouble(grabber.getVacuumTopCurrent());
+            // grabberBottomDigitalInputBox.setBoolean(grabber.getBottomDigitalInput());
+            // grabberTopDigitalInputBox.setBoolean(grabber.getTopDigitalInput());
+            topVacuumPressureBox.setDouble(grabber.convertVoltageToPsi(grabber.getAnalogSensorVoltageTop()));
+            bottomVacuumPressureBox.setDouble(grabber.convertVoltageToPsi(grabber.getAnalogSensorVoltageBottom()));
+        }
+        if(arm != null)
+        {
+            armEncoderBox.setDouble(arm.getArmPosition());
         }
     }
 
-    private void createTimeRemainingBox()
-    {
-        cameraTab.add("Time Remaining", timeRemainingData.toString())
-            .withWidget(BuiltInWidgets.kTextView)
-            .withPosition(24, 5)
-            .withSize(4, 2)
-            .getEntry();
-    }
+    // private void createTimeRemainingBox()
+    // {
+    //     cameraTab.add("Time Remaining", timeRemainingData.toString())
+    //         .withWidget(BuiltInWidgets.kTextView)
+    //         .withPosition(24, 5)
+    //         .withSize(4, 2)
+    //         .getEntry();
+    // }
 
     public void updateTimeRemaining()
     {
