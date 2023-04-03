@@ -324,7 +324,11 @@ public class Drivetrain extends Subsystem4237
         //feedWatchdog();
     }
 
-
+    public void resetSlewRateLimiter()
+    {
+        adaptiveXRateLimiter.reset(0.0);
+        adaptiveYRateLimiter.reset(0.0);
+    }
 
 
     @Override

@@ -149,6 +149,7 @@ public class DriveToSubstation extends CommandBase
     {
         if(drivetrain != null)
         {
+            drivetrain.resetSlewRateLimiter();
             drivetrain.drive(0.0, 0.0, 0.0, false);
         }   
         System.out.println("End");

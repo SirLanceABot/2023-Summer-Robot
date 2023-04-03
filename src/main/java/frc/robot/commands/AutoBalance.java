@@ -181,8 +181,9 @@ public class AutoBalance extends CommandBase
     {
         if(drivetrain != null)
         {
+            drivetrain.resetSlewRateLimiter();
             drivetrain.drive(0.0, 0.0, 0.0, false);
-            // drivetrain.lockWheels();
+            drivetrain.lockWheels();
             // new LockWheels(drivetrain).schedule();
         }
     }

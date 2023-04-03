@@ -96,7 +96,7 @@ public class AlignToPost extends CommandBase
     public void initialize()
     {
         // System.out.println("Initialized");
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);  //turns limelight on
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);  //switches to reflective tape pipeline
         // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);  //turns limelight on
         alignmentTimer.reset();
         alignmentTimer.start();
@@ -107,8 +107,6 @@ public class AlignToPost extends CommandBase
         doneRotating = false;
         // foundTarget = false;
         vision.setIsAligned(false);
-
-        
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -160,7 +158,11 @@ public class AlignToPost extends CommandBase
 
         if(drivetrain != null)
         {
+            drivetrain.resetSlewRateLimiter();
+
             drivetrain.drive(0.0, 0.0, 0.0, false);
+            // drivetrain.stopMotor();
+            // System.out.println("AlignToPost Ended");
         }
 
         // if(candle != null)
