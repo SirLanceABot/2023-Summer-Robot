@@ -46,42 +46,48 @@ public class Ultrasonic4237 extends Sensor4237
         private double sensorVoltage;
         private double filteredMeasurement;
         private double sensorDistance;
-        private Timer timer;
+        // private Timer timer;
     }
 
     private final AnalogInput sonarSensor = new AnalogInput(0);
-    private final AnalogPotentiometer pot = new AnalogPotentiometer(sonarSensor, 5000, 0);
+    // private final AnalogPotentiometer pot = new AnalogPotentiometer(sonarSensor, 5000, 0);
     
     
-    final int kUltrasonicPingPort = 2;
-    final int kUltrasonicEchoPort = 1;
+    // final int kUltrasonicPingPort = 2;
+    // final int kUltrasonicEchoPort = 1;
     private final MedianFilter m_filter = new MedianFilter(5);
     private final PeriodicIO periodicIO = new PeriodicIO();
     
 
     public Ultrasonic4237()
     {
-        periodicIO.timer = new Timer();
-        startTimer();
+        // periodicIO.timer = new Timer();
+        // startTimer();
+        periodicIO.sensorDistance = calculateDistance();
     }
 
-    public void startTimer()
+    // public void startTimer()
+    // {
+    //     periodicIO.timer.start();
+    // }
+
+    private double calculateDistance()
     {
-        periodicIO.timer.start();
+        var voltsPerCM = edu.wpi.first.wpilibj.RobotController.getVoltage5V() / 512.;
+        periodicIO.sensorVoltage = sonarSensor.getVoltage()/voltsPerCM/30.48/*cm per foot*/;
+        periodicIO.filteredMeasurement = m_filter.calculate(periodicIO.sensorVoltage);
+        return periodicIO.filteredMeasurement;
     }
 
     public double getDistance()
     {
-        var voltsPerCM = edu.wpi.first.wpilibj.RobotController.getVoltage5V() / 512.;
-        periodicIO.sensorVoltage = sonarSensor.getVoltage()/voltsPerCM/30.4/*cm per foot*/;
-        periodicIO.filteredMeasurement = m_filter.calculate(periodicIO.sensorVoltage);
-        return periodicIO.filteredMeasurement;
+        return periodicIO.sensorDistance;
     }
 
     @Override
     public void readPeriodicInputs()
     {
-        periodicIO.sensorDistance = getDistance();
+        periodicIO.sensorDistance = calculateDistance();
     }
 
     @Override

@@ -35,15 +35,12 @@ public class DriveToSubstationSensor extends CommandBase
 
     // *** CLASS AND INSTANCE VARIABLES ***
     private final Drivetrain drivetrain;
-    private final Gyro4237 gyro;
     private final Ultrasonic4237 ultrasonic;
-    private double speed;
 
-    private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    // private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
-    NetworkTableEntry ta = table.getEntry("ta");
+    // NetworkTableEntry ta = table.getEntry("ta");
     // private final Timer alignmentTimer = new Timer();
-    private final Timer limelightTimer = new Timer();
 
     // private AlignmentState alignmentState = AlignmentState.kNotAligned;
     /**
@@ -53,19 +50,23 @@ public class DriveToSubstationSensor extends CommandBase
      * @param gyro Gyro sensor.
      * @param ultrasonic Ultrasonic sensor.
      */
-    public DriveToSubstationSensor(Drivetrain drivetrain, Gyro4237 gyro, Ultrasonic4237 ultrasonic) 
+    public DriveToSubstationSensor(Drivetrain drivetrain, Ultrasonic4237 ultrasonic) 
     {
         // System.out.println(fullClassName + ": Constructor Started");
         // alignmentState = AlignmentState.kNotAligned;
 
         this.drivetrain = drivetrain;
-        this.gyro = gyro;
+        // this.gyro = gyro;
         this.ultrasonic = ultrasonic;
         
         if(this.drivetrain != null)
         {
             addRequirements(drivetrain);
         }
+        // if(this.ultrasonic != null)
+        // {
+        //     addRequirements(ultrasonic);
+        // }
             
         
         // System.out.println(fullClassName + ": Constructor Finished");
@@ -88,21 +89,22 @@ public class DriveToSubstationSensor extends CommandBase
         
         if( drivetrain != null && ultrasonic != null)
         {
-            if(ultrasonic.getDistance() > 8.0)
+            if(ultrasonic.getDistance() > 2.5)
             {
                 drivetrain.drive(1.0, 0.0, 0.0, false);
             }
 
-            if(ultrasonic.getDistance() < 8.0)
+            else if(ultrasonic.getDistance() <= 2.5 && ultrasonic.getDistance() >= 1.75)
             {
-                drivetrain.drive(0.2, 0.0, 0.0, false);
+                System.out.println("Under 4");
+                drivetrain.drive(0.1, 0.0, 0.0, false);
             }
 
-            if(ultrasonic.getDistance() < 5.0)
+            else if(ultrasonic.getDistance() < 1.75)
             {
-                System.out.println("Under 5");
-                // drivetrain.drive(0.0, 0.0, 0.0, false);
-                drivetrain.stopMotor();
+                System.out.println("Under 2.5");
+                drivetrain.drive(0.0, 0.0, 0.0, false);
+                // drivetrain.stopMotor();
             }
         }
         // if(Math.abs(drivePower) < POST_ALIGNMENT_MIN_SPEED)

@@ -88,9 +88,9 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= false;
+	private boolean useFullRobot			= true;
 	private boolean useScorer				= false;
-	private boolean useBindings				= false;
+	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
@@ -297,9 +297,17 @@ public class RobotContainer
 			Trigger leftBumperTrigger = new Trigger(leftBumper);
 			if(drivetrain != null && gyro != null && ultrasonic != null)
 			{
-				leftBumperTrigger.toggleOnTrue(new DriveToSubstationSensor(drivetrain, gyro, ultrasonic));
+				leftBumperTrigger.whileTrue(
+					new ConditionalCommand(
+
+						new PrintCommand("Regular Swerve").andThen(
+						new SwerveDrive(drivetrain, leftYAxis, leftXAxis, rightXAxis, true)),
+						new PrintCommand("Crawl Swerve").andThen( 
+						new SwerveDrive(drivetrain, leftYAxisCrawl, leftXAxisCrawl, rightXAxisCrawl, true)), 
+						() -> ultrasonic.getDistance() > 6.0));
 				// leftBumperTrigger.toggleOnFalse(new DriveToSubstationSensor(drivetrain, gyro, ultrasonic));
 			}
+
 
 			//Dpad down button
 			BooleanSupplier dPadDown = driverController.getDpadSupplier(Xbox.Dpad.kDown);
