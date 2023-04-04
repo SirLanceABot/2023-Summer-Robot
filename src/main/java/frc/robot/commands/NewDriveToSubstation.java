@@ -64,30 +64,25 @@ public class NewDriveToSubstation extends CommandBase
     @Override
     public void execute()
     {
-        distance = ultrasonic.getDistance();
-
-        if(distance > 6.0 && !crawlLock)
+        if(ultrasonic != null)
         {
-            if(drivetrain != null)
+            distance = ultrasonic.getDistance();
+        }
+
+        if(drivetrain != null)
+        {
+            if(distance > 6.0 && !crawlLock)
             {
                 drivetrain.drive(xSpeed.getAsDouble(), ySpeed.getAsDouble(), turn.getAsDouble(), fieldRelative);
             }
-        }
-        else if(distance <= 6.0)
-        {
-            crawlLock = true;
-            if(drivetrain != null)
+            else
             {
+                crawlLock = true;
                 drivetrain.drive(xSpeed.getAsDouble() * scaleFactor, ySpeed.getAsDouble() * scaleFactor, turn.getAsDouble() * scaleFactor, fieldRelative);
             }
         }
-        else if(distance > 6.0 && crawlLock)
-        {
-            if(drivetrain != null)
-            {
-                drivetrain.drive(xSpeed.getAsDouble() * scaleFactor, ySpeed.getAsDouble() * scaleFactor, turn.getAsDouble() * scaleFactor, fieldRelative); 
-            }
-        }
+
+        
     }
 
     // Called once the command ends or is interrupted.

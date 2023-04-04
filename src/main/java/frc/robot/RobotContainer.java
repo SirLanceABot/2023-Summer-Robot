@@ -164,7 +164,7 @@ public class RobotContainer
 		operatorController 	= (useFullRobot || useOperatorController) 		? new OperatorController(Constants.Controller.OPERATOR)	: null;
 		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)			? new MainShuffleboard(this)							: null;
 		vision 				= (useFullRobot || useVision)					? new Vision()											: null;
-		compressor			= (useGrabber || useWrist)						? new Compressor(0, PneumaticsModuleType.CTREPCM)		: null;
+		compressor			= (useGrabber 	|| useWrist)					? new Compressor(0, PneumaticsModuleType.CTREPCM)		: null;
 		ultrasonic			= (useFullRobot || useUltrasonic)				? new Ultrasonic4237()									: null;
 
 		// pdh = new PowerDistribution(1, ModuleType.kRev);
