@@ -354,6 +354,12 @@ public class Shoulder extends Subsystem4237
         targetPosition = TargetPosition.kHighCone;
     }
 
+    
+    public void moveToHighConeLock()
+    {
+        targetPosition = TargetPosition.kHighConeLock;
+    }
+
     /** Moves the shoulder to high position */
     public void moveToHighCube()
     {
@@ -453,6 +459,10 @@ public class Shoulder extends Subsystem4237
         targetPosition = TargetPosition.kOverride;
         overrideMode = OverrideMode.kNotMoving;
         periodicIO.motorSpeed = 0.02;
+        if(periodicIO.currentPosition < 30000)
+        {
+            periodicIO.motorSpeed = 0.0;
+        }
         currentOverridePosition = periodicIO.currentPosition;
     }
 

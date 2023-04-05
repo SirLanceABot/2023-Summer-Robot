@@ -126,6 +126,7 @@ public class AutoCommandList extends SequentialCommandGroup
                     //Commented out this line below
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, shoulderPositionPiece1));
                     add( new ExtendScorer(shoulder, arm, wrist, grabber, shoulderPositionPiece1));
+                    add( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kHighConeLock));
                     add( new SuctionControl(grabber, SuctionState.kOff));
                     add( new WaitCommand(0.25));
                     //Commented out line below between Calvin and St. Joe
@@ -378,8 +379,8 @@ public class AutoCommandList extends SequentialCommandGroup
                 {
                     add( new ParallelCommandGroup(
                             new SequentialCommandGroup(
-                                new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 4.1),
-                                new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 1.9),
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 4.3),  //4.1
+                                new ArcadeAutoDriveDistance(drivetrain, gyro, 1.5, 0.0, ArcadeDriveDirection.kStraight, 2.1),   //1.9
                                 // new ArcadeAutoDriveDistance(drivetrain, gyro, -1.5, 0.0, ArcadeDriveDirection.kStraight, 1.75),
                                 // new AutoBalance(drivetrain, gyro, -1)),
                                 new AutoBalance(drivetrain, gyro, 1)),

@@ -103,6 +103,7 @@ public final class Constants
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
         public static final double HIGH_CONE = 205000.0; //375000 big single suction //340000 double small suction
+        public static final double HIGH_CONE_LOCK = 195000.0;
         public static final double HIGH_CUBE = 218000.0;
         public static final double MIDDLE_CONE = 176000.0; //300000 big single suction //297000 double small suction
         public static final double MIDDLE_CUBE = 205000.0;
@@ -340,6 +341,7 @@ public final class Constants
         kMiddleCone(Constants.Shoulder.MIDDLE_CONE, Constants.Arm.MIDDLE_CONE),
         kMiddleCube(Constants.Shoulder.MIDDLE_CUBE, Constants.Arm.MIDDLE_CUBE),
         kHighCone(Constants.Shoulder.HIGH_CONE, Constants.Arm.HIGH_CONE),
+        kHighConeLock(Constants.Shoulder.HIGH_CONE_LOCK, Constants.Arm.HIGH_CONE),
         kHighCube(Constants.Shoulder.HIGH_CUBE, Constants.Arm.HIGH_CUBE),
         kClamp(Constants.Shoulder.CLAMP, Constants.Arm.CLAMP),
         kStartingPosition(Constants.Shoulder.STARTING_POSITION, Constants.Arm.STARTING_POSITION),

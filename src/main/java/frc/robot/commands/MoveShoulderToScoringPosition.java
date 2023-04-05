@@ -62,6 +62,10 @@ public class MoveShoulderToScoringPosition extends CommandBase
                     shoulder.moveToHighCone();
                     break;
 
+                case kHighConeLock:
+                    shoulder.moveToHighConeLock();
+                    break;
+
                 case kHighCube:
                     shoulder.moveToHighCube();
                     break;
