@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.lang.invoke.MethodHandles;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.sensors.Ultrasonic4237;
@@ -29,8 +30,10 @@ public class NewDriveToSubstation extends CommandBase
     private boolean fieldRelative;
     private double scaleFactor;
 
+
     private double distance;
     private boolean crawlLock = false;
+    private double cutOffDistance;
 
     /**
      * Creates a new NewDriveToSubstation.
@@ -64,14 +67,15 @@ public class NewDriveToSubstation extends CommandBase
     @Override
     public void execute()
     {
-        if(ultrasonic != null)
+        cutOffDistance = 
+        9.5 * (Math.abs(xSpeed.getAsDouble() / 4.0) - 0.5) + 6.0;
+        SmartDashboard.putNumber("Cutoff Distance", cutOffDistance);
+
+        if(ultrasonic != null && drivetrain != null)
         {
             distance = ultrasonic.getDistance();
-        }
 
-        if(drivetrain != null)
-        {
-            if(distance > 6.0 && !crawlLock)
+            if(distance > cutOffDistance  && !crawlLock)
             {
                 drivetrain.drive(xSpeed.getAsDouble(), ySpeed.getAsDouble(), turn.getAsDouble(), fieldRelative);
             }
@@ -94,7 +98,7 @@ public class NewDriveToSubstation extends CommandBase
     @Override
     public boolean isFinished() 
     {
-        if(drivetrain != null)
+        if(drivetrain != null || ultrasonic != null)
         {
             return false;
         }

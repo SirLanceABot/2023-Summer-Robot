@@ -57,7 +57,7 @@ public class Ultrasonic4237 extends Sensor4237
     // final int kUltrasonicEchoPort = 1;
     private final MedianFilter m_filter = new MedianFilter(5);
     private final PeriodicIO periodicIO = new PeriodicIO();
-    
+    private boolean skipChecker = false; 
 
     public Ultrasonic4237()
     {
@@ -73,8 +73,11 @@ public class Ultrasonic4237 extends Sensor4237
 
     private double calculateDistance()
     {
+        var voltSensor = sonarSensor.getVoltage();
+        SmartDashboard.putNumber("Sensor Voltage", voltSensor);
         var voltsPerCM = edu.wpi.first.wpilibj.RobotController.getVoltage5V() / 512.;
-        periodicIO.sensorVoltage = sonarSensor.getVoltage()/voltsPerCM/30.48/*cm per foot*/;
+        SmartDashboard.putNumber("RoboRio Voltage", voltsPerCM);
+        periodicIO.sensorVoltage = voltSensor/voltsPerCM/30.48/*cm per foot*/;
         periodicIO.filteredMeasurement = m_filter.calculate(periodicIO.sensorVoltage);
         return periodicIO.filteredMeasurement;
     }
@@ -87,7 +90,20 @@ public class Ultrasonic4237 extends Sensor4237
     @Override
     public void readPeriodicInputs()
     {
-        periodicIO.sensorDistance = calculateDistance();
+        if(!skipChecker)
+        {
+            double temp = calculateDistance();
+            SmartDashboard.putNumber("Temp Distance", temp);
+            if(temp < 12.0)
+            {
+                periodicIO.sensorDistance = temp;
+                skipChecker = !skipChecker;
+            }
+        }
+        else
+        {
+            skipChecker = !skipChecker;
+        }
     }
 
     @Override
@@ -95,6 +111,7 @@ public class Ultrasonic4237 extends Sensor4237
     {
         // System.out.println("Distance: " + pot.get() / 304.8 + "\n");
         SmartDashboard.putNumber("Distance", periodicIO.sensorDistance);
+        
     }
 
     @Override
