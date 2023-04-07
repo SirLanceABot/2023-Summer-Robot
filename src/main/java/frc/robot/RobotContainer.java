@@ -201,9 +201,12 @@ public class RobotContainer
 			DoubleSupplier leftYAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftY);
 			DoubleSupplier leftXAxis = driverController.getAxisSupplier(Xbox.Axis.kLeftX);
 			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
-			DoubleSupplier leftYAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kLeftY, 0.5);
-			DoubleSupplier leftXAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kLeftX, 0.5);
-			DoubleSupplier rightXAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kRightX, 0.5);
+			DoubleSupplier leftYAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kLeftY, 0.15);
+			DoubleSupplier leftXAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kLeftX, 0.15);
+			DoubleSupplier rightXAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kRightX, 0.15);
+			DoubleSupplier leftYAxisCrawlCommunity = driverController.getAxisSupplier(Xbox.Axis.kLeftY, 0.5);
+			DoubleSupplier leftXAxisCrawlCommunity = driverController.getAxisSupplier(Xbox.Axis.kLeftX, 0.5);
+			DoubleSupplier rightXAxisCrawlCommunity = driverController.getAxisSupplier(Xbox.Axis.kRightX, 0.5);
 			DoubleSupplier zero = () -> 0.0;
 
 			// Start Button
@@ -263,10 +266,10 @@ public class RobotContainer
 			//Y Button
 			BooleanSupplier yButton = driverController.getButtonSupplier(Xbox.Button.kY);
 			Trigger yButtonTrigger = new Trigger(yButton);
-			if(drivetrain != null)
+			// if(drivetrain != null)
 			{
 				// yButtonTrigger.toggleOnTrue(new SwerveDriveCrawl(drivetrain, leftYAxis, leftXAxis, rightXAxis, true));
-				yButtonTrigger.toggleOnTrue(new SwerveDrive(drivetrain, leftYAxisCrawl, leftXAxisCrawl, rightXAxisCrawl, true));
+				// yButtonTrigger.toggleOnTrue(new SwerveDrive(drivetrain, leftYAxisCrawl, leftXAxisCrawl, rightXAxisCrawl, true));
 			}
 
 			//Right trigger 
@@ -284,7 +287,7 @@ public class RobotContainer
 			Trigger rightBumperTrigger = new Trigger(rightBumper);
 			if(drivetrain != null)
 			{
-				rightBumperTrigger.whileTrue(new SwerveDrive(drivetrain, leftYAxisCrawl, leftXAxisCrawl, rightXAxis, true));
+				rightBumperTrigger.whileTrue(new SwerveDrive(drivetrain, leftYAxisCrawlCommunity, leftXAxisCrawlCommunity, rightXAxisCrawlCommunity, true));
 
 			}
 			
@@ -292,16 +295,18 @@ public class RobotContainer
 			//Left trigger 
 			BooleanSupplier leftTrigger = driverController.getButtonSupplier(Xbox.Button.kLeftTrigger);
 			Trigger leftTriggerTrigger = new Trigger(leftTrigger);
-			if(drivetrain != null && gyro != null && vision != null)
-			{
-				leftTriggerTrigger.whileTrue( new NewDriveToSubstation(drivetrain, ultrasonic, leftYAxis, leftXAxis, rightXAxis, true, 0.15));
-			}
+			// if(drivetrain != null && gyro != null && vision != null)
+			// {
+			// 	// leftTriggerTrigger.whileTrue( new NewDriveToSubstation(drivetrain, ultrasonic, leftYAxis, leftXAxis, rightXAxis, true, 0.15));
+			// }
 
 			//Left Bumper
 			BooleanSupplier leftBumper = driverController.getButtonSupplier(Xbox.Button.kLeftBumper);
 			Trigger leftBumperTrigger = new Trigger(leftBumper);
-			if(drivetrain != null && gyro != null && ultrasonic != null)
+			if(drivetrain != null)
 			{
+
+				leftBumperTrigger.whileTrue(new SwerveDrive(drivetrain, leftYAxisCrawl, leftXAxisCrawl, rightXAxisCrawl, true));
 				// leftBumperTrigger.whileTrue(
 				// 	new ConditionalCommand(
 

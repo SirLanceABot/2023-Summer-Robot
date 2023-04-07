@@ -99,7 +99,7 @@ public class CameraTab
         return cameraTab.add("Shoulder Encoder", shoulder.getPosition())
         .withWidget(BuiltInWidgets.kTextView)   // specifies type of widget: "kTextView"
         .withPosition(24, 0)  // sets position of widget
-        .withSize(4, 2)    // sets size of widget
+        .withSize(3, 2)    // sets size of widget
         .getEntry();
     }
 
@@ -141,19 +141,19 @@ public class CameraTab
 
     private GenericEntry createTopVacuumPressureBox()
     {
-        return cameraTab.add("Top Vacuum Pressure", grabber.convertVoltageToPsi(grabber.getAnalogSensorVoltageTop()))
+        return cameraTab.add("Top Vacuum Pressure", grabber.getAnalogSensorVoltageTop())
         .withWidget(BuiltInWidgets.kTextView)
-        .withPosition(20, 12)
-        .withSize(3, 3)
+        .withPosition(20, 5)
+        .withSize(3, 2)
         .getEntry();
     }
 
     private GenericEntry createBottomVacuumPressureBox()
     {
-        return cameraTab.add("Bottom Vacuum Pressure", grabber.convertVoltageToPsi(grabber.getAnalogSensorVoltageBottom()))
+        return cameraTab.add("Bottom Vacuum Pressure", grabber.getAnalogSensorVoltageBottom())
         .withWidget(BuiltInWidgets.kTextView)
-        .withPosition(23, 12)
-        .withSize(3, 3)
+        .withPosition(24, 5)
+        .withSize(3, 2)
         .getEntry();
     }
 
@@ -161,8 +161,8 @@ public class CameraTab
     {
         return cameraTab.add("Arm Endocer", arm.getArmPosition())
         .withWidget(BuiltInWidgets.kTextView)
-        .withPosition(20, 12)
-        .withSize(3, 3)
+        .withPosition(20, 0)
+        .withSize(3, 2)
         .getEntry();
     }
 

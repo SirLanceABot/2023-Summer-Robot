@@ -115,7 +115,7 @@ public final class Constants
         public static final double SHOULDER_READY_TO_CLAMP = 168639.2;
         public static final double CLAMP = 682.0;
         public static final double READY_TO_PICK_UP = 104740.0;
-        public static final double STARTING_POSITION = 20000.0; //42000 old
+        public static final double STARTING_POSITION = 32000.0; //20000.0; //42000 old
         public static final double SUBSTATION = 225000.0;//330000 old
         public static final double LIMELIGHT = 135000.0;
     }
@@ -151,18 +151,20 @@ public final class Constants
 
         //Vacuum Top
         public static final int GRABBER_MOTOR_TOP_PORT          = 2;
-        public static final double MAX_PRESSURE_TOP             = 0.7; //0.7
+        public static final double MAX_PRESSURE_TOP             = 0.76; //0.7
         public static final double MAX_SPEED_TOP                = -0.5; //-0.5;
         // public static final double AS_FAST_AS_POSSIBLE_TOP      = -1.000;
         public static final double TARGET_PRESSURE_TOP          = 0.71; // = -12.21625 psi
+        public static final double GAME_PIECE_ACQUIRED_TOP       = 1.1;
         public static final double MAINTAIN_SPEED_LIMIT_TOP     = -0.5; //-0.5; //RUN POWER TOP
 
         //Vacuum Bottom
         public static final int GRABBER_MOTOR_BOTTOM_PORT       = 3;
-        public static final double MAX_PRESSURE_BOTTOM          = 0.7; //0.7;
+        public static final double MAX_PRESSURE_BOTTOM          = 0.84; //0.7;
         public static final double MAX_SPEED_BOTTOM             = -0.5; //-0.5;
         // public static final double AS_FAST_AS_POSSIBLE_BOTTOM   = -1.000;
         public static final double TARGET_PRESSURE_BOTTOM       = 0.79; // = -11.34625 psi
+        public static final double GAME_PIECE_ACQUIRED_BOTTOM    = 1.1;
         public static final double MAINTAIN_SPEED_LIMIT_BOTTOM  = -0.5; //-0.5; //RUN POWER BOTTOM
 
     }

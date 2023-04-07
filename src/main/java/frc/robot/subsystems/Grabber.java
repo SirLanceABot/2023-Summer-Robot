@@ -306,7 +306,10 @@ public class Grabber extends Subsystem4237
 
     public BooleanSupplier vacuumSuctionSupplier()
     {
-        return () -> (isTargetPressureReachedTop && isTargetPressureReachedBottom && rumbleState == RumbleState.kNow);
+        return ()  -> periodicIO.analogSensorVoltageTop < Constants.Grabber.GAME_PIECE_ACQUIRED_TOP
+                    && periodicIO.analogSensorVoltageBottom < Constants.Grabber.GAME_PIECE_ACQUIRED_BOTTOM
+                    && rumbleState == RumbleState.kNow;
+        // return () -> (isTargetPressureReachedTop && isTargetPressureReachedBottom && rumbleState == RumbleState.kNow);
     }
 
     private void logVacuumInit()
