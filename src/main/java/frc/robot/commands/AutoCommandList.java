@@ -122,6 +122,7 @@ public class AutoCommandList extends SequentialCommandGroup
                     // add( new GrabGamePiece(grabber));
                     add( new SuctionControl(grabber, SuctionState.kOn));
                     add( new InstantCommand( () -> shoulder.initialPinch(), shoulder));
+                    // add( new InstantCommand( () -> shoulder.setPositionAfterPinch()));
                     add( new WaitCommand(0.25));
                     //Commented out this line below
                     // add( new ScoreGamePiece(shoulder, arm, grabber, wrist, shoulderPositionPiece1));

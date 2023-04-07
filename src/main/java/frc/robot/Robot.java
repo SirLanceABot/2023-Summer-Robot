@@ -110,6 +110,7 @@ public class Robot extends TimedRobot
                 {
                     // System.out.println(robotContainer.mainShuffleboard.autonomousTab.getAutonomousTabData());
                     robotContainer.mainShuffleboard.autoCommandList = new AutoCommandList(robotContainer);
+                    robotContainer.resetRobot();
                     // System.out.println(robotContainer.mainShuffleboard.autoCommandList);
                 }
             }

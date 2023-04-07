@@ -288,6 +288,11 @@ public class Shoulder extends Subsystem4237
         // DataLogManager.log("Reset Encoder");       
     }
 
+    public void setPositionAfterPinch()
+    {
+        relativeEncoder.setPosition(3500.0);
+    }
+
     public boolean atSetPoint()
     {
         return Math.abs(targetPosition.shoulder - periodicIO.currentPosition) <= threshold;

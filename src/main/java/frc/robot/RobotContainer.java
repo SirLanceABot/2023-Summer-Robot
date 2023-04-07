@@ -108,7 +108,7 @@ public class RobotContainer
 	private boolean useVision				= false;
 	private boolean useUltrasonic			= false;
 
-	private boolean useDataLog				= false;
+	private boolean useDataLog				= true;
 	
 	
 	public final boolean fullRobot;
@@ -140,7 +140,7 @@ public class RobotContainer
 	RobotContainer()
 	{
 		// Create the needed subsystems
-		if(useDataLog)
+		if(useFullRobot || useDataLog)
 		{
 			DataLogManager.start();
 			log = DataLogManager.getLog();
@@ -203,9 +203,9 @@ public class RobotContainer
 			DoubleSupplier rightXAxis = driverController.getAxisSupplier(Xbox.Axis.kRightX);
 			DoubleSupplier leftYAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kLeftY, 0.15);
 			DoubleSupplier leftXAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kLeftX, 0.15);
-			DoubleSupplier rightXAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kRightX, 0.15);
-			DoubleSupplier leftYAxisCrawlCommunity = driverController.getAxisSupplier(Xbox.Axis.kLeftY, 0.5);
-			DoubleSupplier leftXAxisCrawlCommunity = driverController.getAxisSupplier(Xbox.Axis.kLeftX, 0.5);
+			DoubleSupplier rightXAxisCrawl = driverController.getAxisSupplier(Xbox.Axis.kRightX, 0.5);
+			DoubleSupplier leftYAxisCrawlCommunity = driverController.getAxisSupplier(Xbox.Axis.kLeftY, 0.25);
+			DoubleSupplier leftXAxisCrawlCommunity = driverController.getAxisSupplier(Xbox.Axis.kLeftX, 0.25);
 			DoubleSupplier rightXAxisCrawlCommunity = driverController.getAxisSupplier(Xbox.Axis.kRightX, 0.5);
 			DoubleSupplier zero = () -> 0.0;
 
@@ -322,10 +322,10 @@ public class RobotContainer
 			//Dpad down button
 			BooleanSupplier dPadDown = driverController.getDpadSupplier(Xbox.Dpad.kDown);
 			Trigger dPadDownTrigger = new Trigger(dPadDown);
-			if(shoulder != null)
-			{
-				dPadDownTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kStartingPosition));
-			}
+			// if(shoulder != null)
+			// {
+			// 	dPadDownTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kStartingPosition));
+			// }
 
 			// Rumble when gamepiece has full suction
 			BooleanSupplier vacuumSuction = grabber.vacuumSuctionSupplier();
@@ -497,6 +497,10 @@ public class RobotContainer
 			// Start Button
 			BooleanSupplier startButton = operatorController.getButtonSupplier(Xbox.Button.kStart);
 			Trigger startButtonTrigger = new Trigger(startButton);
+			if(shoulder != null)
+			{
+				startButtonTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kStartingPosition));
+			}
 
 			// Start Button and dPad Up
 			Trigger startAndUpTrigger  = startButtonTrigger.and(dPadUpTrigger);
@@ -670,6 +674,12 @@ public class RobotContainer
 			// return command;
 			return command;
 		}
+	}
+
+	public void resetRobot()
+	{
+		gyro.reset();
+		System.out.println("Gyro Reset");
 	}
 
 	
