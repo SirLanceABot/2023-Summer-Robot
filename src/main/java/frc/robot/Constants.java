@@ -139,7 +139,7 @@ public final class Constants
         public static final double CLAMP = 292.6;
         public static final double READY_TO_PICK_UP = 0.0;
         public static final double STARTING_POSITION = 0.0;
-        public static final double SUBSTATION = 360000.0;//319000 old
+        public static final double SUBSTATION = 500000.0; //360000 //319000 old
     }
 
     public static class Grabber
@@ -244,9 +244,9 @@ public final class Constants
         public static double DRIVETRAIN_WHEELBASE_METERS = Constants.DRIVETRAIN_WHEELBASE_METERS  ; // 23.5 Front to back
         public static double DRIVETRAIN_TRACKWIDTH_METERS = Constants.DRIVETRAIN_TRACKWIDTH_METERS ; // 23.5 // Side to side
 
-        public static final double X_ACCELERATION_RATE_LIMT = 15.0;
+        public static final double X_ACCELERATION_RATE_LIMT = 10.0;
         public static final double X_DECELERATION_RATE_LIMT = 10.0;
-        public static final double Y_ACCELERATION_RATE_LIMT = 15.0;
+        public static final double Y_ACCELERATION_RATE_LIMT = 10.0;
         public static final double Y_DECELERATION_RATE_LIMT = 10.0;
 
     }
