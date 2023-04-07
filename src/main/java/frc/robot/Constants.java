@@ -102,7 +102,7 @@ public final class Constants
         public static final float ENCODER_FORWARD_SOFT_LIMIT = 380000.0f;
         public static final float ENCODER_REVERSE_SOFT_LIMIT = -6000.0f;
 
-        public static final double HIGH_CONE = 205000.0; //375000 big single suction //340000 double small suction
+        public static final double HIGH_CONE = 215000.0; //375000 big single suction //340000 double small suction // 205000
         public static final double HIGH_CONE_LOCK = 195000.0;
         public static final double HIGH_CUBE = 218000.0;
         public static final double MIDDLE_CONE = 176000.0; //300000 big single suction //297000 double small suction
@@ -116,7 +116,7 @@ public final class Constants
         public static final double CLAMP = 682.0;
         public static final double READY_TO_PICK_UP = 104740.0;
         public static final double STARTING_POSITION = 32000.0; //20000.0; //42000 old
-        public static final double SUBSTATION = 225000.0;//330000 old
+        public static final double SUBSTATION = 230000.0;//330000 old // 225000
         public static final double LIMELIGHT = 135000.0;
     }
 
@@ -271,7 +271,7 @@ public final class Constants
             if(Robot4237.equals("2023 Robot"))
             {
                 FRONT_LEFT_ENCODER_OFFSET   = -209.883; 
-                FRONT_RIGHT_ENCODER_OFFSET  = -133.330; 
+                FRONT_RIGHT_ENCODER_OFFSET  = -171.562; //-133.330; changed at state 
                 BACK_LEFT_ENCODER_OFFSET    = -18.809; 
                 BACK_RIGHT_ENCODER_OFFSET   = -342.422; 
             }
