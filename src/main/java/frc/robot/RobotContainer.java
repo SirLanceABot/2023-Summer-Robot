@@ -88,9 +88,9 @@ public class RobotContainer
         System.out.println("Loading: " + fullClassName);
     }
 	
-	private boolean useFullRobot			= true;
+	private boolean useFullRobot			= false;
 	private boolean useScorer				= false;
-	private boolean useBindings				= true;
+	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
@@ -108,7 +108,7 @@ public class RobotContainer
 	private boolean useVision				= false;
 	private boolean useUltrasonic			= false;
 
-	private boolean useDataLog				= true;
+	private boolean useDataLog				= false;
 	
 	
 	public final boolean fullRobot;
