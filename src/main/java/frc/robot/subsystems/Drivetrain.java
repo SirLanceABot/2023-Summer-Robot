@@ -1,9 +1,15 @@
 package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.PathPlanner;
+
 import frc.robot.Constants;
 import frc.robot.controls.AdaptiveSlewRateLimiter;
 import frc.robot.sensors.Gyro4237;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,6 +23,7 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import edu.wpi.first.wpilibj2.command.Command;
 
 
 /** Represents a swerve drive style drivetrain. */
@@ -778,6 +785,12 @@ public class Drivetrain extends Subsystem4237
     //     System.out.println("DESIRED ANGLE: " + desiredAngle);
 
     //     return (Math.abs(angleToTurn) < angleThreshold);
+    // }
+
+    // TODO: SAM CONTINUE THIS
+    // public Command followPath(PathPlannerTrajectory traj)
+    // {
+    //     return new PPSwerveControllerCommand(traj, () -> periodicIO.odometry.getPoseMeters(), PIDController(0, 0, 0),  PIDController(0, 0, 0), PIDController(0, 0, 0), )
     // }
 
 
