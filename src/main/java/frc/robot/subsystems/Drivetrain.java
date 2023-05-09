@@ -341,13 +341,13 @@ public class Drivetrain extends Subsystem4237
     @Override
     public void readPeriodicInputs()
     {
-        if(DriverStation.isAutonomousEnabled())
-        {
+        // if(DriverStation.isAutonomousEnabled())
+        // {
             periodicIO.frontLeftPosition = frontLeft.getPosition();
             periodicIO.frontRightPosition =  frontRight.getPosition();
             periodicIO.backLeftPosition = backLeft.getPosition();
             periodicIO.backRightPosition = backRight.getPosition();
-        }
+        // }
 
     }
 
@@ -396,23 +396,8 @@ public class Drivetrain extends Subsystem4237
     @Override
     public void writePeriodicOutputs()
     {
-        if (DriverStation.isDisabled() && resetOdometry)
-        {
-            periodicIO.odometry.resetPosition(
-                new Rotation2d(), /*zero*/
-                new SwerveModulePosition[]
-                {/*zeros distance, angle*/
-                    new SwerveModulePosition(),
-                    new SwerveModulePosition(),
-                    new SwerveModulePosition(),
-                    new SwerveModulePosition()
-                },
-                new Pose2d(/*zeros facing X*/));
-            resetOdometry = false;
-        }
-        else if (DriverStation.isAutonomousEnabled())
-        {
-            periodicIO.odometry.update(
+        // Want to update odometry all the time
+        periodicIO.odometry.update(
                 gyro.getRotation2d(),
                 new SwerveModulePosition[] 
                 {
@@ -422,8 +407,34 @@ public class Drivetrain extends Subsystem4237
                     periodicIO.backRightPosition
                 });
 
-                // System.out.println(gyro.getYaw());
-        }
+        // if (DriverStation.isDisabled() && resetOdometry)
+        // {
+        //     periodicIO.odometry.resetPosition(
+        //         new Rotation2d(), /*zero*/
+        //         new SwerveModulePosition[]
+        //         {/*zeros distance, angle*/
+        //             new SwerveModulePosition(),
+        //             new SwerveModulePosition(),
+        //             new SwerveModulePosition(),
+        //             new SwerveModulePosition()
+        //         },
+        //         new Pose2d(/*zeros facing X*/));
+        //     resetOdometry = false;
+        // }
+        // else if (DriverStation.isAutonomousEnabled())
+        // {
+        //     periodicIO.odometry.update(
+        //         gyro.getRotation2d(),
+        //         new SwerveModulePosition[] 
+        //         {
+        //             periodicIO.frontLeftPosition,
+        //             periodicIO.frontRightPosition,
+        //             periodicIO.backLeftPosition,
+        //             periodicIO.backRightPosition
+        //         });
+
+        //         // System.out.println(gyro.getYaw());
+        // }
 
         if (resetEncoders)
         {   //FIXME do we need to add a time delay to reset the encoders?
@@ -787,11 +798,33 @@ public class Drivetrain extends Subsystem4237
     //     return (Math.abs(angleToTurn) < angleThreshold);
     // }
 
+
+    public void test(ChassisSpeeds testChassisSpeeds) 
+    {
+        // if(periodicIO.fieldRelative)
+        //     periodicIO.chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn, gyro.getRotation2d());
+        // else
+            // periodicIO.chassisSpeeds = new ChassisSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn);
+            periodicIO.chassisSpeeds = new ChassisSpeeds(testChassisSpeeds.vxMetersPerSecond, testChassisSpeeds.vyMetersPerSecond, testChassisSpeeds.omegaRadiansPerSecond);
+        
+        periodicIO.swerveModuleStates = kinematics.toSwerveModuleStates(periodicIO.chassisSpeeds);
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(periodicIO.swerveModuleStates, Constants.DrivetrainConstants.MAX_DRIVE_SPEED);
+    }
+
+
     // TODO: SAM CONTINUE THIS
-    // public Command followPath(PathPlannerTrajectory traj)
-    // {
-    //     return new PPSwerveControllerCommand(traj, () -> periodicIO.odometry.getPoseMeters(), PIDController(0, 0, 0),  PIDController(0, 0, 0), PIDController(0, 0, 0), )
-    // }
+    public Command followPath(PathPlannerTrajectory traj)
+    {
+        return new PPSwerveControllerCommand(
+            traj, 
+            () -> periodicIO.odometry.getPoseMeters(), 
+            new PIDController(0, 0, 0), 
+            new PIDController(0, 0, 0), 
+            new PIDController(0, 0, 0), 
+            this::test,
+            this);
+    }
 
 
 }

@@ -95,19 +95,19 @@ public class RobotContainer
 	
 	private boolean useFullRobot			= false;
 	private boolean useScorer				= false;
-	private boolean useBindings				= false;
+	private boolean useBindings				= true;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= false;
-	private boolean useDrivetrain   		= false;
+	private boolean useGyro					= true;
+	private boolean useDrivetrain   		= true;
 	private boolean useGrabber 				= false;
 	private boolean useWrist				= false;
 	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= false;
+	private boolean useDriverController		= true;
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= false;
@@ -332,11 +332,22 @@ public class RobotContainer
 			// 	dPadDownTrigger.onTrue( new MoveShoulderToScoringPosition(shoulder, TargetPosition.kStartingPosition));
 			// }
 
+			//Back Button 
+			BooleanSupplier backButton = driverController.getButtonSupplier(Xbox.Button.kBack);
+			Trigger backButtonTrigger = new Trigger(backButton);
+			if(drivetrain != null)
+			{
+				System.out.println("Back Button");
+				PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 1, 1);
+				backButtonTrigger.onTrue(new PrintCommand("Back Button")
+									.andThen(drivetrain.followPath(path1)));
+			}
+
 			// Rumble when gamepiece has full suction
-			BooleanSupplier vacuumSuction = grabber.vacuumSuctionSupplier();
-			Trigger vacuumSuctionTrigger = new Trigger(vacuumSuction);
 			if(grabber != null)
 			{
+				BooleanSupplier vacuumSuction = grabber.vacuumSuctionSupplier();
+				Trigger vacuumSuctionTrigger = new Trigger(vacuumSuction);
 				vacuumSuctionTrigger.onTrue( new InstantCommand(() -> driverController.setRumble(0.5, 0.5, 0.5)));
 			}
 			
