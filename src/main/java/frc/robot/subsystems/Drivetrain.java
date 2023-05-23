@@ -816,9 +816,21 @@ public class Drivetrain extends Subsystem4237
     // TODO: SAM CONTINUE THIS
     public Command followPath(PathPlannerTrajectory traj)
     {
+
+        // return new PPSwerveControllerCommand(
+        //     traj, 
+        //     () -> periodicIO.odometry.getPoseMeters(),
+        //     this.kinematics,
+        //     new PIDController(0, 0, 0), 
+        //     new PIDController(0, 0, 0), 
+        //     new PIDController(0, 0, 0), 
+        //     this::test,
+        //     true,
+        //     this);
+
         return new PPSwerveControllerCommand(
             traj, 
-            () -> periodicIO.odometry.getPoseMeters(), 
+            () -> periodicIO.odometry.getPoseMeters(),
             new PIDController(0, 0, 0), 
             new PIDController(0, 0, 0), 
             new PIDController(0, 0, 0), 
