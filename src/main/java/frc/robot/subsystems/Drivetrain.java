@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.lang.invoke.MethodHandles;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.PathPlanner;
 
@@ -169,6 +170,22 @@ public class Drivetrain extends Subsystem4237
             });
 
         // setSafetyEnabled(true);
+
+        // TODO: Sam keep going with this
+        // AutoBuilder.configureHolonomic(
+        //     this::getPose, // Robot pose supplier
+        //     this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+        //     this::getChassisSpeedsRobotRelative, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        //     this::driveChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        //     new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+        //         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+        //         new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+        //         4.5, // Max module speed, in m/s
+        //         0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+        //         new ReplanningConfig() // Default path replanning config. See the API for the options here
+        //     ),
+        //     this // Reference to this subsystem to set requirements
+        // );
     }
 
     // *** CLASS & INSTANCE METHODS ***
@@ -233,6 +250,12 @@ public class Drivetrain extends Subsystem4237
         // feedWatchdog();
     }
     
+    public void driveChassisSpeeds(ChassisSpeeds chassisSpeeds)
+    {
+        driveMode = DriveMode.kDrive;
+        periodicIO.fieldRelative = false;
+        periodicIO.chassisSpeeds = chassisSpeeds;
+    }
     
     /**
      * Rotate swerve modules to an X shape to hopefully prevent being pushed 
@@ -293,8 +316,16 @@ public class Drivetrain extends Subsystem4237
     //     );
         
     // }
-    
 
+    public ChassisSpeeds getChassisSpeedsRobotRelative()
+    {
+        return new ChassisSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn);
+    }
+    
+    public Pose2d getPose()
+    {
+        return periodicIO.odometry.getPoseMeters();
+    }
 
     public Translation2d getCurrentTranslation()
     {
