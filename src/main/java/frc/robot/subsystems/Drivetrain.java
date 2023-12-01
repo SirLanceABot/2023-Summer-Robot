@@ -171,7 +171,7 @@ public class Drivetrain extends Subsystem4237
 
         // setSafetyEnabled(true);
 
-        // TODO: Sam keep going with this
+        // TODO: Sam keep going with this (this is 2024 implementation)
         // AutoBuilder.configureHolonomic(
         //     this::getPose, // Robot pose supplier
         //     this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -833,12 +833,12 @@ public class Drivetrain extends Subsystem4237
     public void test(ChassisSpeeds testChassisSpeeds) 
     {
         // if(periodicIO.fieldRelative)
-        //     periodicIO.chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn, gyro.getRotation2d());
+            // periodicIO.chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn, gyro.getRotation2d());
         // else
             // periodicIO.chassisSpeeds = new ChassisSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn);
-            periodicIO.chassisSpeeds = new ChassisSpeeds(testChassisSpeeds.vxMetersPerSecond, testChassisSpeeds.vyMetersPerSecond, testChassisSpeeds.omegaRadiansPerSecond);
+            // periodicIO.chassisSpeeds = new ChassisSpeeds(testChassisSpeeds.vxMetersPerSecond, testChassisSpeeds.vyMetersPerSecond, testChassisSpeeds.omegaRadiansPerSecond);
         
-        periodicIO.swerveModuleStates = kinematics.toSwerveModuleStates(periodicIO.chassisSpeeds);
+        periodicIO.swerveModuleStates = kinematics.toSwerveModuleStates(testChassisSpeeds);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(periodicIO.swerveModuleStates, Constants.DrivetrainConstants.MAX_DRIVE_SPEED);
     }
@@ -861,7 +861,7 @@ public class Drivetrain extends Subsystem4237
 
         return new PPSwerveControllerCommand(
             traj, 
-            () -> periodicIO.odometry.getPoseMeters(),
+            this::getPose,
             new PIDController(0, 0, 0), 
             new PIDController(0, 0, 0), 
             new PIDController(0, 0, 0), 
