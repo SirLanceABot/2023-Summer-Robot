@@ -338,9 +338,10 @@ public class RobotContainer
 			if(drivetrain != null)
 			{
 				System.out.println("Back Button");
-				PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 1, 1);
+				PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 3, 3);
 				backButtonTrigger.onTrue(new PrintCommand("Back Button")
 									.andThen(drivetrain.followPath(path1)));
+				// backButtonTrigger.onTrue(new InstantCommand(() -> drivetrain.followPath(path1)));
 			}
 
 			// Rumble when gamepiece has full suction
@@ -651,8 +652,25 @@ public class RobotContainer
         }
 		else
 		{
+
+			PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 3, 3);
+
+			Command command = new InstantCommand(() -> drivetrain.followPath(path1));
+			PPSwerveControllerCommand ppSwerveControllerCommand = new PPSwerveControllerCommand(
+				path1, 
+				drivetrain::getPose,
+				drivetrain.kinematics,
+				new PIDController(0, 0, 0), 
+				new PIDController(0, 0, 0), 
+				new PIDController(0, 0, 0), 
+				drivetrain::setModuleStates,
+				true,
+				drivetrain);
+
+			return ppSwerveControllerCommand;
+			// return command;
 			// Command command = new GrabGamePiece(grabber)
-			Command command = null;
+			// Command command = null;
 			 //command = new InstantCommand(() -> grabber.grabGamePiece())
 
 								// .andThen( new WaitCommand(0.5))
@@ -688,7 +706,7 @@ public class RobotContainer
 			// 		// .andThen( new AutoDriveDistance(drivetrain, -0.5, 0.0, 1.5))
 					
 			// return command;
-			return command;
+			// return command;
 		}
 	}
 
