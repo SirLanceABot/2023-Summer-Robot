@@ -489,10 +489,10 @@ public class Drivetrain extends Subsystem4237
         }
         else 
         {
-            frontLeft.setDesiredState(periodicIO.swerveModuleStates[0]);
-            frontRight.setDesiredState(periodicIO.swerveModuleStates[1]);
-            backLeft.setDesiredState(periodicIO.swerveModuleStates[2]);
-            backRight.setDesiredState(periodicIO.swerveModuleStates[3]);
+            // frontLeft.setDesiredState(periodicIO.swerveModuleStates[0]);
+            // frontRight.setDesiredState(periodicIO.swerveModuleStates[1]);
+            // backLeft.setDesiredState(periodicIO.swerveModuleStates[2]);
+            // backRight.setDesiredState(periodicIO.swerveModuleStates[3]);
         }
         
 
@@ -830,38 +830,14 @@ public class Drivetrain extends Subsystem4237
     //     return (Math.abs(angleToTurn) < angleThreshold);
     // }
 
-
-    public void test(SwerveModuleState swerveModuleState) 
+    public void setModuleStates(SwerveModuleState[] desiredStates) 
     {
-        // if(periodicIO.fieldRelative)
-            // periodicIO.chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn, gyro.getRotation2d());
-        // else
-            // periodicIO.chassisSpeeds = new ChassisSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn);
-            // periodicIO.chassisSpeeds = new ChassisSpeeds(testChassisSpeeds.vxMetersPerSecond, testChassisSpeeds.vyMetersPerSecond, testChassisSpeeds.omegaRadiansPerSecond);
-
-        // SwerveDriveKinematics.desaturateWheelSpeeds(periodicIO.swerveModuleStates, Constants.DrivetrainConstants.MAX_DRIVE_SPEED);
-
-        frontLeft.setDesiredState(periodicIO.swerveModuleStates[0]);
-        frontRight.setDesiredState(periodicIO.swerveModuleStates[1]);
-        backLeft.setDesiredState(periodicIO.swerveModuleStates[2]);
-        backRight.setDesiredState(periodicIO.swerveModuleStates[3]);
-
-        // return(periodicIO.swerveModuleStates);
-
-    }
-
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.DrivetrainConstants.MAX_DRIVE_SPEED);
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
-
-        System.out.println(frontLeft.getState());
-        System.out.println(frontRight.getState());
-        System.out.println(backLeft.getState());
-        System.out.println(backRight.getState());
-          }
+    }
 
     // TODO: SAM CONTINUE THIS
     public Command followPath(PathPlannerTrajectory traj)
