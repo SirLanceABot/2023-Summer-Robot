@@ -489,10 +489,10 @@ public class Drivetrain extends Subsystem4237
         }
         else 
         {
-            // frontLeft.setDesiredState(periodicIO.swerveModuleStates[0]);
-            // frontRight.setDesiredState(periodicIO.swerveModuleStates[1]);
-            // backLeft.setDesiredState(periodicIO.swerveModuleStates[2]);
-            // backRight.setDesiredState(periodicIO.swerveModuleStates[3]);
+            frontLeft.setDesiredState(periodicIO.swerveModuleStates[0]);
+            frontRight.setDesiredState(periodicIO.swerveModuleStates[1]);
+            backLeft.setDesiredState(periodicIO.swerveModuleStates[2]);
+            backRight.setDesiredState(periodicIO.swerveModuleStates[3]);
         }
         
 
@@ -832,11 +832,13 @@ public class Drivetrain extends Subsystem4237
 
     public void setModuleStates(SwerveModuleState[] desiredStates) 
     {
+        driveMode = DriveMode.kDrive;
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.DrivetrainConstants.MAX_DRIVE_SPEED);
-        frontLeft.setDesiredState(desiredStates[0]);
-        frontRight.setDesiredState(desiredStates[1]);
-        backLeft.setDesiredState(desiredStates[2]);
-        backRight.setDesiredState(desiredStates[3]);
+        periodicIO.swerveModuleStates = desiredStates;
+        // frontLeft.setDesiredState(desiredStates[0]);
+        // frontRight.setDesiredState(desiredStates[1]);
+        // backLeft.setDesiredState(desiredStates[2]);
+        // backRight.setDesiredState(desiredStates[3]);
     }
 
     // TODO: SAM CONTINUE THIS
