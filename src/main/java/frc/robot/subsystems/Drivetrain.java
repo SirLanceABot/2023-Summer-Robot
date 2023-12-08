@@ -317,11 +317,6 @@ public class Drivetrain extends Subsystem4237
     //     );
         
     // }
-
-    public ChassisSpeeds getChassisSpeedsRobotRelative()
-    {
-        return new ChassisSpeeds(periodicIO.xSpeed, periodicIO.ySpeed, periodicIO.turn);
-    }
     
     public Pose2d getPose()
     {
@@ -844,18 +839,6 @@ public class Drivetrain extends Subsystem4237
     // TODO: SAM CONTINUE THIS
     public Command followPath(PathPlannerTrajectory traj)
     {
-
-        // return new PPSwerveControllerCommand(
-        //     traj, 
-        //     () -> periodicIO.odometry.getPoseMeters(),
-        //     this.kinematics,
-        //     new PIDController(0, 0, 0), 
-        //     new PIDController(0, 0, 0), 
-        //     new PIDController(0, 0, 0), 
-        //     this::test,
-        //     true,
-        //     this);
-
         return new PPSwerveControllerCommand(
             traj, 
             this::getPose,
