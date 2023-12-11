@@ -4,7 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+// import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.PathPlanner;
 
 import frc.robot.Constants;
@@ -839,6 +839,7 @@ public class Drivetrain extends Subsystem4237
     // TODO: SAM CONTINUE THIS
     public Command followPath(PathPlannerTrajectory traj)
     {
+        System.out.println("In method");
         return new PPSwerveControllerCommand(
             traj, 
             this::getPose,

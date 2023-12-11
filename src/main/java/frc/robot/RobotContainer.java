@@ -667,8 +667,8 @@ public class RobotContainer
 				true,
 				drivetrain);
 
-			return ppSwerveControllerCommand;
-			// return command;
+			// return ppSwerveControllerCommand;
+			return command;
 			// Command command = new GrabGamePiece(grabber)
 			// Command command = null;
 			 //command = new InstantCommand(() -> grabber.grabGamePiece())
