@@ -4,7 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
-// import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.PathPlanner;
 
 import frc.robot.Constants;
@@ -24,6 +24,7 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -104,8 +105,7 @@ public class Drivetrain extends Subsystem4237
     private final Gyro4237 gyro; //Pigeon2
     private boolean useDataLog = true;
     private final DataLog log;
-    public final SwerveDriveKinematics kinematics;
-    //private final SwerveDriveKinematics kinemaics;
+    private final SwerveDriveKinematics kinematics;
 
     private final AdaptiveSlewRateLimiter adaptiveXRateLimiter = new AdaptiveSlewRateLimiter(Constants.DrivetrainConstants.X_ACCELERATION_RATE_LIMT, Constants.DrivetrainConstants.X_DECELERATION_RATE_LIMT);
     private final AdaptiveSlewRateLimiter adaptiveYRateLimiter = new AdaptiveSlewRateLimiter(Constants.DrivetrainConstants.Y_ACCELERATION_RATE_LIMT, Constants.DrivetrainConstants.Y_DECELERATION_RATE_LIMT);
@@ -118,6 +118,7 @@ public class Drivetrain extends Subsystem4237
     private DriveMode driveMode = DriveMode.kDrive;
     private boolean resetEncoders = false;
     private boolean resetOdometry = false;
+    private double pidTuner  = 0.0;
 
     private PeriodicIO periodicIO;
     
@@ -187,6 +188,8 @@ public class Drivetrain extends Subsystem4237
         //     ),
         //     this // Reference to this subsystem to set requirements
         // );
+
+        // SmartDashboard.putNumber("pidTuner", 0.0);
     }
 
     // *** CLASS & INSTANCE METHODS ***
@@ -839,6 +842,7 @@ public class Drivetrain extends Subsystem4237
     // TODO: SAM CONTINUE THIS
     public Command followPath(PathPlannerTrajectory traj)
     {
+        pidTuner = SmartDashboard.getNumber("pidTuner", 0.0);
         System.out.println("In method");
         return new PPSwerveControllerCommand(
             traj, 
@@ -846,7 +850,7 @@ public class Drivetrain extends Subsystem4237
             this.kinematics,
             new PIDController(0, 0, 0), 
             new PIDController(0, 0, 0), 
-            new PIDController(0, 0, 0), 
+            new PIDController(pidTuner, 0, 0), 
             this::setModuleStates,
             true,
             this);

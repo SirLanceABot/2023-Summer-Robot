@@ -337,7 +337,6 @@ public class RobotContainer
 			Trigger backButtonTrigger = new Trigger(backButton);
 			if(drivetrain != null)
 			{
-				System.out.println("Back Button");
 				PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 3, 3);
 				backButtonTrigger.onTrue(new PrintCommand("Back Button")
 									.andThen(drivetrain.followPath(path1)));
@@ -653,21 +652,10 @@ public class RobotContainer
 		else
 		{
 
-			PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 3, 3);
+			PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 1, 1);
 
-			Command command = new InstantCommand(() -> drivetrain.followPath(path1));
-			PPSwerveControllerCommand ppSwerveControllerCommand = new PPSwerveControllerCommand(
-				path1, 
-				drivetrain::getPose,
-				drivetrain.kinematics,
-				new PIDController(0, 0, 0), 
-				new PIDController(0, 0, 0), 
-				new PIDController(0, 0, 0), 
-				drivetrain::setModuleStates,
-				true,
-				drivetrain);
-
-			// return ppSwerveControllerCommand;
+			// Command command = new InstantCommand(() -> drivetrain.followPath(path1));
+			Command command = drivetrain.followPath(path1);
 			return command;
 			// Command command = new GrabGamePiece(grabber)
 			// Command command = null;
