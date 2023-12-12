@@ -843,8 +843,7 @@ public class Drivetrain extends Subsystem4237
     public Command followPath(PathPlannerTrajectory traj)
     {
         pidTuner = SmartDashboard.getNumber("pidTuner", 0.0);
-        System.out.println("In method");
-        return new PPSwerveControllerCommand(
+            return new PPSwerveControllerCommand(
             traj, 
             this::getPose,
             this.kinematics,
