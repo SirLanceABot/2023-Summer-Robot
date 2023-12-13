@@ -350,6 +350,32 @@ public class Drivetrain extends Subsystem4237
         resetOdometry = true;
     }
 
+    public void resetOdometry(Pose2d newPose)
+    {
+        //reset encoders
+        frontLeft.stopModule();
+        frontRight.stopModule();
+        backLeft.stopModule();
+        backRight.stopModule();
+
+        frontLeft.resetEncoders();
+        frontRight.resetEncoders();
+        backLeft.resetEncoders();
+        backRight.resetEncoders();
+
+        //reset odometry
+        periodicIO.odometry.resetPosition(
+            gyro.getRotation2d(),
+            new SwerveModulePosition[] 
+            {
+                frontLeft.getPosition(),
+                frontRight.getPosition(),
+                backLeft.getPosition(),
+                backRight.getPosition()
+            },
+            newPose);
+    }
+
     //@Override
     public void stopMotor()
     {
