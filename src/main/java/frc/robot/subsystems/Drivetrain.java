@@ -839,7 +839,6 @@ public class Drivetrain extends Subsystem4237
         // backRight.setDesiredState(desiredStates[3]);
     }
 
-    // TODO: SAM CONTINUE THIS
     public Command followPath(PathPlannerTrajectory traj)
     {
         pidTuner = SmartDashboard.getNumber("pidTuner", 0.0);

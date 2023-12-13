@@ -652,7 +652,7 @@ public class RobotContainer
 		else
 		{
 
-			PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 1, 1);
+			PathPlannerTrajectory path1 = PathPlanner.loadPath("New Path", 3, 3);
 
 			// Command command = new InstantCommand(() -> drivetrain.followPath(path1));
 			Command command = drivetrain.followPath(path1);
