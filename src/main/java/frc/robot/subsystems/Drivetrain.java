@@ -865,8 +865,13 @@ public class Drivetrain extends Subsystem4237
         // backRight.setDesiredState(desiredStates[3]);
     }
 
-    public Command followPath(PathPlannerTrajectory traj)
+    public Command followPath(PathPlannerTrajectory traj, Boolean isFirstPath)
     {
+        if(isFirstPath)
+        {
+            resetOdometry(traj.getInitialHolonomicPose());
+        }
+        System.out.println("Initial Holonomic  Pose: " + traj.getInitialHolonomicPose());
         pidTuner = SmartDashboard.getNumber("pidTuner", 0.0);
             return new PPSwerveControllerCommand(
             traj, 
