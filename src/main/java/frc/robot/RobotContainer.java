@@ -337,9 +337,9 @@ public class RobotContainer
 			Trigger backButtonTrigger = new Trigger(backButton);
 			if(drivetrain != null)
 			{
-				PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 3, 3);
-				backButtonTrigger.onTrue(new PrintCommand("Back Button")
-									.andThen(drivetrain.followPath(path1)));
+				// PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 3, 3);
+				// backButtonTrigger.onTrue(new PrintCommand("Back Button")
+				// 					.andThen(drivetrain.followPath(path1)));
 				// backButtonTrigger.onTrue(new InstantCommand(() -> drivetrain.followPath(path1)));
 			}
 
@@ -655,7 +655,7 @@ public class RobotContainer
 			PathPlannerTrajectory path1 = PathPlanner.loadPath("New Path", 3, 3);
 
 			// Command command = new InstantCommand(() -> drivetrain.followPath(path1));
-			Command command = drivetrain.followPath(path1);
+			Command command = drivetrain.followPath(path1, true);
 			return command;
 			// Command command = new GrabGamePiece(grabber)
 			// Command command = null;
