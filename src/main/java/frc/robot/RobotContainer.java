@@ -337,10 +337,10 @@ public class RobotContainer
 			Trigger backButtonTrigger = new Trigger(backButton);
 			if(drivetrain != null)
 			{
-				// PathPlannerTrajectory path1 = PathPlanner.loadPath("TestPath", 3, 3);
+				PathPlannerTrajectory pidTester = PathPlanner.loadPath("PID Tester", 3, 3);
 				// backButtonTrigger.onTrue(new PrintCommand("Back Button")
 				// 					.andThen(drivetrain.followPath(path1)));
-				// backButtonTrigger.onTrue(new InstantCommand(() -> drivetrain.followPath(path1)));
+				backButtonTrigger.onTrue(drivetrain.followPath(pidTester, false));
 			}
 
 			// Rumble when gamepiece has full suction
@@ -652,10 +652,13 @@ public class RobotContainer
 		else
 		{
 
-			PathPlannerTrajectory path1 = PathPlanner.loadPath("New Path", 3, 3);
+			PathPlannerTrajectory path1 = PathPlanner.loadPath("Path1", 3, 3);
+			PathPlannerTrajectory path2 = PathPlanner.loadPath("Path2", 3, 3);
+			// PathPlannerTrajectory pidTester = PathPlanner.loadPath("PID Tester", 3, 3);
 
 			// Command command = new InstantCommand(() -> drivetrain.followPath(path1));
-			Command command = drivetrain.followPath(path1, true);
+			// Command command = drivetrain.followPath(path1, true);
+			Command command = new SequentialCommandGroup( drivetrain.followPath(path1, true), drivetrain.followPath(path2, false));
 			return command;
 			// Command command = new GrabGamePiece(grabber)
 			// Command command = null;

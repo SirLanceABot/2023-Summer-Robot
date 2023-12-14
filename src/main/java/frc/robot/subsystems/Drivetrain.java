@@ -118,7 +118,9 @@ public class Drivetrain extends Subsystem4237
     private DriveMode driveMode = DriveMode.kDrive;
     private boolean resetEncoders = false;
     private boolean resetOdometry = false;
-    private double pidTuner  = 0.0;
+    private double xPTuner = 0.0;
+    private double yPTuner = 0.0;
+    private double thetaPTuner = 0.0;
 
     private PeriodicIO periodicIO;
     
@@ -189,7 +191,9 @@ public class Drivetrain extends Subsystem4237
         //     this // Reference to this subsystem to set requirements
         // );
 
-        // SmartDashboard.putNumber("pidTuner", 0.0);
+        SmartDashboard.putNumber("xPTuner", 0.0);
+        SmartDashboard.putNumber("yPTuner", 0.0);
+        SmartDashboard.putNumber("thetaPTuner", 0.0);
     }
 
     // *** CLASS & INSTANCE METHODS ***
@@ -872,14 +876,16 @@ public class Drivetrain extends Subsystem4237
             resetOdometry(traj.getInitialHolonomicPose());
         }
         System.out.println("Initial Holonomic  Pose: " + traj.getInitialHolonomicPose());
-        pidTuner = SmartDashboard.getNumber("pidTuner", 0.0);
+        xPTuner = SmartDashboard.getNumber("xPTuner", 0.0);
+        yPTuner = SmartDashboard.getNumber("yPTuner", 0.0);
+        thetaPTuner = SmartDashboard.getNumber("thetaPTuner", 0.0);
             return new PPSwerveControllerCommand(
             traj, 
             this::getPose,
             this.kinematics,
-            new PIDController(0, 0, 0), 
-            new PIDController(0, 0, 0), 
-            new PIDController(pidTuner, 0, 0), 
+            new PIDController(xPTuner, 0, 0), 
+            new PIDController(yPTuner, 0, 0), 
+            new PIDController(thetaPTuner, 0, 0), 
             this::setModuleStates,
             true,
             this);
