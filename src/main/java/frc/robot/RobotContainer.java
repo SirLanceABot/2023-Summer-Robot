@@ -337,7 +337,7 @@ public class RobotContainer
 			Trigger backButtonTrigger = new Trigger(backButton);
 			if(drivetrain != null)
 			{
-				PathPlannerTrajectory pidTester = PathPlanner.loadPath("PID Tester", 3, 3);
+				PathPlannerTrajectory pidTester = PathPlanner.loadPath("PID Tester", 1, 1);
 				// backButtonTrigger.onTrue(new PrintCommand("Back Button")
 				// 					.andThen(drivetrain.followPath(path1)));
 				backButtonTrigger.onTrue(drivetrain.followPath(pidTester, true));
@@ -652,7 +652,7 @@ public class RobotContainer
 		else
 		{
 
-			PathPlannerTrajectory path1 = PathPlanner.loadPath("Path1", 3, 3);
+			PathPlannerTrajectory path1 = PathPlanner.loadPath("Path1", 1, 1);
 			PathPlannerTrajectory path2 = PathPlanner.loadPath("Path2", 3, 3);
 			// PathPlannerTrajectory pidTester = PathPlanner.loadPath("PID Tester", 3, 3);
 
