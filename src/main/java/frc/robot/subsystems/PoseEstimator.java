@@ -3,7 +3,10 @@ package frc.robot.subsystems;
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.sensors.Gyro4237;
+import frc.robot.sensors.Vision;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -24,7 +27,9 @@ public class PoseEstimator extends Subsystem4237
     private final Gyro4237 gyro;
     private final Drivetrain drivetrain;
     private final SwerveDrivePoseEstimator poseEstimator;
+    private final Vision vision;
 
+    private Pose3d botPose;
 
     private class PeriodicIO
     {
@@ -39,10 +44,11 @@ public class PoseEstimator extends Subsystem4237
     /** 
      * Creates a new ExampleSubsystem. 
      */
-    public PoseEstimator(Drivetrain drivetrain, Gyro4237 gyro)
+    public PoseEstimator(Drivetrain drivetrain, Gyro4237 gyro, Vision vision)
     {
         this.gyro = gyro;
         this.drivetrain = drivetrain;
+        this.vision = vision;
 
         poseEstimator = new SwerveDrivePoseEstimator(
             drivetrain.kinematics,
@@ -50,6 +56,22 @@ public class PoseEstimator extends Subsystem4237
             drivetrain.getSwerveModulePositions(),
             drivetrain.getPose());
     }
+
+
+    private String getFomattedPose() 
+    {
+        var pose = getCurrentPose();
+        return String.format("(%.2f, %.2f) %.2f degrees", 
+            pose.getX(), 
+            pose.getY(),
+            pose.getRotation().getDegrees());
+    }
+    
+    public Pose2d getCurrentPose() 
+    {
+        return poseEstimator.getEstimatedPosition();
+    }
+
 
     @Override
     public void readPeriodicInputs()
@@ -63,6 +85,13 @@ public class PoseEstimator extends Subsystem4237
     public void periodic()
     {
         // This method will be called once per scheduler run
+
+        //update pose estimator with drivetrain encoders (odometry part)
+        poseEstimator.update(gyro.getRotation2d(), drivetrain.getSwerveModulePositions());
+
+        botPose = vision.getBotPose();
+        //TODO: figure out how to get timestamp from LL
+        poseEstimator.addVisionMeasurement(botPose.toPose2d(), 0);
     }
 
     @Override

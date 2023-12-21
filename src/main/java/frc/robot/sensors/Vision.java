@@ -2,6 +2,8 @@ package frc.robot.sensors;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -27,10 +29,12 @@ public class Vision extends Sensor4237
         NetworkTableEntry ty = table.getEntry("ty");
         NetworkTableEntry ta = table.getEntry("ta");
         NetworkTableEntry tv = table.getEntry("tv");
+        NetworkTableEntry botpose = table.getEntry("botpose");
         private double x;
         private double y;
         private double area;
         private boolean foundTarget;
+        private double[] botPose;
     }
 
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -89,6 +93,23 @@ public class Vision extends Sensor4237
         this.isAligned = isAligned;
     }
 
+    /** @return the robot pose on the field (double[])*/
+    public Pose3d getBotPose()
+    {
+        return new Pose3d(
+            periodicIO.botPose[0],
+            periodicIO.botPose[1],
+            periodicIO.botPose[2],
+            new Rotation3d(
+                periodicIO.botPose[3],
+                periodicIO.botPose[4],
+                periodicIO.botPose[5]
+            )
+        );
+
+        // return periodicIO.botPose;
+    }
+
     @Override
     public void readPeriodicInputs() 
     {
@@ -96,6 +117,7 @@ public class Vision extends Sensor4237
         periodicIO.y = periodicIO.ty.getDouble(0.0);
         periodicIO.area = periodicIO.ta.getDouble(0.0);
         periodicIO.foundTarget = periodicIO.tv.getDouble(0.0) == 1.0 ? true : false;
+        periodicIO.botPose = periodicIO.botpose.getDoubleArray(new double[6]);
     }
 
     @Override
