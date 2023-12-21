@@ -4,6 +4,8 @@ import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -97,14 +99,16 @@ public class Vision extends Sensor4237
     public Pose3d getBotPose()
     {
         return new Pose3d(
-            periodicIO.botPose[0],
-            periodicIO.botPose[1],
-            periodicIO.botPose[2],
+            new Translation3d(
+                periodicIO.botPose[0],
+                periodicIO.botPose[1],
+                periodicIO.botPose[2]
+                ),
             new Rotation3d(
-                periodicIO.botPose[3],
-                periodicIO.botPose[4],
-                periodicIO.botPose[5]
-            )
+                Units.degreesToRadians(periodicIO.botPose[3]),
+                Units.degreesToRadians(periodicIO.botPose[4]),
+                Units.degreesToRadians(periodicIO.botPose[5])
+                )
         );
 
         // return periodicIO.botPose;
