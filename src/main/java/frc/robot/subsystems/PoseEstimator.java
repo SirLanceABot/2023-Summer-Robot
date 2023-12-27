@@ -5,6 +5,8 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.sensors.Vision;
 import frc.robot.subsystems.Drivetrain;
@@ -30,6 +32,8 @@ public class PoseEstimator extends Subsystem4237
     private final Vision vision;
 
     private Pose3d botPose;
+    private DriverStation.Alliance alliance;
+    private double totalLatency;
 
     private class PeriodicIO
     {
@@ -89,9 +93,20 @@ public class PoseEstimator extends Subsystem4237
         //update pose estimator with drivetrain encoders (odometry part)
         poseEstimator.update(gyro.getRotation2d(), drivetrain.getSwerveModulePositions());
 
-        botPose = vision.getBotPose();
-        //TODO: figure out how to get timestamp from LL
-        poseEstimator.addVisionMeasurement(botPose.toPose2d(), 0);
+        // check the alliance color, get correct pose accordingly
+        alliance = DriverStation.getAlliance();
+        if(alliance == DriverStation.Alliance.Blue)
+        {
+            botPose = vision.toPose3d(vision.getBotPoseWPIBlue());
+            totalLatency = vision.getBotPoseWPIBlue()[6];
+        }
+        else if(alliance == DriverStation.Alliance.Red)
+        {
+            botPose = vision.toPose3d(vision.getBotPoseWPIRed());
+            totalLatency = vision.getBotPoseWPIRed()[6];
+        }
+
+        poseEstimator.addVisionMeasurement(botPose.toPose2d(), Timer.getFPGATimestamp() - (totalLatency / 1000));
     }
 
     @Override

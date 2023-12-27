@@ -27,16 +27,23 @@ public class Vision extends Sensor4237
     public class PeriodicIO
     {
         //INPUTS
+        
+        // Entry variable named with LL format (not camelcase)
         NetworkTableEntry tx = table.getEntry("tx");
         NetworkTableEntry ty = table.getEntry("ty");
         NetworkTableEntry ta = table.getEntry("ta");
         NetworkTableEntry tv = table.getEntry("tv");
         NetworkTableEntry botpose = table.getEntry("botpose");
+        NetworkTableEntry botpose_wpiblue = table.getEntry("botpose_wpiblue");
+        NetworkTableEntry botpose_wpired = table.getEntry("botpose_wpired");
+
         private double x;
         private double y;
         private double area;
         private boolean foundTarget;
         private double[] botPose;
+        private double[] botPoseWPIBlue;
+        private double[] botPoseWPIRed;
     }
 
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -95,23 +102,79 @@ public class Vision extends Sensor4237
         this.isAligned = isAligned;
     }
 
-    /** @return the robot pose on the field (double[])*/
-    public Pose3d getBotPose()
+    // converts the double array from NT into Pose3d
+    public Pose3d toPose3d(double[] array)
     {
         return new Pose3d(
             new Translation3d(
-                periodicIO.botPose[0],
-                periodicIO.botPose[1],
-                periodicIO.botPose[2]
+                array[0],
+                array[1],
+                array[2]
                 ),
             new Rotation3d(
-                Units.degreesToRadians(periodicIO.botPose[3]),
-                Units.degreesToRadians(periodicIO.botPose[4]),
-                Units.degreesToRadians(periodicIO.botPose[5])
+                Units.degreesToRadians(array[3]),
+                Units.degreesToRadians(array[4]),
+                Units.degreesToRadians(array[5])
                 )
         );
+    }
 
-        // return periodicIO.botPose;
+    /** @return the robot pose on the field (double[])*/
+    public double[] getBotPose()
+    {
+        // return new Pose3d(
+        //     new Translation3d(
+        //         periodicIO.botPose[0],
+        //         periodicIO.botPose[1],
+        //         periodicIO.botPose[2]
+        //         ),
+        //     new Rotation3d(
+        //         Units.degreesToRadians(periodicIO.botPose[3]),
+        //         Units.degreesToRadians(periodicIO.botPose[4]),
+        //         Units.degreesToRadians(periodicIO.botPose[5])
+        //         )
+        // );
+
+        return periodicIO.botPose;
+    }
+
+    /** @return the robot pose on the field (double[]) blue driverstration origin*/
+    public double[] getBotPoseWPIBlue()
+    {
+        // return new Pose3d(
+        //     new Translation3d(
+        //         periodicIO.botPoseWPIBlue[0],
+        //         periodicIO.botPoseWPIBlue[1],
+        //         periodicIO.botPoseWPIBlue[2]
+        //         ),
+        //     new Rotation3d(
+        //         Units.degreesToRadians(periodicIO.botPoseWPIBlue[3]),
+        //         Units.degreesToRadians(periodicIO.botPoseWPIBlue[4]),
+        //         Units.degreesToRadians(periodicIO.botPoseWPIBlue[5])
+        //         )
+        // );
+
+        return periodicIO.botPoseWPIBlue;
+    }
+
+    
+    /** @return the robot pose on the field (double[]) red driverstration origin*/
+    public double[] getBotPoseWPIRed()
+    {
+        // return new Pose3d(
+        //     new Translation3d(
+        //         periodicIO.botPoseWPIRed[0],
+        //         periodicIO.botPoseWPIRed[1],
+        //         periodicIO.botPoseWPIRed[2]
+        //         ),
+        //     new Rotation3d(
+        //         Units.degreesToRadians(periodicIO.botPoseWPIRed[3]),
+        //         Units.degreesToRadians(periodicIO.botPoseWPIRed[4]),
+        //         Units.degreesToRadians(periodicIO.botPoseWPIRed[5])
+        //         )
+        // );
+
+        return periodicIO.botPoseWPIRed;
     }
 
     @Override
@@ -121,7 +184,9 @@ public class Vision extends Sensor4237
         periodicIO.y = periodicIO.ty.getDouble(0.0);
         periodicIO.area = periodicIO.ta.getDouble(0.0);
         periodicIO.foundTarget = periodicIO.tv.getDouble(0.0) == 1.0 ? true : false;
-        periodicIO.botPose = periodicIO.botpose.getDoubleArray(new double[6]);
+        periodicIO.botPose = periodicIO.botpose.getDoubleArray(new double[7]);
+        periodicIO.botPoseWPIBlue = periodicIO.botpose_wpiblue.getDoubleArray(new double[7]);
+        periodicIO.botPoseWPIRed = periodicIO.botpose_wpired.getDoubleArray(new double[7]);
     }
 
     @Override
@@ -131,6 +196,6 @@ public class Vision extends Sensor4237
         // SmartDashboard.putNumber("LimelightY", periodicIO.y);
         // SmartDashboard.putNumber("LimelightArea", periodicIO.area);
         // SmartDashboard.putBoolean("LimelightFoundTarget", periodicIO.foundTarget);
+        // SmartDashboard.putNumberArray("LimelightBotPose", periodicIO.botPose);
     }
-    
 }
