@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
 
+import frc.robot.Constants;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -98,12 +100,12 @@ public class PoseEstimator extends Subsystem4237
         if(alliance == DriverStation.Alliance.Blue)
         {
             botPose = vision.toPose3d(vision.getBotPoseWPIBlue());
-            totalLatency = vision.getBotPoseWPIBlue()[6];
+            totalLatency = vision.getBotPoseWPIBlue()[Constants.Vision.totalLatencyIndex];
         }
         else if(alliance == DriverStation.Alliance.Red)
         {
             botPose = vision.toPose3d(vision.getBotPoseWPIRed());
-            totalLatency = vision.getBotPoseWPIRed()[6];
+            totalLatency = vision.getBotPoseWPIRed()[Constants.Vision.totalLatencyIndex];
         }
 
         poseEstimator.addVisionMeasurement(botPose.toPose2d(), Timer.getFPGATimestamp() - (totalLatency / 1000));

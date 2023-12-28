@@ -2,6 +2,8 @@ package frc.robot.sensors;
 
 import java.lang.invoke.MethodHandles;
 
+import frc.robot.Constants;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -107,14 +109,14 @@ public class Vision extends Sensor4237
     {
         return new Pose3d(
             new Translation3d(
-                array[0],
-                array[1],
-                array[2]
+                array[Constants.Vision.translationXMetersIndex],
+                array[Constants.Vision.translationYMetersIndex],
+                array[Constants.Vision.translationZMetersIndex]
                 ),
             new Rotation3d(
-                Units.degreesToRadians(array[3]),
-                Units.degreesToRadians(array[4]),
-                Units.degreesToRadians(array[5])
+                Units.degreesToRadians(array[Constants.Vision.rotationRollDegreesIndex]),
+                Units.degreesToRadians(array[Constants.Vision.rotationPitchDegreesIndex]),
+                Units.degreesToRadians(array[Constants.Vision.rotationYawDegreesIndex])
                 )
         );
     }
@@ -183,7 +185,7 @@ public class Vision extends Sensor4237
         periodicIO.x = periodicIO.tx.getDouble(0.0);
         periodicIO.y = periodicIO.ty.getDouble(0.0);
         periodicIO.area = periodicIO.ta.getDouble(0.0);
-        periodicIO.foundTarget = periodicIO.tv.getDouble(0.0) == 1.0 ? true : false;
+        periodicIO.foundTarget = periodicIO.tv.getDouble(0.0) == 1.0;
         periodicIO.botPose = periodicIO.botpose.getDoubleArray(new double[7]);
         periodicIO.botPoseWPIBlue = periodicIO.botpose_wpiblue.getDoubleArray(new double[7]);
         periodicIO.botPoseWPIRed = periodicIO.botpose_wpired.getDoubleArray(new double[7]);
