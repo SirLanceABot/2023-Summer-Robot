@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Gatherer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle4237;
@@ -110,8 +111,9 @@ public class RobotContainer
 	private boolean useDriverController		= true;
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
-	private boolean useVision				= false;
+	private boolean useVision				= true;
 	private boolean useUltrasonic			= false;
+	private boolean usePoseEsitmator		= true;
 
 	private boolean useDataLog				= false;
 	
@@ -132,6 +134,7 @@ public class RobotContainer
 	public final Accelerometer4237 accelerometer;
 	public final Gyro4237 gyro;
 	private final Ultrasonic4237 ultrasonic;
+	public final PoseEstimator poseEstimator;
 	// public final PowerDistribution pdh;
 	public final Compressor compressor;
 	public DataLog log = null;
@@ -171,6 +174,7 @@ public class RobotContainer
 		vision 				= (useFullRobot || useVision)					? new Vision()											: null;
 		compressor			= (useGrabber 	|| useWrist)					? new Compressor(0, PneumaticsModuleType.CTREPCM)		: null;
 		ultrasonic			= (useFullRobot || useUltrasonic)				? new Ultrasonic4237()									: null;
+		poseEstimator		= (useFullRobot	|| usePoseEsitmator)			? new PoseEstimator(drivetrain, gyro, vision)			: null;
 
 		// pdh = new PowerDistribution(1, ModuleType.kRev);
 		// compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);

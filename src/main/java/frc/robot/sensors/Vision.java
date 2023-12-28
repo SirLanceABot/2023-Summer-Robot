@@ -49,8 +49,10 @@ public class Vision extends Sensor4237
     }
 
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    private NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltagsLL");
     private PeriodicIO periodicIO;
     private boolean isAligned;
+    private Pose3d poseForAS;
     private final double A = 4.8940189;
     private final double B = -0.5459146235;
 
@@ -189,6 +191,17 @@ public class Vision extends Sensor4237
         periodicIO.botPose = periodicIO.botpose.getDoubleArray(new double[7]);
         periodicIO.botPoseWPIBlue = periodicIO.botpose_wpiblue.getDoubleArray(new double[7]);
         periodicIO.botPoseWPIRed = periodicIO.botpose_wpired.getDoubleArray(new double[7]);
+
+        poseForAS = toPose3d(periodicIO.botPoseWPIBlue);
+
+        tagsTable
+        .getEntry("robotpose")
+        .setDoubleArray(
+            new double[] {
+                poseForAS.getTranslation().getX(), poseForAS.getTranslation().getY(), poseForAS.getTranslation().getZ(),
+                poseForAS.getRotation().getQuaternion().getW(), poseForAS.getRotation().getQuaternion().getX(),
+                poseForAS.getRotation().getQuaternion().getY(), poseForAS.getRotation().getQuaternion().getZ()
+            });
     }
 
     @Override

@@ -7,6 +7,8 @@ import frc.robot.Constants;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.sensors.Gyro4237;
@@ -33,9 +35,12 @@ public class PoseEstimator extends Subsystem4237
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Vision vision;
 
+    private NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltagsLL");
+
     private Pose3d botPose;
     private DriverStation.Alliance alliance;
     private double totalLatency;
+    private Pose2d poseForAS;
 
     private class PeriodicIO
     {
@@ -52,6 +57,8 @@ public class PoseEstimator extends Subsystem4237
      */
     public PoseEstimator(Drivetrain drivetrain, Gyro4237 gyro, Vision vision)
     {
+        System.out.println(fullClassName + " : Constructor Started");
+
         this.gyro = gyro;
         this.drivetrain = drivetrain;
         this.vision = vision;
@@ -61,6 +68,8 @@ public class PoseEstimator extends Subsystem4237
             gyro.getRotation2d(),
             drivetrain.getSwerveModulePositions(),
             drivetrain.getPose());
+        
+        System.out.println(fullClassName + " : Constructor Finished");
     }
 
 
@@ -108,7 +117,21 @@ public class PoseEstimator extends Subsystem4237
             totalLatency = vision.getBotPoseWPIRed()[Constants.Vision.totalLatencyIndex];
         }
 
-        poseEstimator.addVisionMeasurement(botPose.toPose2d(), Timer.getFPGATimestamp() - (totalLatency / 1000));
+        if(vision.foundTarget())
+        {
+            poseEstimator.addVisionMeasurement(botPose.toPose2d(), Timer.getFPGATimestamp() - (totalLatency / 1000));
+        }
+
+        poseForAS = poseEstimator.getEstimatedPosition();
+
+
+        tagsTable
+        .getEntry("poseEstimator-robotpose")
+        .setDoubleArray(
+            new double[] {
+                poseForAS.getTranslation().getX(), poseForAS.getTranslation().getY(),
+                poseForAS.getRotation().getRadians()
+            });
     }
 
     @Override

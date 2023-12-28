@@ -20,6 +20,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -112,6 +114,8 @@ public class Drivetrain extends Subsystem4237
     private final AdaptiveSlewRateLimiter adaptiveXRateLimiter = new AdaptiveSlewRateLimiter(Constants.DrivetrainConstants.X_ACCELERATION_RATE_LIMT, Constants.DrivetrainConstants.X_DECELERATION_RATE_LIMT);
     private final AdaptiveSlewRateLimiter adaptiveYRateLimiter = new AdaptiveSlewRateLimiter(Constants.DrivetrainConstants.Y_ACCELERATION_RATE_LIMT, Constants.DrivetrainConstants.Y_DECELERATION_RATE_LIMT);
 
+    private NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltagsLL");
+
 
     // TODO: Make final by setting to an initial stopped state
     //private SwerveModuleState[] previousSwerveModuleStates = null;
@@ -121,6 +125,7 @@ public class Drivetrain extends Subsystem4237
     private double xPTuner = 0.0;
     private double yPTuner = 0.0;
     private double thetaPTuner = 0.0;
+    private Pose2d poseForAS;
 
     private PeriodicIO periodicIO;
     
@@ -536,6 +541,16 @@ public class Drivetrain extends Subsystem4237
         
 
         feedWatchdog();
+
+        poseForAS = periodicIO.odometry.getPoseMeters();
+
+        tagsTable
+        .getEntry("odometry")
+        .setDoubleArray(
+            new double[] {
+                poseForAS.getTranslation().getX(), poseForAS.getTranslation().getY(),
+                poseForAS.getRotation().getRadians()
+            });
     }
 
     public void feedWatchdog() 
