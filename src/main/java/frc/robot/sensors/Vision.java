@@ -30,7 +30,7 @@ public class Vision extends Sensor4237
     {
         //INPUTS
         
-        // Entry variable named with LL format (not camelcase)
+        // Entry variables named with LL convention (not camelcase)
         NetworkTableEntry tx = table.getEntry("tx");
         NetworkTableEntry ty = table.getEntry("ty");
         NetworkTableEntry ta = table.getEntry("ta");
@@ -39,6 +39,7 @@ public class Vision extends Sensor4237
         NetworkTableEntry botpose_wpiblue = table.getEntry("botpose_wpiblue");
         NetworkTableEntry botpose_wpired = table.getEntry("botpose_wpired");
 
+        // Our class variables named with our convention (yes camelcase)
         private double x;
         private double y;
         private double area;
@@ -48,8 +49,8 @@ public class Vision extends Sensor4237
         private double[] botPoseWPIRed;
     }
 
-    private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    private NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltagsLL");
+    private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");   // official limelight camera table
+    private NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltagsLL"); // custom table for AdvantageScope testing
     private PeriodicIO periodicIO;
     private boolean isAligned;
     private Pose3d poseForAS;
@@ -126,38 +127,12 @@ public class Vision extends Sensor4237
     /** @return the robot pose on the field (double[])*/
     public double[] getBotPose()
     {
-        // return new Pose3d(
-        //     new Translation3d(
-        //         periodicIO.botPose[0],
-        //         periodicIO.botPose[1],
-        //         periodicIO.botPose[2]
-        //         ),
-        //     new Rotation3d(
-        //         Units.degreesToRadians(periodicIO.botPose[3]),
-        //         Units.degreesToRadians(periodicIO.botPose[4]),
-        //         Units.degreesToRadians(periodicIO.botPose[5])
-        //         )
-        // );
-
         return periodicIO.botPose;
     }
 
     /** @return the robot pose on the field (double[]) blue driverstration origin*/
     public double[] getBotPoseWPIBlue()
     {
-        // return new Pose3d(
-        //     new Translation3d(
-        //         periodicIO.botPoseWPIBlue[0],
-        //         periodicIO.botPoseWPIBlue[1],
-        //         periodicIO.botPoseWPIBlue[2]
-        //         ),
-        //     new Rotation3d(
-        //         Units.degreesToRadians(periodicIO.botPoseWPIBlue[3]),
-        //         Units.degreesToRadians(periodicIO.botPoseWPIBlue[4]),
-        //         Units.degreesToRadians(periodicIO.botPoseWPIBlue[5])
-        //         )
-        // );
-
         return periodicIO.botPoseWPIBlue;
     }
 
@@ -165,19 +140,6 @@ public class Vision extends Sensor4237
     /** @return the robot pose on the field (double[]) red driverstration origin*/
     public double[] getBotPoseWPIRed()
     {
-        // return new Pose3d(
-        //     new Translation3d(
-        //         periodicIO.botPoseWPIRed[0],
-        //         periodicIO.botPoseWPIRed[1],
-        //         periodicIO.botPoseWPIRed[2]
-        //         ),
-        //     new Rotation3d(
-        //         Units.degreesToRadians(periodicIO.botPoseWPIRed[3]),
-        //         Units.degreesToRadians(periodicIO.botPoseWPIRed[4]),
-        //         Units.degreesToRadians(periodicIO.botPoseWPIRed[5])
-        //         )
-        // );
-
         return periodicIO.botPoseWPIRed;
     }
 
@@ -191,17 +153,6 @@ public class Vision extends Sensor4237
         periodicIO.botPose = periodicIO.botpose.getDoubleArray(new double[7]);
         periodicIO.botPoseWPIBlue = periodicIO.botpose_wpiblue.getDoubleArray(new double[7]);
         periodicIO.botPoseWPIRed = periodicIO.botpose_wpired.getDoubleArray(new double[7]);
-
-        poseForAS = toPose3d(periodicIO.botPoseWPIBlue);
-
-        tagsTable
-        .getEntry("robotpose")
-        .setDoubleArray(
-            new double[] {
-                poseForAS.getTranslation().getX(), poseForAS.getTranslation().getY(), poseForAS.getTranslation().getZ(),
-                poseForAS.getRotation().getQuaternion().getW(), poseForAS.getRotation().getQuaternion().getX(),
-                poseForAS.getRotation().getQuaternion().getY(), poseForAS.getRotation().getQuaternion().getZ()
-            });
     }
 
     @Override
@@ -212,5 +163,17 @@ public class Vision extends Sensor4237
         // SmartDashboard.putNumber("LimelightArea", periodicIO.area);
         // SmartDashboard.putBoolean("LimelightFoundTarget", periodicIO.foundTarget);
         // SmartDashboard.putNumberArray("LimelightBotPose", periodicIO.botPose);
+
+        poseForAS = toPose3d(periodicIO.botPoseWPIBlue);    // variable for testing in AdvantageScope
+
+        // put the pose from LL onto the Network Table so AdvantageScope can read it
+        tagsTable
+        .getEntry("robotpose")
+        .setDoubleArray(
+            new double[] {
+                poseForAS.getTranslation().getX(), poseForAS.getTranslation().getY(), poseForAS.getTranslation().getZ(),
+                poseForAS.getRotation().getQuaternion().getW(), poseForAS.getRotation().getQuaternion().getX(),
+                poseForAS.getRotation().getQuaternion().getY(), poseForAS.getRotation().getQuaternion().getZ()
+            });
     }
 }

@@ -35,6 +35,7 @@ public class PoseEstimator extends Subsystem4237
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Vision vision;
 
+    // custom network table to make pose readable for AdvantageScope
     private NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltagsLL");
 
     private Pose3d botPose;
@@ -73,6 +74,7 @@ public class PoseEstimator extends Subsystem4237
     }
 
 
+    // makes the pose easy to read
     private String getFomattedPose() 
     {
         var pose = getCurrentPose();
@@ -106,25 +108,27 @@ public class PoseEstimator extends Subsystem4237
 
         // check the alliance color, get correct pose accordingly
         alliance = DriverStation.getAlliance();
+
         if(alliance == DriverStation.Alliance.Blue)
         {
             botPose = vision.toPose3d(vision.getBotPoseWPIBlue());
-            totalLatency = vision.getBotPoseWPIBlue()[Constants.Vision.totalLatencyIndex];
+            totalLatency = vision.getBotPoseWPIBlue()[Constants.Vision.totalLatencyIndex];  //total latency is the 7th number in the botPose double array
         }
         else if(alliance == DriverStation.Alliance.Red)
         {
             botPose = vision.toPose3d(vision.getBotPoseWPIRed());
-            totalLatency = vision.getBotPoseWPIRed()[Constants.Vision.totalLatencyIndex];
+            totalLatency = vision.getBotPoseWPIRed()[Constants.Vision.totalLatencyIndex];   //total latency is the 7th number in the botPose double array
         }
 
-        if(vision.foundTarget())
+        if(vision.foundTarget())    // if the LL can see a tag, update the PoseEstimator with those measurements
         {
             poseEstimator.addVisionMeasurement(botPose.toPose2d(), Timer.getFPGATimestamp() - (totalLatency / 1000));
         }
 
-        poseForAS = poseEstimator.getEstimatedPosition();
+        poseForAS = getCurrentPose();   // variable for testing in AdvantageScope
 
 
+        // put the pose onto the Network Table so AdvantageScope can read it
         tagsTable
         .getEntry("poseEstimator-robotpose")
         .setDoubleArray(
