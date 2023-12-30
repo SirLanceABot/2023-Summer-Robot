@@ -238,7 +238,7 @@ public class RobotContainer
 												new ConditionalCommand(
 													new MoveShoulderToScoringPosition(shoulder, TargetPosition.kLimelight), 
 													new PrintCommand("Target Not Found"),
-													() -> vision.foundTarget())))
+													() -> vision.isTargetFound())))
 							  .andThen( new ConditionalCommand(
 											new RunCommand( () -> candle.signalGreen()),
 											new RunCommand( () -> candle.signalWhite()),

@@ -92,7 +92,7 @@ public class Vision extends Sensor4237
     }
 
     /** @return false if no target is found, true if target is found */
-    public boolean foundTarget()
+    public boolean isTargetFound()
     {
         return periodicIO.foundTarget;
     }
@@ -141,6 +141,24 @@ public class Vision extends Sensor4237
     public double[] getBotPoseWPIRed()
     {
         return periodicIO.botPoseWPIRed;
+    }
+
+    /** @return the total latency from botpose measurements (double)*/
+    public double getTotalLatency()
+    {
+        return periodicIO.botPose[Constants.Vision.totalLatencyIndex];
+    }
+
+    /** @return the total latency from WPIBlue botpose measurements (double)*/
+    public double getTotalLatencyBlue()
+    {
+        return periodicIO.botPoseWPIBlue[Constants.Vision.totalLatencyIndex];
+    }
+
+    /** @return the total latency from WPIRed botpose measurements (double)*/
+    public double getTotalLatencyRed()
+    {
+        return periodicIO.botPoseWPIRed[Constants.Vision.totalLatencyIndex];
     }
 
     @Override

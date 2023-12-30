@@ -116,7 +116,7 @@ public class AlignToPost extends CommandBase
         // double xDistance = vision.getx();
         strafeError = vision.getX();
         rotateError = MathUtil.inputModulus(180.0 - gyro.getYaw(), -180.0, 180.0);
-        foundTarget = vision.foundTarget();
+        foundTarget = vision.isTargetFound();
 
         // POST_ALIGNMENT_TOLERANCE = SmartDashboard.getNumber("Post Alignemnt Tolerance", POST_ALIGNMENT_TOLERANCE);
         // POST_ALIGNMENT_ROTATE_TOLERANCE = SmartDashboard.getNumber("Post Alignemnt Rotate Tolerance", POST_ALIGNMENT_ROTATE_TOLERANCE);
