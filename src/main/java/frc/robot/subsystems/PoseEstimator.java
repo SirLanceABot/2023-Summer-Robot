@@ -171,7 +171,7 @@ public class PoseEstimator extends Subsystem4237
         periodicIO.poseForAS = poseEstimator.getEstimatedPosition(); // variable for testing in AdvantageScope
 
         apriltagsLL       // put the pose onto the NT so AdvantageScope can read it
-        .getEntry("limelightPose")
+        .getEntry("poseEstimator")
         .setDoubleArray(
             new double[] {
                 periodicIO.poseForAS.getTranslation().getX(), periodicIO.poseForAS.getTranslation().getY(),
