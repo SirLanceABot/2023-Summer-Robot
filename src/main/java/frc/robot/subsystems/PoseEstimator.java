@@ -54,11 +54,18 @@ public class PoseEstimator extends Subsystem4237
         private Rotation2d gyroRotation;
         private SwerveModulePosition[] swerveModulePositions;
         private DriverStation.Alliance alliance;
+
         private Pose3d limelightPoseBlue;
         private Pose3d limelightPoseRed;
         private double totalLatencyBlue;
         private double totalLatencyRed;
         private boolean isTargetFound;
+
+        private Pose3d limelightPoseBlueTwo;
+        private Pose3d limelightPoseRedTwo;
+        private double totalLatencyBlueTwo;
+        private double totalLatencyRedTwo;
+        private boolean isTargetFoundTwo;
 
         // OUTPUTS
         private Pose2d estimatedPose;
@@ -116,6 +123,12 @@ public class PoseEstimator extends Subsystem4237
         periodicIO.totalLatencyBlue = vision.getTotalLatencyBlue();
         periodicIO.totalLatencyRed = vision.getTotalLatencyRed();
         periodicIO.isTargetFound = vision.isTargetFound();
+
+        periodicIO.limelightPoseBlueTwo = vision.toPose3d(vision.getBotPoseWPIBlueTwo());
+        periodicIO.limelightPoseRedTwo = vision.toPose3d(vision.getBotPoseWPIRedTwo());
+        periodicIO.totalLatencyBlueTwo = vision.getTotalLatencyBlueTwo();
+        periodicIO.totalLatencyRedTwo = vision.getTotalLatencyRedTwo();
+        periodicIO.isTargetFoundTwo = vision.isTargetFoundTwo();
     }
 
     @Override
@@ -137,6 +150,20 @@ public class PoseEstimator extends Subsystem4237
             poseEstimator.addVisionMeasurement(
                 periodicIO.limelightPoseRed.toPose2d(),
                 Timer.getFPGATimestamp() - (periodicIO.totalLatencyRed / 1000));
+        }
+
+        if(periodicIO.alliance == DriverStation.Alliance.Blue && periodicIO.isTargetFoundTwo)
+        {
+            // update pose esitmator with vision pose
+            poseEstimator.addVisionMeasurement(
+                periodicIO.limelightPoseBlueTwo.toPose2d(), 
+                Timer.getFPGATimestamp() - (periodicIO.totalLatencyBlueTwo / 1000));
+        }
+        else if(periodicIO.alliance == DriverStation.Alliance.Red && periodicIO.isTargetFoundTwo)
+        {
+            poseEstimator.addVisionMeasurement(
+                periodicIO.limelightPoseRedTwo.toPose2d(),
+                Timer.getFPGATimestamp() - (periodicIO.totalLatencyRedTwo / 1000));
         }
 
         periodicIO.estimatedPose = poseEstimator.getEstimatedPosition();
