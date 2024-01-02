@@ -41,7 +41,8 @@ public class PoseEstimator extends Subsystem4237
     private final Vision vision;
 
     // custom network table to make pose readable for AdvantageScope
-    private NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltagsLL");
+    private NetworkTable apriltagsLL = NetworkTableInstance.getDefault().getTable("apriltagsLL"); // custom table for AdvantageScope testing
+
 
     private Pose3d botPose;
     private DriverStation.Alliance alliance;
@@ -169,8 +170,8 @@ public class PoseEstimator extends Subsystem4237
         periodicIO.estimatedPose = poseEstimator.getEstimatedPosition();
         periodicIO.poseForAS = poseEstimator.getEstimatedPosition(); // variable for testing in AdvantageScope
 
-        tagsTable       // put the pose onto the NT so AdvantageScope can read it
-        .getEntry("poseEstimator")
+        apriltagsLL       // put the pose onto the NT so AdvantageScope can read it
+        .getEntry("limelightPose")
         .setDoubleArray(
             new double[] {
                 periodicIO.poseForAS.getTranslation().getX(), periodicIO.poseForAS.getTranslation().getY(),

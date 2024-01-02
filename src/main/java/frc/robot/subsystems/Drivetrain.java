@@ -114,7 +114,7 @@ public class Drivetrain extends Subsystem4237
     private final AdaptiveSlewRateLimiter adaptiveXRateLimiter = new AdaptiveSlewRateLimiter(Constants.DrivetrainConstants.X_ACCELERATION_RATE_LIMT, Constants.DrivetrainConstants.X_DECELERATION_RATE_LIMT);
     private final AdaptiveSlewRateLimiter adaptiveYRateLimiter = new AdaptiveSlewRateLimiter(Constants.DrivetrainConstants.Y_ACCELERATION_RATE_LIMT, Constants.DrivetrainConstants.Y_DECELERATION_RATE_LIMT);
 
-    private NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltagsLL"); // custom table for AdvantageScope testing
+    private NetworkTable apriltagsLL = NetworkTableInstance.getDefault().getTable("apriltagsLL"); // custom table for AdvantageScope testing
 
 
     // TODO: Make final by setting to an initial stopped state
@@ -545,7 +545,7 @@ public class Drivetrain extends Subsystem4237
         poseForAS = periodicIO.odometry.getPoseMeters(); // variable for testing in AdvantageScope
 
         // put the pose from odometry onto the Network Table so AdvantageScope can read it
-        tagsTable
+        apriltagsLL
         .getEntry("odometry")
         .setDoubleArray(
             new double[] {
