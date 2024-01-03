@@ -71,6 +71,7 @@ import frc.robot.controls.DriverController;
 import frc.robot.controls.OperatorController;
 import frc.robot.controls.Xbox;
 import frc.robot.sensors.Accelerometer4237;
+import frc.robot.sensors.Camera;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.shuffleboard.MainShuffleboard;
 import frc.robot.sensors.Vision;
@@ -113,6 +114,8 @@ public class RobotContainer
 	private boolean useMainShuffleboard		= false;
 	private boolean useVision				= true;
 	private boolean useUltrasonic			= false;
+	private boolean useCameraOne			= true;
+	private boolean useCameraTwo			= true;
 	private boolean usePoseEsitmator		= true;
 
 	private boolean useDataLog				= false;
@@ -134,6 +137,8 @@ public class RobotContainer
 	public final Accelerometer4237 accelerometer;
 	public final Gyro4237 gyro;
 	private final Ultrasonic4237 ultrasonic;
+	public final Camera cameraOne;
+	public final Camera cameraTwo;
 	public final PoseEstimator poseEstimator;
 	// public final PowerDistribution pdh;
 	public final Compressor compressor;
@@ -158,23 +163,25 @@ public class RobotContainer
 		// log					= (useDataLog)									? DataLogManager.getLog()								: null;
 
 		fullRobot 			= (useFullRobot);
-		exampleSubsystem 	= (useExampleSubsystem)							? new ExampleSubsystem() 								: null;
-		accelerometer		= (useAccelerometer)							? new Accelerometer4237()								: null;
-		gyro 				= (useFullRobot || useGyro)						? new Gyro4237()										: null;	
-		drivetrain 			= (useFullRobot || useDrivetrain) 				? new Drivetrain(gyro, log) 							: null;
-		grabber 			= (useFullRobot || useScorer || useGrabber) 	? new Grabber(log) 										: null;
-		wrist				= (useFullRobot || useScorer || useWrist)		? new Wrist()											: null;
-		arm 				= (useFullRobot || useScorer || useArm) 		? new Arm(log) 											: null;
-		shoulder 			= (useFullRobot || useScorer || useShoulder) 	? new Shoulder(log) 									: null;
-		gatherer 			= (useGatherer) 								? new Gatherer() 										: null;
-		candle 				= (useFullRobot || useCandle)					? new Candle4237() 										: null;
-		driverController 	= (useFullRobot || useDriverController) 		? new DriverController(Constants.Controller.DRIVER) 	: null;
-		operatorController 	= (useFullRobot || useOperatorController) 		? new OperatorController(Constants.Controller.OPERATOR)	: null;
-		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)			? new MainShuffleboard(this)							: null;
-		vision 				= (useFullRobot || useVision)					? new Vision()											: null;
-		compressor			= (useGrabber 	|| useWrist)					? new Compressor(0, PneumaticsModuleType.CTREPCM)		: null;
-		ultrasonic			= (useFullRobot || useUltrasonic)				? new Ultrasonic4237()									: null;
-		poseEstimator		= (useFullRobot	|| usePoseEsitmator)			? new PoseEstimator(drivetrain, gyro, vision)			: null;
+		exampleSubsystem 	= (useExampleSubsystem)							? new ExampleSubsystem() 										: null;
+		accelerometer		= (useAccelerometer)							? new Accelerometer4237()										: null;
+		gyro 				= (useFullRobot || useGyro)						? new Gyro4237()												: null;	
+		drivetrain 			= (useFullRobot || useDrivetrain) 				? new Drivetrain(gyro, log) 									: null;
+		grabber 			= (useFullRobot || useScorer || useGrabber) 	? new Grabber(log) 												: null;
+		wrist				= (useFullRobot || useScorer || useWrist)		? new Wrist()													: null;
+		arm 				= (useFullRobot || useScorer || useArm) 		? new Arm(log) 													: null;
+		shoulder 			= (useFullRobot || useScorer || useShoulder) 	? new Shoulder(log) 											: null;
+		gatherer 			= (useGatherer) 								? new Gatherer() 												: null;
+		candle 				= (useFullRobot || useCandle)					? new Candle4237() 												: null;
+		driverController 	= (useFullRobot || useDriverController) 		? new DriverController(Constants.Controller.DRIVER) 			: null;
+		operatorController 	= (useFullRobot || useOperatorController) 		? new OperatorController(Constants.Controller.OPERATOR)			: null;
+		mainShuffleboard 	= (useFullRobot || useMainShuffleboard)			? new MainShuffleboard(this)									: null;
+		vision 				= (useFullRobot || useVision)					? new Vision()													: null;
+		compressor			= (useGrabber 	|| useWrist)					? new Compressor(0, PneumaticsModuleType.CTREPCM)				: null;
+		ultrasonic			= (useFullRobot || useUltrasonic)				? new Ultrasonic4237()											: null;
+		cameraOne			= (useFullRobot	|| useCameraOne)				? new Camera("limelight")										: null;
+		cameraTwo			= (useFullRobot	|| useCameraTwo)				? new Camera("limelight-two")									: null;
+		poseEstimator		= (useFullRobot	|| usePoseEsitmator)			? new PoseEstimator(drivetrain, gyro, cameraOne, cameraTwo)		: null;
 
 		// pdh = new PowerDistribution(1, ModuleType.kRev);
 		// compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);

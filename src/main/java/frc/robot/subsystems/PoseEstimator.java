@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.sensors.Camera;
 import frc.robot.sensors.Gyro4237;
 import frc.robot.sensors.Vision;
 import frc.robot.subsystems.Drivetrain;
@@ -38,17 +39,12 @@ public class PoseEstimator extends Subsystem4237
     private final Gyro4237 gyro;
     private final Drivetrain drivetrain;
     private final SwerveDrivePoseEstimator poseEstimator;
-    private final Vision vision;
+    private final Camera cam1;
+    private final Camera cam2;
 
     // custom network table to make pose readable for AdvantageScope
-    private NetworkTable apriltagsLL = NetworkTableInstance.getDefault().getTable("apriltagsLL"); // custom table for AdvantageScope testing
-
-
-    private Pose3d botPose;
-    private DriverStation.Alliance alliance;
-    private double totalLatency;
-    private Pose2d poseForAS;
-
+    private NetworkTable ASTable = NetworkTableInstance.getDefault().getTable("ASTable"); // custom table for AdvantageScope testing
+    
     private class PeriodicIO
     {
         // INPUTS
@@ -56,17 +52,13 @@ public class PoseEstimator extends Subsystem4237
         private SwerveModulePosition[] swerveModulePositions;
         private DriverStation.Alliance alliance;
 
-        private Pose3d limelightPoseBlue;
-        private Pose3d limelightPoseRed;
-        private double totalLatencyBlue;
-        private double totalLatencyRed;
-        private boolean isTargetFound;
+        private Pose3d poseCam1;
+        private double totalLatencyCam1;
+        private boolean isTargetFoundCam1;
 
-        private Pose3d limelightPoseBlueTwo;
-        private Pose3d limelightPoseRedTwo;
-        private double totalLatencyBlueTwo;
-        private double totalLatencyRedTwo;
-        private boolean isTargetFoundTwo;
+        private Pose3d poseCam2;
+        private double totalLatencyCam2;
+        private boolean isTargetFoundCam2;
 
         // OUTPUTS
         private Pose2d estimatedPose;
@@ -79,13 +71,14 @@ public class PoseEstimator extends Subsystem4237
     /** 
      * Creates a new ExampleSubsystem. 
      */
-    public PoseEstimator(Drivetrain drivetrain, Gyro4237 gyro, Vision vision)
+    public PoseEstimator(Drivetrain drivetrain, Gyro4237 gyro, Camera cam1, Camera cam2)
     {
         System.out.println(fullClassName + " : Constructor Started");
 
         this.gyro = gyro;
         this.drivetrain = drivetrain;
-        this.vision = vision;
+        this.cam1 = cam1;
+        this.cam2 = cam2;
 
         poseEstimator = new SwerveDrivePoseEstimator(
             drivetrain.kinematics,
@@ -94,17 +87,6 @@ public class PoseEstimator extends Subsystem4237
             drivetrain.getPose());
         
         System.out.println(fullClassName + " : Constructor Finished");
-    }
-
-
-    // makes the pose easy to read
-    private String getFomattedPose() 
-    {
-        var pose = getEstimatedPose();
-        return String.format("(%.2f, %.2f) %.2f degrees", 
-            pose.getX(), 
-            pose.getY(),
-            pose.getRotation().getDegrees());
     }
     
     public Pose2d getEstimatedPose() 
@@ -119,17 +101,14 @@ public class PoseEstimator extends Subsystem4237
         periodicIO.gyroRotation = gyro.getRotation2d();
         periodicIO.swerveModulePositions = drivetrain.getSwerveModulePositions();
         periodicIO.alliance = DriverStation.getAlliance();
-        periodicIO.limelightPoseBlue = vision.toPose3d(vision.getBotPoseWPIBlue());
-        periodicIO.limelightPoseRed = vision.toPose3d(vision.getBotPoseWPIRed());
-        periodicIO.totalLatencyBlue = vision.getTotalLatencyBlue();
-        periodicIO.totalLatencyRed = vision.getTotalLatencyRed();
-        periodicIO.isTargetFound = vision.isTargetFound();
+        
+        periodicIO.poseCam1 = cam1.toPose3d(cam1.getBotPose(periodicIO.alliance));
+        periodicIO.totalLatencyCam1 = cam1.getTotalLatency(periodicIO.alliance);
+        periodicIO.isTargetFoundCam1 = cam1.isTargetFound();
 
-        periodicIO.limelightPoseBlueTwo = vision.toPose3d(vision.getBotPoseWPIBlueTwo());
-        periodicIO.limelightPoseRedTwo = vision.toPose3d(vision.getBotPoseWPIRedTwo());
-        periodicIO.totalLatencyBlueTwo = vision.getTotalLatencyBlueTwo();
-        periodicIO.totalLatencyRedTwo = vision.getTotalLatencyRedTwo();
-        periodicIO.isTargetFoundTwo = vision.isTargetFoundTwo();
+        periodicIO.poseCam2 = cam2.toPose3d(cam2.getBotPose(periodicIO.alliance));
+        periodicIO.totalLatencyCam2 = cam2.getTotalLatency(periodicIO.alliance);
+        periodicIO.isTargetFoundCam2 = cam2.isTargetFound();
     }
 
     @Override
@@ -138,85 +117,35 @@ public class PoseEstimator extends Subsystem4237
         // update pose estimator with drivetrain encoders (odometry part)
         periodicIO.estimatedPose = poseEstimator.update(periodicIO.gyroRotation, periodicIO.swerveModulePositions);
        
-        // check alliance color, get vision pose and total latency accordingly
-        if(periodicIO.alliance == DriverStation.Alliance.Blue && periodicIO.isTargetFound)
+        // camera one
+        if(periodicIO.isTargetFoundCam1)
         {
             // update pose esitmator with vision pose
             poseEstimator.addVisionMeasurement(
-                periodicIO.limelightPoseBlue.toPose2d(), 
-                Timer.getFPGATimestamp() - (periodicIO.totalLatencyBlue / 1000));
-        }
-        else if(periodicIO.alliance == DriverStation.Alliance.Red && periodicIO.isTargetFound)
-        {
-            poseEstimator.addVisionMeasurement(
-                periodicIO.limelightPoseRed.toPose2d(),
-                Timer.getFPGATimestamp() - (periodicIO.totalLatencyRed / 1000));
+                periodicIO.poseCam1.toPose2d(), 
+                Timer.getFPGATimestamp() - (periodicIO.totalLatencyCam1 / 1000));
         }
 
-        if(periodicIO.alliance == DriverStation.Alliance.Blue && periodicIO.isTargetFoundTwo)
+        // camera two
+        if(periodicIO.isTargetFoundCam2)
         {
             // update pose esitmator with vision pose
             poseEstimator.addVisionMeasurement(
-                periodicIO.limelightPoseBlueTwo.toPose2d(), 
-                Timer.getFPGATimestamp() - (periodicIO.totalLatencyBlueTwo / 1000));
-        }
-        else if(periodicIO.alliance == DriverStation.Alliance.Red && periodicIO.isTargetFoundTwo)
-        {
-            poseEstimator.addVisionMeasurement(
-                periodicIO.limelightPoseRedTwo.toPose2d(),
-                Timer.getFPGATimestamp() - (periodicIO.totalLatencyRedTwo / 1000));
+                periodicIO.poseCam2.toPose2d(), 
+                Timer.getFPGATimestamp() - (periodicIO.totalLatencyCam2 / 1000));
         }
 
         periodicIO.estimatedPose = poseEstimator.getEstimatedPosition();
         periodicIO.poseForAS = poseEstimator.getEstimatedPosition(); // variable for testing in AdvantageScope
 
-        apriltagsLL       // put the pose onto the NT so AdvantageScope can read it
-        .getEntry("poseEstimator")
-        .setDoubleArray(
-            new double[] {
-                periodicIO.poseForAS.getTranslation().getX(), periodicIO.poseForAS.getTranslation().getY(),
-                periodicIO.poseForAS.getRotation().getRadians()
-            });
+        // put the pose onto the NT so AdvantageScope can read it
+        ASTable.getEntry("poseEstimator").setDoubleArray(cam1.toQuaternions(periodicIO.poseForAS));
     }
 
     @Override
     public void periodic()
     {
-        // // This method will be called once per scheduler run
-
-        // //update pose estimator with drivetrain encoders (odometry part)
-        // poseEstimator.update(gyro.getRotation2d(), drivetrain.getSwerveModulePositions());
-
-        // // check the alliance color, get correct pose accordingly
-        // alliance = DriverStation.getAlliance();
-
-        // if(alliance == DriverStation.Alliance.Blue)
-        // {
-        //     botPose = vision.toPose3d(vision.getBotPoseWPIBlue());
-        //     totalLatency = vision.getBotPoseWPIBlue()[Constants.Vision.totalLatencyIndex];  //total latency is the 7th number in the botPose double array
-        // }
-        // else if(alliance == DriverStation.Alliance.Red)
-        // {
-        //     botPose = vision.toPose3d(vision.getBotPoseWPIRed());
-        //     totalLatency = vision.getBotPoseWPIRed()[Constants.Vision.totalLatencyIndex];   //total latency is the 7th number in the botPose double array
-        // }
-
-        // if(vision.isTargetFound())    // if the LL can see a tag, update the PoseEstimator with those measurements
-        // {
-        //     poseEstimator.addVisionMeasurement(botPose.toPose2d(), Timer.getFPGATimestamp() - (totalLatency / 1000));
-        // }
-
-        // poseForAS = getEstimatedPose();   // variable for testing in AdvantageScope
-
-
-        // // put the pose onto the Network Table so AdvantageScope can read it
-        // tagsTable
-        // .getEntry("poseEstimator-robotpose")
-        // .setDoubleArray(
-        //     new double[] {
-        //         poseForAS.getTranslation().getX(), poseForAS.getTranslation().getY(),
-        //         poseForAS.getRotation().getRadians()
-        //     });
+        // This method will be called once per scheduler run
     }
 
     @Override
