@@ -8,6 +8,7 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -191,6 +192,7 @@ class SwerveModule extends RobotDriveBase
          * Confgure the CANCoders
          */
         CANCoderConfiguration CANCoderConfigs = new CANCoderConfiguration();
+        ErrorCode errorCode;
 
         // Configurations all have in common
         CANCoderConfigs.velocityMeasurementPeriod = SensorVelocityMeasPeriod.Period_100Ms;
@@ -210,7 +212,9 @@ class SwerveModule extends RobotDriveBase
         // frontLeftEncoder = new CANCoder(Constants.SwerveModule.frontLeft.turnMotorEncoder);
         // System.out.println("setStatusFramePeriod " + turnEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, (int)(steerAdjustPeriod*1000.*.8)));
         CANCoderConfigs.magnetOffsetDegrees = turnEncoderOffset;
-        // System.out.println("configAllSettings " + turnEncoder.configAllSettings(CANCoderConfigs));
+
+        errorCode = turnEncoder.configAllSettings(CANCoderConfigs);
+        // System.out.println("configAllSettings " + errorCode);
         // System.out.println(CANCoderConfigs.toString());
     }
 
