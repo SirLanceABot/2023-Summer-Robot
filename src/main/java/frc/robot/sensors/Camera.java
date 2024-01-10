@@ -12,8 +12,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import frc.robot.Constants.Sensor;
 
 public class Camera extends Sensor4237
 {
@@ -44,7 +42,10 @@ public class Camera extends Sensor4237
 
     private PeriodicIO periodicIO;
     private Pose3d poseForAS;
-    private String camName;
+    private NetworkTable cameraTable;
+
+    private NetworkTable ASTable = NetworkTableInstance.getDefault().getTable("ASTable"); // custom table for AdvantageScope testing
+
 
     public Camera(String camName)
     {   
@@ -52,14 +53,11 @@ public class Camera extends Sensor4237
 
         periodicIO = new PeriodicIO();
 
-        this.camName = camName;
+        // Assign the Network Table variable in the constructor so the camName parameter can be used
+        cameraTable = NetworkTableInstance.getDefault().getTable(camName);   // official limelight table
 
         System.out.println(fullClassName + " (" + camName + ")" + " : Constructor Finished");
     }
-
-    private NetworkTable cameraTable = NetworkTableInstance.getDefault().getTable(camName);   // official limelight camera table
-    private NetworkTable ASTable = NetworkTableInstance.getDefault().getTable("ASTable"); // custom table for AdvantageScope testing
-
 
     /** @return false if no target is found, true if target is found */
     public boolean isTargetFound()
