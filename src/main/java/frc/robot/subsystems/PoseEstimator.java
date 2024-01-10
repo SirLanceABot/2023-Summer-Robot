@@ -1,9 +1,6 @@
 package frc.robot.subsystems;
 
 import java.lang.invoke.MethodHandles;
-import java.sql.Driver;
-
-import frc.robot.Constants;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,10 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.sensors.Camera;
 import frc.robot.sensors.Gyro4237;
-import frc.robot.sensors.Vision;
-import frc.robot.subsystems.Drivetrain;
 
-// Hi my name is sam
 
 /**
  * Use this class as a template to create other subsystems.
@@ -43,7 +37,7 @@ public class PoseEstimator extends Subsystem4237
     private final Camera cam2;
 
     // custom network table to make pose readable for AdvantageScope
-    private NetworkTable ASTable = NetworkTableInstance.getDefault().getTable("ASTable"); // custom table for AdvantageScope testing
+    // private NetworkTable ASTable = NetworkTableInstance.getDefault().getTable("ASTable");
     
     private class PeriodicIO
     {
@@ -69,7 +63,7 @@ public class PoseEstimator extends Subsystem4237
     private PeriodicIO periodicIO = new PeriodicIO();
 
     /** 
-     * Creates a new ExampleSubsystem. 
+     * Creates a new PoseEstimator. 
      */
     public PoseEstimator(Drivetrain drivetrain, Gyro4237 gyro, Camera cam1, Camera cam2)
     {
@@ -89,11 +83,11 @@ public class PoseEstimator extends Subsystem4237
         System.out.println(fullClassName + " : Constructor Finished");
     }
     
+    /** @return the estimated pose (Pose2d)*/
     public Pose2d getEstimatedPose() 
     {
         return poseEstimator.getEstimatedPosition();
     }
-
 
     @Override
     public void readPeriodicInputs()
@@ -120,7 +114,7 @@ public class PoseEstimator extends Subsystem4237
         // camera one
         if(periodicIO.isTargetFoundCam1)
         {
-            // update pose esitmator with vision pose
+            // update pose esitmator with limelight data (vision part)
             poseEstimator.addVisionMeasurement(
                 periodicIO.poseCam1.toPose2d(), 
                 Timer.getFPGATimestamp() - (periodicIO.totalLatencyCam1 / 1000));
@@ -129,7 +123,7 @@ public class PoseEstimator extends Subsystem4237
         // camera two
         if(periodicIO.isTargetFoundCam2)
         {
-            // update pose esitmator with vision pose
+            // update pose esitmator with limelight-two data (vision part)
             poseEstimator.addVisionMeasurement(
                 periodicIO.poseCam2.toPose2d(), 
                 Timer.getFPGATimestamp() - (periodicIO.totalLatencyCam2 / 1000));
@@ -139,7 +133,7 @@ public class PoseEstimator extends Subsystem4237
         periodicIO.poseForAS = poseEstimator.getEstimatedPosition(); // variable for testing in AdvantageScope
 
         // put the pose onto the NT so AdvantageScope can read it
-        ASTable.getEntry("poseEstimator").setDoubleArray(cam1.toQuaternions(periodicIO.poseForAS));
+        // ASTable.getEntry("poseEstimator").setDoubleArray(cam1.toQuaternions(periodicIO.poseForAS));
     }
 
     @Override
