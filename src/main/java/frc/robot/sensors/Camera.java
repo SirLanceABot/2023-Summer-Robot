@@ -30,9 +30,9 @@ public class Camera extends Sensor4237
         //INPUTS
         
         // Entry variables named with LL convention (not camelcase)
-        NetworkTableEntry tv = cameraTable.getEntry("tv");
-        NetworkTableEntry botpose_wpiblue = cameraTable.getEntry("botpose_wpiblue");
-        NetworkTableEntry botpose_wpired = cameraTable.getEntry("botpose_wpired");
+        NetworkTableEntry tv;
+        NetworkTableEntry botpose_wpiblue;
+        NetworkTableEntry botpose_wpired;
 
         // Our class variables named with our convention (yes camelcase)
         private boolean isTargetFound;
@@ -55,6 +55,11 @@ public class Camera extends Sensor4237
 
         // Assign the Network Table variable in the constructor so the camName parameter can be used
         cameraTable = NetworkTableInstance.getDefault().getTable(camName);   // official limelight table
+
+        periodicIO.tv = cameraTable.getEntry("tv");
+        periodicIO.botpose_wpiblue = cameraTable.getEntry("botpose_wpiblue");
+        periodicIO.botpose_wpired = cameraTable.getEntry("botpose_wpired");
+
 
         System.out.println(fullClassName + " (" + camName + ")" + " : Constructor Finished");
     }
