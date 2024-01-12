@@ -97,26 +97,28 @@ public class RobotContainer
 	
 	private boolean useFullRobot			= false;
 	private boolean useScorer				= false;
-	private boolean useBindings				= true;
+	private boolean useBindings				= false;
 
 	private boolean useExampleSubsystem		= false;
 	private boolean useAccelerometer		= false;
-	private boolean useGyro					= true;
-	private boolean useDrivetrain   		= true;
+	private boolean useGyro					= false;
+	private boolean useDrivetrain   		= false;
 	private boolean useGrabber 				= false;
 	private boolean useWrist				= false;
 	private boolean useArm 					= false;
 	private boolean useShoulder				= false;
 	private boolean useGatherer 			= false;
 	private boolean useCandle				= false;
-	private boolean useDriverController		= true;
+	private boolean useDriverController		= false;
 	private boolean useOperatorController 	= false;
 	private boolean useMainShuffleboard		= false;
-	private boolean useVision				= true;
+	private boolean useVision				= false;
 	private boolean useUltrasonic			= false;
-	private boolean useCameraOne			= true;
-	private boolean useCameraTwo			= true;
-	private boolean usePoseEsitmator		= true;
+	private boolean useCameraOne			= false;
+	private boolean useCameraTwo			= false;
+	private boolean useCameraThree			= false;
+	private boolean useCameraFour			= false;
+	private boolean usePoseEsitmator		= false;
 
 	private boolean useDataLog				= false;
 	
@@ -139,6 +141,8 @@ public class RobotContainer
 	private final Ultrasonic4237 ultrasonic;
 	public final Camera cameraOne;
 	public final Camera cameraTwo;
+	public final Camera cameraThree;
+	public final Camera cameraFour;
 	public final PoseEstimator poseEstimator;
 	// public final PowerDistribution pdh;
 	public final Compressor compressor;
@@ -181,7 +185,9 @@ public class RobotContainer
 		ultrasonic			= (useFullRobot || useUltrasonic)				? new Ultrasonic4237()											: null;
 		cameraOne			= (useFullRobot	|| useCameraOne)				? new Camera("limelight")										: null;
 		cameraTwo			= (useFullRobot	|| useCameraTwo)				? new Camera("limelight-two")									: null;
-		poseEstimator		= (useFullRobot	|| usePoseEsitmator)			? new PoseEstimator(drivetrain, gyro, cameraOne, cameraTwo)		: null;
+		cameraThree			= (useFullRobot	|| useCameraThree)				? new Camera("limelight-three")									: null;
+		cameraFour			= (useFullRobot	|| useCameraFour)				? new Camera("limelight-four")									: null;
+		poseEstimator		= (useFullRobot	|| usePoseEsitmator)			? new PoseEstimator(drivetrain, gyro, cameraOne, cameraTwo, cameraThree, cameraFour)		: null;
 
 		// pdh = new PowerDistribution(1, ModuleType.kRev);
 		// compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);

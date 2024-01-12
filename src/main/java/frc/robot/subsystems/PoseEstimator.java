@@ -35,10 +35,20 @@ public class PoseEstimator extends Subsystem4237
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Camera cam1;
     private final Camera cam2;
+    private final Camera cam3;
+    private final Camera cam4;
 
     // custom network table to make pose readable for AdvantageScope
     // private NetworkTable ASTable = NetworkTableInstance.getDefault().getTable("ASTable");
     
+    private class Cam
+    {
+        private Pose3d pose;
+        private double totalLatency;
+        private boolean isTargetFound;
+    }
+
+
     private class PeriodicIO
     {
         // INPUTS
@@ -46,13 +56,10 @@ public class PoseEstimator extends Subsystem4237
         private SwerveModulePosition[] swerveModulePositions;
         private DriverStation.Alliance alliance;
 
-        private Pose3d poseCam1;
-        private double totalLatencyCam1;
-        private boolean isTargetFoundCam1;
-
-        private Pose3d poseCam2;
-        private double totalLatencyCam2;
-        private boolean isTargetFoundCam2;
+        private Cam cam1;
+        private Cam cam2;
+        private Cam cam3;
+        private Cam cam4;
 
         // OUTPUTS
         private Pose2d estimatedPose;
@@ -65,7 +72,7 @@ public class PoseEstimator extends Subsystem4237
     /** 
      * Creates a new PoseEstimator. 
      */
-    public PoseEstimator(Drivetrain drivetrain, Gyro4237 gyro, Camera cam1, Camera cam2)
+    public PoseEstimator(Drivetrain drivetrain, Gyro4237 gyro, Camera cam1, Camera cam2, Camera cam3, Camera cam4)
     {
         System.out.println(fullClassName + " : Constructor Started");
 
@@ -73,67 +80,126 @@ public class PoseEstimator extends Subsystem4237
         this.drivetrain = drivetrain;
         this.cam1 = cam1;
         this.cam2 = cam2;
+        this.cam3 = cam3;
+        this.cam4 = cam4;
 
-        poseEstimator = new SwerveDrivePoseEstimator(
-            drivetrain.kinematics,
-            gyro.getRotation2d(),
-            drivetrain.getSwerveModulePositions(),
-            drivetrain.getPose());
-        
+        if(drivetrain != null && gyro != null)
+        {
+            poseEstimator = new SwerveDrivePoseEstimator(
+                drivetrain.kinematics,
+                gyro.getRotation2d(),
+                drivetrain.getSwerveModulePositions(),
+                drivetrain.getPose());
+        }
+        else
+        {
+            poseEstimator = null;
+        }
+
         System.out.println(fullClassName + " : Constructor Finished");
     }
     
     /** @return the estimated pose (Pose2d)*/
     public Pose2d getEstimatedPose() 
     {
-        return poseEstimator.getEstimatedPosition();
+        if(poseEstimator != null)
+        {
+            return periodicIO.estimatedPose;
+        }
+        else
+        {
+            return new Pose2d();
+        }
+        
     }
 
     @Override
     public void readPeriodicInputs()
     {
-        periodicIO.gyroRotation = gyro.getRotation2d();
-        periodicIO.swerveModulePositions = drivetrain.getSwerveModulePositions();
+        if(drivetrain != null && gyro != null)
+        {
+            periodicIO.gyroRotation = gyro.getRotation2d();
+            periodicIO.swerveModulePositions = drivetrain.getSwerveModulePositions();
+        }
+        
         periodicIO.alliance = DriverStation.getAlliance();
         
-        periodicIO.poseCam1 = cam1.toPose3d(cam1.getBotPose(periodicIO.alliance));
-        periodicIO.totalLatencyCam1 = cam1.getTotalLatency(periodicIO.alliance);
-        periodicIO.isTargetFoundCam1 = cam1.isTargetFound();
+        if(cam1 != null)
+        {
+            periodicIO.cam1.pose = cam1.toPose3d(cam1.getBotPose(periodicIO.alliance));
+            periodicIO.cam1.totalLatency = cam1.getTotalLatency(periodicIO.alliance);
+            periodicIO.cam1.isTargetFound = cam1.isTargetFound();
+        }
+    
+        
+        if(cam2 != null)
+        {
+            periodicIO.cam2.pose = cam2.toPose3d(cam2.getBotPose(periodicIO.alliance));
+            periodicIO.cam2.totalLatency = cam2.getTotalLatency(periodicIO.alliance);
+            periodicIO.cam2.isTargetFound = cam2.isTargetFound();
+        }
 
-        periodicIO.poseCam2 = cam2.toPose3d(cam2.getBotPose(periodicIO.alliance));
-        periodicIO.totalLatencyCam2 = cam2.getTotalLatency(periodicIO.alliance);
-        periodicIO.isTargetFoundCam2 = cam2.isTargetFound();
+        if(cam3 != null)
+        {
+            periodicIO.cam3.pose = cam3.toPose3d(cam3.getBotPose(periodicIO.alliance));
+            periodicIO.cam3.totalLatency = cam3.getTotalLatency(periodicIO.alliance);
+            periodicIO.cam3.isTargetFound = cam3.isTargetFound();
+        }
+
+        if(cam4 != null)
+        {
+            periodicIO.cam4.pose = cam4.toPose3d(cam4.getBotPose(periodicIO.alliance));
+            periodicIO.cam4.totalLatency = cam4.getTotalLatency(periodicIO.alliance);
+            periodicIO.cam4.isTargetFound = cam4.isTargetFound();
+        }
     }
 
     @Override
     public void writePeriodicOutputs()
     {
-        // update pose estimator with drivetrain encoders (odometry part)
-        periodicIO.estimatedPose = poseEstimator.update(periodicIO.gyroRotation, periodicIO.swerveModulePositions);
-       
-        // camera one
-        if(periodicIO.isTargetFoundCam1)
+        if(poseEstimator != null)
         {
-            // update pose esitmator with limelight data (vision part)
-            poseEstimator.addVisionMeasurement(
-                periodicIO.poseCam1.toPose2d(), 
-                Timer.getFPGATimestamp() - (periodicIO.totalLatencyCam1 / 1000));
+            // update pose estimator with drivetrain encoders (odometry part)
+            periodicIO.estimatedPose = poseEstimator.update(periodicIO.gyroRotation, periodicIO.swerveModulePositions);
+
+            if(cam1 != null && periodicIO.cam1.isTargetFound)
+            {
+                // update pose esitmator with limelight data (vision part)
+                poseEstimator.addVisionMeasurement(
+                    periodicIO.cam1.pose.toPose2d(), 
+                    Timer.getFPGATimestamp() - (periodicIO.cam1.totalLatency / 1000));
+            }
+
+            if(cam2 != null && periodicIO.cam2.isTargetFound)
+            {
+                // update pose esitmator with limelight-two data (vision part)
+                poseEstimator.addVisionMeasurement(
+                    periodicIO.cam2.pose.toPose2d(), 
+                    Timer.getFPGATimestamp() - (periodicIO.cam2.totalLatency / 1000));
+            }
+
+            if(cam3 != null && periodicIO.cam3.isTargetFound)
+            {
+                // update pose esitmator with limelight-three data (vision part)
+                poseEstimator.addVisionMeasurement(
+                    periodicIO.cam3.pose.toPose2d(), 
+                    Timer.getFPGATimestamp() - (periodicIO.cam3.totalLatency / 1000));
+            }
+
+            if(cam4 != null && periodicIO.cam4.isTargetFound)
+            {
+                // update pose esitmator with limelight-four data (vision part)
+                poseEstimator.addVisionMeasurement(
+                    periodicIO.cam4.pose.toPose2d(), 
+                    Timer.getFPGATimestamp() - (periodicIO.cam4.totalLatency / 1000));
+            }
+
+            periodicIO.estimatedPose = poseEstimator.getEstimatedPosition();
+            periodicIO.poseForAS = poseEstimator.getEstimatedPosition(); // variable for testing in AdvantageScope
+
+            // put the pose onto the NT so AdvantageScope can read it
+            // ASTable.getEntry("poseEstimator").setDoubleArray(cam1.toQuaternions(periodicIO.poseForAS));
         }
-
-        // camera two
-        if(periodicIO.isTargetFoundCam2)
-        {
-            // update pose esitmator with limelight-two data (vision part)
-            poseEstimator.addVisionMeasurement(
-                periodicIO.poseCam2.toPose2d(), 
-                Timer.getFPGATimestamp() - (periodicIO.totalLatencyCam2 / 1000));
-        }
-
-        periodicIO.estimatedPose = poseEstimator.getEstimatedPosition();
-        periodicIO.poseForAS = poseEstimator.getEstimatedPosition(); // variable for testing in AdvantageScope
-
-        // put the pose onto the NT so AdvantageScope can read it
-        // ASTable.getEntry("poseEstimator").setDoubleArray(cam1.toQuaternions(periodicIO.poseForAS));
     }
 
     @Override
