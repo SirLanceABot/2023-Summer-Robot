@@ -118,7 +118,7 @@ public class RobotContainer
 	private boolean useCameraTwo			= false;
 	private boolean useCameraThree			= false;
 	private boolean useCameraFour			= false;
-	private boolean usePoseEsitmator		= false;
+	private boolean usePoseEstimator		= false;
 
 	private boolean useDataLog				= false;
 	
@@ -187,7 +187,7 @@ public class RobotContainer
 		cameraTwo			= (useFullRobot	|| useCameraTwo)				? new Camera("limelight-two")									: null;
 		cameraThree			= (useFullRobot	|| useCameraThree)				? new Camera("limelight-three")									: null;
 		cameraFour			= (useFullRobot	|| useCameraFour)				? new Camera("limelight-four")									: null;
-		poseEstimator		= (useFullRobot	|| usePoseEsitmator)			? new PoseEstimator(drivetrain, gyro, cameraOne, cameraTwo, cameraThree, cameraFour)		: null;
+		poseEstimator		= (useFullRobot	|| usePoseEstimator)			? new PoseEstimator(drivetrain, gyro, cameraOne, cameraTwo, cameraThree, cameraFour)		: null;
 
 		// pdh = new PowerDistribution(1, ModuleType.kRev);
 		// compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
