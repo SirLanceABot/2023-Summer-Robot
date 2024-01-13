@@ -126,7 +126,7 @@ public class PoseEstimator extends Subsystem4237
         
         if(cam1 != null)
         {
-            periodicIO.cam1.pose = cam1.toPose3d(cam1.getBotPose(periodicIO.alliance));
+            periodicIO.cam1.pose = cam1.getBotPose(periodicIO.alliance);
             periodicIO.cam1.totalLatency = cam1.getTotalLatency(periodicIO.alliance);
             periodicIO.cam1.isTargetFound = cam1.isTargetFound();
         }
@@ -134,21 +134,21 @@ public class PoseEstimator extends Subsystem4237
         
         if(cam2 != null)
         {
-            periodicIO.cam2.pose = cam2.toPose3d(cam2.getBotPose(periodicIO.alliance));
+            periodicIO.cam2.pose = cam2.getBotPose(periodicIO.alliance);
             periodicIO.cam2.totalLatency = cam2.getTotalLatency(periodicIO.alliance);
             periodicIO.cam2.isTargetFound = cam2.isTargetFound();
         }
 
         if(cam3 != null)
         {
-            periodicIO.cam3.pose = cam3.toPose3d(cam3.getBotPose(periodicIO.alliance));
+            periodicIO.cam3.pose = cam3.getBotPose(periodicIO.alliance);
             periodicIO.cam3.totalLatency = cam3.getTotalLatency(periodicIO.alliance);
             periodicIO.cam3.isTargetFound = cam3.isTargetFound();
         }
 
         if(cam4 != null)
         {
-            periodicIO.cam4.pose = cam4.toPose3d(cam4.getBotPose(periodicIO.alliance));
+            periodicIO.cam4.pose = cam4.getBotPose(periodicIO.alliance);
             periodicIO.cam4.totalLatency = cam4.getTotalLatency(periodicIO.alliance);
             periodicIO.cam4.isTargetFound = cam4.isTargetFound();
         }

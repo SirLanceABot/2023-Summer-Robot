@@ -107,28 +107,28 @@ public class Camera extends Sensor4237
     }
 
     /** @return the robot pose on the field (double[]) blue driverstration origin*/
-    public double[] getBotPoseWPIBlue()
+    public Pose3d getBotPoseWPIBlue()
     {
-        return periodicIO.botPoseWPIBlue;
+        return toPose3d(periodicIO.botPoseWPIBlue);
     }
 
     /** @return the robot pose on the field (double[]) red driverstration origin*/
-    public double[] getBotPoseWPIRed()
+    public Pose3d getBotPoseWPIRed()
     {
-        return periodicIO.botPoseWPIRed;
+        return toPose3d(periodicIO.botPoseWPIRed);
     }
 
     /** @return the robot pose on the field (double[]) red driverstration origin*/
     /** @param allianceColor the allaince color */
-    public double[] getBotPose(DriverStation.Alliance allianceColor)
+    public Pose3d getBotPose(DriverStation.Alliance allianceColor)
     {
         if(allianceColor == DriverStation.Alliance.Red)
         {
-            return periodicIO.botPoseWPIRed;
+            return toPose3d(periodicIO.botPoseWPIRed);
         }
         else if(allianceColor == DriverStation.Alliance.Blue)
         {
-            return periodicIO.botPoseWPIBlue;
+            return toPose3d(periodicIO.botPoseWPIBlue);
         }
         else
         {
